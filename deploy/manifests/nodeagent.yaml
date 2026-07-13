@@ -1,0 +1,60 @@
+# WATCH stage: privileged host-network DaemonSet running eBPF tcpmon and the
+# GPU reader on every worker node.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: keinfer-nodeagent
+  namespace: kubeedgeinfer
+spec:
+  selector:
+    matchLabels:
+      app: keinfer-nodeagent
+  template:
+    metadata:
+      labels:
+        app: keinfer-nodeagent
+    spec:
+      nodeSelector:
+        kubeedgeinfer.io/worker: "true"
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: nodeagent
+          image: kubeedgeinfer/nodeagent:dev
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: HTTP_ADDR
+              value: ":9101"
+            - name: CONTROLLER_ADDR
+              value: "controller.kubeedgeinfer.svc.cluster.local:50053"
+            - name: PORT_MIN
+              value: "50051"
+            - name: PORT_MAX
+              value: "50052"
+            - name: GPU_MODE
+              value: "sim"  # sim | cputherm | nvml -- see docs/laptops.md for real hardware
+          volumeMounts:
+            - name: btf
+              mountPath: /sys/kernel/btf
+              readOnly: true
+            - name: bpffs
+              mountPath: /sys/fs/bpf
+            - name: thermal
+              mountPath: /sys/class/thermal
+              readOnly: true
+      volumes:
+        - name: btf
+          hostPath:
+            path: /sys/kernel/btf
+        - name: bpffs
+          hostPath:
+            path: /sys/fs/bpf
+        - name: thermal
+          hostPath:
+            path: /sys/class/thermal

@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package kubeedgeinfer.v1;
+
+option go_package = "kubeedgeinfer/gen/pipelinepb;pipelinepb";
+
+// ---------------------------------------------------------------------------
+// Worker: implemented by the Python shard workers.
+// Called by the controller (AssignLayers) and the router (Forward).
+// ---------------------------------------------------------------------------
+service Worker {
+  rpc AssignLayers(AssignLayersRequest) returns (AssignLayersReply);
+  rpc Forward(ForwardRequest) returns (ForwardReply);
+  rpc Stats(StatsRequest) returns (StatsReply);
+}
+
+message AssignLayersRequest {
+  int32 start_layer = 1;  // inclusive
+  int32 end_layer = 2;    // exclusive
+  int32 total_layers = 3;
+  string backend = 4;     // "sim" | "gpt2"
+  string model = 5;       // model name for the gpt2 backend
+  int64 generation = 6;   // monotonically increasing assignment version
+}
+
+message AssignLayersReply {
+  bool ok = 1;
+  string error = 2;
+}
+
+message ForwardRequest {
+  int64 request_id = 1;      // identifies the KV-cache session on the worker
+  int32 step = 2;            // autoregressive step; 0 = prefill
+  repeated int32 input_ids = 3;  // set when calling the first stage
+  bytes hidden = 4;          // fp32 little-endian activations for later stages
+  repeated int32 shape = 5;  // shape of `hidden`
+  int64 generation = 6;      // must match the worker's current assignment
+}
+
+message ForwardReply {
+  bytes hidden = 1;
+  repeated int32 shape = 2;
+  int32 next_token = 3;   // set by the last stage
+  bool is_last = 4;       // true if this worker holds the final layers
+  double compute_ms = 5;  // busy time spent on this call
+  string error = 6;
+}
+
+message StatsRequest {}
+
+message StatsReply {
+  int32 start_layer = 1;
+  int32 end_layer = 2;
+  double window_busy_ms = 3;  // compute-busy ms since the previous Stats call
+  double window_wall_ms = 4;  // wall ms since the previous Stats call
+  int64 forwards = 5;         // total Forward calls served
+  int64 generation = 6;
+}
+
+// ---------------------------------------------------------------------------
+// Router: implemented by the Python router. Called by the controller to
+// apply a new stage ordering after repartitioning.
+// ---------------------------------------------------------------------------
+service Router {
+  rpc SetPipeline(SetPipelineRequest) returns (Ack);
+}
+
+message StageRef {
+  string name = 1;  // worker pod name
+  string addr = 2;  // host:port of the worker gRPC endpoint
+  int32 start_layer = 3;
+  int32 end_layer = 4;
+}
+
+message SetPipelineRequest {
+  repeated StageRef stages = 1;  // in pipeline order
+  int64 generation = 2;
+}
+
+message Ack {
+  bool ok = 1;
+  string error = 2;
+}
+
+// ---------------------------------------------------------------------------
+// Telemetry: implemented by the controller. Node agents push a snapshot
+// roughly once per second (doubles as the liveness heartbeat).
+// ---------------------------------------------------------------------------
+service Telemetry {
+  rpc Report(NodeTelemetry) returns (Ack);
+}
+
+message LinkStat {
+  string src_ip = 1;  // kprobes are kernel-global: controller attributes
+  string dst_ip = 2;  // flows to pipeline links by pod IP
+  uint32 dst_port = 3;
+  double srtt_ms = 4;        // smoothed RTT from eBPF tcp_probe
+  double bytes_per_sec = 5;  // send throughput from eBPF tcp_sendmsg
+  uint64 samples = 6;
+}
+
+message GpuStat {
+  double temp_c = 1;
+  double vram_free_mb = 2;
+  bool throttled = 3;
+  double speed_factor = 4;  // effective compute multiplier in (0, 1]
+}
+
+message NodeTelemetry {
+  string node = 1;
+  string worker_addr = 2;  // gRPC addr of the shard worker on this node
+  int64 timestamp_ms = 3;
+  GpuStat gpu = 4;
+  repeated LinkStat links = 5;
+}

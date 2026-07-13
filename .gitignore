@@ -1,0 +1,10 @@
+gen/
+worker/gen/
+bin/
+__pycache__/
+*.pyc
+bench/results/
+.venv/
+*.o
+!internal/ebpf/tcpmon_bpfel.o
+*.md

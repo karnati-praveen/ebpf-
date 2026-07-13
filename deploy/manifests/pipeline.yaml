@@ -1,0 +1,12 @@
+apiVersion: kubeedgeinfer.io/v1alpha1
+kind: InferencePipeline
+metadata:
+  name: demo
+  namespace: kubeedgeinfer
+spec:
+  model: gpt2
+  backend: sim
+  totalLayers: 12
+  perLayerMs: 30
+  workers: 3
+  routerAddr: router.kubeedgeinfer.svc.cluster.local:50052

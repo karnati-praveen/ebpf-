@@ -1,0 +1,6 @@
+.git
+bin/
+bench/results/
+worker/__pycache__/
+**/__pycache__/
+*.pdf

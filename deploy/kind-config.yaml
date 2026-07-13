@@ -1,0 +1,17 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kubeedgeinfer
+nodes:
+  - role: control-plane
+  - role: worker
+    labels:
+      kubeedgeinfer.io/worker: "true"
+      kubeedgeinfer.io/node-id: "w1"
+  - role: worker
+    labels:
+      kubeedgeinfer.io/worker: "true"
+      kubeedgeinfer.io/node-id: "w2"
+  - role: worker
+    labels:
+      kubeedgeinfer.io/worker: "true"
+      kubeedgeinfer.io/node-id: "w3"
