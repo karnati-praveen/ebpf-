@@ -230,9 +230,16 @@ type podInfo struct {
 }
 
 // livePods returns Running worker pods whose node agent heartbeat is fresh,
-// ordered by node label for a stable pipeline order. Dropping a pod whose
-// heartbeat went stale is the HEAL trigger: the Decider sees a changed
-// worker set and forces a repartition across survivors.
+// in a deterministic pipeline order. Dropping a pod whose heartbeat went
+// stale is the HEAL trigger: the Decider sees a changed worker set and
+// forces a repartition across survivors.
+//
+// Ordering is (node, pod name), not node alone: sort.Slice is not stable, so
+// with several workers on one node -- the single-machine GPU layout, where
+// every pod shares a node -- ordering by node alone leaves ties to be broken
+// arbitrarily. The Decider compares worker identity position-by-position, so
+// a reshuffle would look like a changed worker set and force a pointless
+// repartition on every tick.
 func (c *Controller) livePods(ctx context.Context) ([]podInfo, error) {
 	list, err := c.kube.CoreV1().Pods(c.cfg.Namespace).List(ctx, metav1.ListOptions{
 		LabelSelector: c.cfg.WorkerSelector,
@@ -253,7 +260,12 @@ func (c *Controller) livePods(ctx context.Context) ([]podInfo, error) {
 		}
 		pods = append(pods, podInfo{name: p.Name, ip: p.Status.PodIP, node: p.Spec.NodeName})
 	}
-	sort.Slice(pods, func(i, j int) bool { return pods[i].node < pods[j].node })
+	sort.Slice(pods, func(i, j int) bool {
+		if pods[i].node != pods[j].node {
+			return pods[i].node < pods[j].node
+		}
+		return pods[i].name < pods[j].name
+	})
 	return pods, nil
 }
 

@@ -1,0 +1,75 @@
+# Worker shards for a SINGLE machine with one GPU (e.g. one L4 box).
+#
+# The default deploy/manifests/workers.yaml runs workers as a DaemonSet: one
+# pod per node, which on a single machine gives a one-stage "pipeline" with
+# nothing to partition. This replaces it with a Deployment so several shards
+# share the one GPU and you get a real multi-stage pipeline.
+#
+# Use INSTEAD of the worker DaemonSet (the router still comes from
+# workers.yaml):
+#   kubectl -n kubeedgeinfer delete ds keinfer-worker --ignore-not-found
+#   kubectl apply -f deploy/manifests/workers-singlenode.yaml
+#   kubectl -n kubeedgeinfer scale deploy/keinfer-worker-shard --replicas=3
+#
+# GPU access: this requests no nvidia.com/gpu resource on purpose. The L4 is
+# a single allocatable GPU, so requesting it would let exactly one shard
+# schedule and leave the rest Pending. Instead all shards share the device
+# through the NVIDIA container runtime. k3s writes a RuntimeClass named
+# "nvidia" automatically once nvidia-container-toolkit is installed; if your
+# cluster has no such RuntimeClass (because the nvidia runtime is already the
+# default), delete the runtimeClassName line below.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keinfer-worker-shard
+  namespace: kubeedgeinfer
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: keinfer-worker
+  template:
+    metadata:
+      labels:
+        # Same label the controller selects on, so these shards are picked up
+        # as pipeline stages exactly like the DaemonSet pods were.
+        app: keinfer-worker
+    spec:
+      nodeSelector:
+        kubeedgeinfer.io/worker: "true"
+      runtimeClassName: nvidia
+      containers:
+        - name: worker
+          image: kubeedgeinfer/worker:dev
+          imagePullPolicy: IfNotPresent
+          command: ["python3", "server.py"]
+          ports:
+            - containerPort: 50051
+          env:
+            - name: PORT
+              value: "50051"
+            - name: WORKER_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: NODE_AGENT_ADDR
+              value: "$(HOST_IP):9101"
+            # Real CUDA inference; fails loudly rather than silently running
+            # on CPU if the GPU is not actually visible in the container.
+            - name: WORKER_DEVICE
+              value: "cuda"
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,utility"
+          readinessProbe:
+            tcpSocket:
+              port: 50051
+            # GPT-2 weights load on first assignment, not at startup, so the
+            # port opens quickly; keep the probe cheap.
+            initialDelaySeconds: 2
+            periodSeconds: 3
