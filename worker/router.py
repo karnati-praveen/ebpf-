@@ -43,22 +43,27 @@ class PipelineState:
         self.lock = threading.Lock()
         self.stages = []  # list of pb.StageRef, pipeline order
         self.generation = -1
+        self._layout = ""  # last logged layout, to quiet periodic re-pushes
         self.changed = threading.Condition(self.lock)
         self._channels = {}
 
     def set(self, stages, generation):
+        layout = " -> ".join(
+            f"{s.name}[{s.start_layer},{s.end_layer})" for s in stages
+        )
         with self.lock:
             if generation < self.generation:
                 log.warning("generation went backwards: %d -> %d (controller restart?)",
                             self.generation, generation)
+            # The controller re-pushes the current layout periodically so a
+            # restarted router recovers; only log when something changed.
+            changed = generation != self.generation or layout != self._layout
             self.stages = list(stages)
             self.generation = generation
+            self._layout = layout
             self.changed.notify_all()
-        log.info(
-            "pipeline gen=%d: %s",
-            generation,
-            " -> ".join(f"{s.name}[{s.start_layer},{s.end_layer})" for s in stages),
-        )
+        if changed:
+            log.info("pipeline gen=%d: %s", generation, layout)
         return True
 
     def snapshot(self):

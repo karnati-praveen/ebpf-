@@ -60,8 +60,17 @@ spec:
     spec:
       # Keep the router off the worker nodes: injected faults (netem, node
       # kill) must degrade pipeline stages, not the orchestration path.
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
+      # Matched with Exists, not a nodeSelector: kind labels the control
+      # plane with an empty value but k3s uses "true", and a nodeSelector
+      # compares values exactly -- so a selector that works on kind would
+      # leave this pod Pending forever on a real k3s cluster.
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists

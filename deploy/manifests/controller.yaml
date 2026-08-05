@@ -14,8 +14,15 @@ spec:
         app: keinfer-controller
     spec:
       serviceAccountName: keinfer-controller
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
+      # Exists, not a nodeSelector: kind uses an empty label value, k3s uses
+      # "true" (see workers.yaml for the full note).
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists

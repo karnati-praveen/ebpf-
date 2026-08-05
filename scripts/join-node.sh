@@ -27,6 +27,36 @@ if [[ "$ROLE" != "server" && "$ROLE" != "agent" ]]; then
 fi
 
 log() { echo "[join-node] $*"; }
+die() { echo "[join-node] ERROR: $*" >&2; exit 1; }
+
+# ---- preflight ------------------------------------------------------------
+[[ "$(uname -s)" == "Linux" ]] || die "this project needs Linux (eBPF + privileged DaemonSets); macOS/Windows can only run the kind demo inside a Linux VM"
+
+# eBPF CO-RE needs BTF. Without it the node agent still runs (it logs a
+# warning and drops network telemetry), so this is a warning, not fatal.
+if [[ ! -r /sys/kernel/btf/vmlinux ]]; then
+  log "WARNING: /sys/kernel/btf/vmlinux not found -- eBPF network telemetry will be"
+  log "         disabled on this machine (kernel needs CONFIG_DEBUG_INFO_BTF=y, ~5.8+)."
+  log "         The thermal control loop still works."
+else
+  log "BTF present: eBPF telemetry supported ($(uname -r))"
+fi
+
+log "architecture: $(uname -m) -- every machine in the cluster must match, or you must build multi-arch images (docs/laptops.md)"
+
+if [[ "$ROLE" == "agent" ]]; then
+  SERVER_IP_PRE="${2:-}"
+  [[ -n "$SERVER_IP_PRE" && -n "${3:-}" ]] || die "agent mode needs: $0 agent <server-ip> <node-token>"
+  # Fail early and clearly on the single most common two-laptop problem.
+  if command -v curl >/dev/null; then
+    curl -sk --connect-timeout 5 "https://${SERVER_IP_PRE}:6443" >/dev/null 2>&1 \
+      || die "cannot reach ${SERVER_IP_PRE}:6443 from this machine.
+  Check: both machines on the same network, and the SERVER's firewall allows
+    6443/tcp (API), 8472/udp (flannel VXLAN), 10250/tcp (kubelet), 5000/tcp (registry).
+  On the server:  sudo ufw allow 6443/tcp && sudo ufw allow 8472/udp && sudo ufw allow 10250/tcp && sudo ufw allow 5000/tcp"
+    log "server ${SERVER_IP_PRE}:6443 reachable"
+  fi
+fi
 
 has_gpu=0
 if command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi -L >/dev/null 2>&1; then
@@ -57,11 +87,18 @@ if [[ "$ROLE" == "server" ]]; then
   sudo cp /etc/rancher/k3s/k3s.yaml "$HOME/.kube/config"
   sudo chown "$(id -u):$(id -g)" "$HOME/.kube/config"
   TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
-  SERVER_IP=$(hostname -I | awk '{print $1}')
+  SERVER_IP="${SERVER_IP:-$(hostname -I | awk '{print $1}')}"
+  # Open the ports agents need, if a firewall is active.
+  if command -v ufw >/dev/null && sudo ufw status 2>/dev/null | grep -q "Status: active"; then
+    log "ufw is active -- opening cluster ports"
+    for p in 6443/tcp 8472/udp 10250/tcp 5000/tcp; do sudo ufw allow "$p" >/dev/null || true; done
+  fi
   log "server ready. Give this to the other machines:"
   echo
   echo "  ./scripts/join-node.sh agent ${SERVER_IP} ${TOKEN}"
   echo
+  log "(if ${SERVER_IP} is the wrong interface -- e.g. a docker/VPN address --"
+  log " re-read it from 'ip addr' and use the LAN address the other laptop can ping)"
 else
   SERVER_IP="$2"
   TOKEN="$3"

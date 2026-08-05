@@ -43,6 +43,7 @@ func main() {
 		cooldown    = flag.Duration("cooldown", envDurationOr("COOLDOWN_S", 30*time.Second), "repartition cooldown")
 		improvement = flag.Float64("improvement", envFloatOr("IMPROVEMENT_FRAC", 0.15), "min fractional bottleneck improvement to repartition")
 		heartbeat   = flag.Duration("heartbeat-timeout", 3*time.Second, "node agent staleness before a node is dead")
+		reassert    = flag.Duration("reassert-interval", 10*time.Second, "how often to re-push the current layout so a restarted worker/router recovers (0 disables)")
 		defLink     = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
 		profileOnce = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
 	)
@@ -72,6 +73,7 @@ func main() {
 		ImprovementFrac:  *improvement,
 		Cooldown:         *cooldown,
 		Interval:         *interval,
+		ReassertInterval: *reassert,
 		ProfileOnce:      *profileOnce,
 	}, kube, dyn, store)
 

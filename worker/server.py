@@ -47,6 +47,7 @@ class WorkerServicer(rpc.WorkerServicer):
             self.backends[key] = backend
         backend.load(req.start_layer, req.end_layer, req.total_layers)
         self.backend = backend
+        self.backend_name = req.backend
         self.start_layer = req.start_layer
         self.end_layer = req.end_layer
         self.total_layers = req.total_layers
@@ -60,16 +61,23 @@ class WorkerServicer(rpc.WorkerServicer):
                     "generation went backwards: %d -> %d (controller restart?)",
                     self.generation, req.generation,
                 )
+            # The controller re-pushes the current assignment periodically so
+            # a restarted worker recovers; only log genuine changes.
+            changed = (req.generation, req.start_layer, req.end_layer,
+                       req.total_layers, req.backend) != (
+                self.generation, self.start_layer, self.end_layer,
+                self.total_layers, getattr(self, "backend_name", None))
             try:
                 self._apply_assignment(req)
             except Exception as e:  # surface load errors to the controller
                 log.exception("AssignLayers failed")
                 return pb.AssignLayersReply(ok=False, error=str(e))
-        log.info(
-            "assigned layers [%d, %d) of %d backend=%s gen=%d",
-            req.start_layer, req.end_layer, req.total_layers,
-            req.backend, req.generation,
-        )
+        if changed:
+            log.info(
+                "assigned layers [%d, %d) of %d backend=%s gen=%d",
+                req.start_layer, req.end_layer, req.total_layers,
+                req.backend, req.generation,
+            )
         return pb.AssignLayersReply(ok=True)
 
     def Forward(self, req, ctx):

@@ -41,6 +41,14 @@ type Config struct {
 	ImprovementFrac  float64
 	Cooldown         time.Duration
 	Interval         time.Duration
+	// ReassertInterval is how often the controller re-pushes the current
+	// assignment even when nothing changed. Workers and the router hold
+	// their layout in memory only, so a restarted pod comes back empty; the
+	// worker set looks unchanged to the Decider, so without this the
+	// pipeline would stay broken forever. Re-pushing is idempotent and
+	// carries the *current* generation, so it does not disturb in-flight
+	// requests.
+	ReassertInterval time.Duration
 	// ProfileOnce freezes each node's speed factor and each link's cost at
 	// its first observed eBPF/GPU reading, then reuses that snapshot forever
 	// instead of tracking live telemetry. This reproduces the "offline
@@ -61,6 +69,7 @@ type Controller struct {
 	generation     int64
 	staticApplied  bool
 	lastApplied    *partition.Result
+	lastPush       time.Time
 	lastError      string
 	conns          map[string]*grpc.ClientConn
 	frozenSpeed    map[string]float64 // node -> speed, captured once when ProfileOnce
@@ -166,6 +175,11 @@ func (c *Controller) reconcile(ctx context.Context) error {
 		}
 		log.Printf("applied gen=%d bottleneck=%.1fms: %s",
 			c.generation, res.BottleneckMs, describe(res))
+	} else if gen, due := c.reassertDue(time.Now()); due {
+		// Repair a worker or router that restarted and lost its layout.
+		if err := c.push(ctx, sp, res, gen); err != nil {
+			return fmt.Errorf("reassert: %w", err)
+		}
 	}
 	return c.updateStatus(ctx, cr, res, "Running")
 }
@@ -175,9 +189,18 @@ func (c *Controller) reconcile(ctx context.Context) error {
 func (c *Controller) reconcileStatic(ctx context.Context, cr *unstructured.Unstructured, sp spec, input partition.Input) error {
 	c.mu.Lock()
 	applied := c.staticApplied
+	last := c.lastApplied
 	c.mu.Unlock()
 	if applied {
-		return c.updateStatus(ctx, cr, c.lastApplied, "RunningStatic")
+		// Static never repartitions, but it must still repair a restarted
+		// worker or router — otherwise the baseline arm of a benchmark dies
+		// on a pod restart for reasons unrelated to the ablation.
+		if gen, due := c.reassertDue(time.Now()); due && last != nil {
+			if err := c.push(ctx, sp, last, gen); err != nil {
+				log.Printf("static reassert: %v", err)
+			}
+		}
+		return c.updateStatus(ctx, cr, last, "RunningStatic")
 	}
 	if sp.workers > 0 && int64(len(input.Workers)) < sp.workers {
 		return c.updateStatus(ctx, cr, nil, "WaitingForWorkers")
@@ -289,15 +312,36 @@ func (c *Controller) buildInput(sp spec, pods []podInfo) partition.Input {
 	return input
 }
 
-// apply pushes the split to every worker, then flips the router. Workers
-// tolerate being assigned before the router switches: requests carrying the
-// old generation are rejected and the router replays them on the new chain.
+// apply adopts a new split: it bumps the generation and pushes it out.
 func (c *Controller) apply(ctx context.Context, sp spec, res *partition.Result) error {
 	c.mu.Lock()
 	c.generation++
 	gen := c.generation
 	c.mu.Unlock()
+	return c.push(ctx, sp, res, gen)
+}
 
+// reassertDue reports whether the current layout should be re-pushed.
+func (c *Controller) reassertDue(now time.Time) (int64, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.lastApplied == nil || c.cfg.ReassertInterval <= 0 {
+		return 0, false
+	}
+	return c.generation, now.Sub(c.lastPush) >= c.cfg.ReassertInterval
+}
+
+// push sends the split to every worker, then points the router at it, at the
+// given generation. Workers tolerate being assigned before the router
+// switches: requests carrying the old generation are rejected and the router
+// replays them on the new chain.
+//
+// This is idempotent, and deliberately so: workers and the router keep their
+// layout in memory only, so one that restarts comes back with nothing
+// assigned while still looking unchanged to the Decider (same pod name and
+// IP). Re-pushing the *current* generation on a timer is what repairs that;
+// without it a single router restart wedges the pipeline permanently.
+func (c *Controller) push(ctx context.Context, sp spec, res *partition.Result, gen int64) error {
 	for _, a := range res.Assignments {
 		client := pipelinepb.NewWorkerClient(c.conn(a.Worker.Addr))
 		reqCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
@@ -346,6 +390,7 @@ func (c *Controller) apply(ctx context.Context, sp spec, res *partition.Result) 
 
 	c.mu.Lock()
 	c.lastApplied = res
+	c.lastPush = time.Now()
 	c.lastError = ""
 	c.mu.Unlock()
 	return nil

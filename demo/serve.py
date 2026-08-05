@@ -127,6 +127,14 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(502, {"error": str(e)})
         return self._json(404, {"error": "not found"})
 
+    def handle_one_request(self):
+        # A polling dashboard drops connections routinely (tab closed, page
+        # reloaded mid-request); that is not an error worth a traceback.
+        try:
+            super().handle_one_request()
+        except (BrokenPipeError, ConnectionResetError):
+            self.close_connection = True
+
     def log_message(self, fmt, *args):
         pass
 
