@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KubeEdgeInfer — live</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:      #f9f9f7;
+    --surface:   #fcfcfb;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --muted:     #898781;
+    --grid:      #e1e0d9;
+    --baseline:  #c3c2b7;
+    --border:    rgba(11,11,11,0.10);
+    --series-1:  #2a78d6;
+    --series-2:  #eb6834;
+    --series-3:  #1baf7a;
+    --good:      #0ca30c;
+    --critical:  #d03b3b;
+    --warning:   #fab219;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --page:      #0d0d0d;
+      --surface:   #1a1a19;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --muted:     #898781;
+      --grid:      #2c2c2a;
+      --baseline:  #383835;
+      --border:    rgba(255,255,255,0.10);
+      --series-1:  #3987e5;
+      --series-2:  #d95926;
+      --series-3:  #199e70;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px;
+    background: var(--page); color: var(--ink);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  h1 { font-size: 16px; margin: 0; font-weight: 650; }
+  h2 { font-size: 12px; margin: 0 0 10px; font-weight: 600; color: var(--ink-2);
+       text-transform: uppercase; letter-spacing: .04em; }
+  .topbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--critical); }
+  .dot.ok { background: var(--good); }
+  .topbar .spacer { flex: 1; }
+  button, select {
+    font: inherit; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; cursor: pointer;
+  }
+  button:hover { border-color: var(--baseline); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .card, .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .card .label { font-size: 11px; color: var(--ink-2); }
+  .card .value { font-size: 24px; font-weight: 650; margin-top: 2px; }
+  .card .sub   { font-size: 11px; color: var(--muted); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+  .panel { margin-bottom: 10px; overflow-x: auto; }
+
+  /* layer-assignment stacked bar: one segment per stage, 2px surface gaps */
+  .stack { display: flex; height: 22px; border-radius: 4px; overflow: hidden; background: var(--grid); }
+  .stack .seg { height: 100%; border-right: 2px solid var(--surface); }
+  .stack .seg:last-child { border-right: none; }
+  .stack-labels { display: flex; margin-top: 4px; font-size: 11px; color: var(--ink-2); }
+  .stack-labels span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 6px; }
+
+  /* per-stage busy bars */
+  .bar-row { display: grid; grid-template-columns: 130px 1fr 52px; align-items: center; gap: 8px; margin: 6px 0; }
+  .bar-name { font-size: 12px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { height: 16px; background: none; border-left: 2px solid var(--baseline); position: relative; }
+  .bar-fill { height: 100%; border-radius: 0 4px 4px 0; }
+  .bar-val { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; text-align: right; }
+  .swatch { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: baseline; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th { text-align: left; color: var(--muted); font-weight: 500; padding: 3px 10px 3px 0; border-bottom: 1px solid var(--grid); }
+  td { padding: 4px 10px 4px 0; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  .status { font-size: 12px; }
+  .status.bad  { color: var(--critical); }
+  .status.good { color: var(--good); }
+
+  #log { font-size: 12px; max-height: 180px; overflow-y: auto; }
+  #log div { padding: 2px 0; border-bottom: 1px solid var(--grid); color: var(--ink-2); }
+  #log time { color: var(--muted); margin-right: 8px; font-variant-numeric: tabular-nums; }
+
+  #tooltip {
+    position: fixed; display: none; pointer-events: none; z-index: 10;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+    padding: 6px 9px; font-size: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  #err { color: var(--critical); font-size: 12px; display: none; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span id="conn" class="dot"></span>
+    <h1>KubeEdgeInfer — live pipeline</h1>
+    <span id="err"></span>
+    <span class="spacer"></span>
+    <label style="font-size:12px;color:var(--ink-2)">load
+      <input type="checkbox" id="loadToggle" checked></label>
+    <select id="faultNode" title="node to overheat"></select>
+    <button id="inject">Inject heat (92°C)</button>
+    <button id="clearFault">Clear fault</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="label">Generation</div><div class="value" id="gen">–</div><div class="sub">repartitions applied</div></div>
+    <div class="card"><div class="label">Predicted bottleneck</div><div class="value" id="bneck">–</div><div class="sub">ms / token (DP)</div></div>
+    <div class="card"><div class="label">Tokens / sec</div><div class="value" id="tps">–</div><div class="sub">avg over all requests</div></div>
+    <div class="card"><div class="label">Avg TTFT</div><div class="value" id="ttft">–</div><div class="sub">ms to first token</div></div>
+    <div class="card"><div class="label">Requests</div><div class="value" id="reqs">–</div><div class="sub"><span id="replays">0</span> replays · <span id="errs">0</span> errors</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>Layer assignment</h2>
+    <div class="stack" id="stack"></div>
+    <div class="stack-labels" id="stackLabels"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h2>Stage utilization (busy fraction of window)</h2>
+      <div id="bars"></div>
+    </div>
+    <div class="panel">
+      <h2>Node telemetry</h2>
+      <table><thead><tr><th>node</th><th>temp</th><th>speed</th><th>state</th></tr></thead>
+      <tbody id="nodes"></tbody></table>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h2>eBPF flows (sRTT into worker ports)</h2>
+      <table><thead><tr><th>src → dst</th><th>port</th><th>sRTT</th><th>throughput</th></tr></thead>
+      <tbody id="flows"></tbody></table>
+    </div>
+    <div class="panel">
+      <h2>Events</h2>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const seriesVars = ["--series-1", "--series-2", "--series-3"];
+const colorOf = new Map();          // worker name -> css var (identity, first-seen)
+function workerColor(name) {
+  if (!colorOf.has(name)) colorOf.set(name, seriesVars[colorOf.size % seriesVars.length]);
+  return `var(${colorOf.get(name)})`;
+}
+
+let lastGen = null, lastPhase = null, throttledPrev = {};
+function logEvent(msg) {
+  const row = document.createElement("div");
+  const t = new Date().toTimeString().slice(0, 8);
+  row.innerHTML = `<time>${t}</time>${msg}`;
+  const log = $("log");
+  log.prepend(row);
+  while (log.children.length > 80) log.removeChild(log.lastChild);
+}
+
+const tooltip = $("tooltip");
+function attachTip(el, html) {
+  el.onmousemove = e => {
+    tooltip.innerHTML = html;
+    tooltip.style.display = "block";
+    tooltip.style.left = Math.min(e.clientX + 12, innerWidth - 180) + "px";
+    tooltip.style.top = (e.clientY + 12) + "px";
+  };
+  el.onmouseleave = () => tooltip.style.display = "none";
+}
+
+async function j(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + ": " + r.status); return r.json(); }
+
+function renderStack(stages) {
+  const total = stages.length ? Math.max(...stages.map(s => s.layers[1])) : 0;
+  const stack = $("stack"), labels = $("stackLabels");
+  stack.innerHTML = ""; labels.innerHTML = "";
+  for (const s of stages) {
+    const w = total ? (100 * (s.layers[1] - s.layers[0]) / total) : 0;
+    const seg = document.createElement("div");
+    seg.className = "seg";
+    seg.style.width = w + "%";
+    seg.style.background = workerColor(s.name);
+    attachTip(seg, `<b>${s.name}</b><br>layers [${s.layers[0]}, ${s.layers[1]}) of ${total}<br>${s.addr}`);
+    stack.appendChild(seg);
+    const lab = document.createElement("span");
+    lab.style.width = w + "%";
+    lab.innerHTML = `<span class="swatch" style="background:${workerColor(s.name)}"></span>${s.name.replace(/^keinfer-worker-/, "…")} [${s.layers[0]},${s.layers[1]})`;
+    labels.appendChild(lab);
+  }
+}
+
+function renderBars(stats) {
+  const bars = $("bars");
+  bars.innerHTML = "";
+  for (const s of stats.stages || []) {
+    const busy = s.window_busy_ms || 0, wall = s.window_wall_ms || 0;
+    const frac = wall > 0 ? Math.min(busy / wall, 1) : 0;
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML =
+      `<span class="bar-name"><span class="swatch" style="background:${workerColor(s.name)}"></span>${s.name.replace(/^keinfer-worker-/, "…")}</span>` +
+      `<div class="bar-track"><div class="bar-fill" style="width:${(frac * 100).toFixed(1)}%;background:${workerColor(s.name)}"></div></div>` +
+      `<span class="bar-val">${s.error ? "n/a" : (frac * 100).toFixed(0) + "%"}</span>`;
+    attachTip(row.children[1],
+      `<b>${s.name}</b><br>busy ${busy.toFixed(0)} ms / window ${wall.toFixed(0)} ms<br>` +
+      `${s.forwards ?? 0} forwards · layers [${s.layers[0]}, ${s.layers[1]})` + (s.error ? `<br>error: ${s.error}` : ""));
+    bars.appendChild(row);
+  }
+}
+
+function renderNodes(state) {
+  const tbody = $("nodes");
+  tbody.innerHTML = "";
+  const nodes = (state.telemetry && state.telemetry.nodes) || {};
+  const names = Object.keys(nodes).sort();
+  const sel = $("faultNode");
+  if (sel.options.length !== names.length) {
+    sel.innerHTML = names.map(n => `<option${/worker2$/.test(n) ? " selected" : ""}>${n}</option>`).join("");
+  }
+  for (const name of names) {
+    const n = nodes[name];
+    const bad = n.throttled;
+    if (throttledPrev[name] !== undefined && throttledPrev[name] !== bad)
+      logEvent(bad ? `▲ <b>${name}</b> started throttling (${n.temp_c.toFixed(0)}°C)`
+                   : `▼ <b>${name}</b> recovered (${n.temp_c.toFixed(0)}°C)`);
+    throttledPrev[name] = bad;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${name}</td><td>${n.temp_c.toFixed(1)}°C</td>` +
+      `<td>${n.speed_factor.toFixed(2)}×</td>` +
+      `<td class="status ${bad ? "bad" : "good"}">${bad ? "⚠ throttled" : "✓ ok"}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+function renderFlows(state) {
+  const tbody = $("flows");
+  tbody.innerHTML = "";
+  for (const f of ((state.telemetry && state.telemetry.flows) || []).slice(0, 8)) {
+    const tr = document.createElement("tr");
+    const mbps = f.bytes_per_sec > 0 ? (f.bytes_per_sec / 1e6).toFixed(2) + " MB/s" : "–";
+    tr.innerHTML = `<td>${f.src} → ${f.dst}</td><td>${f.port}</td>` +
+      `<td>${f.srtt_ms.toFixed(2)} ms</td><td>${mbps}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+async function tick() {
+  try {
+    const [pipeline, stats, metrics, state] = await Promise.all([
+      j("/api/router/pipeline"), j("/api/router/stats"),
+      j("/api/router/metrics"), j("/api/ctrl/state"),
+    ]);
+    $("conn").classList.add("ok");
+    $("err").style.display = "none";
+
+    $("gen").textContent = state.generation ?? "–";
+    $("bneck").textContent = state.bottleneck_ms ? state.bottleneck_ms.toFixed(0) : "–";
+    $("reqs").textContent = metrics.requests ?? 0;
+    $("replays").textContent = metrics.repartition_replays ?? 0;
+    $("errs").textContent = metrics.errors ?? 0;
+    $("ttft").textContent = metrics.avg_ttft_ms ? metrics.avg_ttft_ms.toFixed(0) : "–";
+    $("tps").textContent = metrics.requests
+      ? (1000 * (metrics.tokens / metrics.requests) / metrics.avg_duration_ms).toFixed(2) : "–";
+
+    if (lastGen !== null && pipeline.generation !== lastGen)
+      logEvent(`↻ repartitioned: gen ${lastGen} → <b>${pipeline.generation}</b>: ` +
+        pipeline.stages.map(s => `${s.name.replace(/^keinfer-worker-/, "…")}[${s.layers[0]},${s.layers[1]})`).join(" → "));
+    lastGen = pipeline.generation;
+    if (state.last_error && state.last_error !== lastPhase) logEvent(`✗ controller: ${state.last_error}`);
+    lastPhase = state.last_error;
+
+    renderStack(pipeline.stages || []);
+    renderBars(stats);
+    renderNodes(state);
+    renderFlows(state);
+  } catch (e) {
+    $("conn").classList.remove("ok");
+    const err = $("err");
+    err.textContent = "unreachable: " + e.message;
+    err.style.display = "inline";
+  }
+}
+
+$("loadToggle").onchange = e =>
+  fetch("/api/load", { method: "POST", body: JSON.stringify({ on: e.target.checked }) });
+$("inject").onclick = async () => {
+  const node = $("faultNode").value;
+  const r = await j2("/api/fault", { node, temp_c: 92 });
+  logEvent(r.error ? `✗ inject failed: ${r.error}` : `🔥 injected 92°C override on <b>${node}</b>`);
+};
+$("clearFault").onclick = async () => {
+  const node = $("faultNode").value;
+  const r = await j2("/api/fault", { node, clear: true });
+  logEvent(r.error ? `✗ clear failed: ${r.error}` : `💧 cleared fault on <b>${node}</b>`);
+};
+async function j2(url, body) {
+  try {
+    const r = await fetch(url, { method: "POST", body: JSON.stringify(body) });
+    return await r.json();
+  } catch (e) { return { error: e.message }; }
+}
+
+logEvent("dashboard started");
+tick();
+setInterval(tick, 2000);
+</script>
+</body>
+</html>

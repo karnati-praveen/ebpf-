@@ -34,10 +34,25 @@ decision** driven by kernel-level measurements:
 ## Quickstart
 
 Requirements: Linux with BTF (`/sys/kernel/btf/vmlinux`), Docker, kind,
-kubectl, Go ≥1.26, Python ≥3.11, clang (for regenerating the BPF object).
+kubectl, Python ≥3.11. (Go, protoc, and clang are only needed when *changing*
+the code — images build inside Docker, and the generated gRPC stubs and BPF
+object are committed.)
+
+**One command** — builds, deploys, and opens a live dashboard at
+<http://localhost:8000> showing the pipeline, per-stage utilization, node
+telemetry, eBPF flow sRTTs, and a repartition event log, with buttons to
+inject/clear a thermal fault and watch the loop heal:
 
 ```bash
-make proto          # generate Go + Python gRPC stubs
+./run-demo.sh
+```
+
+Or step by step:
+
+```bash
+make proto          # regenerate Go + Python gRPC stubs (optional: generated
+                    # stubs are committed; only needed after editing proto/,
+                    # requires protoc + protoc-gen-go{,-grpc} + grpcio-tools)
 make test           # partitioner unit tests (incl. brute-force cross-check)
 make images         # build worker / nodeagent / controller images
 make cluster-up     # kind cluster: 1 control-plane + 3 workers
