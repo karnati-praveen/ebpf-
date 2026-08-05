@@ -98,10 +98,23 @@ if [[ "$ROLE" == "server" ]]; then
     log "installing k3s as server"
     curl -sfL https://get.k3s.io | $SUDO sh -
   else
-    log "no systemd detected (container environment) -- installing k3s and starting it directly"
-    curl -sfL https://get.k3s.io | \
-      $SUDO env INSTALL_K3S_SKIP_START=true INSTALL_K3S_SKIP_ENABLE=true sh -
-    $SUDO sh -c 'nohup k3s server --write-kubeconfig-mode 644 >/var/log/k3s.log 2>&1 &'
+    log "no systemd detected (container environment) -- installing the k3s binary directly"
+    # get.k3s.io aborts with "Can not find systemd or openrc to use as a
+    # process supervisor" before it installs anything, even with
+    # INSTALL_K3S_SKIP_START. The k3s binary is self-contained, so fetch it
+    # and supervise it ourselves.
+    case "$(uname -m)" in
+      x86_64)        K3S_ASSET="k3s" ;;
+      aarch64|arm64) K3S_ASSET="k3s-arm64" ;;
+      *) die "no prebuilt k3s binary for $(uname -m)" ;;
+    esac
+    $SUDO curl -fL --progress-bar -o /usr/local/bin/k3s \
+      "https://github.com/k3s-io/k3s/releases/latest/download/${K3S_ASSET}" \
+      || die "could not download the k3s binary"
+    $SUDO chmod +x /usr/local/bin/k3s
+    # K3S_EXTRA_ARGS lets an unprivileged container pass --rootless.
+    log "starting k3s (extra args: ${K3S_EXTRA_ARGS:-none})"
+    $SUDO sh -c "nohup /usr/local/bin/k3s server --write-kubeconfig-mode 644 ${K3S_EXTRA_ARGS:-} >/var/log/k3s.log 2>&1 &"
     log "k3s starting in the background (log: /var/log/k3s.log)"
   fi
   log "waiting for k3s to be ready (up to 3 minutes)"
@@ -114,10 +127,22 @@ if [[ "$ROLE" == "server" ]]; then
   k3s needs a privileged container; if this box is an unprivileged container,
   Kubernetes cannot run here -- use the no-Kubernetes path instead:
     ./scripts/run-single-gpu.sh     (see docs/single-gpu.md)"
+  # Rootless k3s keeps its kubeconfig under $HOME instead of /etc/rancher.
   mkdir -p "$HOME/.kube"
-  $SUDO cp /etc/rancher/k3s/k3s.yaml "$HOME/.kube/config"
-  $SUDO chown "$(id -u):$(id -g)" "$HOME/.kube/config"
-  TOKEN=$(${SUDO} cat /var/lib/rancher/k3s/server/node-token)
+  KUBECONFIG_SRC=""
+  for cand in /etc/rancher/k3s/k3s.yaml \
+              "$HOME/.rancher/k3s/server/cred/admin.kubeconfig" \
+              "$HOME/.kube/k3s.yaml"; do
+    if $SUDO test -r "$cand"; then KUBECONFIG_SRC="$cand"; break; fi
+  done
+  if [[ -n "$KUBECONFIG_SRC" ]]; then
+    $SUDO cp "$KUBECONFIG_SRC" "$HOME/.kube/config"
+    $SUDO chown "$(id -u):$(id -g)" "$HOME/.kube/config"
+    log "kubeconfig written to $HOME/.kube/config (from $KUBECONFIG_SRC)"
+  else
+    log "WARNING: no kubeconfig found; use 'k3s kubectl' or set KUBECONFIG by hand"
+  fi
+  TOKEN=$($SUDO cat /var/lib/rancher/k3s/server/node-token 2>/dev/null || echo "<unavailable>")
   SERVER_IP="${SERVER_IP:-$(hostname -I | awk '{print $1}')}"
   # Open the ports agents need, if a firewall is active.
   if command -v ufw >/dev/null && $SUDO ufw status 2>/dev/null | grep -q "Status: active"; then
