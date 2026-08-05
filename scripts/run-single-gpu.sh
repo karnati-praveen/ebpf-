@@ -33,25 +33,59 @@ die() { echo "[single-gpu] ERROR: $*" >&2; exit 1; }
 [[ "$TOTAL_LAYERS" -ge "$SHARDS" ]] || die "TOTAL_LAYERS ($TOTAL_LAYERS) < SHARDS ($SHARDS)"
 
 command -v python3 >/dev/null || die "python3 not found"
+command -v curl >/dev/null || die "curl not found (apt-get install -y curl)"
 
-log "checking python dependencies"
-python3 - <<'EOF' || exit 1
-import importlib.util, sys
-missing = [m for m in ("grpc", "google.protobuf", "numpy")
-           if not importlib.util.find_spec(m)]
-if missing:
-    print(f"[single-gpu] ERROR: missing {missing}; run: "
-          f"pip install grpcio protobuf numpy", file=sys.stderr)
-    sys.exit(1)
-EOF
+# ---- python dependencies --------------------------------------------------
+# Modern Debian/Ubuntu mark the system interpreter "externally managed"
+# (PEP 668), so `pip install` into it fails. Prefer a local venv; fall back to
+# --break-system-packages when python3-venv isn't available.
+PY="${PY:-python3}"
+VENV_DIR="${VENV_DIR:-.venv}"
+
+MODS="grpc google.protobuf numpy"
+PIP_PKGS="grpcio protobuf numpy"
+if [[ "$BACKEND" == "gpt2" ]]; then
+  MODS="$MODS torch transformers"
+  PIP_PKGS="$PIP_PKGS torch transformers"
+fi
+
+have_mods() {
+  "$1" -c "import importlib.util,sys;
+sys.exit(0 if all(importlib.util.find_spec(m) for m in '$MODS'.split()) else 1)" \
+    >/dev/null 2>&1
+}
+
+log "checking python dependencies ($MODS)"
+if have_mods "$PY"; then
+  :
+elif [[ -x "$VENV_DIR/bin/python" ]] && have_mods "$VENV_DIR/bin/python"; then
+  PY="$VENV_DIR/bin/python"
+  log "using existing venv $VENV_DIR"
+elif [[ "${SKIP_INSTALL:-0}" == "1" ]]; then
+  die "dependencies missing and SKIP_INSTALL=1; install manually: pip install $PIP_PKGS"
+else
+  log "installing: $PIP_PKGS"
+  [[ "$BACKEND" == "gpt2" ]] && log "(torch is a large download -- expect several minutes)"
+  if [[ ! -x "$VENV_DIR/bin/python" ]]; then
+    python3 -m venv "$VENV_DIR" 2>/dev/null || true
+  fi
+  if [[ -x "$VENV_DIR/bin/python" ]]; then
+    "$VENV_DIR/bin/pip" install --quiet --upgrade pip
+    # shellcheck disable=SC2086
+    "$VENV_DIR/bin/pip" install --quiet $PIP_PKGS || die "pip install failed in $VENV_DIR"
+    PY="$VENV_DIR/bin/python"
+    log "installed into $VENV_DIR"
+  else
+    log "python3-venv unavailable -- installing with --break-system-packages"
+    # shellcheck disable=SC2086
+    python3 -m pip install --quiet --break-system-packages $PIP_PKGS \
+      || die "could not install dependencies. Try: apt-get install -y python3-venv, then re-run"
+  fi
+  have_mods "$PY" || die "dependencies still missing after install"
+fi
 
 if [[ "$BACKEND" == "gpt2" ]]; then
-  python3 - <<'EOF' || die "install torch + transformers, e.g. pip install torch transformers"
-import importlib.util, sys
-if not importlib.util.find_spec("torch") or not importlib.util.find_spec("transformers"):
-    sys.exit(1)
-EOF
-  python3 - <<'EOF'
+  "$PY" - <<'EOF'
 import torch
 print(f"[single-gpu] torch {torch.__version__}, cuda available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
@@ -84,7 +118,7 @@ for ((i = 0; i < SHARDS; i++)); do
   WORKER_NAME="shard$i" \
   WORKER_DEVICE="${WORKER_DEVICE:-auto}" \
   INITIAL_ASSIGNMENT="${start}:${end}:${TOTAL_LAYERS}:${BACKEND}:${MODEL}" \
-    python3 worker/server.py &
+    "$PY" worker/server.py &
   PIDS+=($!)
   log "shard$i: layers [${start}, ${end}) on port ${port}"
 
@@ -103,7 +137,7 @@ for ((i = 0; i < SHARDS; i++)); do
 done
 
 STATIC_PIPELINE="$stages" HTTP_PORT="$HTTP_PORT" GRPC_PORT="$GRPC_PORT" \
-  python3 worker/router.py &
+  "$PY" worker/router.py &
 PIDS+=($!)
 
 for _ in $(seq 1 60); do
@@ -131,7 +165,7 @@ cat <<EOF
   curl -s localhost:${HTTP_PORT}/pipeline   # the layer split
 
   # dashboard (controller panels stay empty: there is no controller here)
-  ROUTER_PORT=${HTTP_PORT} python3 demo/serve.py    # http://localhost:8000
+  ROUTER_PORT=${HTTP_PORT} ${PY} demo/serve.py    # http://localhost:8000
 
   nvidia-smi                                # should show ${SHARDS} python processes
 
