@@ -107,20 +107,21 @@
   <div class="topbar">
     <span id="conn" class="dot"></span>
     <h1>KubeEdgeInfer — live pipeline</h1>
+    <span id="updated" style="font-size:11px;color:var(--muted)"></span>
     <span id="err"></span>
     <span class="spacer"></span>
     <label style="font-size:12px;color:var(--ink-2)">load
       <input type="checkbox" id="loadToggle" checked></label>
     <select id="faultNode" title="node to overheat"></select>
-    <button id="inject">Inject heat (92°C)</button>
-    <button id="clearFault">Clear fault</button>
+    <button id="inject" title="Pins the node's simulated temperature at 92°C until cleared">Inject heat (92°C)</button>
+    <button id="clearFault" title="Removes the pin; temperature then cools over ~20s and layers rebalance after the cooldown">Clear fault</button>
   </div>
 
   <div class="cards">
     <div class="card"><div class="label">Generation</div><div class="value" id="gen">–</div><div class="sub">repartitions applied</div></div>
     <div class="card"><div class="label">Predicted bottleneck</div><div class="value" id="bneck">–</div><div class="sub">ms / token (DP)</div></div>
-    <div class="card"><div class="label">Tokens / sec</div><div class="value" id="tps">–</div><div class="sub">avg over all requests</div></div>
-    <div class="card"><div class="label">Avg TTFT</div><div class="value" id="ttft">–</div><div class="sub">ms to first token</div></div>
+    <div class="card"><div class="label">Tokens / sec</div><div class="value" id="tps">–</div><div class="sub">last 12s · <span id="tpsAvg">–</span> avg</div></div>
+    <div class="card"><div class="label">TTFT</div><div class="value" id="ttft">–</div><div class="sub">ms, last 12s · <span id="ttftAvg">–</span> avg</div></div>
     <div class="card"><div class="label">Requests</div><div class="value" id="reqs">–</div><div class="sub"><span id="replays">0</span> replays · <span id="errs">0</span> errors</div></div>
   </div>
 
@@ -187,7 +188,28 @@ function attachTip(el, html) {
   el.onmouseleave = () => tooltip.style.display = "none";
 }
 
-async function j(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + ": " + r.status); return r.json(); }
+async function j(url) {
+  const r = await fetch(url, { cache: "no-store" });
+  if (!r.ok) throw new Error(url + ": " + r.status);
+  return r.json();
+}
+
+// Windowed rates: cumulative averages converge and look frozen, so compute
+// tokens/sec and TTFT over the last ~12s of polls instead.
+const samples = [];
+function windowed(metrics) {
+  const now = performance.now();
+  samples.push({ t: now, tokens: metrics.tokens || 0, requests: metrics.requests || 0,
+                 ttft: metrics.ttft_ms_sum || 0 });
+  while (samples.length > 7) samples.shift();
+  const first = samples[0], last = samples[samples.length - 1];
+  const dt = (last.t - first.t) / 1000;
+  const dTok = last.tokens - first.tokens, dReq = last.requests - first.requests;
+  return {
+    tps: dt > 0 ? dTok / dt : null,
+    ttft: dReq > 0 ? (last.ttft - first.ttft) / dReq : null,
+  };
+}
 
 function renderStack(stages) {
   const total = stages.length ? Math.max(...stages.map(s => s.layers[1])) : 0;
@@ -264,40 +286,46 @@ function renderFlows(state) {
 }
 
 async function tick() {
-  try {
-    const [pipeline, stats, metrics, state] = await Promise.all([
-      j("/api/router/pipeline"), j("/api/router/stats"),
-      j("/api/router/metrics"), j("/api/ctrl/state"),
-    ]);
-    $("conn").classList.add("ok");
-    $("err").style.display = "none";
+  // allSettled: one slow/failing endpoint must not freeze the other panels.
+  const [pipeline, stats, metrics, state] = await Promise.allSettled([
+    j("/api/router/pipeline"), j("/api/router/stats"),
+    j("/api/router/metrics"), j("/api/ctrl/state"),
+  ]).then(rs => rs.map(r => r.status === "fulfilled" ? r.value : null));
 
-    $("gen").textContent = state.generation ?? "–";
-    $("bneck").textContent = state.bottleneck_ms ? state.bottleneck_ms.toFixed(0) : "–";
+  const failed = [pipeline, stats, metrics, state].filter(v => v === null).length;
+  $("conn").classList.toggle("ok", failed === 0);
+  const err = $("err");
+  err.style.display = failed ? "inline" : "none";
+  if (failed) err.textContent = `${failed} endpoint(s) unreachable`;
+  else $("updated").textContent = "updated " + new Date().toTimeString().slice(0, 8);
+
+  if (metrics) {
     $("reqs").textContent = metrics.requests ?? 0;
     $("replays").textContent = metrics.repartition_replays ?? 0;
     $("errs").textContent = metrics.errors ?? 0;
-    $("ttft").textContent = metrics.avg_ttft_ms ? metrics.avg_ttft_ms.toFixed(0) : "–";
-    $("tps").textContent = metrics.requests
+    const w = windowed(metrics);
+    $("tps").textContent = w.tps !== null ? w.tps.toFixed(2) : "–";
+    $("ttft").textContent = w.ttft !== null ? w.ttft.toFixed(0) : "–";
+    $("tpsAvg").textContent = metrics.requests
       ? (1000 * (metrics.tokens / metrics.requests) / metrics.avg_duration_ms).toFixed(2) : "–";
-
+    $("ttftAvg").textContent = metrics.avg_ttft_ms ? metrics.avg_ttft_ms.toFixed(0) : "–";
+  }
+  if (state) {
+    $("gen").textContent = state.generation ?? "–";
+    $("bneck").textContent = state.bottleneck_ms ? state.bottleneck_ms.toFixed(0) : "–";
+    if (state.last_error && state.last_error !== lastPhase) logEvent(`✗ controller: ${state.last_error}`);
+    lastPhase = state.last_error;
+    renderNodes(state);
+    renderFlows(state);
+  }
+  if (pipeline) {
     if (lastGen !== null && pipeline.generation !== lastGen)
       logEvent(`↻ repartitioned: gen ${lastGen} → <b>${pipeline.generation}</b>: ` +
         pipeline.stages.map(s => `${s.name.replace(/^keinfer-worker-/, "…")}[${s.layers[0]},${s.layers[1]})`).join(" → "));
     lastGen = pipeline.generation;
-    if (state.last_error && state.last_error !== lastPhase) logEvent(`✗ controller: ${state.last_error}`);
-    lastPhase = state.last_error;
-
     renderStack(pipeline.stages || []);
-    renderBars(stats);
-    renderNodes(state);
-    renderFlows(state);
-  } catch (e) {
-    $("conn").classList.remove("ok");
-    const err = $("err");
-    err.textContent = "unreachable: " + e.message;
-    err.style.display = "inline";
   }
+  if (stats) renderBars(stats);
 }
 
 $("loadToggle").onchange = e =>
@@ -305,12 +333,14 @@ $("loadToggle").onchange = e =>
 $("inject").onclick = async () => {
   const node = $("faultNode").value;
   const r = await j2("/api/fault", { node, temp_c: 92 });
-  logEvent(r.error ? `✗ inject failed: ${r.error}` : `🔥 injected 92°C override on <b>${node}</b>`);
+  logEvent(r.error ? `✗ inject failed: ${r.error}`
+    : `🔥 <b>${node}</b> pinned at 92°C — stays hot until you press “Clear fault”`);
 };
 $("clearFault").onclick = async () => {
   const node = $("faultNode").value;
   const r = await j2("/api/fault", { node, clear: true });
-  logEvent(r.error ? `✗ clear failed: ${r.error}` : `💧 cleared fault on <b>${node}</b>`);
+  logEvent(r.error ? `✗ clear failed: ${r.error}`
+    : `💧 cleared fault on <b>${node}</b> — cooling (~20s), rebalance follows after cooldown`);
 };
 async function j2(url, body) {
   try {
