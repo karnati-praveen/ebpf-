@@ -22,6 +22,15 @@ cd "$(dirname "$0")/.."
 log() { echo "[deploy-real-hardware] $*"; }
 die() { echo "[deploy-real-hardware] ERROR: $*" >&2; exit 1; }
 
+# Root containers (most rented GPU boxes) have no sudo and don't need it.
+if [[ "$(id -u)" -eq 0 ]]; then
+  SUDO=""
+elif command -v sudo >/dev/null 2>&1; then
+  SUDO="sudo"
+else
+  die "not root and no sudo available -- re-run as root"
+fi
+
 command -v kubectl >/dev/null || die "kubectl not found (run scripts/join-node.sh server first)"
 command -v docker  >/dev/null || die "docker not found"
 kubectl get nodes >/dev/null 2>&1 || die "kubectl cannot reach the cluster (is k3s running? is ~/.kube/config set up?)"
@@ -29,7 +38,6 @@ kubectl get nodes >/dev/null 2>&1 || die "kubectl cannot reach the cluster (is k
 SERVER_IP="${SERVER_IP:-$(hostname -I | awk '{print $1}')}"
 [[ -n "$SERVER_IP" ]] || die "could not determine this machine's IP; set SERVER_IP=<ip> explicitly"
 REGISTRY="${SERVER_IP}:5000"
-log "using registry ${REGISTRY} (override with SERVER_IP=<ip> if that is the wrong interface)"
 
 # ---- preflight ------------------------------------------------------------
 # The router/controller require a node carrying the control-plane role label.
@@ -58,10 +66,23 @@ for node in $(kubectl get nodes -l kubeedgeinfer.io/worker=true -o name); do
     log "WARNING: /sys/kernel/btf/vmlinux missing on $n -- eBPF network telemetry will be disabled on it (the control loop still runs on thermal signal)"
 done
 
-# ---- registry -------------------------------------------------------------
-if ! docker ps --format '{{.Names}}' | grep -q '^kubeedgeinfer-registry$'; then
-  log "starting local image registry on :5000"
-  docker run -d --restart=always -p 5000:5000 --name kubeedgeinfer-registry registry:2
+# ---- image distribution strategy ------------------------------------------
+# One node (a single GPU box) needs no registry at all: build locally and
+# import straight into k3s's containerd. That skips the registry container,
+# the registries.yaml edit, and the k3s restart those require.
+TOTAL_NODES=$(kubectl get nodes --no-headers | wc -l)
+if [[ "$TOTAL_NODES" -eq 1 ]]; then
+  SINGLE_NODE=1
+  IMG_PREFIX=""
+  log "single-node cluster: importing images directly into containerd (no registry)"
+else
+  SINGLE_NODE=0
+  IMG_PREFIX="${REGISTRY}/"
+  log "multi-node cluster: distributing via registry ${REGISTRY} (override with SERVER_IP=<ip> if that is the wrong interface)"
+  if ! docker ps --format '{{.Names}}' | grep -q '^kubeedgeinfer-registry$'; then
+    log "starting local image registry on :5000"
+    docker run -d --restart=always -p 5000:5000 --name kubeedgeinfer-registry registry:2
+  fi
 fi
 
 # ---- build ----------------------------------------------------------------
@@ -69,51 +90,57 @@ WITH_GPT2="${WITH_GPT2:-0}"
 WITH_CUDA=0
 [[ "$GPU_NODES" -gt 0 && "$WITH_GPT2" == "1" ]] && WITH_CUDA=1
 log "building images (first run takes a few minutes; WITH_GPT2=${WITH_GPT2} WITH_CUDA=${WITH_CUDA})"
-docker build -t "${REGISTRY}/kubeedgeinfer/worker:dev" \
+docker build -t "${IMG_PREFIX}kubeedgeinfer/worker:dev" \
   --build-arg WITH_GPT2="${WITH_GPT2}" --build-arg WITH_CUDA="${WITH_CUDA}" \
   -f deploy/docker/worker.Dockerfile .
-docker build -t "${REGISTRY}/kubeedgeinfer/controller:dev" -f deploy/docker/controller.Dockerfile .
+docker build -t "${IMG_PREFIX}kubeedgeinfer/controller:dev" -f deploy/docker/controller.Dockerfile .
 if [[ "$GPU_NODES" -gt 0 ]]; then
-  docker build -t "${REGISTRY}/kubeedgeinfer/nodeagent:dev" \
+  docker build -t "${IMG_PREFIX}kubeedgeinfer/nodeagent:dev" \
     --build-arg GO_BUILD_TAGS=gpu -f deploy/docker/nodeagent.Dockerfile .
 else
-  docker build -t "${REGISTRY}/kubeedgeinfer/nodeagent:dev" -f deploy/docker/nodeagent.Dockerfile .
+  docker build -t "${IMG_PREFIX}kubeedgeinfer/nodeagent:dev" -f deploy/docker/nodeagent.Dockerfile .
 fi
 
-log "pushing to ${REGISTRY}"
-docker push "${REGISTRY}/kubeedgeinfer/worker:dev"
-docker push "${REGISTRY}/kubeedgeinfer/controller:dev"
-docker push "${REGISTRY}/kubeedgeinfer/nodeagent:dev"
+# ---- distribute -----------------------------------------------------------
+if [[ "$SINGLE_NODE" -eq 1 ]]; then
+  log "importing images into k3s containerd"
+  for img in worker controller nodeagent; do
+    docker save "kubeedgeinfer/${img}:dev" | $SUDO k3s ctr images import - >/dev/null
+    log "  imported kubeedgeinfer/${img}:dev"
+  done
+else
+  log "pushing to ${REGISTRY}"
+  docker push "${REGISTRY}/kubeedgeinfer/worker:dev"
+  docker push "${REGISTRY}/kubeedgeinfer/controller:dev"
+  docker push "${REGISTRY}/kubeedgeinfer/nodeagent:dev"
 
-# ---- registry trust (k3s containerd) --------------------------------------
-write_registries_yaml() {
-  sudo mkdir -p /etc/rancher/k3s
-  printf 'mirrors:\n  "%s":\n    endpoint:\n      - "http://%s"\n' "$REGISTRY" "$REGISTRY" \
-    | sudo tee /etc/rancher/k3s/registries.yaml >/dev/null
-  sudo systemctl restart k3s 2>/dev/null || sudo systemctl restart k3s-agent 2>/dev/null || true
-}
-log "configuring this node to trust the insecure registry"
-write_registries_yaml
+  write_registries_yaml() {
+    $SUDO mkdir -p /etc/rancher/k3s
+    printf 'mirrors:\n  "%s":\n    endpoint:\n      - "http://%s"\n' "$REGISTRY" "$REGISTRY" \
+      | $SUDO tee /etc/rancher/k3s/registries.yaml >/dev/null
+    $SUDO systemctl restart k3s 2>/dev/null || $SUDO systemctl restart k3s-agent 2>/dev/null || true
+  }
+  log "configuring this node to trust the insecure registry"
+  write_registries_yaml
 
-if [[ "$WORKER_NODES" -gt 1 ]]; then
   cat <<EOF
 
 *** ACTION NEEDED ON EVERY OTHER MACHINE ***
 k3s's containerd must trust the local registry. On each OTHER machine, run:
 
-  sudo mkdir -p /etc/rancher/k3s
+  ${SUDO} mkdir -p /etc/rancher/k3s
   printf 'mirrors:\n  "${REGISTRY}":\n    endpoint:\n      - "http://${REGISTRY}"\n' \\
-    | sudo tee /etc/rancher/k3s/registries.yaml
-  sudo systemctl restart k3s-agent
+    | ${SUDO} tee /etc/rancher/k3s/registries.yaml
+  ${SUDO} systemctl restart k3s-agent
 
 Press Enter once every other machine has done this.
 EOF
   read -r _
-fi
 
-log "waiting for nodes to come back Ready after the restart"
-kubectl wait --for=condition=Ready nodes --all --timeout=180s || \
-  log "WARNING: not all nodes reported Ready; continuing anyway"
+  log "waiting for nodes to come back Ready after the restart"
+  kubectl wait --for=condition=Ready nodes --all --timeout=180s || \
+    log "WARNING: not all nodes reported Ready; continuing anyway"
+fi
 
 # ---- deploy ---------------------------------------------------------------
 log "applying manifests"
@@ -121,12 +148,12 @@ kubectl apply -f deploy/manifests/namespace.yaml
 kubectl apply -f deploy/manifests/crd.yaml
 kubectl apply -f deploy/manifests/rbac.yaml
 
-log "patching image references to ${REGISTRY}"
-sed "s#kubeedgeinfer/worker:dev#${REGISTRY}/kubeedgeinfer/worker:dev#;s#kubeedgeinfer/controller:dev#${REGISTRY}/kubeedgeinfer/controller:dev#" \
+log "applying workloads (image prefix: '${IMG_PREFIX:-none}')"
+sed "s#kubeedgeinfer/worker:dev#${IMG_PREFIX}kubeedgeinfer/worker:dev#;s#kubeedgeinfer/controller:dev#${IMG_PREFIX}kubeedgeinfer/controller:dev#" \
   deploy/manifests/workers.yaml | kubectl apply -f -
-sed "s#kubeedgeinfer/nodeagent:dev#${REGISTRY}/kubeedgeinfer/nodeagent:dev#" \
+sed "s#kubeedgeinfer/nodeagent:dev#${IMG_PREFIX}kubeedgeinfer/nodeagent:dev#" \
   deploy/manifests/nodeagent.yaml | kubectl apply -f -
-sed "s#kubeedgeinfer/controller:dev#${REGISTRY}/kubeedgeinfer/controller:dev#" \
+sed "s#kubeedgeinfer/controller:dev#${IMG_PREFIX}kubeedgeinfer/controller:dev#" \
   deploy/manifests/controller.yaml | kubectl apply -f -
 kubectl apply -f deploy/manifests/pipeline.yaml
 

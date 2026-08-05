@@ -19,12 +19,27 @@ the kind demo (or a second machine, see `two-laptops.md`) for the
 **control-loop** claims. Adding any second machine later turns the network
 and healing rows into "yes".
 
-## 0. Check the driver
+## 0. Check the driver — and whether Kubernetes can run here
 
 ```bash
 nvidia-smi                       # must print your L4
 git clone https://github.com/karnati-praveen/ebpf- && cd ebpf-
 ```
+
+Rented GPU boxes are often **containers**, not VMs, and k3s needs a
+privileged one. Check before you start:
+
+```bash
+[ -d /run/systemd/system ] && echo "systemd: yes" || echo "systemd: no (container)"
+ip link add dummy0 type dummy 2>/dev/null \
+  && { echo "privileged: yes"; ip link del dummy0; } \
+  || echo "privileged: NO -- k3s will not run here"
+```
+
+The scripts handle "no systemd" (they start k3s directly) and running as
+root without `sudo`. But if **privileged is NO**, Kubernetes cannot run on
+that box at all — use the no-Kubernetes fallback at the bottom of this
+document, which still gives you real GPT-2 on the real GPU.
 
 ## 1. Install k3s, detect the GPU, label the node
 
@@ -67,12 +82,14 @@ machine gives a one-stage pipeline with nothing to partition. Swap it for a
 Deployment whose replicas share the L4:
 
 ```bash
-SERVER_IP=$(hostname -I | awk '{print $1}')
 kubectl -n kubeedgeinfer delete ds keinfer-worker --ignore-not-found
-sed "s#kubeedgeinfer/worker:dev#${SERVER_IP}:5000/kubeedgeinfer/worker:dev#" \
-  deploy/manifests/workers-singlenode.yaml | kubectl apply -f -
+kubectl apply -f deploy/manifests/workers-singlenode.yaml
 kubectl -n kubeedgeinfer get pods -w      # 3 shards + router + controller
 ```
+
+(On a single node the deploy script imports images straight into k3s's
+containerd, so the manifests use plain `kubeedgeinfer/*:dev` tags with no
+registry prefix.)
 
 ## 5. Switch to the real model
 
@@ -118,6 +135,30 @@ real thermal movement, raise concurrency (`LOAD_THREADS` in `bench/run.py`)
 and/or run a companion GPU stress job during the fault window. Flat, cool
 curves are still a legitimate real-hardware result — just report them as
 "no throttling observed under this load" rather than implying a dramatic one.
+
+## Fallback: no Kubernetes at all
+
+If the box is an unprivileged container, k3s cannot run. You can still get
+the thing the GPU is actually for — real GPT-2 sharded across a real
+pipeline on the real device:
+
+```bash
+pip install grpcio protobuf numpy torch transformers
+./scripts/run-single-gpu.sh                  # 3 shards, GPT-2, uses the GPU
+```
+
+Then:
+
+```bash
+curl -s -X POST localhost:8080/generate \
+  -d '{"input_ids":[15496,11,616,1438,318],"max_new_tokens":10}'
+nvidia-smi                                   # 3 python processes on the GPU
+```
+
+What you lose without Kubernetes: the controller, and therefore telemetry,
+repartitioning, and healing — the split is fixed at startup. Keep using the
+kind demo (`./run-demo.sh`) for those claims and this box for the
+"real model on real GPU" claim.
 
 ## Troubleshooting
 
