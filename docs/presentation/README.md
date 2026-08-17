@@ -5,16 +5,27 @@ palette — use whichever the venue wants.
 
 | Deck | PowerPoint | LaTeX | Slides |
 |---|---|---|---|
-| Main research talk | `KubeEdgeInfer.pptx` | `kubeedgeinfer.tex` | 15 |
-| Proposed-work code walkthrough | `KubeEdgeInfer-CodeDemo.pptx` | `kubeedgeinfer-code.tex` | 6 |
+| **Simple talk** | `KubeEdgeInfer-Simple.pptx` | `kubeedgeinfer-simple.tex` | 10 |
+| Full talk | `KubeEdgeInfer.pptx` | `kubeedgeinfer.tex` | 15 |
+| Code walkthrough | `KubeEdgeInfer-CodeDemo.pptx` | `kubeedgeinfer-code.tex` | 6 |
+
+**Start with the simple deck.** It is the same talk in ten slides: one idea per
+slide, larger type, a single accent colour, and no slide that needs more than a
+glance. The 15-slide version is the same material with the detail left in — the
+maths, the implementation breakdown, and a second results slide — for a longer
+slot or a reader who wants the full argument. Both quote the same measured
+numbers.
 
 The code walkthrough is deliberately a separate deck: present it only if there
 is time for the live demo.
 
-Main deck contents: title, introduction, literature review (10 papers, all
-2024–2025, over two slides), what past work is missing, the problem, what is
-new, our system (loop / maths / what we built), results, comparison,
-conclusion, references.
+Simple deck contents, one per slide: title, introduction, literature review
+(all 10 papers on one slide), the problem, what is new, how the system works,
+results, comparison, conclusion, references.
+
+The 15-slide deck splits the literature review over two slides and adds a
+research-gap table, the maths and hysteresis rules, an implementation
+breakdown, and a second results slide on what the solver actually decides.
 
 The wording throughout is deliberately plain English — short sentences and
 everyday words — so the talk works for an audience that does not already know

@@ -1,12 +1,13 @@
-# Build the two presentation decks.
+# Build the presentation decks.
 #
-#   make          both PDFs from the LaTeX sources
-#   make pptx     both .pptx decks from the pptxgenjs generators
+#   make          all PDFs from the LaTeX sources
+#   make pptx     all .pptx decks from the pptxgenjs generators
 #
-# The .pptx and .tex decks carry the same content and palette; use whichever
-# your venue wants. Slide-11 numbers in both come from `go run ./bench/dpsim`.
+# Three decks: the simple 10-slide talk, the full 15-slide talk, and the code
+# walkthrough. Each exists as both .pptx and .tex; use whichever your venue
+# wants. The measured numbers in all of them come from `go run ./bench/dpsim`.
 
-TEX := kubeedgeinfer.tex kubeedgeinfer-code.tex
+TEX := kubeedgeinfer-simple.tex kubeedgeinfer.tex kubeedgeinfer-code.tex
 PDF := $(TEX:.tex=.pdf)
 
 .PHONY: all pptx clean
@@ -17,6 +18,7 @@ all: $(PDF)
 	xelatex -interaction=nonstopmode $< >/dev/null   # resolve outlines
 
 pptx:
+	node build_simple.js
 	node build_main.js
 	node build_code.js
 
