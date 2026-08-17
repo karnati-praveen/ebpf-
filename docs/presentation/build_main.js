@@ -78,16 +78,16 @@ function dot(s, x, y, label, color) {
     x: M, y: 1.5, w: 9, h: 0.3, fontFace: BFONT, fontSize: 12, bold: true,
     color: AMBER, charSpacing: 3.4, margin: 0,
   });
-  s.addText("A Closed-Loop, eBPF-Driven Kubernetes Framework for Heterogeneous Distributed LLM Inference", {
+  s.addText("Sharing One Big AI Model Across Small Machines - and Fixing the Split While It Runs", {
     x: M, y: 2.0, w: 8.5, h: 1.9, fontFace: HFONT, fontSize: 30, bold: true,
     color: "FFFFFF", lineSpacing: 36, margin: 0,
   });
-  s.addText("Turning the one-time model split into a continuous, self-correcting decision driven by kernel-level measurements.", {
+  s.addText("Most systems choose how to cut the model once. We keep checking, and change the cut whenever the machines change.", {
     x: M, y: 4.05, w: 8.4, h: 0.8, fontFace: BFONT, fontSize: 15, color: "B9C0CC",
     lineSpacing: 22, margin: 0,
   });
 
-  const chips = ["eBPF / CO-RE", "Kubernetes operator", "Pipeline parallelism", "Consumer edge hardware"];
+  const chips = ["Kernel measuring (eBPF)", "Kubernetes", "Split by layer", "Everyday machines"];
   chips.forEach((c, i) => {
     const x = M + i * 2.14;
     s.addShape(p.ShapeType.roundRect, {
@@ -112,11 +112,11 @@ function dot(s, x, y, label, color) {
 /* ------------------------------------------------ 2. Introduction */
 {
   const s = p.addSlide();
-  head(s, "Introduction", "Edge LLM inference is a moving target");
+  head(s, "Introduction", "The machines keep changing");
   const items = [
-    ["Why split at all", "A 7B+ model does not fit on one consumer device. Pipeline parallelism spreads contiguous layer ranges across several machines, so the split point is the central performance decision."],
-    ["Why the edge is different", "Datacenter schedulers assume stable, homogeneous, well-cooled nodes. An edge cluster is laptops and hobby GPU boxes on WiFi: they thermally throttle, their links wander, and they disappear."],
-    ["What existing frameworks do", "They profile once, solve the placement problem once, and never revisit it. The plan is optimal for the machine state at t = 0 and progressively wrong afterwards."],
+    ["Why we split the model at all", "A big AI model is too large for one laptop or small PC. So we cut it into blocks of layers and give one block to each machine. Where we cut is the most important choice we make."],
+    ["Small machines are not like data centres", "Data centre servers are all the same and stay cool. Our machines are laptops and cheap GPU boxes on WiFi. They get hot and slow down, their network speed wanders, and sometimes they switch off."],
+    ["What other systems do today", "They measure the machines once, pick a cut, and never look again. That cut is right at the start and gets more and more wrong as the machines change."],
   ];
   items.forEach(([t, b], i) => {
     const y = 1.62 + i * 1.62;
@@ -127,62 +127,62 @@ function dot(s, x, y, label, color) {
   });
 
   card(s, 8.62, 1.62, 4.09, 4.62, INK);
-  s.addText("The consequence", {
+  s.addText("What that costs", {
     x: 8.92, y: 1.92, w: 3.5, h: 0.3, fontFace: BFONT, fontSize: 11, bold: true, color: AMBER, charSpacing: 1.6, margin: 0,
   });
   const stats = [
-    ["2.4x", "bottleneck-stage cost inflicted by a single throttled node under a frozen split"],
-    ["4.3x", "when a degraded link and a throttled GPU coincide"],
-    ["0", "requests served once a node dies and nothing re-plans"],
+    ["2.4x", "slower on the busiest machine when one machine gets hot and the cut never changes"],
+    ["4.3x", "slower when a slow network and a hot GPU happen at the same time"],
+    ["0", "answers given after one machine dies, if nothing is re-planned"],
   ];
   stats.forEach(([n, l], i) => {
     const y = 2.36 + i * 1.32;
     s.addText(n, { x: 8.92, y, w: 3.5, h: 0.62, fontFace: HFONT, fontSize: 40, bold: true, color: "FFFFFF", margin: 0 });
     s.addText(l, { x: 8.92, y: y + 0.6, w: 3.5, h: 0.62, fontFace: BFONT, fontSize: 10, color: "9AA3B4", lineSpacing: 13, margin: 0 });
   });
-  foot(s, 2, "Figures from the partitioner-level evaluation on slide 11 (12 layers, 3 stages).");
-  s.addNotes("Frame the problem: the split decision is made once, but the hardware it was made for does not stay still.");
+  foot(s, 2, "Numbers from the test on slide 11 (12 layers, 3 machines).");
+  s.addNotes("Main point: the cut is chosen once, but the machines it was chosen for do not stay the same.");
 }
 
 /* ------------------------------------------------ 3-4. Literature review */
 const papers = [
   ["EdgeShard", "IEEE IoT-J, 2024", "arXiv:2405.14371",
-   "Joint device selection + layer partition by dynamic programming across collaborative edge devices. Up to 50% latency reduction, 2x throughput on Llama2 over 15 physical devices.",
-   "Profiles device speed and bandwidth offline; the DP runs on that static profile."],
+   "Picks which devices to use and where to cut, with an exact solver. Up to 50% less delay and 2x more work done, tested on 15 real devices.",
+   "Measures the devices once, before running. The plan never changes after that."],
   ["Galaxy", "IEEE INFOCOM, 2024", "arXiv:2405.17245",
-   "Hybrid tensor/sequence parallelism for in-situ Transformer inference, with heterogeneity-aware planning and tile-based compute/communication overlap. Up to 2.5x lower latency.",
-   "Planning is a one-shot offline step; no runtime re-planning under drift."],
+   "Splits the work inside each layer instead of by layer, and overlaps computing with sending. Up to 2.5x less delay.",
+   "The plan is made once, before running. Nothing is re-planned while it runs."],
   ["Helix", "ACM ASPLOS, 2025", "arXiv:2406.01566",
-   "Models heterogeneous GPU serving as max-flow on a weighted graph and solves placement + request scheduling jointly by MILP. Up to 3.3x throughput on 24-42 node clusters.",
-   "Datacenter-scale GPUs; MILP is too heavy for a seconds-scale control loop."],
+   "Treats serving on mixed GPUs as a flow problem, and chooses placement and routing together. Up to 3.3x more work done on 24-42 machines.",
+   "Built for data centre GPUs. Its solver is far too slow to re-run every few seconds."],
   ["TPI-LLM", "arXiv, 2024", "arXiv:2410.00531",
-   "Argues tensor parallelism beats pipeline on low-resource devices; sliding-window memory scheduler and star-based allreduce keep 70B-scale weights moving through small RAM.",
-   "Optimises memory and collectives, not adaptation to node degradation."],
+   "Argues that splitting inside layers beats splitting by layer on small devices. Clever memory handling lets 70B models run in small RAM.",
+   "Improves memory use, but does not react when a machine slows down."],
   ["prima.cpp", "arXiv, 2025", "arXiv:2504.08791",
-   "30-70B inference on real home clusters: Halda scheduler co-optimises CPU/GPU workload and device selection; pipelined-ring parallelism hides disk I/O. 5-17x lower TPOT than llama.cpp.",
-   "Scheduling is decided at load time from static device capability."],
+   "Runs 30-70B models on real home machines. Shares work between CPU and GPU and hides slow disk reads. 5-17x faster per token than llama.cpp.",
+   "Decides the plan when loading, from fixed device specs."],
   ["LLM Partitioning at the Edge", "arXiv, 2025", "arXiv:2505.02533",
-   "Partitions the decoder at attention-head granularity, co-locating each head with its K/V cache and migrating heads when memory tightens. Within 15-20% of an exact solver.",
-   "Migration is triggered by memory pressure only - not thermal or network state."],
+   "Cuts the model into much smaller pieces (single attention heads) and moves them when memory runs low. Within 15-20% of the best possible answer.",
+   "Only reacts to memory running low - not to heat or to a slow network."],
   ["Parallax", "arXiv, 2025", "arXiv:2509.26182",
-   "Inference service over a decentralised pool of volunteer, non-uniform machines, addressing placement and routing without a central trusted cluster.",
-   "Decentralised placement, but no kernel-level measurement substrate."],
+   "Serves a model across a pool of volunteer machines of all shapes, with no central cluster in charge.",
+   "Spreads the work out well, but measures nothing inside the kernel."],
   ["Adaptive Layer Splitting (MBRL)", "FITEE, Springer, 2025", "doi:10.1631/FITEE.2400468",
-   "Model-based reinforcement learning chooses the split point for wireless LLM inference as channel quality varies - explicitly an adaptive, not one-shot, formulation.",
-   "Learned policy needs training and gives no optimality guarantee; single split point."],
+   "Learns where to cut, and moves the cut as the wireless signal changes. It does keep adapting, which is rare.",
+   "The policy must be trained first, and cannot promise the best answer. Only one cut point."],
   ["Distributed LLMs & MLLMs Survey", "arXiv, 2025", "arXiv:2503.16585",
-   "Survey of distributed inference across advances, challenges and directions; names dynamic adaptation under heterogeneity as an open problem.",
-   "Confirms the gap this work targets rather than filling it."],
+   "Reviews the whole field, and lists 'adapting to machines that keep changing' as an open problem.",
+   "Confirms the gap we are filling. It does not fill it."],
   ["Agentic OS / sched_ext", "arXiv, 2025", "arXiv:2509.01245",
-   "Custom Linux schedulers loaded at runtime as eBPF programs (sched_ext, Linux 6.12) - evidence that eBPF is becoming a control substrate, not only an observability one.",
-   "Schedules CPU tasks on one host; no notion of a distributed model pipeline."],
+   "Loads custom Linux schedulers as eBPF programs while the system runs. Shows eBPF is now used to control things, not only to watch them.",
+   "Works on one machine's CPU tasks. Nothing about splitting a model across machines."],
 ];
 
 [0, 1].forEach((half) => {
   const s = p.addSlide();
   head(s, `Literature review (${half + 1} of 2)`,
-       half === 0 ? "Partitioning and placement"
-                  : "Adaptation, decentralisation, and eBPF as control");
+       half === 0 ? "How other systems split the model"
+                  : "Adapting, sharing out, and eBPF as a control tool");
   papers.slice(half * 5, half * 5 + 5).forEach((pp, i) => {
     const y = 1.58 + i * 1.06;
     card(s, M, y, W - 2 * M, 0.96, i % 2 === 0 ? MIST : "F7F8FA");
@@ -193,29 +193,29 @@ const papers = [
     s.addShape(p.ShapeType.ellipse, { x: 8.34, y: y + 0.42, w: 0.13, h: 0.13, fill: { color: AMBER }, line: { width: 0 } });
     s.addText(pp[4], { x: 8.58, y: y + 0.13, w: 3.5, h: 0.74, fontFace: BFONT, fontSize: 9.5, color: "6B4A2E", italic: true, lineSpacing: 12, margin: 0 });
   });
-  s.addText("Limitation relevant to this work", {
+  s.addText("What it does not do", {
     x: 8.58, y: 1.31, w: 3.5, h: 0.24, fontFace: BFONT, fontSize: 9, bold: true, color: AMBER, charSpacing: 1.2, margin: 0,
   });
   s.addText("Contribution", {
     x: M + 2.92, y: 1.31, w: 3, h: 0.24, fontFace: BFONT, fontSize: 9, bold: true, color: MUTED, charSpacing: 1.2, margin: 0,
   });
-  foot(s, 3 + half, "All ten works published 2024-2025; full citations on slide 15.");
-  s.addNotes("Each row: what the paper contributes, and the specific limitation KubeEdgeInfer addresses.");
+  foot(s, 3 + half, "All ten papers are from 2024-2025. Full list on slide 15.");
+  s.addNotes("Each row: what the paper does, and the gap we fill.");
 });
 
 /* ------------------------------------------------ 5. Research gap */
 {
   const s = p.addSlide();
-  head(s, "Synthesis", "Where the literature stops");
+  head(s, "What is missing", "What past work is missing");
   const rows = [
-    ["Capability", "Datacenter serving\n(Helix)", "Edge partitioning\n(EdgeShard, Galaxy, prima.cpp)", "Adaptive splitting\n(MBRL, head-level)", "KubeEdgeInfer"],
-    ["Heterogeneity-aware placement", "yes", "yes", "yes", "yes"],
-    ["Exact optimum for a snapshot", "MILP", "DP", "no (learned / heuristic)", "DP, unit-tested vs brute force"],
-    ["Re-plans while serving", "request routing only", "no", "yes", "yes, every 2 s"],
-    ["Kernel-measured network input", "no", "user-space probes", "channel estimate", "eBPF tp_btf/tcp_probe sRTT"],
-    ["Thermal / throttle input", "no", "no", "no", "NVML or /sys/class/thermal"],
-    ["Survives node loss", "replication", "no", "no", "heartbeat-forced repartition"],
-    ["Applies without restart", "n/a", "no", "no", "gRPC hot reassign, generation-fenced"],
+    ["Capability", "Data centre serving\n(Helix)", "Splitting on small devices\n(EdgeShard, Galaxy, prima.cpp)", "Learned splitting\n(MBRL, head-level)", "KubeEdgeInfer"],
+    ["Handles machines of different speed", "yes", "yes", "yes", "yes"],
+    ["Finds the best cut for the moment", "yes, heavy solver", "yes", "no (learned or rule of thumb)", "yes, checked against brute force"],
+    ["Changes the cut while running", "only where requests go", "no", "yes", "yes, every 2 seconds"],
+    ["Measures the network in the kernel", "no", "app-level timers", "signal estimate", "yes, reads TCP directly"],
+    ["Knows when a machine gets hot", "no", "no", "no", "yes, reads GPU and CPU heat"],
+    ["Survives a machine dying", "by keeping copies", "no", "no", "yes, re-cuts in 3 seconds"],
+    ["Changes without restarting", "not applicable", "no", "no", "yes, moves layers live"],
   ];
   const colX = [M, 4.05, 5.75, 8.45, 10.5];
   const colW = [3.35, 1.62, 2.6, 1.98, 2.2];
@@ -242,25 +242,25 @@ const papers = [
     x: 10.4, y: 1.6, w: 2.31, h: 4.98, rectRadius: 0.05,
     fill: { type: "solid", color: TEAL, transparency: 92 }, line: { color: TEAL, width: 1.25 },
   });
-  foot(s, 5, "No prior system closes the loop from kernel-level measurement back to the layer split while inference is running.");
-  s.addNotes("This is the gap slide: every column has one of the four capabilities, none has all of them together.");
+  foot(s, 5, "No earlier system measures the machines in the kernel and feeds that straight back into the cut, while the model is still answering.");
+  s.addNotes("The gap slide: each column has some of what is needed. None has all of it together.");
 }
 
 /* ------------------------------------------------ 6. Problem statement */
 {
   const s = p.addSlide(); darkBg(s);
   s.addShape(p.ShapeType.ellipse, { x: 10.4, y: -1.2, w: 4.6, h: 4.6, fill: { color: INK2 }, line: { width: 0 } });
-  s.addText("PROBLEM STATEMENT", {
+  s.addText("THE PROBLEM", {
     x: M, y: 0.75, w: 8, h: 0.3, fontFace: BFONT, fontSize: 11.5, bold: true, color: AMBER, charSpacing: 2.6, margin: 0,
   });
-  s.addText("Given N transformer layers and K heterogeneous edge nodes whose compute speed, link latency and liveness all vary during inference, continuously maintain a contiguous layer assignment that minimises the bottleneck stage - without restarting the pipeline.",
+  s.addText("We have N model layers and K machines of different speeds. While the model is answering, their speed, their network delay, and whether they are even alive all keep changing. Keep choosing a cut that makes the slowest machine as fast as possible - and never restart anything to do it.",
     { x: M, y: 1.25, w: 8.5, h: 2.0, fontFace: HFONT, fontSize: 21, color: "FFFFFF", lineSpacing: 30, margin: 0 });
 
   const subs = [
-    ["Measure", "Obtain per-flow latency and per-node thermal state cheaply and without instrumenting the inference code."],
-    ["Decide", "Solve the placement exactly at telemetry rate, and suppress oscillation when the measurement is merely noisy."],
-    ["Act", "Move layer ranges between live workers without dropping in-flight requests or restarting pods."],
-    ["Heal", "Detect node loss and redistribute its layers across the survivors automatically."],
+    ["Measure", "Measure network delay and machine heat cheaply, without changing the model code."],
+    ["Decide", "Work out the best cut fast enough to redo it often, without flip-flopping when a reading is just noisy."],
+    ["Act", "Move layers between running machines without losing requests or restarting anything."],
+    ["Heal", "Notice when a machine dies and share its layers among the machines that are left."],
   ];
   subs.forEach(([t, b], i) => {
     const y = 3.55 + Math.floor(i / 2) * 1.5;
@@ -271,23 +271,23 @@ const papers = [
   });
 
   s.addShape(p.ShapeType.roundRect, { x: 9.5, y: 3.35, w: 3.2, h: 3.0, rectRadius: 0.08, fill: { color: INK2 }, line: { color: "3A4356", width: 1 } });
-  s.addText("Constraint", { x: 9.8, y: 3.6, w: 2.6, h: 0.28, fontFace: BFONT, fontSize: 10.5, bold: true, color: AMBER, charSpacing: 1.4, margin: 0 });
-  s.addText("Commodity Linux only.\n\nNo datacenter interconnect, no vendor telemetry agent, no change to the model code, and no assumption that a node stays alive.",
+  s.addText("The rules we set ourselves", { x: 9.8, y: 3.6, w: 2.6, h: 0.28, fontFace: BFONT, fontSize: 10.5, bold: true, color: AMBER, charSpacing: 1.4, margin: 0 });
+  s.addText("Ordinary Linux only.\n\nNo special data centre network, no vendor software, no changes to the model code, and no assuming a machine stays alive.",
     { x: 9.8, y: 3.95, w: 2.6, h: 2.2, fontFace: BFONT, fontSize: 11, color: "C2C9D6", lineSpacing: 16, margin: 0 });
   foot(s, 6, "");
-  s.addNotes("State the problem formally, then break it into the four sub-problems that map onto the four loop stages.");
+  s.addNotes("State the problem, then break it into four jobs - one for each stage of the loop.");
 }
 
 /* ------------------------------------------------ 7. Contributions */
 {
   const s = p.addSlide();
-  head(s, "Contributions", "What is new here");
+  head(s, "What is new", "What is new in our work");
   const cs = [
-    ["Kernel telemetry as a scheduling input", "CO-RE eBPF programs (tp_btf/tcp_probe, fentry/tcp_sendmsg) feed per-flow smoothed RTT straight into a model-placement decision. Prior edge-LLM systems use user-space probes or offline profiles; none drives the partitioner from the kernel's own TCP state.", true],
-    ["A closed loop, not a one-shot plan", "WATCH-DECIDE-ACT-HEAL runs every 2 s for the lifetime of the deployment. The split is a continuously maintained control variable rather than a deployment-time constant.", true],
-    ["Hysteresis-gated exact optimisation", "The O(N^2 K) DP is exact for each snapshot; a 15% improvement threshold plus a 30 s cooldown converts it into a stable controller. One gate handles thermal, network and failure triggers alike.", true],
-    ["Restart-free, generation-fenced reassignment", "Layer ranges move over gRPC while requests are in flight. Every assignment carries a generation; workers reject stale forwards and the stateless design makes context replay trivially correct.", false],
-    ["An ablation that isolates continuous telemetry", "A profile-once mode reuses the same DP and apply path but freezes its inputs, approximating offline-profiling systems - so the measured gain is attributable to live telemetry, not to a better solver.", false],
+    ["We measure the network inside the kernel", "Small eBPF programs read the round-trip time Linux already tracks for every connection, and we feed that straight into the cut decision. Other systems guess with app-level timers, or use readings taken before the run.", true],
+    ["We never stop deciding", "Watch, decide, act, heal - every 2 seconds, for as long as the system runs. The cut is something we keep adjusting, not a setting we pick once.", true],
+    ["We add brakes so it does not flip-flop", "The solver gives the exact best cut every time. We only apply a new one if it is at least 15% better and 30 seconds have passed. The same brake handles heat, network and machine failure.", true],
+    ["We move layers without a restart", "Layers move between machines while requests are still in flight. Each plan carries a version number, machines refuse messages from an old plan, and because machines keep no state we can simply replay the request.", false],
+    ["We show the gain comes from live measuring", "We built a 'measure once' mode that uses the same solver and the same code, but freezes what it measured. So the improvement we report comes from measuring all the time, not from a better solver.", false],
   ];
   cs.forEach(([t, b, novel], i) => {
     const x = i < 3 ? M : M + 6.35;
@@ -298,22 +298,22 @@ const papers = [
     s.addText(b, { x: x + 0.76, y: y + 0.55, w: 5.15, h: 0.82, fontFace: BFONT, fontSize: 9.5, color: "3E4658", lineSpacing: 12, margin: 0 });
   });
   s.addShape(p.ShapeType.roundRect, { x: M + 6.35, y: 4.82, w: 6.1, h: 1.44, rectRadius: 0.07, fill: { color: INK }, line: { width: 0 }, shadow: shadow() });
-  s.addText("Core novelty claim", { x: M + 6.63, y: 5.0, w: 5.4, h: 0.3, fontFace: BFONT, fontSize: 10.5, bold: true, color: AMBER, charSpacing: 1.4, margin: 0 });
-  s.addText("Not a better partitioning algorithm - the same classical DP the literature already uses, placed inside a kernel-measured feedback loop that never stops running.",
+  s.addText("The main new idea", { x: M + 6.63, y: 5.0, w: 5.4, h: 0.3, fontFace: BFONT, fontSize: 10.5, bold: true, color: AMBER, charSpacing: 1.4, margin: 0 });
+  s.addText("We did not invent a new splitting algorithm. We took the standard one and put it inside a loop that keeps measuring the real machines and never stops.",
     { x: M + 6.63, y: 5.34, w: 5.5, h: 0.85, fontFace: BFONT, fontSize: 11.5, color: "D3D9E2", lineSpacing: 15.5, margin: 0 });
-  foot(s, 7, "Amber-numbered items are the primary novelty claims.");
-  s.addNotes("Be explicit that the DP itself is classical - the novelty is the loop it sits inside and the telemetry that feeds it.");
+  foot(s, 7, "The orange-numbered items are the main new ideas.");
+  s.addNotes("Say clearly that the algorithm is standard. What is new is the loop around it and the live data feeding it.");
 }
 
 /* ------------------------------------------------ 8. Architecture */
 {
   const s = p.addSlide();
-  head(s, "Proposed work", "The closed loop");
+  head(s, "Our system", "How the loop works");
   const stages = [
-    ["WATCH", "eBPF + NVML", "tp_btf/tcp_probe gives per-flow sRTT and fentry/tcp_sendmsg gives throughput. GPU temperature and derated speed come from NVML or /sys/class/thermal.", "internal/ebpf + cmd/nodeagent", AMBER],
-    ["DECIDE", "linear partition DP", "Exact O(N^2 K) minimisation of the bottleneck stage cost, gated by a 15% improvement threshold and a 30 s cooldown.", "internal/partition", TEAL],
-    ["ACT", "K8s controller", "Hot-reassigns layer ranges over gRPC with no pod restart, recording state in the InferencePipeline CRD with a monotonic generation.", "cmd/controller", AMBER],
-    ["HEAL", "heartbeat watchdog", "A 3 s stale heartbeat marks a node gone and forces an immediate repartition across the surviving workers, bypassing hysteresis.", "internal/controller", TEAL],
+    ["WATCH", "measure", "Two small kernel programs report the delay and speed of every connection. Another reads GPU or CPU temperature and how much the machine has slowed down.", "internal/ebpf + cmd/nodeagent", AMBER],
+    ["DECIDE", "choose", "Works out the cut that makes the slowest machine as fast as possible. Applied only if it is 15% better and 30 seconds have passed.", "internal/partition", TEAL],
+    ["ACT", "apply", "Sends the new layer ranges to the machines with no restart, and saves the plan in Kubernetes with a version number.", "cmd/controller", AMBER],
+    ["HEAL", "recover", "If a machine stops reporting for 3 seconds, treat it as dead and re-cut across the machines left, ignoring the brakes.", "internal/controller", TEAL],
   ];
   stages.forEach(([t, sub, body, path, col], i) => {
     const x = M + i * 3.08;
@@ -331,45 +331,45 @@ const papers = [
   });
   // return path
   s.addShape(p.ShapeType.line, { x: M + 0.6, y: 5.42, w: 11.5, h: 0, line: { color: "B6BDCA", width: 1.25, dashType: "dash", endArrowType: "triangle" }, flipH: true });
-  s.addText("loop repeats every 2 s", {
+  s.addText("the loop repeats every 2 seconds", {
     x: M, y: 5.5, w: 12.1, h: 0.3, fontFace: BFONT, fontSize: 10.5, color: MUTED, italic: true, align: "center", margin: 0,
   });
   s.addShape(p.ShapeType.roundRect, { x: M, y: 5.95, w: W - 2 * M, h: 0.72, rectRadius: 0.06, fill: { color: MIST }, line: { width: 0 } });
-  s.addText("Consistency: every assignment carries a generation. Workers reject stale-generation forwards; the router refetches the layout and replays the accumulated context. Workers are stateless, so replay is trivially correct.",
+  s.addText("Staying correct: every plan carries a version number. Machines refuse messages from an old plan. The router then fetches the new plan and replays the request from the start. Machines keep no state, so replaying is always safe.",
     { x: M + 0.28, y: 6.05, w: 11.6, h: 0.55, fontFace: BFONT, fontSize: 10.5, color: "3E4658", valign: "middle", lineSpacing: 14, margin: 0 });
   foot(s, 8, "");
-  s.addNotes("Walk the loop left to right, then emphasise that the dashed return arrow is what the related work is missing.");
+  s.addNotes("Walk left to right, then point at the dashed arrow going back - that is what the other systems do not have.");
 }
 
 /* ------------------------------------------------ 9. Formulation */
 {
   const s = p.addSlide();
-  head(s, "Proposed work", "Formulation and stability");
+  head(s, "Our system", "The maths, and how we keep it steady");
   card(s, M, 1.58, 6.1, 2.5);
-  s.addText("Objective", { x: M + 0.3, y: 1.78, w: 5, h: 0.3, fontFace: BFONT, fontSize: 12.5, bold: true, color: AMBER, margin: 0 });
-  s.addText("minimise  max   cost(i)\n           i in 1..K", {
+  s.addText("The goal", { x: M + 0.3, y: 1.78, w: 5, h: 0.3, fontFace: BFONT, fontSize: 12.5, bold: true, color: AMBER, margin: 0 });
+  s.addText("make the slowest machine\nas fast as possible", {
     x: M + 0.3, y: 2.12, w: 5.5, h: 0.62, fontFace: MFONT, fontSize: 13, bold: true, color: INK, lineSpacing: 16, margin: 0 });
-  s.addText("cost(i) = layers(i) x perLayerMs / speed(i)  +  linkMs(i-1)", {
-    x: M + 0.3, y: 2.82, w: 5.6, h: 0.3, fontFace: MFONT, fontSize: 10, color: "3E4658", margin: 0 });
-  s.addText("subject to contiguous, non-overlapping ranges covering all N layers. An empty stage costs nothing - so the DP may bypass a worker entirely when its link has degraded past the value of its compute.",
+  s.addText("machine time  =  layers x time per layer / speed  +  delay", {
+    x: M + 0.3, y: 2.82, w: 5.6, h: 0.3, fontFace: MFONT, fontSize: 9, color: "3E4658", margin: 0 });
+  s.addText("Each machine gets a block of layers next to each other, and together they cover all N layers. A machine given zero layers costs nothing at all - so the solver can skip a machine whose network has become too slow to be worth using.",
     { x: M + 0.3, y: 3.18, w: 5.55, h: 0.78, fontFace: BFONT, fontSize: 10.5, color: "3E4658", lineSpacing: 14, margin: 0 });
 
   card(s, M, 4.24, 6.1, 2.0);
-  s.addText("Solution", { x: M + 0.3, y: 4.42, w: 5, h: 0.3, fontFace: BFONT, fontSize: 12.5, bold: true, color: TEAL, margin: 0 });
-  s.addText("f[j][w] = min over split of  max( f[split][w-1], cost(w, j - split) )", {
-    x: M + 0.3, y: 4.76, w: 5.6, h: 0.3, fontFace: MFONT, fontSize: 9.5, color: INK, margin: 0 });
-  s.addText("The classical linear-partition recurrence: minimal bottleneck for the first j layers over the first w workers. O(N^2 K) - about 1.7k operations for N=12, K=3, so re-solving at 0.5 Hz is free. Verified against brute force on 200 randomised instances.",
+  s.addText("How we solve it", { x: M + 0.3, y: 4.42, w: 5, h: 0.3, fontFace: BFONT, fontSize: 12.5, bold: true, color: TEAL, margin: 0 });
+  s.addText("best[j][w]  =  best possible for the first j layers on w machines", {
+    x: M + 0.3, y: 4.76, w: 5.6, h: 0.3, fontFace: MFONT, fontSize: 9, color: INK, margin: 0 });
+  s.addText("This is a classic problem with a known exact answer. For 12 layers and 3 machines it takes about 1,700 steps, so redoing it every 2 seconds costs nothing. We checked it against brute force on 200 random cases.",
     { x: M + 0.3, y: 5.12, w: 5.55, h: 1.0, fontFace: BFONT, fontSize: 10.5, color: "3E4658", lineSpacing: 14, margin: 0 });
 
   card(s, 7.05, 1.58, 5.66, 4.66, INK);
-  s.addText("Why a bare optimiser is not a controller", {
+  s.addText("Why a solver alone is not enough", {
     x: 7.35, y: 1.82, w: 5.0, h: 0.3, fontFace: BFONT, fontSize: 12.5, bold: true, color: AMBER, margin: 0 });
-  s.addText("Telemetry is noisy. Re-applying the argmin on every 2 s tick would thrash the pipeline for sub-millisecond gains. Three rules turn the optimiser into a stable controller:",
+  s.addText("Measurements jump around. If we applied the best answer every 2 seconds, the system would keep moving layers for tiny gains. Three rules fix that:",
     { x: 7.35, y: 2.2, w: 5.06, h: 0.85, fontFace: BFONT, fontSize: 10.5, color: "AEB6C4", lineSpacing: 14, margin: 0 });
   const rules = [
-    ["Improvement threshold", "Apply only if the new split beats the current one, re-evaluated under current telemetry, by 15%."],
-    ["Cooldown", "At most one change per 30 s, so a transient spike cannot start an oscillation."],
-    ["Membership override", "A changed worker set bypasses both gates and repartitions immediately - correctness beats stability."],
+    ["Must be clearly better", "Only change if the new cut beats the current one, measured right now, by 15%."],
+    ["Wait between changes", "At most one change every 30 seconds, so a short spike cannot start a wobble."],
+    ["Except when a machine dies", "If the set of machines changes, ignore both rules and re-cut at once. Being correct matters more than being steady."],
   ];
   rules.forEach(([t, b], i) => {
     const y = 3.2 + i * 1.02;
@@ -377,21 +377,21 @@ const papers = [
     s.addText(t, { x: 7.73, y, w: 4.6, h: 0.28, fontFace: BFONT, fontSize: 11.5, bold: true, color: "FFFFFF", margin: 0 });
     s.addText(b, { x: 7.73, y: y + 0.3, w: 4.65, h: 0.62, fontFace: BFONT, fontSize: 10, color: "9AA3B4", lineSpacing: 13, margin: 0 });
   });
-  s.addText("Both thresholds are tunable live via IMPROVEMENT_FRAC and COOLDOWN_S.", {
-    x: 7.35, y: 6.3, w: 5.06, h: 0.28, fontFace: MFONT, fontSize: 8, color: "7C8698", margin: 0 });
+  s.addText("Both numbers can be changed while the system is running.", {
+    x: 7.05, y: 6.34, w: 5.06, h: 0.28, fontFace: BFONT, fontSize: 9.5, italic: true, color: MUTED, margin: 0 });
   foot(s, 9, "");
-  s.addNotes("The DP is textbook. The contribution on this slide is the hysteresis that makes re-solving safe to do continuously.");
+  s.addNotes("The solver is textbook. What matters on this slide is the brakes that make it safe to redo it constantly.");
 }
 
-/* ------------------------------------------------ 10. Implementation */
+/* ------------------------------------------------ 10. What we built */
 {
   const s = p.addSlide();
-  head(s, "Proposed work", "Implementation");
+  head(s, "Our system", "What we built");
   const comps = [
-    ["Node agent", "Go + C (CO-RE BPF)", "Privileged DaemonSet. Attaches tp_btf/tcp_probe and fentry/tcp_sendmsg, filtered to worker ports, and exports per-flow sRTT plus GPU state through a pluggable gpu.Reader (simulated / cputherm / nvml).", AMBER],
-    ["Controller", "Go, controller-runtime", "Aggregates telemetry, runs the Decider, writes assignments into the InferencePipeline CRD and pushes them to workers over gRPC. Watchdog forces repartition on a 3 s stale heartbeat.", TEAL],
-    ["Workers + router", "Python", "Stateless shard servers with pluggable sim and gpt2 backends, on WORKER_DEVICE=auto|cuda|cpu. The router drives stages hub-and-spoke and replays context on a generation mismatch.", AMBER],
-    ["Benchmark harness", "Python", "Five fault scenarios x three modes, measuring bubble time, tokens/s and TTFT; plus a hysteresis sweep and a predicted-vs-measured fidelity check.", TEAL],
+    ["Agent on each machine", "Go and C", "Runs on every machine with kernel access. Loads the eBPF programs, watches only the ports we care about, and reports network delay plus GPU state. GPU readings can be simulated, taken from CPU heat sensors, or read from a real NVIDIA card.", AMBER],
+    ["Central controller", "Go", "Collects all the readings, runs the decider, saves the plan in Kubernetes and sends it to the machines. A watchdog forces a re-cut if a machine goes quiet for 3 seconds.", TEAL],
+    ["Workers and router", "Python", "Each worker holds a block of layers and keeps no state. Two backends: a fake one for testing, and real GPT-2. Runs on CPU or GPU. The router sends each request through the machines in order.", AMBER],
+    ["Test harness", "Python", "Five fault situations x three modes. Measures idle time, tokens per second, and time to the first word. Also tries different brake settings.", TEAL],
   ];
   comps.forEach(([t, tech, b, col], i) => {
     const y = 1.58 + i * 1.18;
@@ -402,13 +402,13 @@ const papers = [
     s.addText(b, { x: M + 3.2, y: y + 0.14, w: 4.9, h: 0.8, fontFace: BFONT, fontSize: 9.5, color: "3E4658", lineSpacing: 12.5, margin: 0 });
   });
   card(s, 8.5, 1.58, 4.21, 4.64, INK);
-  s.addText("Deployment reality", { x: 8.8, y: 1.82, w: 3.6, h: 0.3, fontFace: BFONT, fontSize: 12, bold: true, color: AMBER, margin: 0 });
+  s.addText("What is real, what is not", { x: 8.8, y: 1.82, w: 3.6, h: 0.3, fontFace: BFONT, fontSize: 12, bold: true, color: AMBER, margin: 0 });
   const facts = [
-    "eBPF is real, not simulated - CO-RE against the host BTF, loaded with cilium/ebpf.",
-    "kind gives one host: real eBPF, loopback network, simulated GPU.",
-    "k3s scripts turn laptops and GPU boxes on a LAN into the same cluster with zero YAML editing.",
-    "GPU_MODE=nvml on NVIDIA nodes; GPU_MODE=cputherm reads /sys/class/thermal on GPU-less laptops.",
-    "Distributed GPT-2 output is token-identical to single-process HuggingFace.",
+    "The eBPF part is real, not simulated. It is built against the running kernel and loaded into it.",
+    "On a single test host you get real eBPF, but a fake network and a fake GPU.",
+    "Our scripts turn a few laptops and GPU boxes on the same network into one cluster, with no config editing.",
+    "Real NVIDIA readings on GPU machines; real CPU heat readings on laptops with no GPU.",
+    "The split-up GPT-2 gives exactly the same text as running it on one machine.",
   ];
   facts.forEach((f, i) => {
     const y = 2.28 + i * 0.79;
@@ -416,23 +416,23 @@ const papers = [
     s.addText(f, { x: 9.04, y, w: 3.42, h: 0.72, fontFace: BFONT, fontSize: 9.5, color: "AEB6C4", lineSpacing: 12.5, margin: 0 });
   });
   foot(s, 10, "");
-  s.addNotes("Emphasise that the eBPF layer is genuinely loaded into the kernel; only the GPU reader has a simulated option.");
+  s.addNotes("Stress that eBPF really runs in the kernel. Only the GPU reading has a simulated option.");
 }
 
 /* ------------------------------------------------ 11. Results: chart */
 {
   const s = p.addSlide();
-  head(s, "Results", "Bottleneck-stage cost under injected faults");
-  const cats = ["Baseline", "Thermal\nthrottle", "Network\ndegradation", "Thermal +\nnetwork"];
+  head(s, "Results", "How slow the busiest machine gets");
+  const cats = ["Nothing\nwrong", "Machine\ngets hot", "Network\ngets slow", "Both at\nonce"];
   s.addChart(p.ChartType.bar, [
-    { name: "KubeEdgeInfer (live telemetry)", labels: cats, values: [42, 52, 62, 62] },
-    { name: "Profile-once (offline profiling)", labels: cats, values: [42, 102, 122, 182] },
-    { name: "Static equal split", labels: cats, values: [42, 102, 122, 182] },
+    { name: "Ours - measures all the time", labels: cats, values: [42, 52, 62, 62] },
+    { name: "Measure once, then freeze", labels: cats, values: [42, 102, 122, 182] },
+    { name: "Fixed equal cut", labels: cats, values: [42, 102, 122, 182] },
   ], {
     x: M, y: 1.5, w: 7.75, h: 4.95,
     barDir: "col", barGapWidthPct: 55,
     chartColors: [TEAL, AMBER, "B6BDCA"],
-    showTitle: true, title: "Per-token bottleneck cost (ms) - lower is better",
+    showTitle: true, title: "Time on the slowest machine, per word (ms) - lower is better",
     titleFontFace: BFONT, titleFontSize: 12, titleColor: INK,
     showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 8.5,
     dataLabelColor: "4A5264", dataLabelFontFace: BFONT,
@@ -442,7 +442,7 @@ const papers = [
     valGridLine: { color: "E8EAEF", size: 1 }, catGridLine: { style: "none" },
     valAxisMaxVal: 200,
   });
-  const gains = [["49%", "vs both baselines\nunder thermal throttle"], ["49%", "vs both baselines\nunder link degradation"], ["66%", "vs both baselines\nwhen the two coincide"]];
+  const gains = [["49%", "better than both\nwhen a machine gets hot"], ["49%", "better than both\nwhen the network slows"], ["66%", "better than both\nwhen both happen at once"]];
   gains.forEach(([n, l], i) => {
     const y = 1.72 + i * 1.36;
     card(s, 8.55, y, 4.16, 1.2, i === 2 ? INK : MIST);
@@ -450,21 +450,21 @@ const papers = [
     s.addText(l, { x: 10.3, y: y + 0.24, w: 2.2, h: 0.75, fontFace: BFONT, fontSize: 10, color: i === 2 ? "AEB6C4" : "3E4658", lineSpacing: 13, margin: 0 });
   });
   card(s, 8.55, 5.8, 4.16, 0.9, "FBEDE2");
-  s.addText("Node failure: the static split is undefined over a worker set that no longer exists - the pipeline stops. KubeEdgeInfer heals to 62 ms.",
+  s.addText("When a machine dies, the fixed cut has no plan for the machines left, so everything stops. Ours re-cuts and keeps going at 62 ms.",
     { x: 8.82, y: 5.9, w: 3.65, h: 0.72, fontFace: BFONT, fontSize: 9.5, color: "7A4A22", valign: "middle", lineSpacing: 12, margin: 0 });
-  foot(s, 11, "Partitioner-level evaluation via bench/dpsim (N=12 layers, K=3 stages, 10 ms/layer, 0.4x throttle, 80 ms netem).");
-  s.addNotes("These are the DP's own objective values, reproducible with `go run ./bench/dpsim`. Profile-once matches static here because the pre-fault cluster is homogeneous - it differs only in that it still heals on node loss.");
+  foot(s, 11, "Measured with bench/dpsim: 12 layers, 3 machines, 10 ms per layer, one machine slowed to 0.4x, 80 ms network delay.");
+  s.addNotes("These are the solver's own numbers, reproducible with `go run ./bench/dpsim`. Measure-once matches the fixed cut here because all machines start equal - the difference is that it still recovers when a machine dies.");
 }
 
 /* ------------------------------------------------ 12. Results: behaviour */
 {
   const s = p.addSlide();
-  head(s, "Results", "What the partitioner actually does");
+  head(s, "Results", "What the solver actually decides");
   const splits = [
-    ["Baseline", "3 healthy stages", ["0-4", "4-8", "8-12"], "42 ms", TEAL],
-    ["Thermal throttle on stage 2", "speed 1.0 -> 0.4", ["0-5", "5-7", "7-12"], "52 ms", AMBER],
-    ["80 ms delay on the hop into stage 2", "link 2 -> 82 ms", ["0-6", "empty", "6-12"], "62 ms", AMBER],
-    ["Stage 3 lost", "3 workers -> 2", ["0-6", "6-12", ""], "62 ms", AMBER],
+    ["All machines healthy", "3 machines, all fine", ["0-4", "4-8", "8-12"], "42 ms", TEAL],
+    ["Machine 2 gets hot", "speed drops to 0.4x", ["0-5", "5-7", "7-12"], "52 ms", AMBER],
+    ["Network to machine 2 slows down", "delay 2 ms -> 82 ms", ["0-6", "empty", "6-12"], "62 ms", AMBER],
+    ["Machine 3 dies", "3 machines -> 2", ["0-6", "6-12", ""], "62 ms", AMBER],
   ];
   splits.forEach(([t, sub, ranges, cost, col], i) => {
     const y = 1.55 + i * 1.16;
@@ -486,18 +486,18 @@ const papers = [
     });
     s.addText(cost, { x: M + 6.6, y: y + 0.3, w: 0.95, h: 0.42, fontFace: HFONT, fontSize: 15, bold: true, color: col, align: "right", valign: "middle", margin: 0 });
   });
-  s.addText("layer ranges assigned to stage 1 / 2 / 3", {
+  s.addText("layers given to machine 1 / 2 / 3", {
     x: M + 3.75, y: 1.26, w: 3.2, h: 0.24, fontFace: BFONT, fontSize: 8.5, color: MUTED, margin: 0 });
 
   card(s, 8.55, 1.55, 4.16, 2.34, INK);
-  s.addText("Stage bypass", { x: 8.85, y: 1.78, w: 3.5, h: 0.3, fontFace: BFONT, fontSize: 12.5, bold: true, color: AMBER, margin: 0 });
-  s.addText("Under an 80 ms link the DP assigns stage 2 an empty range. Because an empty stage costs nothing - not even its hop - the router skips it entirely, and the two remaining nodes absorb all 12 layers. The optimiser discovers node exclusion without any special-case rule for it.",
+  s.addText("It can skip a machine", { x: 8.85, y: 1.78, w: 3.5, h: 0.3, fontFace: BFONT, fontSize: 12.5, bold: true, color: AMBER, margin: 0 });
+  s.addText("When the network to machine 2 slows to 80 ms, the solver gives it zero layers. A machine with no layers costs nothing at all, so the router skips it and the other two take all 12 layers. Nobody told it to do this - it falls out of the maths.",
     { x: 8.85, y: 2.16, w: 3.6, h: 1.6, fontFace: BFONT, fontSize: 10, color: "AEB6C4", lineSpacing: 13.5, margin: 0 });
 
   const checks = [
-    ["Optimality", "DP output matches brute force on 200 randomised instances."],
-    ["Correctness", "3-stage distributed GPT-2 is token-identical to single-process greedy decoding."],
-    ["Model fidelity", "Predicted vs measured bottleneck tracks at a stable 3.0-3.24x ratio: a reliable ranking signal, not a calibrated latency."],
+    ["It finds the best answer", "The solver matched brute force on 200 random test cases."],
+    ["It gives the same answers", "GPT-2 split over 3 machines produces exactly the same text as one machine."],
+    ["How good the estimate is", "Our predicted time is always about 3x lower than the real time. Good for ranking cuts, not for predicting real speed."],
   ];
   checks.forEach(([t, b], i) => {
     const y = 4.06 + i * 0.78;
@@ -505,24 +505,24 @@ const papers = [
     s.addText(t, { x: 8.93, y, w: 3.6, h: 0.26, fontFace: BFONT, fontSize: 11, bold: true, color: INK, margin: 0 });
     s.addText(b, { x: 8.93, y: y + 0.27, w: 3.72, h: 0.5, fontFace: BFONT, fontSize: 9, color: "4A5264", lineSpacing: 11.5, margin: 0 });
   });
-  foot(s, 12, "End-to-end tokens/s, TTFT and measured bubble time come from bench/run.py, which requires a live cluster.");
-  s.addNotes("The netem row is the most interesting result: the exact optimiser drops a node on its own.");
+  foot(s, 12, "Tokens per second, time to the first word, and real idle time come from bench/run.py, which needs a running cluster.");
+  s.addNotes("The network row is the best result: the solver drops a machine all by itself.");
 }
 
 /* ------------------------------------------------ 13. Comparison */
 {
   const s = p.addSlide();
-  head(s, "Comparison", "Against the closest systems");
+  head(s, "Comparison", "How we compare with the closest systems");
   const cols = ["", "EdgeShard\n(IoT-J 24)", "Galaxy\n(INFOCOM 24)", "Helix\n(ASPLOS 25)", "prima.cpp\n(2025)", "KubeEdgeInfer"];
   const rows = [
-    ["Parallelism", "pipeline", "tensor + sequence", "pipeline + routing", "pipelined ring", "pipeline"],
-    ["Placement method", "DP (exact)", "heuristic planner", "MILP on max-flow", "Halda scheduler", "DP (exact)"],
-    ["Telemetry source", "offline profile", "offline profile", "cluster profile", "device capability", "eBPF + NVML, live"],
-    ["Re-plan while serving", "no", "no", "routing only", "no", "every 2 s"],
-    ["Handles thermal drift", "no", "no", "no", "no", "yes"],
-    ["Handles node loss", "no", "no", "replication", "no", "yes, 3 s watchdog"],
-    ["Target hardware", "15 edge devices", "edge devices", "24-42 GPU nodes", "home cluster", "consumer edge + k3s"],
-    ["Reported gain", "50% latency", "2.5x latency", "3.3x throughput", "5-17x TPOT", "49-66% bottleneck*"],
+    ["How the model is split", "by layer", "inside layers", "by layer + routing", "ring of layers", "by layer"],
+    ["How the cut is chosen", "exact solver", "rule of thumb", "heavy solver", "custom scheduler", "exact solver"],
+    ["Where its numbers come from", "measured before", "measured before", "measured before", "device specs", "kernel + GPU, live"],
+    ["Re-cuts while running", "no", "no", "only routing", "no", "every 2 seconds"],
+    ["Reacts to machines getting hot", "no", "no", "no", "no", "yes"],
+    ["Survives a machine dying", "no", "no", "by keeping copies", "no", "yes, within 3 seconds"],
+    ["What it runs on", "15 small devices", "small devices", "24-42 GPU servers", "home machines", "laptops + GPU boxes"],
+    ["Improvement they report", "50% less delay", "2.5x less delay", "3.3x more work", "5-17x faster words", "49-66% better*"],
   ];
   const colX = [M, 3.05, 4.75, 6.55, 8.4, 10.15];
   const colW = [2.4, 1.65, 1.75, 1.8, 1.7, 2.56];
@@ -545,8 +545,8 @@ const papers = [
     x: 10.05, y: 1.5, w: 2.66, h: 4.96, rectRadius: 0.05,
     fill: { type: "solid", color: TEAL, transparency: 93 }, line: { color: TEAL, width: 1.25 },
   });
-  foot(s, 13, "* Bottleneck-stage cost vs a static split and a profile-once ablation; not directly comparable to the end-to-end figures in the other columns.");
-  s.addNotes("Be careful and honest here: the gain column measures different quantities across systems. Say so out loud.");
+  foot(s, 13, "* We measure how slow the busiest machine gets, against a fixed cut and a measure-once version of our own system. That is not the same measurement as the other columns.");
+  s.addNotes("Be honest here: the last row measures different things in different columns. Say so out loud.");
 }
 
 /* ------------------------------------------------ 14. Conclusion */
@@ -554,15 +554,15 @@ const papers = [
   const s = p.addSlide(); darkBg(s);
   s.addShape(p.ShapeType.ellipse, { x: -1.4, y: 4.6, w: 4.4, h: 4.4, fill: { color: INK2 }, line: { width: 0 } });
   s.addText("CONCLUSION", { x: M, y: 0.72, w: 8, h: 0.3, fontFace: BFONT, fontSize: 11.5, bold: true, color: AMBER, charSpacing: 2.6, margin: 0 });
-  s.addText("The split point should be a control variable, not a deployment constant.", {
+  s.addText("Where to cut the model is a decision you should keep making, not one you make once.", {
     x: M, y: 1.2, w: 8.3, h: 1.35, fontFace: HFONT, fontSize: 28, bold: true, color: "FFFFFF", lineSpacing: 36, margin: 0 });
-  s.addText("KubeEdgeInfer keeps a classical exact partitioner permanently in the loop, fed by kernel-measured latency and real thermal state, and applies its decisions to a running pipeline without a restart. On a heterogeneous edge cluster that is the difference between a plan that was right once and a plan that stays right.",
+  s.addText("We keep a standard, exact solver running all the time. It is fed by network delays read from the kernel and by real temperature readings, and it moves layers on a live system with no restart. On a set of ordinary machines, that is the difference between a plan that was right once and a plan that stays right.",
     { x: M, y: 2.66, w: 8.3, h: 1.3, fontFace: BFONT, fontSize: 13, color: "AEB6C4", lineSpacing: 20, margin: 0 });
 
   const takeaways = [
-    ["Exactness is cheap", "The DP costs microseconds; there is no reason to solve it only once."],
-    ["Hysteresis is what makes it usable", "One improvement threshold and one cooldown tame thermal, network and failure triggers alike."],
-    ["Kernel telemetry needs no instrumentation", "eBPF measures the real transport, not what the application thinks it sent."],
+    ["The exact answer is cheap", "Working out the best cut takes microseconds. There is no reason to do it only once."],
+    ["The brakes are what make it usable", "One 'must be clearly better' rule and one 'wait a bit' rule handle heat, network and machine failure all the same way."],
+    ["Kernel measuring is free", "eBPF sees what really went over the network, not what the program thinks it sent."],
   ];
   takeaways.forEach(([t, b], i) => {
     const y = 4.28 + i * 0.86;
@@ -572,12 +572,12 @@ const papers = [
   });
 
   s.addShape(p.ShapeType.roundRect, { x: 9.25, y: 2.66, w: 3.46, h: 3.92, rectRadius: 0.08, fill: { color: INK2 }, line: { color: "3A4356", width: 1 } });
-  s.addText("Future work", { x: 9.55, y: 2.9, w: 2.9, h: 0.3, fontFace: BFONT, fontSize: 12, bold: true, color: AMBER, margin: 0 });
+  s.addText("Next steps", { x: 9.55, y: 2.9, w: 2.9, h: 0.3, fontFace: BFONT, fontSize: 12, bold: true, color: AMBER, margin: 0 });
   const fw = [
-    "A Llama-class backend so two 8 GB cards hold a real modern LLM across stages.",
-    "Sustained multi-tenant load to observe genuine NVML throttling, not just flat curves.",
-    "Non-contiguous and attention-head-level assignment, following arXiv:2505.02533.",
-    "Calibrating the cost model so the DP's bottleneck becomes a latency prediction, not only a ranking.",
+    "Support a Llama-size model, so two 8 GB cards can hold a real modern model between them.",
+    "Run heavy load for a long time, to see a GPU really slow down instead of flat lines.",
+    "Allow cuts that are not one solid block per machine, as in arXiv:2505.02533.",
+    "Calibrate the cost estimate so it predicts real speed, not only the right ranking.",
   ];
   fw.forEach((f, i) => {
     const y = 3.32 + i * 0.8;
@@ -585,7 +585,7 @@ const papers = [
     s.addText(f, { x: 9.79, y, w: 2.72, h: 0.72, fontFace: BFONT, fontSize: 9.5, color: "AEB6C4", lineSpacing: 12.5, margin: 0 });
   });
   foot(s, 14, "");
-  s.addNotes("Close on the one-line thesis, then the honest limits.");
+  s.addNotes("End on the one-line message, then the honest limits.");
 }
 
 /* ------------------------------------------------ 15. References */
@@ -609,10 +609,10 @@ const papers = [
     if (i % 2 === 0) s.addShape(p.ShapeType.rect, { x: M, y, w: W - 2 * M, h: 0.47, fill: { color: "F7F8FA" }, line: { width: 0 } });
     s.addText(r, { x: M + 0.22, y, w: W - 2 * M - 0.44, h: 0.47, fontFace: BFONT, fontSize: 9.5, color: "3E4658", valign: "middle", margin: 0 });
   });
-  s.addText("Tooling: cilium/ebpf (CO-RE loader) · Kubernetes controller-runtime · NVIDIA NVML · k3s · Hugging Face Transformers (GPT-2).", {
+  s.addText("Tools used: cilium/ebpf · Kubernetes controller-runtime · NVIDIA NVML · k3s · Hugging Face Transformers (GPT-2).", {
     x: M, y: 6.65, w: 11.6, h: 0.3, fontFace: BFONT, fontSize: 9, color: MUTED, italic: true, margin: 0 });
   foot(s, 15, "");
-  s.addNotes("Ten works, all 2024-2025.");
+  s.addNotes("Ten papers, all from 2024-2025.");
 }
 
 p.writeFile({ fileName: "KubeEdgeInfer.pptx" }).then(f => console.log("wrote", f));

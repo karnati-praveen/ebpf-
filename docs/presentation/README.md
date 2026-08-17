@@ -12,9 +12,14 @@ The code walkthrough is deliberately a separate deck: present it only if there
 is time for the live demo.
 
 Main deck contents: title, introduction, literature review (10 papers, all
-2024–2025, over two slides), research-gap synthesis, problem statement,
-contributions, proposed work (architecture / formulation / implementation),
-results, comparison, conclusion, references.
+2024–2025, over two slides), what past work is missing, the problem, what is
+new, our system (loop / maths / what we built), results, comparison,
+conclusion, references.
+
+The wording throughout is deliberately plain English — short sentences and
+everyday words — so the talk works for an audience that does not already know
+eBPF or pipeline parallelism. The technical terms that do appear (eBPF,
+Kubernetes, layer, GPU) are explained where they are first used.
 
 ## Building
 
