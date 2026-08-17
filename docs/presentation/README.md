@@ -5,11 +5,21 @@ palette — use whichever the venue wants.
 
 | Deck | PowerPoint | LaTeX | Slides |
 |---|---|---|---|
-| **Simple talk** | `KubeEdgeInfer-Simple.pptx` | `kubeedgeinfer-simple.tex` | 10 |
+| **Reference template** | `KubeEdgeInfer-Classic.pptx` | `kubeedgeinfer-classic.tex` | 10 |
+| Simple talk | `KubeEdgeInfer-Simple.pptx` | `kubeedgeinfer-simple.tex` | 10 |
 | Full talk | `KubeEdgeInfer.pptx` | `kubeedgeinfer.tex` | 15 |
 | Code walkthrough | `KubeEdgeInfer-CodeDemo.pptx` | `kubeedgeinfer-code.tex` | 6 |
 
-**Start with the simple deck.** It is the same talk in ten slides: one idea per
+**`Classic` follows the supplied reference deck.** Navy frame-title bars,
+rounded blocks with a navy header over a grey body, a red alert block for the
+consequence, the WATCH → DECIDE → ACT → HEAL flow, and a ✓/✗ novelty table —
+the same visual language, extended from the reference's seven slides to ten so
+it also carries the literature review, results and reference list. Its LaTeX
+source builds with plain pdfLaTeX, no fontspec needed.
+
+The two decks below it are an alternative house style, kept for reference.
+
+**The simple deck** It is the same talk in ten slides: one idea per
 slide, larger type, a single accent colour, and no slide that needs more than a
 glance. The 15-slide version is the same material with the detail left in — the
 maths, the implementation breakdown, and a second results slide — for a longer
