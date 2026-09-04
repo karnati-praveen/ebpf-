@@ -144,6 +144,28 @@ genuine but likely flat; sustained concurrent load (raise `LOAD_THREADS` in
 `bench/run.py`, or run a companion GPU-stress workload during the fault
 window) is what it takes to see real throttling on modern hardware.
 
+### Running on rented online GPUs
+
+If you rent a GPU machine (Runpod/Lambda/Paperspace/etc.), the fastest path is:
+
+```bash
+./scripts/join-node.sh server
+WITH_GPT2=1 ./scripts/deploy-real-hardware.sh
+kubectl apply -f deploy/manifests/workers-singlenode.yaml
+```
+
+Then set `backend: gpt2` in the `InferencePipeline` and verify `device=cuda`
+in worker logs plus real NVML telemetry from the node agent. Important caveat:
+many rented offerings are unprivileged containers, not full VMs; if
+`./scripts/join-node.sh server` reports the host is not privileged, k3s cannot
+run there. In that case use the non-Kubernetes fallback:
+
+```bash
+./scripts/run-single-gpu.sh
+```
+
+For the full worked walkthrough, see `docs/single-gpu.md`.
+
 ## Design notes
 
 - **eBPF telemetry is real** (not simulated): CO-RE programs compiled against
