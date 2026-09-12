@@ -51,6 +51,15 @@ images: proto
 cluster-up:
 	$(KIND) get clusters | grep -qx $(CLUSTER) || \
 		$(KIND) create cluster --name $(CLUSTER) --config deploy/kind-config.yaml
+	@control_plane="$(CLUSTER)-control-plane"; \
+	if ! docker exec "$$control_plane" grep -q \
+		"server: https://$$control_plane:6443" /etc/kubernetes/kubelet.conf; then \
+		echo "repairing kind control-plane kubelet endpoint after container IP change"; \
+		docker exec "$$control_plane" sh -c \
+			'cp -n /etc/kubernetes/kubelet.conf /etc/kubernetes/kubelet.conf.original && \
+			sed -i "s#server: https://[^:]*:6443#server: https://$(CLUSTER)-control-plane:6443#" /etc/kubernetes/kubelet.conf && \
+			systemctl restart kubelet'; \
+	fi
 	kubectl cluster-info --context kind-$(CLUSTER)
 
 cluster-down:

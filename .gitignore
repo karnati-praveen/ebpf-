@@ -5,3 +5,11 @@ bench/results/
 .venv/
 *.o
 !internal/ebpf/tcpmon_bpfel.o
+
+# LaTeX build artifacts
+ppt/*.aux
+ppt/*.log
+ppt/*.nav
+ppt/*.out
+ppt/*.snm
+ppt/*.toc

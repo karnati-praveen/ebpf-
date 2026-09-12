@@ -16,6 +16,7 @@ _phases.csv, plus results/summary.json across all runs.
 Usage:
   python3 bench/run.py --all
   python3 bench/run.py --scenario netem --mode dynamic
+  python3 bench/run.py --scenario thermal --mode dynamic --tag thermal_dynamic_r1
 """
 
 import argparse
@@ -446,9 +447,15 @@ def main():
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--scenario", choices=list(SCENARIOS))
     ap.add_argument("--mode", choices=MODES)
+    ap.add_argument("--tag",
+                    help="unique output prefix for a single scenario/mode run")
     ap.add_argument("--sweep-hysteresis", metavar="SCENARIO", choices=list(SCENARIOS),
                      help="run a hysteresis sensitivity sweep on this scenario instead of a normal run")
     args = ap.parse_args()
+
+    if args.tag and (args.all or args.sweep_hysteresis or
+                     not (args.scenario and args.mode)):
+        ap.error("--tag requires exactly one --scenario/--mode run")
 
     if args.sweep_hysteresis:
         # 0.15/30s (the shipped default) is already covered by the existing
@@ -475,9 +482,14 @@ def main():
         with open(summary_path) as f:
             summaries = json.load(f)
     for scenario, mode in runs:
-        result = run_one(scenario, mode)
-        summaries = [s for s in summaries
-                     if not (s["scenario"] == scenario and s["mode"] == mode)]
+        result = run_one(scenario, mode, tag=args.tag)
+        if args.tag:
+            result["tag"] = args.tag
+            summaries = [s for s in summaries if s.get("tag") != args.tag]
+        else:
+            summaries = [s for s in summaries
+                         if not (s["scenario"] == scenario and s["mode"] == mode
+                                 and "tag" not in s)]
         summaries.append(result)
         with open(summary_path, "w") as f:
             json.dump(summaries, f, indent=2)
