@@ -214,12 +214,18 @@ class Sampler:
             state = http_json(f"{self.ctrl_url}/state", timeout=3)
             row["ctrl_generation"] = state.get("generation")
             row["bottleneck_ms"] = state.get("bottleneck_ms")
+            row["ctrl_last_error"] = state.get("last_error", "")
+            row["flows_json"] = json.dumps(state.get("telemetry", {}).get("flows", []),
+                                             sort_keys=True, separators=(",", ":"))
             temps, speeds = [], []
+            ages = []
             for node, st in sorted(state.get("telemetry", {}).get("nodes", {}).items()):
                 temps.append(f"{node}:{st['temp_c']:.1f}")
                 speeds.append(f"{node}:{st['speed_factor']:.2f}")
+                ages.append(st.get("age_s"))
             row["temps"] = "|".join(temps)
             row["speeds"] = "|".join(speeds)
+            row["telemetry_max_age_s"] = max((v for v in ages if v is not None), default="")
         except Exception:
             pass
         self.rows.append(row)
@@ -316,9 +322,36 @@ def write_csv(path, rows, fields):
         w.writerows(rows)
 
 
+def qdisc_snapshot(node=NODE_MID):
+    return sh(["docker", "exec", node, "tc", "qdisc", "show", "dev", "eth0"],
+              check=False, quiet=True, timeout=10).stdout.strip()
+
+
+def system_snapshot():
+    commands = {
+        "utc": ["date", "--iso-8601=seconds"],
+        "nodes": ["kubectl", "get", "nodes", "-o", "wide"],
+        "pods": ["kubectl", "get", "pods", "-A", "-o", "wide"],
+        "memory": ["free", "-h"],
+        "disk": ["df", "-h", os.path.dirname(RESULTS)],
+    }
+    return {name: sh(cmd, check=False, quiet=True, timeout=30).stdout
+            for name, cmd in commands.items()}
+
+
 def run_one(scenario, mode, improvement=None, cooldown=None, tag=None):
     print(f"=== {scenario} / {mode} ===")
     os.makedirs(RESULTS, exist_ok=True)
+    name = tag or f"{scenario}_{mode}"
+    prefix = os.path.join(RESULTS, name)
+    output_paths = [f"{prefix}_{suffix}" for suffix in
+                    ("requests.csv", "series.csv", "phases.csv", "evidence.json")]
+    existing = [path for path in output_paths if os.path.exists(path)]
+    if existing:
+        raise FileExistsError("refusing to overwrite existing result(s): " + ", ".join(existing))
+
+    evidence = {"tag": name, "scenario": scenario, "mode": mode,
+                "qdisc_before": qdisc_snapshot(), "host_before": system_snapshot()}
     set_mode(mode, improvement, cooldown)
 
     with PortForward("svc/router", ROUTER_PORT, 8080), \
@@ -326,6 +359,8 @@ def run_one(scenario, mode, improvement=None, cooldown=None, tag=None):
         router_url = f"http://127.0.0.1:{ROUTER_PORT}"
         ctrl_url = f"http://127.0.0.1:{CTRL_PORT}"
         wait_pipeline_ready(router_url)
+        evidence["controller_before"] = http_json(f"{ctrl_url}/state", timeout=5)
+        evidence["pipeline_before"] = http_json(f"{router_url}/pipeline", timeout=5)
         # Warm the pipeline (and the eBPF flow table) before measuring. Right
         # after a mode-switch rollout the pipeline can report itself ready
         # (stage count reached) before every worker has actually loaded its
@@ -352,7 +387,8 @@ def run_one(scenario, mode, improvement=None, cooldown=None, tag=None):
             for name, duration, inject, _ in SCENARIOS[scenario]:
                 if inject:
                     inject()
-                phases.append({"phase": name, "t": time.time()})
+                phases.append({"phase": name, "t": time.time(),
+                               "qdisc": qdisc_snapshot()})
                 print(f"  phase {name} ({duration}s)")
                 time.sleep(duration)
         finally:
@@ -368,16 +404,25 @@ def run_one(scenario, mode, improvement=None, cooldown=None, tag=None):
             elif scenario == "combo":
                 combo_stop()
 
-    name = tag or f"{scenario}_{mode}"
-    prefix = os.path.join(RESULTS, name)
+        evidence["controller_after"] = http_json(f"{ctrl_url}/state", timeout=5)
+        evidence["pipeline_after"] = http_json(f"{router_url}/pipeline", timeout=5)
+
+    evidence["qdisc_after_cleanup"] = qdisc_snapshot()
+    evidence["host_after"] = system_snapshot()
+    evidence["nodeagent_logs"] = kubectl(
+        "logs", "ds/keinfer-nodeagent", "--all-pods=true", "--prefix=true",
+        "--tail=300", check=False).stdout
     write_csv(f"{prefix}_requests.csv", requests,
               ["t", "ok", "ttft_ms", "duration_ms", "tokens_per_sec",
                "replays", "generation", "error"])
     write_csv(f"{prefix}_series.csv", series,
               ["t", "idle_fractions", "worst_idle", "layout",
                "router_generation", "ctrl_generation", "bottleneck_ms",
-               "temps", "speeds"])
-    write_csv(f"{prefix}_phases.csv", phases, ["phase", "t"])
+               "temps", "speeds", "telemetry_max_age_s", "ctrl_last_error",
+               "flows_json"])
+    write_csv(f"{prefix}_phases.csv", phases, ["phase", "t", "qdisc"])
+    with open(f"{prefix}_evidence.json", "w") as f:
+        json.dump(evidence, f, indent=2, sort_keys=True)
 
     return summarize(scenario, mode, requests, series, phases, t_start)
 

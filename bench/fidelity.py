@@ -80,7 +80,7 @@ def points_for(prefix):
 
 def main():
     runs = []
-    for path in sorted(glob.glob(os.path.join(RESULTS, "*_dynamic_requests.csv"))):
+    for path in sorted(glob.glob(os.path.join(RESULTS, "*dynamic*_requests.csv"))):
         name = os.path.basename(path)[: -len("_requests.csv")]
         runs.append(name)
 
