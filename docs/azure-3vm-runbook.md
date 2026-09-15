@@ -383,3 +383,58 @@ Do the Azure CPU run first — it yields real network and real node-failure
 results, which are two of the five evaluation gaps. Run thermal as a separate
 session on laptops or GPU VMs, and until then keep the existing thermal
 numbers labeled as simulated.
+
+---
+
+# Google Cloud variant
+
+Everything in this runbook applies unchanged; GCP is a plain Linux VM like
+Azure. Three differences.
+
+**1. Networking is easier.** The default VPC ships a `default-allow-internal`
+firewall rule permitting all protocols and ports between VMs inside the
+network. The four-port table above is already satisfied — no rule to create.
+Verify it exists before relying on it:
+
+```bash
+gcloud compute firewall-rules list --filter="name~default-allow-internal"
+```
+
+If the project uses a custom VPC instead, create the equivalent rule for
+tcp:6443, udp:8472, tcp:10250, tcp:5000 on the subnet range.
+
+**2. The free trial's vCPU quota will bite.** New trial projects are commonly
+capped at 8 vCPUs per region. Three `e2-standard-4` VMs need 12 and the create
+will fail. Check first:
+
+```bash
+gcloud compute regions describe <region> --format="value(quotas.filter(metric:CPUS))"
+```
+
+Under an 8-vCPU cap, use **three `e2-standard-2`** (2 vCPU, 8 GB) = 6 vCPUs.
+That is enough for the `sim`-backend runs. It is tight for a `WITH_GPT2=1`
+image build (~1 GB torch download plus the build itself), so build that image
+on the server VM only and distribute it through the local registry, exactly as
+`scripts/deploy-real-hardware.sh` already does.
+
+**3. Never use Spot/preemptible VMs.** Google can reclaim them at any time. A
+node vanishing mid-run is indistinguishable in the results from the node
+failure you are deliberately injecting, which silently corrupts the one
+experiment this testbed exists for.
+
+Create three VMs, Ubuntu 22.04 LTS, same region and zone:
+
+```bash
+for i in 1 2 3; do
+  gcloud compute instances create keinfer-vm$i \
+    --machine-type=e2-standard-2 \
+    --image-family=ubuntu-2204-lts --image-project=ubuntu-os-cloud \
+    --boot-disk-size=50GB --zone=<zone>
+done
+```
+
+Then run the per-VM prompts above, using the VMs' **internal** IPs
+(`gcloud compute instances list` shows them).
+
+Cost at `e2-standard-2` x3 is roughly $0.20/hour — two days of intermittent
+work is a few dollars against the $300 trial credit.
