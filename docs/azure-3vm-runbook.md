@@ -308,3 +308,78 @@ output including errors. Never push to git from this machine.
 | thermal scenario 409s | `GPU_MODE=cputherm` rejects override | do not run thermal on Azure — see above |
 | Latency numbers drift between identical runs | B-series CPU-credit throttling | rebuild on D4s_v5 / F4s_v2 |
 | Node stays Ready after `systemctl stop k3s-agent` | containers not killed | also run `k3s-killall.sh` |
+
+---
+
+# Where to run the thermal experiment (not here)
+
+Azure CPU VMs cannot produce real thermal data, for the reasons in "What this
+run is NOT for" above. This section is where it *can* be done.
+
+## The deciding fact
+
+`internal/gpu/nvml.go` reads temperature and throttle reasons through the
+NVIDIA driver (`GetTemperature`, `GetCurrentClocksThrottleReasons`). The
+driver talks to the card, not to the host BIOS — so **NVML works inside an
+ordinary guest VM with a passed-through GPU**. `internal/gpu/cputherm.go`
+globs `/sys/class/thermal/thermal_zone*/temp`, which a hypervisor does not
+populate for a guest.
+
+Conclusion: a rented **GPU** VM gives real thermal telemetry. A rented **CPU**
+VM never does, at any size or price. Bare metal is not required.
+
+## Verify any candidate box in 30 seconds
+
+Run this on a machine before committing to it. All four must pass for a full
+KubeEdgeInfer node; the first two decide the thermal question specifically.
+
+```bash
+# 1. GPU thermal path (GPU_MODE=nvml) -- want a real temp and a throttle field
+nvidia-smi --query-gpu=name,temperature.gpu,clocks_throttle_reasons.active \
+           --format=csv 2>&1
+
+# 2. CPU thermal path (GPU_MODE=cputherm) -- want plausible millidegrees
+#    (45000 = 45C). No output, or a constant, means no usable sensor.
+cat /sys/class/thermal/thermal_zone*/temp 2>&1
+
+# 3. eBPF CO-RE -- must exist or network telemetry is dead
+ls -l /sys/kernel/btf/vmlinux
+
+# 4. Can this box run k3s at all? "running"/"degraded" = real VM, good.
+#    "offline" or an error = unprivileged container; use scripts/run-single-gpu.sh
+systemctl is-system-running 2>&1
+```
+
+## Options, ranked for this project
+
+| Option | Real thermal? | k3s + eBPF? | Cost | Catch |
+|---|---|---|---|---|
+| **Your own laptops (2–3, on a LAN)** | yes — `cputherm`, and consumer chassis genuinely throttle under sustained load | yes | free | needs 3 physical Linux machines; `docs/two-laptops.md` and `docs/laptops.md` already cover this path |
+| **Cloud GPU VMs (e.g. Azure NC-series T4)** | yes — real NVML | yes, full root + systemd | ~$0.5/hr/node | GPU quota approval can take a day — start the request *now* if you want this |
+| **Marketplace GPU rentals (vast.ai, RunPod)** | yes — real NVML, and consumer rigs in poor chassis actually throttle | **often no** — many are unprivileged containers where the eBPF DaemonSet cannot load | ~$0.2–0.4/hr | run check 4 above before paying; `scripts/run-single-gpu.sh` is the no-Kubernetes fallback |
+| **Bare metal (Equinix, Vultr, OVH)** | yes — both CPU and GPU paths | yes | higher | slower to provision; only needed if you specifically want real *CPU* package thermal in a cloud |
+
+## Which to pick
+
+**For the paper's thermal claim: your own laptops.** Free, the `cputherm` path
+is already written and deployed by `scripts/deploy-real-hardware.sh`, and a
+consumer laptop under sustained load throttles reliably — which is more than
+can be said for a well-cooled datacenter card.
+
+**If you want the GPU story too: 2–3 T4-class VMs.** A T4 is 70 W passively
+cooled and thermally marginal, so it is more likely to throttle than the
+4070/5050 case discussed in `docs/gpu-hardware.md`. Start the quota request
+before anything else.
+
+**What will not work:** expecting GPT-2 alone to heat any modern card. See
+`docs/gpu-hardware.md` — raise `LOAD_THREADS` in `bench/run.py` and run a
+companion stress workload (`gpu-burn`) during the fault window, and say so
+explicitly in the paper's methodology.
+
+## Sequencing
+
+Thermal is not a 2-hour experiment on hardware you have not provisioned yet.
+Do the Azure CPU run first — it yields real network and real node-failure
+results, which are two of the five evaluation gaps. Run thermal as a separate
+session on laptops or GPU VMs, and until then keep the existing thermal
+numbers labeled as simulated.
