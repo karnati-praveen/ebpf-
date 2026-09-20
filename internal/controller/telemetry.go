@@ -21,8 +21,12 @@ type TelemetryStore struct {
 }
 
 type nodeState struct {
-	gpu      *pipelinepb.GpuStat
-	lastSeen time.Time
+	gpu *pipelinepb.GpuStat
+	// workerAddr is the shard worker co-located with this node agent. It is
+	// what lets the standalone substrate discover workers with no API server:
+	// the agent's once-per-second push already IS the liveness heartbeat.
+	workerAddr string
+	lastSeen   time.Time
 }
 
 type flowKey struct {
@@ -47,7 +51,7 @@ func (s *TelemetryStore) Report(ctx context.Context, msg *pipelinepb.NodeTelemet
 	now := time.Now()
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.nodes[msg.Node] = &nodeState{gpu: msg.Gpu, lastSeen: now}
+	s.nodes[msg.Node] = &nodeState{gpu: msg.Gpu, workerAddr: msg.WorkerAddr, lastSeen: now}
 	for _, l := range msg.Links {
 		key := flowKey{src: l.SrcIp, dst: l.DstIp, port: l.DstPort}
 		if l.Samples == 0 && l.BytesPerSec == 0 {
@@ -72,6 +76,27 @@ func (s *TelemetryStore) Node(node string, staleAfter time.Duration) (*pipelinep
 		return nil, false
 	}
 	return st.gpu, true
+}
+
+// LiveWorkers returns one WorkerRef per node whose agent heartbeat is fresh
+// and which reported a worker address, in deterministic (node, name) order.
+//
+// This is the standalone substrate's discovery path. It currently yields at
+// most one worker per node, because NodeTelemetry carries a single
+// worker_addr; several workers per machine need the additional repeated field
+// (plan 2.4), which is additive and wire-compatible.
+func (s *TelemetryStore) LiveWorkers(staleAfter time.Duration) []WorkerRef {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	var out []WorkerRef
+	for node, st := range s.nodes {
+		if st.workerAddr == "" || time.Since(st.lastSeen) > staleAfter {
+			continue
+		}
+		out = append(out, WorkerRef{Name: node, Addr: st.workerAddr, Node: node})
+	}
+	sortWorkers(out)
+	return out
 }
 
 // LinkSRTT returns the observed sRTT for src->dst:port, if fresh.

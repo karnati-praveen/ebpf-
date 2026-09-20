@@ -45,24 +45,40 @@ func main() {
 		heartbeat   = flag.Duration("heartbeat-timeout", 3*time.Second, "node agent staleness before a node is dead")
 		reassert    = flag.Duration("reassert-interval", 10*time.Second, "how often to re-push the current layout so a restarted worker/router recovers (0 disables)")
 		defLink     = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
+		mode        = flag.String("mode", envOr("KEINFER_MODE", "standalone"), "substrate: standalone | k8s")
+		configPath  = flag.String("config", envOr("KEINFER_CONFIG", "keinfer.json"), "standalone: pipeline config file")
 		profileOnce = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
 	)
 	flag.Parse()
 
-	cfg, err := kubeConfig()
-	if err != nil {
-		log.Fatalf("kube config: %v", err)
-	}
-	kube, err := kubernetes.NewForConfig(cfg)
-	if err != nil {
-		log.Fatalf("clientset: %v", err)
-	}
-	dyn, err := dynamic.NewForConfig(cfg)
-	if err != nil {
-		log.Fatalf("dynamic client: %v", err)
+	store := controller.NewTelemetryStore()
+
+	// Client construction happens ONLY in the k8s branch. Standalone must
+	// never touch client-go -- it has no kubeconfig and no API server, and the
+	// previous unconditional kubeConfig() call was fatal before anything else
+	// ran.
+	var src controller.Source
+	switch *mode {
+	case "k8s":
+		cfg, err := kubeConfig()
+		if err != nil {
+			log.Fatalf("kube config: %v", err)
+		}
+		kube, err := kubernetes.NewForConfig(cfg)
+		if err != nil {
+			log.Fatalf("clientset: %v", err)
+		}
+		dyn, err := dynamic.NewForConfig(cfg)
+		if err != nil {
+			log.Fatalf("dynamic client: %v", err)
+		}
+		src = controller.NewK8sSource(kube, dyn, store, *namespace, *selector, *workerPort, *heartbeat)
+	case "standalone":
+		src = controller.NewLocalSource(*configPath, store, *heartbeat)
+	default:
+		log.Fatalf("unknown -mode %q (want standalone or k8s)", *mode)
 	}
 
-	store := controller.NewTelemetryStore()
 	ctrl := controller.New(controller.Config{
 		Namespace:        *namespace,
 		WorkerSelector:   *selector,
@@ -75,7 +91,7 @@ func main() {
 		Interval:         *interval,
 		ReassertInterval: *reassert,
 		ProfileOnce:      *profileOnce,
-	}, kube, dyn, store)
+	}, src, store)
 
 	lis, err := net.Listen("tcp", *grpcAddr)
 	if err != nil {
@@ -95,8 +111,8 @@ func main() {
 	})
 	go func() { log.Fatal(http.ListenAndServe(*httpAddr, mux)) }()
 
-	log.Printf("controller: ns=%s static=%v profile-once=%v improvement=%.2f cooldown=%s grpc=%s http=%s",
-		*namespace, *static, *profileOnce, *improvement, *cooldown, *grpcAddr, *httpAddr)
+	log.Printf("controller: mode=%s ns=%s static=%v profile-once=%v improvement=%.2f cooldown=%s grpc=%s http=%s",
+		*mode, *namespace, *static, *profileOnce, *improvement, *cooldown, *grpcAddr, *httpAddr)
 	ctrl.Run(context.Background())
 }
 
