@@ -127,18 +127,20 @@ func TestOptimalMatchesBruteForce(t *testing.T) {
 
 func bruteForce(in Input) float64 {
 	n, k := in.TotalLayers, len(in.Workers)
+	perLayer := perLayerCost(in)
 	best := math.Inf(1)
 	var rec func(worker, start int, worst float64)
 	rec = func(worker, start int, worst float64) {
 		if worker == k-1 {
-			cost := math.Max(worst, stageCost(in, worker, n-start))
+			cost := math.Max(worst, stageCost(in, perLayer, worker, start, n))
 			if cost < best {
 				best = cost
 			}
 			return
 		}
 		for take := 0; start+take <= n; take++ {
-			rec(worker+1, start+take, math.Max(worst, stageCost(in, worker, take)))
+			rec(worker+1, start+take,
+				math.Max(worst, stageCost(in, perLayer, worker, start, start+take)))
 		}
 	}
 	rec(0, 0, 0)

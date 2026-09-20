@@ -28,8 +28,29 @@ import (
 	"kubeedgeinfer/internal/partition"
 )
 
+// measuredQwen3_06B is the decode-time per-layer cost table measured on an
+// Azure 4-vCPU Xeon 8272CL, FP32. See docs/phase4-prelim-findings.md.
+var measuredQwen3_06B = []partition.CtxCost{
+	{ContextLen: 128, PerLayerMs: 5.55},
+	{ContextLen: 512, PerLayerMs: 6.25},
+	{ContextLen: 1024, PerLayerMs: 7.18},
+	{ContextLen: 2048, PerLayerMs: 9.49},
+}
+
+var (
+	gEmbedMs, gHeadMs float64
+	gContextLen       int
+	gMeasured         bool
+)
+
 func baseInput(layers, workers int, perLayerMs, linkMs float64) partition.Input {
-	in := partition.Input{TotalLayers: layers, PerLayerMs: perLayerMs}
+	in := partition.Input{
+		TotalLayers: layers, PerLayerMs: perLayerMs,
+		EmbedMs: gEmbedMs, HeadMs: gHeadMs, ContextLen: gContextLen,
+	}
+	if gMeasured {
+		in.PerLayerByCtx = measuredQwen3_06B
+	}
 	for i := 0; i < workers; i++ {
 		in.Workers = append(in.Workers, partition.Worker{
 			Name: fmt.Sprintf("w%d", i), Node: fmt.Sprintf("n%d", i), Speed: 1,
@@ -85,8 +106,13 @@ func main() {
 		perLayerMs = flag.Float64("per-layer-ms", 30, "base per-layer compute cost at Speed=1")
 		linkMs     = flag.Float64("link-ms", 0.5, "baseline per-hop transfer cost")
 		csvPath    = flag.String("csv", "", "also write results here")
+		embedMs    = flag.Float64("embed-ms", 0, "endpoint cost on the stage holding layer 0")
+		headMs     = flag.Float64("head-ms", 0, "endpoint cost on the stage holding the last layer (lm_head + final norm)")
+		contextLen = flag.Int("ctx", 0, "context length, for the measured per-layer table")
+		measured   = flag.Bool("measured", false, "use the measured Qwen3-0.6B per-layer table instead of -per-layer-ms")
 	)
 	flag.Parse()
+	gEmbedMs, gHeadMs, gContextLen, gMeasured = *embedMs, *headMs, *contextLen, *measured
 
 	base := baseInput(*layers, *workers, *perLayerMs, *linkMs)
 	baseRes, err := partition.Optimal(base)
@@ -98,8 +124,13 @@ func main() {
 	// Candidate allocations, stated explicitly: zero-layer stages are allowed
 	// (partition.go stageCost/Optimal), so for L layers across 2 workers the
 	// space is k = 0..L, i.e. L+1.
-	fmt.Printf("layers=%d workers=%d per-layer=%.1fms link=%.2fms\n",
-		*layers, *workers, *perLayerMs, *linkMs)
+	if *measured {
+		fmt.Printf("layers=%d workers=%d per-layer=MEASURED@ctx%d link=%.2fms embed=%.1fms head=%.1fms\n",
+			*layers, *workers, *contextLen, *linkMs, *embedMs, *headMs)
+	} else {
+		fmt.Printf("layers=%d workers=%d per-layer=%.1fms link=%.2fms embed=%.1fms head=%.1fms\n",
+			*layers, *workers, *perLayerMs, *linkMs, *embedMs, *headMs)
+	}
 	if *workers == 2 {
 		fmt.Printf("candidate contiguous allocations: %d (k=0..%d; zero-layer stages allowed)\n",
 			*layers+1, *layers)

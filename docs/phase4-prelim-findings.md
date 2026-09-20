@@ -112,3 +112,66 @@ throughput to real decode throughput on real silicon.
 3. Re-run `cmd/dpsweep` with measured values once (1) and (2) land.
 4. The crossover is the headline candidate. It needs the real improvement figure
    and the `lm_head` prefill fix before it can be claimed.
+
+---
+
+# Cost-model fix applied, and the corrected sweeps
+
+`partition.Input` now carries `EmbedMs`/`HeadMs` (endpoint costs, speed-scaled,
+attributed to whichever stage holds layer 0 and the last layer) and
+`ContextLen`/`PerLayerByCtx` (context-interpolated per-layer cost). Both default
+to the previous layer-proportional behaviour, so the Kubernetes path and all
+committed results are unaffected until the controller populates them.
+
+Endpoint attribution is decidable locally — the DP already knows each stage's
+range, so `start == 0` and `end == TotalLayers` identify the owners, and because
+empty stages return early these fall through to the first and last **non-empty**
+stages, matching what the router executes.
+
+**DP optimality re-proven, not assumed.** `TestOptimalMatchesBruteForceWithEndpoints`
+runs 300 randomized exhaustive cross-checks with non-zero endpoint costs and
+deliberately unsorted context tables. `TestEndpointCostSkewsSplitAwayFromLastStage`
+pins the measured finding: 14/14 → 176.7 ms, optimum 16/12 → 157.7 ms, 10.7% loss.
+
+## The optimal split is not even, and the skew grows at short context
+
+Measured table, `head-ms=43.8`, `embed-ms=0.09`, 2 workers:
+
+| ctx | baseline optimum | was (layer-proportional) |
+|---|---|---|
+| 128 | **18/10** | 14/14 |
+| 512 | **18/10** | 14/14 |
+| 1024 | **17/11** | 14/14 |
+| 2048 | **16/12** | 14/14 |
+
+The skew is larger at short context because the endpoint cost is a larger share
+of a stage there (48.9% at ctx 128 vs 33.0% at 2048).
+
+## Corrected fault sensitivity — margins are thinner than the naive estimate
+
+Network, 80 ms delay:
+
+| ctx | base split | fault split | benefit | vs 15% gate |
+|---|---|---|---|---|
+| 128 | 18/10 | 25/3 | 21.7% | clears |
+| 512 | 18/10 | 24/4 | 19.4% | clears |
+| 1024 | 17/11 | 23/5 | 18.5% | clears |
+| 2048 | 16/12 | 21/7 | **16.1%** | **clears by 1.1 points** |
+
+Phase 1's naive estimate was 20–32%. With endpoint costs modelled it is 16–22%.
+**Still above the gate, but at ctx 2048 the margin is about one percentage point** —
+inside the ±13% IQR of the model's own prediction error (Phase 0). Recommendation:
+run the network scenario at **120 ms** (21.4% at ctx 2048) for a robust effect, and
+report 80 ms as the marginal case rather than the headline.
+
+Thermal crosses the 15% gate at **speed ≈ 0.7** consistently across contexts
+(16.7% at ctx 128, 18.0% at ctx 2048) — the scale-invariance Phase 1 predicted
+survives the endpoint correction.
+
+## Still outstanding
+
+- Controller does not yet populate the new fields; that is Phase 4 proper and
+  needs the profiling path.
+- Single-device baseline and direct KV-reconstruction timing (Part B) not yet run.
+- The `lm_head`-over-all-prefill-positions question is unresolved and inflates
+  the reconstruction numbers above.
