@@ -118,7 +118,7 @@ def write_outputs(results_dir, name, rows, aggregate_rows):
 
     metrics = [("tokens_per_sec_mean", "Mean tokens/sec"),
                ("ttft_ms_mean", "Mean TTFT (ms)"),
-               ("worst_idle_mean", "Mean worst-stage idle fraction")]
+               ("worst_idle_mean", "Mean worst-stage idle fraction (utilization proxy, not bubble time)")]
     fig, axes = plt.subplots(1, 3, figsize=(13, 4))
     phases = list(PHASE_SECONDS)
     x = list(range(len(phases)))

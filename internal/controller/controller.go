@@ -472,7 +472,12 @@ func (c *Controller) State() map[string]any {
 			})
 		}
 		out["assignments"] = stages
+		// Two distinct predictions: bottleneck governs throughput, pipeline
+		// governs per-request latency. Reporting only the first is what made
+		// the old fidelity check compare a throughput quantity against a
+		// latency observable.
 		out["bottleneck_ms"] = c.lastApplied.BottleneckMs
+		out["pipeline_ms"] = c.lastApplied.PipelineMs
 	}
 	out["telemetry"] = c.store.Snapshot()
 	return out

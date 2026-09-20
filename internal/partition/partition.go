@@ -35,9 +35,23 @@ type Assignment struct {
 }
 
 // Result is an optimal (or evaluated) split.
+//
+// BottleneckMs and PipelineMs measure different things and must not be
+// compared against the same observable:
+//
+//   - BottleneckMs is the slowest single stage. It governs steady-state
+//     THROUGHPUT once the pipeline is full, so its observable counterpart is
+//     aggregate tokens/sec under saturated load.
+//   - PipelineMs is the sum of every stage's cost. A token traverses all
+//     stages sequentially, so it governs per-request LATENCY, and its
+//     observable counterpart is measured per-token end-to-end cost.
+//
+// Confusing the two is what produced the spurious ~3x "fidelity gap" (it was
+// roughly the stage count, not model error). See docs/phase1-findings.md.
 type Result struct {
 	Assignments  []Assignment
-	BottleneckMs float64
+	BottleneckMs float64 // slowest stage -> predicts throughput
+	PipelineMs   float64 // sum of stages  -> predicts per-request latency
 }
 
 func (r *Result) Splits() [][2]int {
@@ -114,10 +128,15 @@ func Optimal(in Input) (*Result, error) {
 		res.Assignments[w-1] = Assignment{Worker: in.Workers[w-1], Start: start, End: j}
 		j = start
 	}
+	for i, a := range res.Assignments {
+		res.PipelineMs += stageCost(in, i, a.End-a.Start)
+	}
 	return res, nil
 }
 
-// Evaluate computes the bottleneck of an existing split under new telemetry.
+// Evaluate computes the bottleneck (slowest stage) of an existing split under
+// new telemetry -- the THROUGHPUT-governing quantity. For the LATENCY-governing
+// quantity use EvaluatePipeline.
 // Returns +Inf if the split does not fit the input's worker count or layers.
 func Evaluate(in Input, splits [][2]int) float64 {
 	if len(splits) != len(in.Workers) || len(in.LinkMs) != len(in.Workers)-1 {
@@ -136,6 +155,27 @@ func Evaluate(in Input, splits [][2]int) float64 {
 		return math.Inf(1)
 	}
 	return bottleneck
+}
+
+// EvaluatePipeline computes the sum of every stage's cost for an existing
+// split -- the LATENCY-governing quantity, since a token traverses all stages
+// sequentially. Returns +Inf on the same validity failures as Evaluate.
+func EvaluatePipeline(in Input, splits [][2]int) float64 {
+	if len(splits) != len(in.Workers) || len(in.LinkMs) != len(in.Workers)-1 {
+		return math.Inf(1)
+	}
+	total, expect := 0.0, 0
+	for i, s := range splits {
+		if s[0] != expect || s[1] < s[0] {
+			return math.Inf(1)
+		}
+		expect = s[1]
+		total += stageCost(in, i, s[1]-s[0])
+	}
+	if expect != in.TotalLayers {
+		return math.Inf(1)
+	}
+	return total
 }
 
 // Decider adds hysteresis: it repartitions only when the optimal split beats

@@ -161,13 +161,19 @@ window) is what it takes to see real throttling on modern hardware.
   thermal-throttle their CPU under sustained load with the same dynamics a
   GPU throttles under, so the same `Reader`/derate abstraction applies
   unchanged. See "Running on real hardware" above.
-- **Model fidelity**: the DP's predicted per-token bottleneck cost tracks
-  measured cost with a stable ~3.0-3.24× ratio across every scenario tested
-  (`bench/fidelity.py`) — the cost model gets *relative* bottleneck
-  placement right (what the DP needs to choose the correct partition) but
-  underestimates *absolute* latency by a roughly constant factor, likely
-  gRPC/interpreter overhead not in the cost model. Treat the DP's bottleneck
-  number as a ranking signal, not a calibrated latency prediction.
+- **Model fidelity**: the DP emits two predictions that must not be compared
+  against the same observable. `BottleneckMs` is the slowest single stage and
+  governs steady-state **throughput**; `PipelineMs` is the sum of stages and
+  governs per-request **latency**, since a token traverses every stage
+  sequentially. An earlier version of `bench/fidelity.py` compared the
+  bottleneck against measured per-request per-token cost and reported a stable
+  ~3.0-3.24x "gap", attributed to gRPC/interpreter overhead. That attribution
+  was **unsupported and confounded**: for k balanced stages the ratio of those
+  two quantities is ~k, and every run tested had 3 stages. Compared against
+  aggregate throughput -- the quantity it actually predicts -- the bottleneck
+  prediction has a median error of -2.2% to -7.9% with an IQR around 13%
+  (`bench/fidelity.py` CHECK T; see `docs/phase0-findings.md`). The residual
+  causes have not been measured, so no replacement explanation is asserted.
 - **Optimality**: for a fixed telemetry snapshot the DP solves the classical
   linear partition problem exactly (unit-tested against brute force, 200
   randomized instances).
