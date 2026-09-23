@@ -53,6 +53,7 @@ func main() {
 		gateFixed   = flag.Float64("gate-transition-fixed-ms", envFloatOr("GATE_TRANSITION_FIXED_MS", 2000), "transition downtime independent of context (weight reload, orchestration)")
 		gatePrefill = flag.Float64("gate-prefill-ms-per-token-layer", envFloatOr("GATE_PREFILL_MS_PER_TOKEN_LAYER", 0.21), "measured prefill cost per token per layer, for cache reconstruction")
 		gateMargin  = flag.Float64("gate-margin", envFloatOr("GATE_MARGIN", 0.13), "required fractional token advantage before a voluntary move")
+		linkSource  = flag.String("link-source", envOr("LINK_SOURCE", "any"), "link telemetry: ebpf | app | ebpf+app | none | any")
 		profileOnce = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
 	)
 	flag.Parse()
@@ -68,6 +69,13 @@ func main() {
 	case partition.PolicyNone, partition.PolicyHysteresis, partition.PolicyGate, partition.PolicyGateForce:
 	default:
 		log.Fatalf("unknown -policy %q (want none, hysteresis, gate or gate-force)", *policy)
+	}
+
+	switch controller.LinkSource(*linkSource) {
+	case controller.LinkSourceAny, controller.LinkSourceEBPF, controller.LinkSourceApp,
+		controller.LinkSourceEBPFThenApp, controller.LinkSourceNone:
+	default:
+		log.Fatalf("unknown -link-source %q (want ebpf, app, ebpf+app, none or any)", *linkSource)
 	}
 
 	switch *mode {
@@ -104,6 +112,7 @@ func main() {
 		ReassertInterval: *reassert,
 		ProfileOnce:      *profileOnce,
 		Policy:           partition.Policy(*policy),
+		LinkSource:       controller.LinkSource(*linkSource),
 		Gate: partition.GateParams{
 			HorizonS:               *gateHorizon,
 			TransitionFixedMs:      *gateFixed,
@@ -130,8 +139,8 @@ func main() {
 	})
 	go func() { log.Fatal(http.ListenAndServe(*httpAddr, mux)) }()
 
-	log.Printf("controller: mode=%s policy=%s ns=%s static=%v profile-once=%v improvement=%.2f cooldown=%s grpc=%s http=%s",
-		*mode, *policy, *namespace, *static, *profileOnce, *improvement, *cooldown, *grpcAddr, *httpAddr)
+	log.Printf("controller: mode=%s policy=%s link-source=%s ns=%s static=%v profile-once=%v improvement=%.2f cooldown=%s grpc=%s http=%s",
+		*mode, *policy, *linkSource, *namespace, *static, *profileOnce, *improvement, *cooldown, *grpcAddr, *httpAddr)
 	ctrl.Run(context.Background())
 }
 

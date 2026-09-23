@@ -48,6 +48,10 @@ type Config struct {
 	// from the pipeline spec at decision time, not from here.
 	Policy partition.Policy
 	Gate   partition.GateParams
+
+	// LinkSource selects which link telemetry prices the hops (the H3 arms).
+	// Empty means LinkSourceAny, the historical behaviour.
+	LinkSource LinkSource
 }
 
 type Controller struct {
@@ -235,7 +239,11 @@ func (c *Controller) buildInput(sp PipelineSpec, workers []WorkerRef) partition.
 	for i := 0; i+1 < len(workers); i++ {
 		next := workers[i+1]
 		ms := c.cfg.DefaultLinkMs
-		if srtt, ok := c.store.LinkSRTTToDst(next.ip(), next.port(), 15*time.Second); ok {
+		src := c.cfg.LinkSource
+		if src == "" {
+			src = LinkSourceAny
+		}
+		if srtt, ok := c.store.LinkCost(src, next.ip(), next.port(), 15*time.Second); ok {
 			ms = srtt
 		}
 		if c.cfg.ProfileOnce {
@@ -387,6 +395,7 @@ func (c *Controller) State() map[string]any {
 		policy = partition.PolicyHysteresis
 	}
 	out["policy"] = string(policy)
+	out["link_source"] = string(c.cfg.LinkSource)
 	out["decisions"] = c.decisions
 	out["telemetry"] = c.store.Snapshot()
 	return out

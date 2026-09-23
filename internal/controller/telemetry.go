@@ -115,6 +115,43 @@ func (s *TelemetryStore) LinkSRTT(src, dst string, port uint32, staleAfter time.
 // feeding a stage is router->stage; matching by destination captures it
 // without knowing the router's pod IP.
 func (s *TelemetryStore) LinkSRTTToDst(dst string, port uint32, staleAfter time.Duration) (float64, bool) {
+	return s.LinkCost(LinkSourceAny, dst, port, staleAfter)
+}
+
+// LinkSource selects which telemetry the controller prices links with. This is
+// the H3 comparison: kernel (eBPF) measurements against application-level
+// ones, never silently mixed.
+type LinkSource string
+
+const (
+	// LinkSourceAny is the historical behaviour: the freshest flow from any
+	// source. Kept for LinkSRTTToDst; experiments should choose explicitly.
+	LinkSourceAny LinkSource = "any"
+	// LinkSourceEBPF uses only kernel-measured sRTT from node agents.
+	LinkSourceEBPF LinkSource = "ebpf"
+	// LinkSourceApp uses only the router's application-level transport cost.
+	LinkSourceApp LinkSource = "app"
+	// LinkSourceEBPFThenApp prefers eBPF and falls back to the application
+	// measurement when no fresh kernel sample exists.
+	LinkSourceEBPFThenApp LinkSource = "ebpf+app"
+	// LinkSourceNone ignores link telemetry: every hop costs DefaultLinkMs.
+	LinkSourceNone LinkSource = "none"
+)
+
+// appSrc is the src key the router uses for application-level flows.
+const appSrc = "app"
+
+// LinkCost returns the freshest link cost into dst:port from the chosen source.
+func (s *TelemetryStore) LinkCost(src LinkSource, dst string, port uint32, staleAfter time.Duration) (float64, bool) {
+	switch src {
+	case LinkSourceNone:
+		return 0, false
+	case LinkSourceEBPFThenApp:
+		if v, ok := s.LinkCost(LinkSourceEBPF, dst, port, staleAfter); ok {
+			return v, true
+		}
+		return s.LinkCost(LinkSourceApp, dst, port, staleAfter)
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	var (
@@ -124,6 +161,12 @@ func (s *TelemetryStore) LinkSRTTToDst(dst string, port uint32, staleAfter time.
 	)
 	for key, f := range s.flows {
 		if key.dst != dst || key.port != port || time.Since(f.lastSeen) > staleAfter {
+			continue
+		}
+		if src == LinkSourceEBPF && key.src == appSrc {
+			continue
+		}
+		if src == LinkSourceApp && key.src != appSrc {
 			continue
 		}
 		if !found || f.lastSeen.After(bestSeen) {

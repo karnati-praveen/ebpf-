@@ -3,7 +3,7 @@
 Serves a contiguous range of model layers. The controller re-assigns the
 range at runtime via AssignLayers (hot, no restart); the router drives
 inference through Forward. A single lock serializes compute, mimicking one
-GPU, so busy-time stats are meaningful for bubble-time measurement.
+GPU, so busy-time stats are a meaningful utilization proxy.
 """
 
 import logging

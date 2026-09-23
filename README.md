@@ -1,7 +1,8 @@
 # KubeEdgeInfer
 
-A closed-loop, eBPF-driven Kubernetes framework for heterogeneous distributed
-LLM inference on consumer edge clusters.
+A closed-loop, eBPF-driven framework for heterogeneous distributed LLM
+inference on consumer edge devices. It runs standalone on plain Linux machines
+(`deploy/standalone/`) or on Kubernetes (kind/k3s).
 
 Large models are split across machines by pipeline parallelism. Existing
 frameworks decide that split **once** and never revisit it — but edge hardware
@@ -24,14 +25,28 @@ decision** driven by kernel-level measurements:
 
 | Path | Language | Role |
 |---|---|---|
-| `internal/ebpf` + `cmd/nodeagent` | Go + C (CO-RE BPF) | **WATCH** — `tp_btf/tcp_probe` (per-flow sRTT) + `fentry/tcp_sendmsg` (throughput) filtered to worker ports; GPU/thermal telemetry via a selectable `gpu.Reader`: simulated (default), real CPU thermal (`GPU_MODE=cputherm`, no discrete GPU needed), or real NVML (`GPU_MODE=nvml`, `-tags gpu`) |
-| `internal/partition` | Go | **DECIDE** — exact linear-partition DP (O(N²K)) minimizing the bottleneck stage; 15% improvement + 30 s cooldown hysteresis (both tunable live via `IMPROVEMENT_FRAC`/`COOLDOWN_S`) |
-| `cmd/controller` + `internal/controller` | Go | **ACT/HEAL** — aggregates telemetry, hot-reassigns layer ranges over gRPC (no pod restarts), tracks state in the `InferencePipeline` CRD; a 3 s stale heartbeat forces repartition across survivors; `PROFILE_ONCE=1` freezes telemetry after the first reading (offline-profiling ablation baseline) |
-| `worker/` | Python | Shard workers (pluggable `sim` and `gpt2` backends) + router. Workers are stateless — distributed GPT-2 output is token-identical to single-process HuggingFace. `gpt2` backend runs on `WORKER_DEVICE=auto\|cuda\|cpu` (real CUDA inference if available) |
-| `bench/` | Python | Ablation harness: baseline / netem / thermal / node-failure / combo (netem+thermal together) × dynamic / static / profileonly, measuring bubble time (worst-stage idle), tokens/sec, TTFT; plus a hysteresis sweep and a predicted-vs-measured model-fidelity check |
+| `internal/ebpf` + `cmd/nodeagent` | Go + C (CO-RE BPF) | **WATCH** — `tp_btf/tcp_probe` (per-flow sRTT) + `fentry/tcp_sendmsg` (throughput) filtered to worker ports; compute-speed telemetry via a selectable `gpu.Reader`: measured execution speed pushed by the worker (`GPU_MODE=measured`, works on any machine including cloud VMs), simulated (default), real CPU thermal (`GPU_MODE=cputherm`), or real NVML (`GPU_MODE=nvml`, `-tags gpu`) |
+| `internal/partition` | Go | **DECIDE** — exact linear-partition DP (O(N²K)) minimizing the bottleneck stage, with measured endpoint (embedding / LM-head) and context-dependent per-layer costs; decision policies `none` / `hysteresis` (15% + 30 s, default) / `gate` (hysteresis plus a transition-cost gate over a planning horizon) / `gate-force` (same verdict, always executes -- the counterfactual arm) |
+| `cmd/controller` + `internal/controller` | Go | **ACT/HEAL** — aggregates telemetry, hot-reassigns layer ranges over gRPC (no restarts); configured by the `InferencePipeline` CRD under Kubernetes or a JSON file standalone (`-mode=standalone`, the default); a 3 s stale heartbeat forces repartition across survivors; `PROFILE_ONCE=1` freezes telemetry after the first reading (offline-profiling ablation baseline) |
+| `worker/` | Python | Shard workers (pluggable `sim`, `gpt2` and `qwen3` backends) + router. `qwen3` supports a per-request KV cache (`KV_CACHE=1`, router and workers must agree); a relayout replays each in-flight request from step 0, which is the measured reconstruction cost. Distributed output is verified token-identical to single-process HuggingFace (`bench/verify_gpt2.py`, `bench/verify_qwen3.py`) |
+| `bench/` | Python | Ablation harness: baseline / netem / thermal / node-failure / combo (netem+thermal together) × dynamic / static / profileonly, measuring worst-stage idle fraction (a utilization proxy, not a direct bubble measurement), tokens/sec, TTFT; plus a hysteresis sweep and a predicted-vs-measured model-fidelity check |
+| `deploy/standalone/` | Bash | No-Kubernetes deployment: `setup-vm.sh`, `start-coordinator.sh`, `start-worker-node.sh`, `fault.sh` (compute / contention / network / loss injection), with `bench/vmrun.py` + `bench/vmanalyze.py` for experiments. See its README |
 | `scripts/` | Bash | `join-node.sh` / `deploy-real-hardware.sh` — turn a handful of real machines (laptops, GPU boxes) into a k3s cluster running this project, no manual YAML editing |
 
-## Quickstart
+## Quickstart — standalone (no Kubernetes)
+
+On each Linux machine (x86_64, Ubuntu 22.04/24.04, sudo):
+
+```bash
+./deploy/standalone/setup-vm.sh                          # every machine, once
+./deploy/standalone/start-worker-node.sh <coordinator-ip>  # every machine
+./deploy/standalone/start-coordinator.sh <n-workers>       # coordinator only
+curl -s -X POST localhost:8080/generate -d '{"prompt_len":64,"max_new_tokens":16}'
+```
+
+Full runbook, fault injection and the experiment driver: `deploy/standalone/README.md`.
+
+## Quickstart — kind (Kubernetes, single host)
 
 Requirements: Linux with BTF (`/sys/kernel/btf/vmlinux`), Docker, kind,
 kubectl, Python ≥3.11. (Go, protoc, and clang are only needed when *changing*

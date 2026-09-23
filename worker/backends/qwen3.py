@@ -108,6 +108,13 @@ class _SpeedProbe:
     """
 
     ALPHA = 0.2
+    # Push only while samples are fresh, and restart the average after a gap.
+    # Otherwise an idle worker would keep re-sending the speed it measured
+    # under a fault that has since been cleared, and the next experiment run
+    # would start by partitioning around a fault that no longer exists. Once
+    # pushes stop, the node agent's own staleness returns speed to 1.
+    PUSH_FRESH_S = 5.0
+    RESET_AFTER_S = 10.0
 
     def __init__(self):
         self.table = []
@@ -118,6 +125,7 @@ class _SpeedProbe:
         self.table.sort()
         self.agent = os.environ.get("NODE_AGENT_ADDR", "")
         self.ewma = None
+        self.last_sample = 0.0
         self.lock = threading.Lock()
         if self.table and self.agent:
             threading.Thread(target=self._push_loop, daemon=True).start()
@@ -141,16 +149,21 @@ class _SpeedProbe:
         if not self.table or n_layers <= 0 or elapsed_ms <= 0:
             return
         sample = self.expected(ctx) / (elapsed_ms / n_layers)
+        now = time.monotonic()
         with self.lock:
-            self.ewma = sample if self.ewma is None else (
-                self.ALPHA * sample + (1 - self.ALPHA) * self.ewma)
+            if self.ewma is None or now - self.last_sample > self.RESET_AFTER_S:
+                self.ewma = sample
+            else:
+                self.ewma = self.ALPHA * sample + (1 - self.ALPHA) * self.ewma
+            self.last_sample = now
 
     def _push_loop(self):
         while True:
             time.sleep(1.0)
             with self.lock:
                 v = self.ewma
-            if v is None:
+                fresh = time.monotonic() - self.last_sample < self.PUSH_FRESH_S
+            if v is None or not fresh:
                 continue
             try:
                 url = f"http://{self.agent}/gpu?measured_speed={v:.4f}"

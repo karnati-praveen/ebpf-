@@ -8,6 +8,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -221,7 +222,15 @@ func main() {
 		log.Printf("advertising worker %s while it is serving gRPC", a.workerAddr)
 	}
 
-	mon, err := kebpf.NewMonitor(uint16(portMin), uint16(portMax))
+	var mon *kebpf.Monitor
+	var err error
+	if env("EBPF", "on") == "off" {
+		// The application-only arm (H3): no kernel programs at all, so the
+		// agent's measured overhead is that arm's real overhead.
+		err = fmt.Errorf("disabled by EBPF=off")
+	} else {
+		mon, err = kebpf.NewMonitor(uint16(portMin), uint16(portMax))
+	}
 	if err != nil {
 		log.Printf("WARNING: eBPF monitor unavailable (%v); running without network telemetry", err)
 	} else {

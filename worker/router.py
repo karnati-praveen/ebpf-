@@ -8,7 +8,7 @@ repartition, the router re-prefills the accumulated context on the new chain.
 
 HTTP API (default :8080):
   POST /generate  {"input_ids": [..]} or {"prompt_len": N}, "max_new_tokens": M
-  GET  /stats     per-stage window busy/wall (bubble-time source)
+  GET  /stats     per-stage window busy/wall (utilization proxy)
   GET  /pipeline  current stage layout
   GET  /metrics   cumulative counters
 """
@@ -112,6 +112,49 @@ class GenerationChanged(Exception):
 # mismatch is rejected by the worker rather than producing wrong tokens.
 KV_CACHE = os.environ.get("KV_CACHE", "0") == "1"
 
+# Application-level link telemetry (the H3 comparison arm). For every
+# single-position decode step the router records, per stage, the RPC round trip
+# minus the worker's own compute_ms: the transport cost -- network plus
+# serialization plus gRPC overhead -- measured at the application layer, with
+# no kernel access. It is pushed to the controller's Telemetry service as
+# flows with src "app", alongside (never mixed with) eBPF flows. Enabled when
+# CONTROLLER_ADDR is set. Prefill steps carry a context-sized payload and are
+# excluded so every sample measures the same message size.
+CONTROLLER_ADDR = os.environ.get("CONTROLLER_ADDR", "")
+APP_LINK_ALPHA = 0.2
+APP_LINKS = {}  # stage addr -> [ewma_ms, samples]
+APP_LINKS_LOCK = threading.Lock()
+
+
+def _record_transport(addr, transport_ms):
+    with APP_LINKS_LOCK:
+        cur = APP_LINKS.get(addr)
+        if cur is None:
+            APP_LINKS[addr] = [transport_ms, 1]
+        else:
+            cur[0] = APP_LINK_ALPHA * transport_ms + (1 - APP_LINK_ALPHA) * cur[0]
+            cur[1] += 1
+
+
+def _push_app_links():
+    stub = rpc.TelemetryStub(grpc.insecure_channel(CONTROLLER_ADDR))
+    while True:
+        time.sleep(1.0)
+        with APP_LINKS_LOCK:
+            snap = {a: tuple(v) for a, v in APP_LINKS.items()}
+        if not snap:
+            continue
+        msg = pb.NodeTelemetry(node="router-app", timestamp_ms=int(time.time() * 1000))
+        for addr, (ms, n) in snap.items():
+            host, _, port = addr.rpartition(":")
+            msg.links.add(src_ip="app", dst_ip=host, dst_port=int(port),
+                          srtt_ms=ms, samples=n)
+        try:
+            stub.Report(msg, timeout=0.9)
+        except grpc.RpcError:
+            pass  # telemetry is best-effort
+
+
 # Worker errors that mean "this request's cache is gone or out of step" -- a
 # restarted worker, an evicted session, or a relaid-out shard. Recoverable by
 # replaying from step 0, exactly like a generation change.
@@ -132,10 +175,14 @@ def _forward_chain(stages, generation, request_id, step, first_stage_ids):
         else:
             req.hidden = hidden
             req.shape.extend(shape)
+        t_rpc = time.monotonic()
         try:
             reply = STATE.stub(stage.addr).Forward(req, timeout=120)
         except grpc.RpcError as e:
             raise GenerationChanged(f"stage {stage.name} unreachable: {e.code()}")
+        if KV_CACHE and step > 0 and not reply.error:
+            rpc_ms = (time.monotonic() - t_rpc) * 1000.0
+            _record_transport(stage.addr, max(0.0, rpc_ms - reply.compute_ms))
         if reply.error:
             if any(k in reply.error for k in _REPLAYABLE):
                 raise GenerationChanged(reply.error)
@@ -338,9 +385,13 @@ def main():
     server.add_insecure_port(f"[::]:{grpc_port}")
     server.start()
 
+    if CONTROLLER_ADDR:
+        threading.Thread(target=_push_app_links, daemon=True).start()
+        log.info("app-level link telemetry -> %s", CONTROLLER_ADDR)
+
     http_port = int(os.environ.get("HTTP_PORT", "8080"))
     httpd = ThreadingHTTPServer(("", http_port), Handler)
-    log.info("router: http :%d grpc :%d", http_port, grpc_port)
+    log.info("router: http :%d grpc :%d kv_cache=%s", http_port, grpc_port, KV_CACHE)
     httpd.serve_forever()
 
 
