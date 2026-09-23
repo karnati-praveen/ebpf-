@@ -3,6 +3,9 @@
 **Measurement-Guided Adaptive LLM Inference on Heterogeneous Consumer Devices**
 
 Primary goal: the journal paper.
+
+**See also** `docs/NOVELTY_AND_ABLATIONS.md` (comparison with EdgeShard and
+arXiv 2505.02533; the ablation matrix) and `docs/HANDOFF.md` (current state).
 Immediate milestone: the **preliminary results table** (Phase 6). Not an
 architecture rewrite.
 

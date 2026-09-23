@@ -212,6 +212,13 @@ class Qwen3Backend:
                   self.model_name, start, end, total, self.device, self.cached,
                   torch.get_num_threads())
         dtype = torch.float16 if self.device == "cuda" else torch.float32
+        # Free the previous shard BEFORE loading, so a relayout's peak memory
+        # is one full model rather than one full model plus the old shard.
+        # Every cached session is invalid for the new layers anyway.
+        self.layers = self.embed = self.norm = self.lm_head = self.rotary = None
+        with self.sessions_lock:
+            self.sessions.clear()
+        gc.collect()
         # Loads the full model, keeps this shard's modules, and frees the rest.
         # Peak memory is therefore the full model during load. Acceptable for
         # Qwen3-0.6B (~2.4 GB FP32); a larger tier would need per-tensor

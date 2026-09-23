@@ -62,4 +62,7 @@ func TestRouterTelemetryIsNotAWorker(t *testing.T) {
 	if len(w) != 1 || w[0].Node != "vm2" || w[0].Addr != "10.0.0.5:50051" {
 		t.Fatalf("LiveWorkers = %+v", w)
 	}
+	if _, listed := s.Snapshot()["nodes"].(map[string]any)["router-app"]; listed {
+		t.Error("router telemetry must not be listed as a node in /state")
+	}
 }

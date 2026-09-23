@@ -35,6 +35,14 @@ log = logging.getLogger("router")
 GRPC_OPTS = [
     ("grpc.max_send_message_length", 64 * 1024 * 1024),
     ("grpc.max_receive_message_length", 64 * 1024 * 1024),
+    # Short reconnect backoff for known peers. gRPC's default grows toward
+    # 120 s, so a cached channel to a worker that died and came back kept
+    # failing fast with the stale dial error long after the worker was
+    # listening again -- making recovery time measure gRPC's backoff, not the
+    # system. Mirrors internal/peerconn on the Go side.
+    ("grpc.initial_reconnect_backoff_ms", 200),
+    ("grpc.min_reconnect_backoff_ms", 200),
+    ("grpc.max_reconnect_backoff_ms", 2000),
 ]
 
 
@@ -137,7 +145,7 @@ def _record_transport(addr, transport_ms):
 
 
 def _push_app_links():
-    stub = rpc.TelemetryStub(grpc.insecure_channel(CONTROLLER_ADDR))
+    stub = rpc.TelemetryStub(grpc.insecure_channel(CONTROLLER_ADDR, options=GRPC_OPTS))
     while True:
         time.sleep(1.0)
         with APP_LINKS_LOCK:

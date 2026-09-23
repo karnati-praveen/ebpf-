@@ -182,6 +182,11 @@ func (s *TelemetryStore) Snapshot() map[string]any {
 	defer s.mu.Unlock()
 	nodes := map[string]any{}
 	for name, st := range s.nodes {
+		// The router reports application-level links under a pseudo-node with
+		// no GPU stat and no worker; it is a telemetry source, not a node.
+		if st.gpu == nil && st.workerAddr == "" {
+			continue
+		}
 		nodes[name] = map[string]any{
 			"temp_c":       st.gpu.GetTempC(),
 			"throttled":    st.gpu.GetThrottled(),

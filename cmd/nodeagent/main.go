@@ -16,13 +16,12 @@ import (
 	"sync"
 	"time"
 
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
-	"google.golang.org/grpc/credentials/insecure"
 
 	"kubeedgeinfer/gen/pipelinepb"
 	kebpf "kubeedgeinfer/internal/ebpf"
 	"kubeedgeinfer/internal/gpu"
+	"kubeedgeinfer/internal/peerconn"
 )
 
 func env(key, def string) string {
@@ -134,8 +133,9 @@ func (a *agent) handleLinks(w http.ResponseWriter, r *http.Request) {
 // a given layout is established separately by its AssignLayers acknowledgement.
 func (a *agent) watchWorker() {
 	for {
-		conn, err := grpc.NewClient(a.workerAddr,
-			grpc.WithTransportCredentials(insecure.NewCredentials()))
+		// Short backoff: a restarted worker must be re-detected within
+		// seconds, not after gRPC's default backoff of up to 120 s.
+		conn, err := peerconn.Dial(a.workerAddr)
 		if err != nil {
 			a.setWorkerReady(false)
 			time.Sleep(time.Second)
@@ -261,8 +261,7 @@ func main() {
 	if controllerAddr != "" {
 		go func() {
 			for {
-				conn, err := grpc.NewClient(controllerAddr,
-					grpc.WithTransportCredentials(insecure.NewCredentials()))
+				conn, err := peerconn.Dial(controllerAddr)
 				if err != nil {
 					time.Sleep(2 * time.Second)
 					continue

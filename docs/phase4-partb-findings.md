@@ -23,6 +23,15 @@ adequate model, slightly sublinear from fixed overhead.
 
 ## 2. Break-even horizon — the result to report
 
+> **Correction (2026-09-23).** The table below prices reconstruction as a
+> re-prefill of the **moved** 14 layers. The implemented router replays each
+> in-flight request from step 0 through the **whole** chain, so every layer
+> re-prefills, and a relayout also reloads weights (~2 s measured). With both
+> included, the break-even horizon for a 0.7× derate at ctx 2048 is **77.9 s**,
+> not 26.4 s (`internal/partition/decider_test.go`). The shape — break-even
+> growing with context — stands; the magnitudes below understate it roughly 2–3×.
+> The transition gate uses the corrected model.
+
 A binary "does it pay at 30 s" hides the structure. The useful quantity is **how
 long conditions must hold for a move to repay its reconstruction cost**:
 
@@ -44,7 +53,7 @@ Using measured reconstruction and the endpoint-corrected DP predictions:
 The break-even horizon grows roughly linearly with context — from under 2 s at 128
 tokens to 26–30 s at 2048 — because reconstruction grows with context while the
 per-token gain does not. Against a 30 s planning horizon the network case lands at
-30.2 s: **exactly break-even, by construction of nothing.** That is a far more
+30.2 s: **essentially at break-even.** That is a far more
 informative statement than a pass/fail, and it is the shape the paper should report.
 
 **This is still a prediction.** `stay` and `adapt` come from the DP's cost model,
