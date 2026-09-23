@@ -29,8 +29,8 @@ type CtxCost struct {
 // Input is one telemetry snapshot for the partitioner.
 type Input struct {
 	TotalLayers int
-	PerLayerMs  float64  // base per-layer compute cost at Speed == 1
-	Workers     []Worker // in pipeline order
+	PerLayerMs  float64   // base per-layer compute cost at Speed == 1
+	Workers     []Worker  // in pipeline order
 	LinkMs      []float64 // LinkMs[i] = transfer cost of hop i -> i+1; len(Workers)-1
 
 	// EmbedMs and HeadMs are ENDPOINT costs: compute that belongs to whichever
@@ -258,22 +258,92 @@ func EvaluatePipeline(in Input, splits [][2]int) float64 {
 	return total
 }
 
-// Decider adds hysteresis: it repartitions only when the optimal split beats
-// the current one by ImprovementFrac and Cooldown has elapsed — unless the
-// worker set changed (healing), which always forces a new split.
+// Policy selects how voluntary repartitions are gated. Recovery (a changed
+// worker set) always bypasses the policy: the current split is unservable.
+type Policy string
+
+const (
+	// PolicyNone moves whenever the optimum is strictly better, with no
+	// threshold and no cooldown -- the "no hysteresis" arm.
+	PolicyNone Policy = "none"
+	// PolicyHysteresis moves only when the optimum beats the current split by
+	// ImprovementFrac and Cooldown has elapsed -- the original behaviour.
+	PolicyHysteresis Policy = "hysteresis"
+	// PolicyGate is hysteresis plus the transition gate: a move must also
+	// deliver more useful tokens over the planning horizon than staying put,
+	// after paying its transition downtime, by at least SafetyMargin.
+	PolicyGate Policy = "gate"
+	// PolicyGateForce computes exactly the same gate verdict as PolicyGate but
+	// executes the move regardless. Run on the same fault trace as
+	// PolicyGate, it supplies the OBSERVED outcome of moves the gate rejects,
+	// which otherwise have no counterfactual.
+	PolicyGateForce Policy = "gate-force"
+)
+
+// GateParams parameterises the transition gate. Transition downtime is
+//
+//	T = TransitionFixedMs + ContextLen * PrefillMsPerTokenLayer * TotalLayers
+//
+// TransitionFixedMs covers weight reload and orchestration. The second term is
+// cache reconstruction: on a relayout the router replays each in-flight
+// request from step 0 through the WHOLE chain, so every layer re-prefills the
+// context, not only the layers that moved.
+type GateParams struct {
+	HorizonS               float64
+	TransitionFixedMs      float64
+	PrefillMsPerTokenLayer float64
+	ContextLen             int
+	SafetyMargin           float64
+}
+
+// TransitionMs is the predicted downtime of one relayout.
+func (g GateParams) TransitionMs(totalLayers int) float64 {
+	return g.TransitionFixedMs + float64(g.ContextLen)*g.PrefillMsPerTokenLayer*float64(totalLayers)
+}
+
+// Decision records one evaluated candidate move, accepted or not, with every
+// quantity the verdict used. Rejected moves are recorded too, because
+// evaluating whether a rejection was justified needs them.
+type Decision struct {
+	Time         time.Time `json:"time"`
+	Policy       Policy    `json:"policy"`
+	Reason       string    `json:"reason"`
+	CurrentMs    float64   `json:"current_bottleneck_ms"`
+	OptimalMs    float64   `json:"optimal_bottleneck_ms"`
+	Improvement  float64   `json:"improvement_frac"`
+	TransitionMs float64   `json:"transition_ms,omitempty"`
+	HorizonS     float64   `json:"horizon_s,omitempty"`
+	TokensStay   float64   `json:"tokens_stay,omitempty"`
+	TokensAdapt  float64   `json:"tokens_adapt,omitempty"`
+	BreakEvenS   float64   `json:"break_even_s,omitempty"`
+	GateAccepts  bool      `json:"gate_accepts"`
+	Executed     bool      `json:"executed"`
+	FromSplits   [][2]int  `json:"from_splits,omitempty"`
+	ToSplits     [][2]int  `json:"to_splits"`
+}
+
+// Decider decides when to adopt a new split. Recovery -- a changed worker set
+// -- always forces a new split, whatever the policy.
 type Decider struct {
 	ImprovementFrac float64
 	Cooldown        time.Duration
+	Policy          Policy
+	Gate            GateParams
 
 	current    *Result
 	lastChange time.Time
+	last       *Decision
 }
 
+// NewDecider keeps the original constructor: the hysteresis policy.
 func NewDecider(improvementFrac float64, cooldown time.Duration) *Decider {
-	return &Decider{ImprovementFrac: improvementFrac, Cooldown: cooldown}
+	return &Decider{ImprovementFrac: improvementFrac, Cooldown: cooldown, Policy: PolicyHysteresis}
 }
 
 func (d *Decider) Current() *Result { return d.current }
+
+// LastDecision returns the most recent evaluated candidate move, or nil.
+func (d *Decider) LastDecision() *Decision { return d.last }
 
 // Decide returns the split to apply and whether it is a change.
 func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, error) {
@@ -282,21 +352,114 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 		return nil, false, err
 	}
 	if d.current == nil || force || workersChanged(d.current, in.Workers) {
+		var from [][2]int
+		if d.current != nil {
+			from = d.current.Splits()
+		}
+		d.last = &Decision{Time: now, Policy: d.policy(), Reason: "recovery-or-initial",
+			OptimalMs: opt.BottleneckMs, GateAccepts: true, Executed: true,
+			FromSplits: from, ToSplits: opt.Splits()}
 		d.current = opt
 		d.lastChange = now
 		return opt, true, nil
 	}
-	currentCost := Evaluate(in, d.current.Splits())
-	improved := opt.BottleneckMs < currentCost*(1-d.ImprovementFrac)
-	if improved && now.Sub(d.lastChange) >= d.Cooldown {
-		d.current = opt
-		d.lastChange = now
-		return opt, true, nil
+
+	curSplits := d.current.Splits()
+	currentCost := Evaluate(in, curSplits)
+	keep := func() (*Result, bool, error) {
+		kept := &Result{Assignments: d.current.Assignments, BottleneckMs: currentCost,
+			PipelineMs: EvaluatePipeline(in, curSplits)}
+		d.current = kept
+		return kept, false, nil
 	}
-	// Keep the current split; refresh its evaluated bottleneck for status.
-	kept := &Result{Assignments: d.current.Assignments, BottleneckMs: currentCost}
-	d.current = kept
-	return kept, false, nil
+	if splitsEqual(curSplits, opt.Splits()) || !(opt.BottleneckMs < currentCost) {
+		return keep()
+	}
+
+	dec := &Decision{Time: now, Policy: d.policy(), CurrentMs: currentCost,
+		OptimalMs: opt.BottleneckMs, Improvement: (currentCost - opt.BottleneckMs) / currentCost,
+		FromSplits: curSplits, ToSplits: opt.Splits()}
+	d.last = dec
+
+	execute := false
+	switch d.policy() {
+	case PolicyNone:
+		dec.Reason, dec.GateAccepts, execute = "strictly-better", true, true
+	case PolicyHysteresis, PolicyGate, PolicyGateForce:
+		if opt.BottleneckMs >= currentCost*(1-d.ImprovementFrac) {
+			dec.Reason = "below-improvement-threshold"
+			return keep()
+		}
+		if now.Sub(d.lastChange) < d.Cooldown {
+			dec.Reason = "cooldown"
+			return keep()
+		}
+		if d.policy() == PolicyHysteresis {
+			dec.Reason, dec.GateAccepts, execute = "hysteresis-passed", true, true
+			break
+		}
+		d.evaluateGate(dec, in.TotalLayers, currentCost, opt.BottleneckMs)
+		execute = dec.GateAccepts || d.policy() == PolicyGateForce
+		switch {
+		case dec.GateAccepts:
+			dec.Reason = "gate-accepts"
+		case execute:
+			dec.Reason = "gate-rejects-forced"
+		default:
+			dec.Reason = "gate-rejects"
+		}
+	default:
+		return nil, false, fmt.Errorf("unknown decision policy %q", d.Policy)
+	}
+
+	if !execute {
+		return keep()
+	}
+	dec.Executed = true
+	d.current = opt
+	d.lastChange = now
+	return opt, true, nil
+}
+
+// evaluateGate fills in the gate's quantities. Both sides are in useful tokens
+// delivered over the horizon, so the comparison has consistent units:
+//
+//	stay  = H / current
+//	adapt = max(0, H - T) / optimal
+//
+// and the break-even horizon, where the two are equal, is
+//
+//	H* = T * current / (current - optimal)
+func (d *Decider) evaluateGate(dec *Decision, totalLayers int, current, optimal float64) {
+	h := d.Gate.HorizonS * 1000
+	t := d.Gate.TransitionMs(totalLayers)
+	dec.HorizonS = d.Gate.HorizonS
+	dec.TransitionMs = t
+	dec.TokensStay = h / current
+	dec.TokensAdapt = math.Max(0, h-t) / optimal
+	if current > optimal {
+		dec.BreakEvenS = t * current / (current - optimal) / 1000
+	}
+	dec.GateAccepts = dec.TokensAdapt > dec.TokensStay*(1+d.Gate.SafetyMargin)
+}
+
+func (d *Decider) policy() Policy {
+	if d.Policy == "" {
+		return PolicyHysteresis
+	}
+	return d.Policy
+}
+
+func splitsEqual(a, b [][2]int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func workersChanged(cur *Result, workers []Worker) bool {

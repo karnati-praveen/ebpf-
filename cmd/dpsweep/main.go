@@ -87,16 +87,16 @@ func describe(s [][2]int) string {
 }
 
 type row struct {
-	fault     string
-	magnitude string
-	baseSplit string
+	fault      string
+	magnitude  string
+	baseSplit  string
 	faultSplit string
-	moved     bool
-	stayMs    float64 // predicted bottleneck if we keep the baseline split
-	adaptMs   float64 // predicted bottleneck after repartitioning
-	benefitMs float64
+	moved      bool
+	stayMs     float64 // predicted bottleneck if we keep the baseline split
+	adaptMs    float64 // predicted bottleneck after repartitioning
+	benefitMs  float64
 	benefitPct float64
-	note      string
+	note       string
 }
 
 func main() {
@@ -229,8 +229,8 @@ func evaluate(fault, magnitude string, in partition.Input, baseSplits [][2]int, 
 	return row{
 		fault: fault, magnitude: magnitude,
 		baseSplit: describe(baseSplits), faultSplit: describe(res.Splits()),
-		moved:     !splitsEqual(baseSplits, res.Splits()),
-		stayMs:    stay, adaptMs: res.BottleneckMs,
+		moved:  !splitsEqual(baseSplits, res.Splits()),
+		stayMs: stay, adaptMs: res.BottleneckMs,
 		benefitMs: benefit, benefitPct: pct,
 	}
 }

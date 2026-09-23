@@ -169,7 +169,7 @@ func TestDeciderHysteresis(t *testing.T) {
 
 	// Heavy throttle: improvement is large, but cooldown not yet elapsed.
 	in.Workers = workers(1, 0.3, 1)
-	_, changed, _ = d.Decide(t0.Add(time.Minute + time.Second), in, false)
+	_, changed, _ = d.Decide(t0.Add(time.Minute+time.Second), in, false)
 	if !changed {
 		t.Fatal("cooldown elapsed since t0; large improvement must repartition")
 	}

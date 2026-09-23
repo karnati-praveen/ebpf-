@@ -32,10 +32,11 @@ func env(key, def string) string {
 }
 
 type agent struct {
-	node   string
-	reader gpu.Reader // active telemetry source: sim, cputherm, or nvml
-	sim    *gpu.Sim   // non-nil only in sim mode (the only source that supports fault injection)
-	mon    *kebpf.Monitor
+	node     string
+	reader   gpu.Reader    // active telemetry source: sim, cputherm, nvml, or measured
+	sim      *gpu.Sim      // non-nil only in sim mode (the only source that supports fault injection)
+	measured *gpu.Measured // non-nil only in measured mode
+	mon      *kebpf.Monitor
 
 	mu    sync.Mutex
 	links []kebpf.LinkSnapshot
@@ -53,22 +54,26 @@ type agent struct {
 // environments; GPU_MODE=cputherm reads real /sys/class/thermal state, for
 // running on laptops that have no discrete GPU but do thermally throttle
 // under sustained load; GPU_MODE=nvml requires building with -tags gpu.
-func newReader() (gpu.Reader, *gpu.Sim) {
+func newReader() (gpu.Reader, *gpu.Sim, *gpu.Measured) {
 	switch env("GPU_MODE", "sim") {
+	case "measured":
+		log.Printf("gpu telemetry: measured execution speed pushed by the co-located worker")
+		m := gpu.NewMeasured(10 * time.Second)
+		return m, nil, m
 	case "cputherm":
 		log.Printf("gpu telemetry: real CPU thermal (/sys/class/thermal)")
-		return gpu.NewCPUTherm(0, 0, 0), nil
+		return gpu.NewCPUTherm(0, 0, 0), nil, nil
 	case "nvml":
 		if r, err := newNVML(); err == nil {
 			log.Printf("gpu telemetry: real NVML")
-			return r, nil
+			return r, nil, nil
 		} else {
 			log.Printf("WARNING: GPU_MODE=nvml requested but unavailable (%v); falling back to sim", err)
 		}
 		fallthrough
 	default:
 		s := gpu.NewSim()
-		return s, s
+		return s, s, nil
 	}
 }
 
@@ -76,6 +81,11 @@ func (a *agent) handleGPU(w http.ResponseWriter, r *http.Request) {
 	if bf := r.URL.Query().Get("busy_frac"); bf != "" {
 		if v, err := strconv.ParseFloat(bf, 64); err == nil && a.sim != nil {
 			a.sim.ReportLoad(v)
+		}
+	}
+	if ms := r.URL.Query().Get("measured_speed"); ms != "" {
+		if v, err := strconv.ParseFloat(ms, 64); err == nil && a.measured != nil {
+			a.measured.Report(v)
 		}
 	}
 	json.NewEncoder(w).Encode(a.reader.Read())
@@ -203,8 +213,9 @@ func main() {
 	portMin, _ := strconv.Atoi(env("PORT_MIN", "50051"))
 	portMax, _ := strconv.Atoi(env("PORT_MAX", "50052"))
 
-	reader, sim := newReader()
-	a := &agent{node: nodeName, reader: reader, sim: sim, workerAddr: os.Getenv("WORKER_ADDR")}
+	reader, sim, measured := newReader()
+	a := &agent{node: nodeName, reader: reader, sim: sim, measured: measured,
+		workerAddr: os.Getenv("WORKER_ADDR")}
 	if a.workerAddr != "" {
 		go a.watchWorker()
 		log.Printf("advertising worker %s while it is serving gRPC", a.workerAddr)

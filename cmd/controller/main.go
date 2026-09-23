@@ -22,6 +22,7 @@ import (
 
 	"kubeedgeinfer/gen/pipelinepb"
 	"kubeedgeinfer/internal/controller"
+	"kubeedgeinfer/internal/partition"
 )
 
 func kubeConfig() (*rest.Config, error) {
@@ -47,6 +48,11 @@ func main() {
 		defLink     = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
 		mode        = flag.String("mode", envOr("KEINFER_MODE", "standalone"), "substrate: standalone | k8s")
 		configPath  = flag.String("config", envOr("KEINFER_CONFIG", "keinfer.json"), "standalone: pipeline config file")
+		policy      = flag.String("policy", envOr("DECISION_POLICY", "hysteresis"), "voluntary-move policy: none | hysteresis | gate | gate-force")
+		gateHorizon = flag.Float64("gate-horizon-s", envFloatOr("GATE_HORIZON_S", 30), "transition gate planning horizon, seconds")
+		gateFixed   = flag.Float64("gate-transition-fixed-ms", envFloatOr("GATE_TRANSITION_FIXED_MS", 2000), "transition downtime independent of context (weight reload, orchestration)")
+		gatePrefill = flag.Float64("gate-prefill-ms-per-token-layer", envFloatOr("GATE_PREFILL_MS_PER_TOKEN_LAYER", 0.21), "measured prefill cost per token per layer, for cache reconstruction")
+		gateMargin  = flag.Float64("gate-margin", envFloatOr("GATE_MARGIN", 0.13), "required fractional token advantage before a voluntary move")
 		profileOnce = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
 	)
 	flag.Parse()
@@ -58,6 +64,12 @@ func main() {
 	// previous unconditional kubeConfig() call was fatal before anything else
 	// ran.
 	var src controller.Source
+	switch partition.Policy(*policy) {
+	case partition.PolicyNone, partition.PolicyHysteresis, partition.PolicyGate, partition.PolicyGateForce:
+	default:
+		log.Fatalf("unknown -policy %q (want none, hysteresis, gate or gate-force)", *policy)
+	}
+
 	switch *mode {
 	case "k8s":
 		cfg, err := kubeConfig()
@@ -91,6 +103,13 @@ func main() {
 		Interval:         *interval,
 		ReassertInterval: *reassert,
 		ProfileOnce:      *profileOnce,
+		Policy:           partition.Policy(*policy),
+		Gate: partition.GateParams{
+			HorizonS:               *gateHorizon,
+			TransitionFixedMs:      *gateFixed,
+			PrefillMsPerTokenLayer: *gatePrefill,
+			SafetyMargin:           *gateMargin,
+		},
 	}, src, store)
 
 	lis, err := net.Listen("tcp", *grpcAddr)
@@ -111,8 +130,8 @@ func main() {
 	})
 	go func() { log.Fatal(http.ListenAndServe(*httpAddr, mux)) }()
 
-	log.Printf("controller: mode=%s ns=%s static=%v profile-once=%v improvement=%.2f cooldown=%s grpc=%s http=%s",
-		*mode, *namespace, *static, *profileOnce, *improvement, *cooldown, *grpcAddr, *httpAddr)
+	log.Printf("controller: mode=%s policy=%s ns=%s static=%v profile-once=%v improvement=%.2f cooldown=%s grpc=%s http=%s",
+		*mode, *policy, *namespace, *static, *profileOnce, *improvement, *cooldown, *grpcAddr, *httpAddr)
 	ctrl.Run(context.Background())
 }
 

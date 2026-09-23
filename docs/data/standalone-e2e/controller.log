@@ -1,0 +1,7 @@
+2026/09/23 05:00:40 controller: mode=standalone policy=none ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=0s grpc=:50353 http=:8381
+2026/09/23 05:00:42 decision policy=none reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/09/23 05:00:54 applied gen=1 bottleneck=112.6ms: vm1[0,18) -> vm2[18,28)
+2026/09/23 05:01:06 decision policy=none reason=strictly-better improvement=23.4% transition=0ms break-even=0.0s executed=true
+2026/09/23 05:01:10 applied gen=2 bottleneck=81.8ms: vm1[0,22) -> vm2[22,28)
+2026/09/23 05:01:48 decision policy=none reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/09/23 05:01:50 applied gen=3 bottleneck=139.8ms: vm1[0,28)

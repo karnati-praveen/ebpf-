@@ -42,6 +42,12 @@ type Config struct {
 	// so it can be compared head-to-head against KubeEdgeInfer's own
 	// continuous-telemetry DECIDE loop under the same fault injection.
 	ProfileOnce bool
+
+	// Policy selects how voluntary repartitions are gated (the H2 arms), and
+	// Gate parameterises the transition gate. The gate's ContextLen is taken
+	// from the pipeline spec at decision time, not from here.
+	Policy partition.Policy
+	Gate   partition.GateParams
 }
 
 type Controller struct {
@@ -50,15 +56,17 @@ type Controller struct {
 	store   *TelemetryStore
 	decider *partition.Decider
 
-	mu            sync.Mutex
-	generation    int64
-	staticApplied bool
-	lastApplied   *partition.Result
-	lastPush      time.Time
-	lastError     string
-	conns         map[string]*grpc.ClientConn
-	frozenSpeed   map[string]float64 // node -> speed, captured once when ProfileOnce
-	frozenLinkMs  map[string]float64 // dst ip -> link ms, captured once when ProfileOnce
+	mu             sync.Mutex
+	generation     int64
+	staticApplied  bool
+	lastApplied    *partition.Result
+	lastPush       time.Time
+	lastError      string
+	conns          map[string]*grpc.ClientConn
+	frozenSpeed    map[string]float64   // node -> speed, captured once when ProfileOnce
+	frozenLinkMs   map[string]float64   // dst ip -> link ms, captured once when ProfileOnce
+	decisions      []partition.Decision // bounded history of evaluated moves
+	lastDecisionAt time.Time
 }
 
 func New(cfg Config, src Source, store *TelemetryStore) *Controller {
@@ -66,11 +74,24 @@ func New(cfg Config, src Source, store *TelemetryStore) *Controller {
 		cfg:          cfg,
 		src:          src,
 		store:        store,
-		decider:      partition.NewDecider(cfg.ImprovementFrac, cfg.Cooldown),
+		decider:      newDecider(cfg),
 		conns:        map[string]*grpc.ClientConn{},
 		frozenSpeed:  map[string]float64{},
 		frozenLinkMs: map[string]float64{},
 	}
+}
+
+// newDecider builds a Decider from config. Always use this rather than
+// partition.NewDecider directly: the controller rebuilds its Decider after a
+// failed apply, and a bare NewDecider would silently reset the policy to
+// hysteresis in the middle of an experiment.
+func newDecider(cfg Config) *partition.Decider {
+	d := partition.NewDecider(cfg.ImprovementFrac, cfg.Cooldown)
+	if cfg.Policy != "" {
+		d.Policy = cfg.Policy
+	}
+	d.Gate = cfg.Gate
+	return d
 }
 
 func (c *Controller) Run(ctx context.Context) {
@@ -114,7 +135,9 @@ func (c *Controller) reconcile(ctx context.Context) error {
 		return c.reconcileStatic(ctx, sp, input)
 	}
 
+	c.decider.Gate.ContextLen = sp.ContextLen
 	res, changed, err := c.decider.Decide(time.Now(), input, false)
+	c.recordDecision()
 	if err != nil {
 		return c.report(ctx, nil, "PartitionError: "+err.Error())
 	}
@@ -122,7 +145,7 @@ func (c *Controller) reconcile(ctx context.Context) error {
 		if err := c.apply(ctx, sp, res); err != nil {
 			// Force a fresh decision next tick rather than believing the
 			// half-applied split is active.
-			c.decider = partition.NewDecider(c.cfg.ImprovementFrac, c.cfg.Cooldown)
+			c.decider = newDecider(c.cfg)
 			return fmt.Errorf("apply: %w", err)
 		}
 		log.Printf("applied gen=%d bottleneck=%.1fms: %s",
@@ -179,8 +202,12 @@ func (c *Controller) reconcileStatic(ctx context.Context, sp PipelineSpec, input
 
 func (c *Controller) buildInput(sp PipelineSpec, workers []WorkerRef) partition.Input {
 	input := partition.Input{
-		TotalLayers: sp.TotalLayers,
-		PerLayerMs:  sp.PerLayerMs,
+		TotalLayers:   sp.TotalLayers,
+		PerLayerMs:    sp.PerLayerMs,
+		EmbedMs:       sp.EmbedMs,
+		HeadMs:        sp.HeadMs,
+		ContextLen:    sp.ContextLen,
+		PerLayerByCtx: sp.PerLayerByCtx,
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -353,8 +380,44 @@ func (c *Controller) State() map[string]any {
 		out["bottleneck_ms"] = c.lastApplied.BottleneckMs
 		out["pipeline_ms"] = c.lastApplied.PipelineMs
 	}
+	// Read from immutable config, not c.decider: State runs on the HTTP
+	// goroutine and the reconcile loop may replace the Decider.
+	policy := c.cfg.Policy
+	if policy == "" {
+		policy = partition.PolicyHysteresis
+	}
+	out["policy"] = string(policy)
+	out["decisions"] = c.decisions
 	out["telemetry"] = c.store.Snapshot()
 	return out
+}
+
+// maxDecisions bounds the history served by /state. The bench samples /state
+// every second, so a short window is enough to capture every decision.
+const maxDecisions = 64
+
+// recordDecision appends the Decider's latest verdict to the history if it is
+// new and meaningful. Threshold and cooldown rejections recur every tick while
+// a small improvement persists, so they are not kept -- only decisions that
+// reached a policy's actual decision point.
+func (c *Controller) recordDecision() {
+	d := c.decider.LastDecision()
+	if d == nil || !d.Time.After(c.lastDecisionAt) {
+		return
+	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.lastDecisionAt = d.Time
+	switch d.Reason {
+	case "below-improvement-threshold", "cooldown":
+		return
+	}
+	c.decisions = append(c.decisions, *d)
+	if len(c.decisions) > maxDecisions {
+		c.decisions = c.decisions[len(c.decisions)-maxDecisions:]
+	}
+	log.Printf("decision policy=%s reason=%s improvement=%.1f%% transition=%.0fms break-even=%.1fs executed=%v",
+		d.Policy, d.Reason, d.Improvement*100, d.TransitionMs, d.BreakEvenS, d.Executed)
 }
 
 func describe(res *partition.Result) string {

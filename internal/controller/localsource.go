@@ -10,6 +10,8 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"kubeedgeinfer/internal/partition"
 )
 
 // LocalSource reads a JSON config file for the spec and derives the worker set
@@ -38,6 +40,15 @@ type localSpec struct {
 	PerLayerMs  float64 `json:"perLayerMs"`
 	Workers     int64   `json:"workers"`
 	RouterAddr  string  `json:"routerAddr"`
+
+	// Measured cost model; optional.
+	EmbedMs       float64 `json:"embedMs"`
+	HeadMs        float64 `json:"headMs"`
+	ContextLen    int     `json:"contextLen"`
+	PerLayerByCtx []struct {
+		ContextLen int     `json:"contextLen"`
+		PerLayerMs float64 `json:"perLayerMs"`
+	} `json:"perLayerByCtx"`
 }
 
 func (l *LocalSource) Spec(ctx context.Context) (PipelineSpec, bool, error) {
@@ -60,6 +71,13 @@ func (l *LocalSource) Spec(ctx context.Context) (PipelineSpec, bool, error) {
 	sp := PipelineSpec{
 		Model: ls.Model, Backend: ls.Backend, TotalLayers: ls.TotalLayers,
 		PerLayerMs: ls.PerLayerMs, Workers: ls.Workers, RouterAddr: ls.RouterAddr,
+		EmbedMs: ls.EmbedMs, HeadMs: ls.HeadMs, ContextLen: ls.ContextLen,
+	}
+	for _, c := range ls.PerLayerByCtx {
+		if c.ContextLen <= 0 || c.PerLayerMs <= 0 {
+			return PipelineSpec{}, false, fmt.Errorf("%s: perLayerByCtx entries need positive contextLen and perLayerMs", l.path)
+		}
+		sp.PerLayerByCtx = append(sp.PerLayerByCtx, partition.CtxCost{ContextLen: c.ContextLen, PerLayerMs: c.PerLayerMs})
 	}
 	sp.applyDefaults()
 	if ls.RouterAddr == "" {

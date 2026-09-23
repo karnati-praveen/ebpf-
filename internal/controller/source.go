@@ -21,6 +21,13 @@ type PipelineSpec struct {
 	PerLayerMs  float64
 	Workers     int64 // expected count; static mode waits for all
 	RouterAddr  string
+
+	// Measured cost model (all optional; zero keeps the layer-proportional
+	// model). See partition.Input for why each term exists.
+	EmbedMs       float64
+	HeadMs        float64
+	ContextLen    int // operating context length; also sizes the transition gate
+	PerLayerByCtx []partition.CtxCost
 }
 
 // applyDefaults is shared by every source so both substrates agree.

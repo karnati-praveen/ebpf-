@@ -66,10 +66,10 @@ func TestBottleneckVersusPipelineIsStageCount(t *testing.T) {
 func TestEvaluatePipelineRejectsBadSplits(t *testing.T) {
 	in := balanced(12, 2, 10, 1)
 	bad := [][][2]int{
-		{{0, 6}},                 // wrong worker count
-		{{1, 6}, {6, 12}},        // does not start at 0
-		{{0, 6}, {7, 12}},        // not contiguous
-		{{0, 6}, {6, 11}},        // does not cover all layers
+		{{0, 6}},          // wrong worker count
+		{{1, 6}, {6, 12}}, // does not start at 0
+		{{0, 6}, {7, 12}}, // not contiguous
+		{{0, 6}, {6, 11}}, // does not cover all layers
 	}
 	for i, splits := range bad {
 		if got := EvaluatePipeline(in, splits); !math.IsInf(got, 1) {

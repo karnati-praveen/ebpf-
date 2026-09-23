@@ -39,6 +39,7 @@ import logging
 import os
 import threading
 import time
+import urllib.request
 
 import numpy as np
 import pipeline_pb2 as pb
@@ -88,6 +89,77 @@ class _Session:
         self.last_used = time.monotonic()
 
 
+class _SpeedProbe:
+    """Measures this shard's compute speed relative to a reference profile.
+
+    For each cached decode step the per-layer time is compared with what the
+    reference profile predicts at that context length:
+
+        sample = expected_ms_per_layer(ctx) / observed_ms_per_layer
+
+    so 1.0 means "as fast as the profiled machine", 0.5 means half as fast.
+    Samples are smoothed (EWMA) and pushed to the co-located node agent, which
+    reports them as the speed factor the controller partitions with. Only the
+    decoder-layer loop is timed; endpoint modules have their own cost terms.
+
+    Configure with PER_LAYER_PROFILE="ctx:ms,ctx:ms,..." (the measured decode
+    table) and NODE_AGENT_ADDR=host:port. Without a profile nothing is
+    measured and the controller sees speed 1.
+    """
+
+    ALPHA = 0.2
+
+    def __init__(self):
+        self.table = []
+        raw = os.environ.get("PER_LAYER_PROFILE", "")
+        for part in filter(None, raw.split(",")):
+            ctx, ms = part.split(":")
+            self.table.append((int(ctx), float(ms)))
+        self.table.sort()
+        self.agent = os.environ.get("NODE_AGENT_ADDR", "")
+        self.ewma = None
+        self.lock = threading.Lock()
+        if self.table and self.agent:
+            threading.Thread(target=self._push_loop, daemon=True).start()
+            log.info("speed probe on: profile=%s agent=%s", self.table, self.agent)
+
+    def enabled(self):
+        return bool(self.table)
+
+    def expected(self, ctx):
+        t = self.table
+        if ctx <= t[0][0]:
+            return t[0][1]
+        if ctx >= t[-1][0]:
+            return t[-1][1]
+        for (c0, m0), (c1, m1) in zip(t, t[1:]):
+            if ctx <= c1:
+                return m0 + (m1 - m0) * (ctx - c0) / (c1 - c0)
+        return t[-1][1]
+
+    def observe(self, ctx, elapsed_ms, n_layers):
+        if not self.table or n_layers <= 0 or elapsed_ms <= 0:
+            return
+        sample = self.expected(ctx) / (elapsed_ms / n_layers)
+        with self.lock:
+            self.ewma = sample if self.ewma is None else (
+                self.ALPHA * sample + (1 - self.ALPHA) * self.ewma)
+
+    def _push_loop(self):
+        while True:
+            time.sleep(1.0)
+            with self.lock:
+                v = self.ewma
+            if v is None:
+                continue
+            try:
+                url = f"http://{self.agent}/gpu?measured_speed={v:.4f}"
+                with urllib.request.urlopen(url, timeout=0.3) as r:
+                    r.read()
+            except Exception:
+                pass  # telemetry is best-effort; never disturb inference
+
+
 def _pick_device():
     import torch
 
@@ -112,6 +184,7 @@ class Qwen3Backend:
         self.session_ttl_s = float(os.environ.get("KV_SESSION_TTL_S", "300"))
         self.sessions = {}
         self.sessions_lock = threading.Lock()
+        self.probe = _SpeedProbe()
 
     def load(self, start, end, total):
         if (start, end, total) == (self.start, self.end, self.total):
@@ -241,6 +314,7 @@ class Qwen3Backend:
                                         device=self.device).unsqueeze(0)
             position_embeddings = self.rotary(h, position_ids)
 
+            t_layers = time.perf_counter()
             for layer in self.layers:
                 out = layer(
                     h,
@@ -254,6 +328,13 @@ class Qwen3Backend:
                 h = out[0] if isinstance(out, tuple) else out
 
             if self.cached:
+                # Only single-position decode steps are comparable to the
+                # decode profile; prefill has a different per-token cost.
+                if n_new == 1 and self.probe.enabled():
+                    if self.device == "cuda":
+                        torch.cuda.synchronize()  # kernels are async; time real work
+                    self.probe.observe(past + 1, (time.perf_counter() - t_layers) * 1000.0,
+                                       len(self.layers))
                 sess.past_len = past + n_new
                 sess.next_step = req.step + 1
 
