@@ -1,7 +1,7 @@
 # Phase 4 (preliminary) — measured cost model, Qwen3-0.6B on Azure CPU
 
-Source: single-process spike on one Azure VM. Raw data `docs/per-layer-cost.csv`,
-machine `docs/machine_info.json`.
+Source: single-process spike on one Azure VM. Raw data `docs/data/azure-d4-2026-09/per-layer-cost.csv`,
+machine `docs/data/azure-d4-2026-09/machine_info.json`.
 
 Machine: 4 vCPU Intel Xeon Platinum 8272CL @2.6GHz, torch 2.14.0+cpu,
 torch_threads=2, FP32. Model: Qwen3-0.6B, 28 layers, hidden 1024, vocab 151936,
