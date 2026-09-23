@@ -19,6 +19,53 @@ fits on one VM, so the survivor of a lost node can hold the whole model. A
 third adds a 3-stage pipeline and, as a different CPU family, real compute
 heterogeneity.
 
+## GPU run (Qwen3-0.6B, NVIDIA CUDA)
+
+The Qwen3 worker already executes on CUDA. The standalone launcher now selects
+CUDA explicitly and uses a measured GPU cost profile instead of the Azure CPU
+numbers. Run on Linux hosts with NVIDIA drivers and enough VRAM for the **full
+model during each shard reload** (the current backend loads and then prunes).
+Use the same model and profile file on every worker and the coordinator. One
+representative GPU supplies the reference; each worker reports its measured
+speed relative to that profile. For different GPU families, verify endpoint
+cost and placement separately because one speed factor may not describe both
+layers and the LM head.
+
+```bash
+# On every machine: install the CUDA wheel and verify torch can see the GPU.
+WORKER_DEVICE=cuda ./deploy/standalone/setup-vm.sh
+
+# On one representative GPU: measure decoder, endpoints and replay prefill.
+WORKER_DEVICE=cuda ~/keinfer/venv/bin/python bench/profile_qwen3.py \
+  --out ~/keinfer/qwen3-gpu-profile.json
+
+# Copy that JSON file to ~/keinfer/qwen3-gpu-profile.json on every machine.
+# Then on EVERY worker, including the coordinator:
+WORKER_DEVICE=cuda COST_PROFILE=~/keinfer/qwen3-gpu-profile.json \
+  ./deploy/standalone/start-worker-node.sh <coordinator-private-ip>
+
+# On the coordinator:
+WORKER_DEVICE=cuda COST_PROFILE=~/keinfer/qwen3-gpu-profile.json \
+  ./deploy/standalone/start-coordinator.sh 2
+
+# Before measurements, validate a relayout. More tokens give a fast GPU time
+# to trigger it while a request is active.
+WORKER_DEVICE=cuda ~/keinfer/venv/bin/python bench/verify_qwen3.py \
+  --relayout --tokens 128
+```
+
+`COST_PROFILE` supplies GPU decode, embedding, head and prefill costs. The gate's
+fixed reload/orchestration term still defaults to the **CPU** 2000 ms estimate:
+measure complete GPU relayouts, then set `GATE_TRANSITION_FIXED_MS` on the
+coordinator before comparing gate policies. A full relayout is sequential
+across workers, so a single-worker model-load timing is not a replacement.
+Run `bench/vmrun.py` with `WORKER_DEVICE=cuda` and `COST_PROFILE` set in the
+experiment session too: the driver forwards them to SSH worker restores. Start
+with `--scenarios network:120,loss:0,stable:0`. Its `compute` and `contention`
+faults affect CPUs, so the driver refuses those arms in CUDA mode. GPU
+performance or novelty claims require results from real GPU hosts; this
+repository's development sandbox has no visible GPU.
+
 ## 1. Create the VMs (Azure)
 
 - **Size:** `Standard_D4s_v5` (4 vCPU, 16 GiB) — the SKU the cost model was

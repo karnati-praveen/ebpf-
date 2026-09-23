@@ -9,6 +9,7 @@
 # match the router), EBPF (default on; off for the application-only H3 arm).
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
+[[ "$WORKER_DEVICE" != cuda || -n "${COST_PROFILE:-}" ]] || die "WORKER_DEVICE=cuda requires COST_PROFILE from bench/profile_qwen3.py"
 
 COORD="${1:-}"
 [[ -n "$COORD" ]] || die "usage: $0 <coordinator-private-ip>"
@@ -23,7 +24,7 @@ stop_one nodeagent
 
 cd "$REPO/worker"
 supervise worker env \
-  PYTHONUNBUFFERED=1 PORT="$WORKER_PORT" WORKER_NAME="$NODE_NAME" KV_CACHE="$KV_CACHE" \
+  PYTHONUNBUFFERED=1 PORT="$WORKER_PORT" WORKER_NAME="$NODE_NAME" KV_CACHE="$KV_CACHE" WORKER_DEVICE="$WORKER_DEVICE" \
   NODE_AGENT_ADDR="127.0.0.1:$AGENT_HTTP_PORT" PER_LAYER_PROFILE="$PER_LAYER_PROFILE" \
   ${TORCH_THREADS:+TORCH_THREADS=$TORCH_THREADS} HF_HOME="$HF_HOME" HF_HUB_OFFLINE=1 \
   "$VENV/bin/python" server.py
@@ -37,4 +38,4 @@ supervise nodeagent sudo env \
   PORT_MIN="$WORKER_PORT" PORT_MAX="$WORKER_PORT" GPU_MODE=measured EBPF="${EBPF:-on}" \
   "$BIN/nodeagent"
 
-log "node $NODE_NAME: worker $IP:$WORKER_PORT, reporting to $COORD:$CONTROLLER_GRPC_PORT, KV_CACHE=$KV_CACHE"
+log "node $NODE_NAME: worker $IP:$WORKER_PORT, reporting to $COORD:$CONTROLLER_GRPC_PORT, KV_CACHE=$KV_CACHE device=$WORKER_DEVICE profile=${COST_PROFILE:-azure-cpu}"

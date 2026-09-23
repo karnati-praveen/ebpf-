@@ -61,18 +61,22 @@ def reference(tok, n_tokens):
     import torch
     from transformers import AutoModelForCausalLM
 
-    model = AutoModelForCausalLM.from_pretrained(MODEL, dtype=torch.float32,
-                                                 attn_implementation="sdpa")
+    device = "cuda" if os.environ.get("WORKER_DEVICE", "cpu") == "cuda" else "cpu"
+    if device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("WORKER_DEVICE=cuda but PyTorch cannot see the GPU")
+    dtype = torch.float16 if device == "cuda" else torch.float32
+    model = AutoModelForCausalLM.from_pretrained(MODEL, dtype=dtype,
+                                                 attn_implementation="sdpa").to(device)
     model.eval()
     prompt = tok.encode(PROMPT)
     ids = list(prompt)
     with torch.no_grad():
         for _ in range(n_tokens):
-            ids.append(int(model(torch.tensor([ids])).logits[0, -1].argmax()))
-        full_logits = model(torch.tensor([ids])).logits[0]
+            ids.append(int(model(torch.tensor([ids], device=device)).logits[0, -1].argmax()))
+        full_logits = model(torch.tensor([ids], device=device)).logits[0]
     gen = ids[len(prompt):]
     # Logits that predict gen[s] sit at position len(prompt) + s - 1.
-    step_logits = [full_logits[len(prompt) + s - 1].clone() for s in range(n_tokens)]
+    step_logits = [full_logits[len(prompt) + s - 1].float().cpu().clone() for s in range(n_tokens)]
     del model
     return prompt, gen, step_logits
 
@@ -142,7 +146,7 @@ def inprocess(n_tokens):
                 else:
                     ids = prompt + ref_gen[:s]
                 r = _run_chain(chain, rid, s, ids, pb)
-                d = float((captured["logits"] - ref_logits[s]).abs().max())
+                d = float((captured["logits"].float().cpu() - ref_logits[s]).abs().max())
                 max_d = max(max_d, d)
                 if d > LOGIT_REPORT_BOUND and first_bad is None:
                     first_bad = s
@@ -318,7 +322,17 @@ def relayout(n_tokens, prompt, ref_gen):
 
         t = threading.Thread(target=run)
         t.start()
-        time.sleep(3.0)  # let several cached decode steps happen first
+        # Wait for real forwards so this still lands mid-request on a fast GPU.
+        deadline = time.time() + 30
+        while time.time() < deadline and t.is_alive():
+            try:
+                with urllib.request.urlopen("http://127.0.0.1:8290/stats", timeout=1) as response:
+                    stats = json.load(response)
+                if sum(stage.get("forwards", 0) for stage in stats["stages"]) >= 8:
+                    break
+            except Exception:
+                pass
+            time.sleep(0.01)
 
         # Repartition exactly as the controller's push() does: workers, then router.
         for i, (lo, hi) in enumerate(after):

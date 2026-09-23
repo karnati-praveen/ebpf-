@@ -18,6 +18,7 @@
 #   ROUTER=0         restart only the controller, leave the router running
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
+[[ "$WORKER_DEVICE" != cuda || -n "${COST_PROFILE:-}" ]] || die "WORKER_DEVICE=cuda requires COST_PROFILE from bench/profile_qwen3.py"
 
 WORKERS="${1:-}"
 [[ "$WORKERS" =~ ^[0-9]+$ ]] || die "usage: $0 <expected-worker-count>"
@@ -30,9 +31,9 @@ CONTEXT_LEN="${CONTEXT_LEN:-512}"
 CFG="$STATE_DIR/keinfer.json"
 COST_MODEL="${COST_MODEL:-full}"
 [[ "$COST_MODEL" == full || "$COST_MODEL" == layer-proportional ]] || die "COST_MODEL must be full or layer-proportional"
-python3 - "$CFG" "$WORKERS" "$CONTEXT_LEN" "$PER_LAYER_PROFILE" "$ROUTER_GRPC_PORT" "$MODEL" "$COST_MODEL" <<'PY'
+python3 - "$CFG" "$WORKERS" "$CONTEXT_LEN" "$PER_LAYER_PROFILE" "$ROUTER_GRPC_PORT" "$MODEL" "$COST_MODEL" "${EMBED_MS:-0.09}" "${HEAD_MS:-43.8}" <<'PY'
 import json, sys
-cfg, workers, ctx, profile, rport, model, cost_model = sys.argv[1:]
+cfg, workers, ctx, profile, rport, model, cost_model, embed_ms, head_ms = sys.argv[1:]
 table = [{"contextLen": int(c), "perLayerMs": float(m)}
          for c, m in (p.split(":") for p in profile.split(",") if p)]
 spec = {
@@ -42,7 +43,7 @@ spec = {
 }
 if cost_model == "full":
     # Measured endpoint costs and the context-dependent per-layer table.
-    spec.update({"embedMs": 0.09, "headMs": 43.8, "perLayerByCtx": table})
+    spec.update({"embedMs": float(embed_ms), "headMs": float(head_ms), "perLayerByCtx": table})
 # layer-proportional: one scalar per-layer cost, no endpoint terms (A9/A10).
 json.dump(spec, open(cfg, "w"), indent=2)
 PY
@@ -68,6 +69,6 @@ if [[ "${ROUTER:-1}" == 1 ]]; then
     HTTP_PORT="$ROUTER_HTTP_PORT" GRPC_PORT="$ROUTER_GRPC_PORT" "$VENV/bin/python" router.py
 fi
 
-log "coordinator: policy=${POLICY:-hysteresis} link-source=${LINK_SOURCE:-ebpf+app} cost-model=$COST_MODEL static=${STATIC_MODE:-0} profile-once=${PROFILE_ONCE:-0} ctx=$CONTEXT_LEN workers=$WORKERS"
+log "coordinator: profile=${COST_PROFILE:-azure-cpu} policy=${POLICY:-hysteresis} link-source=${LINK_SOURCE:-ebpf+app} cost-model=$COST_MODEL static=${STATIC_MODE:-0} profile-once=${PROFILE_ONCE:-0} ctx=$CONTEXT_LEN workers=$WORKERS"
 log "  controller state: curl -s localhost:$CONTROLLER_HTTP_PORT/state"
 log "  generate:         curl -s -X POST localhost:$ROUTER_HTTP_PORT/generate -d '{\"prompt_len\":64,\"max_new_tokens\":16}'"

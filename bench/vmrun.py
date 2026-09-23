@@ -34,6 +34,7 @@ import csv
 import json
 import os
 import random
+import shlex
 import subprocess
 import sys
 import threading
@@ -123,6 +124,16 @@ class Run:
         self.requests, self.series, self.decisions, self.faults = [], [], {}, []
         self.stop = threading.Event()
         self.lock = threading.Lock()
+        # Remote restore runs through SSH, which does not inherit our shell
+        # environment. Keep the worker on CUDA with the same profile after a
+        # loss rather than silently restarting it with CPU defaults.
+        self.remote_worker_env = ""
+        if os.environ.get("WORKER_DEVICE") == "cuda":
+            profile = os.environ.get("COST_PROFILE")
+            if not profile:
+                raise ValueError("CUDA runs require COST_PROFILE in the vmrun environment")
+            self.remote_worker_env = ("env WORKER_DEVICE=cuda "
+                                      f"COST_PROFILE={shlex.quote(profile)} ")
 
     # -- setup ----------------------------------------------------------------
     # Prints the worker's PID if it is running, else "dead".
@@ -153,7 +164,7 @@ class Run:
             ssh(h, f"{self.a.remote_repo}/deploy/standalone/fault.sh clear", check=False)
             if pids[h] == "dead":
                 print(f"    restoring stopped node on {h}")
-                ssh(h, f"{self.a.remote_repo}/deploy/standalone/start-worker-node.sh {coord}")
+                ssh(h, f"{self.remote_worker_env}{shlex.quote(self.a.remote_repo)}/deploy/standalone/start-worker-node.sh {shlex.quote(coord)}")
 
     def restart_coordinator(self):
         env = dict(os.environ)
@@ -248,7 +259,7 @@ class Run:
             cmd = {"compute": f"{f} compute {m}", "contention": f"{f} contention {int(m)}",
                    "network": f"{f} network {m}", "loss": f"{f} loss"}[s]
         else:
-            cmd = f"{f} restore {private_ip()}" if s == "loss" else f"{f} clear"
+            cmd = f"{self.remote_worker_env}{f} restore {private_ip()}" if s == "loss" else f"{f} clear"
         t_local = time.time()
         out = ssh(tgt, cmd) if cmd else ""
         ev = fault_events(out)
@@ -327,6 +338,8 @@ class Run:
             "policy": self.policy, "policy_env": POLICIES[self.policy],
             "link_source": self.a.link_source, "cost_model": self.a.cost_model,
             "kv_cache": os.environ.get("KV_CACHE", "1"), "repeat": self.repeat,
+            "worker_device": os.environ.get("WORKER_DEVICE", "cpu"),
+            "cost_profile": os.environ.get("COST_PROFILE", ""),
             "workers": self.a.workers, "target": self.a.target, "hosts": self.a.hosts,
             "concurrency": self.a.concurrency, "prompt_len": self.a.prompt_len,
             "new_tokens": self.a.new_tokens, "context_len": self.a.context_len,
@@ -390,10 +403,16 @@ def main():
 
     args.hosts = [h for h in args.hosts.split(",") if h]
     scenarios = parse_scenarios(args.scenarios)
+    if os.environ.get("WORKER_DEVICE") == "cuda" and any(
+            s in ("compute", "contention") for s, _ in scenarios):
+        sys.exit("compute and contention scenarios cap/stress CPUs, not GPUs; use network/loss on CUDA")
     policies = [p for p in args.policies.split(",") if p]
     for p in policies:
         if p not in POLICIES:
             sys.exit(f"unknown policy {p!r}; choose from {sorted(POLICIES)}")
+    if os.environ.get("WORKER_DEVICE") == "cuda" and any(
+            p in ("gate", "gate-force") for p in policies) and not os.environ.get("GATE_TRANSITION_FIXED_MS"):
+        sys.exit("CUDA gate runs require measured GATE_TRANSITION_FIXED_MS; the default 2000 ms is from CPUs")
     if any(s != "stable" for s, _ in scenarios) and not args.target:
         sys.exit("--target is required for fault scenarios")
     if args.target and args.target not in args.hosts:
