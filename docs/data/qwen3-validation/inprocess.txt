@@ -1,0 +1,23 @@
+prompt tokens=8  reference: [429, 279, 1852, 821, 646, 387, 15233, 304, 15279, 13, 1096, 374, 1576, 279, 821, 374]
+                           ' that the same data can be processed in parallel. This is because the data is'
+layout    mode       max|dlogit|  first step >bound  teacher argmax  free-run tokens
+1 stage   stateless     2.00e-05                  -              OK            MATCH
+1 stage   cached        2.19e-05                  -              OK            MATCH
+14/14     stateless     2.00e-05                  -              OK            MATCH
+14/14     cached        2.19e-05                  -              OK            MATCH
+7/21      stateless     2.00e-05                  -              OK            MATCH
+7/21      cached        2.19e-05                  -              OK            MATCH
+21/7      stateless     2.00e-05                  -              OK            MATCH
+21/7      cached        2.19e-05                  -              OK            MATCH
+9/9/10    stateless     2.00e-05                  -              OK            MATCH
+9/9/10    cached        2.19e-05                  -              OK            MATCH
+7/7/7/7   stateless     2.00e-05                  -              OK            MATCH
+7/7/7/7   cached        2.19e-05                  -              OK            MATCH
+protocol guards:
+  ok  decode step with no session: kv cache miss: no session for request (evicted, restarted or relaid out)
+  ok  out-of-order step: kv cache step mismatch: expected step 1, got 5
+  ok  multi-position decode (router stateless, worker cached): kv cache protocol error: decode step 1 carried 3 positions, expected 1 (is the router running with KV_CACHE=0?)
+  ok  session after relayout: kv cache miss: no session for request (evicted, restarted or relaid out)
+  ok  single position at step 4 (router cached, worker stateless): stateless worker got 1 positions at step 4; is the router running with KV_CACHE=1?
+wrote qwen3-shard-validation.json
+ALL CHECKS PASSED

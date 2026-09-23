@@ -97,6 +97,7 @@ METRICS = {
     "ttft_ms_sum": 0.0,
     "duration_ms_sum": 0.0,
     "repartition_replays": 0,
+    "transition_ms_sum": 0.0,
     "errors": 0,
 }
 METRICS_LOCK = threading.Lock()
@@ -104,6 +105,17 @@ METRICS_LOCK = threading.Lock()
 
 class GenerationChanged(Exception):
     pass
+
+
+# KV_CACHE=1: after step 0, send only the newly generated token and let each
+# worker extend its per-request cache. Must match the workers' KV_CACHE; a
+# mismatch is rejected by the worker rather than producing wrong tokens.
+KV_CACHE = os.environ.get("KV_CACHE", "0") == "1"
+
+# Worker errors that mean "this request's cache is gone or out of step" -- a
+# restarted worker, an evicted session, or a relaid-out shard. Recoverable by
+# replaying from step 0, exactly like a generation change.
+_REPLAYABLE = ("generation mismatch", "kv cache miss", "kv cache step mismatch")
 
 
 def _forward_chain(stages, generation, request_id, step, first_stage_ids):
@@ -125,7 +137,7 @@ def _forward_chain(stages, generation, request_id, step, first_stage_ids):
         except grpc.RpcError as e:
             raise GenerationChanged(f"stage {stage.name} unreachable: {e.code()}")
         if reply.error:
-            if "generation mismatch" in reply.error:
+            if any(k in reply.error for k in _REPLAYABLE):
                 raise GenerationChanged(reply.error)
             raise RuntimeError(f"stage {stage.name}: {reply.error}")
         hidden, shape = reply.hidden, list(reply.shape)
@@ -138,18 +150,32 @@ def generate(input_ids, max_new_tokens):
     ttft_ms = None
     out_tokens = []
     replays = 0
+    # Transition cost, measured directly. `transition_ms` runs from the moment
+    # a disruption is detected until the replayed step-0 forward completes on
+    # the new layout (waiting for the new layout + cache reconstruction).
+    # `reconstruct_ms` is only the replayed step-0 forward itself.
+    transition_ms = 0.0
+    reconstruct_ms = 0.0
+    disrupted_at = None
 
     stages, generation = STATE.wait_for_pipeline()
     step = 0
 
     while len(out_tokens) < max_new_tokens:
-        # Workers are stateless: send the full accumulated context each step.
-        # This keeps distributed output token-identical to single-process
-        # greedy decoding and makes repartition recovery trivial.
-        first_ids = list(input_ids) + out_tokens
+        if KV_CACHE and step > 0:
+            # Cached: workers hold this request's context; send one position.
+            first_ids = [out_tokens[-1]]
+        else:
+            # Step 0 (first prefill, or a replay after a disruption), or
+            # stateless mode: send the full accumulated context. After a
+            # disruption this rebuilds every stage's cache from scratch.
+            first_ids = list(input_ids) + out_tokens
+        t_fwd = time.monotonic()
         try:
             reply = _forward_chain(stages, generation, request_id, step, first_ids)
         except GenerationChanged as e:
+            if disrupted_at is None:
+                disrupted_at = time.monotonic()
             # The pipeline was repartitioned (or a stage died) mid-request.
             # Refresh the layout and replay the full accumulated context.
             # Healing needs heartbeat timeout + reconcile + apply (~5-7s),
@@ -165,6 +191,11 @@ def generate(input_ids, max_new_tokens):
             step = 0
             request_id = random.getrandbits(63)
             continue
+        if disrupted_at is not None:
+            now = time.monotonic()
+            reconstruct_ms += (now - t_fwd) * 1000.0
+            transition_ms += (now - disrupted_at) * 1000.0
+            disrupted_at = None
         out_tokens.append(reply.next_token)
         if ttft_ms is None:
             ttft_ms = (time.monotonic() - t_start) * 1000.0
@@ -177,12 +208,16 @@ def generate(input_ids, max_new_tokens):
         METRICS["ttft_ms_sum"] += ttft_ms
         METRICS["duration_ms_sum"] += duration_ms
         METRICS["repartition_replays"] += replays
+        METRICS["transition_ms_sum"] += transition_ms
     return {
         "tokens": out_tokens,
         "ttft_ms": round(ttft_ms, 2),
         "duration_ms": round(duration_ms, 2),
         "tokens_per_sec": round(len(out_tokens) / (duration_ms / 1000.0), 3),
         "replays": replays,
+        "transition_ms": round(transition_ms, 2),
+        "reconstruct_ms": round(reconstruct_ms, 2),
+        "kv_cache": KV_CACHE,
         "generation": generation,
     }
 

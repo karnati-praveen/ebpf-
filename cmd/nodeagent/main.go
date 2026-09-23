@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
 
 	"kubeedgeinfer/gen/pipelinepb"
@@ -38,6 +39,13 @@ type agent struct {
 
 	mu    sync.Mutex
 	links []kebpf.LinkSnapshot
+
+	// workerAddr is the coordinator-reachable host:port of the shard worker
+	// co-located with this agent (WORKER_ADDR). It is advertised in every
+	// telemetry push only while workerReady, which is how the standalone
+	// controller discovers workers without an API server.
+	workerAddr  string
+	workerReady bool
 }
 
 // newReader selects the GPU/thermal telemetry source. GPU_MODE=sim (default)
@@ -102,10 +110,69 @@ func (a *agent) handleLinks(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(a.links)
 }
 
+// watchWorker tracks whether the co-located worker is serving gRPC.
+//
+// Readiness is the gRPC channel reaching READY -- a completed HTTP/2
+// handshake with a live gRPC server -- rather than a bare TCP accept. It
+// deliberately does NOT call the Worker.Stats RPC: Stats resets the worker's
+// busy-time window, and the router's /stats reads that same window for the
+// utilization figure, so polling it here would silently corrupt those
+// measurements.
+//
+// This signals "available for assignment". Whether a worker is ready to serve
+// a given layout is established separately by its AssignLayers acknowledgement.
+func (a *agent) watchWorker() {
+	for {
+		conn, err := grpc.NewClient(a.workerAddr,
+			grpc.WithTransportCredentials(insecure.NewCredentials()))
+		if err != nil {
+			a.setWorkerReady(false)
+			time.Sleep(time.Second)
+			continue
+		}
+		conn.Connect()
+		for {
+			ctx, cancel := context.WithTimeout(context.Background(), 900*time.Millisecond)
+			st := conn.GetState()
+			if st != connectivity.Ready {
+				conn.WaitForStateChange(ctx, st)
+				st = conn.GetState()
+			}
+			cancel()
+			a.setWorkerReady(st == connectivity.Ready)
+			if st == connectivity.Shutdown {
+				break
+			}
+			if st == connectivity.TransientFailure || st == connectivity.Idle {
+				conn.Connect()
+			}
+			time.Sleep(time.Second)
+		}
+		conn.Close()
+	}
+}
+
+func (a *agent) setWorkerReady(ready bool) {
+	a.mu.Lock()
+	changed := a.workerReady != ready
+	a.workerReady = ready
+	a.mu.Unlock()
+	if changed {
+		log.Printf("worker %s ready=%v", a.workerAddr, ready)
+	}
+}
+
 func (a *agent) telemetry() *pipelinepb.NodeTelemetry {
 	st := a.reader.Read()
+	a.mu.Lock()
+	advertise := ""
+	if a.workerReady {
+		advertise = a.workerAddr
+	}
+	a.mu.Unlock()
 	msg := &pipelinepb.NodeTelemetry{
 		Node:        a.node,
+		WorkerAddr:  advertise,
 		TimestampMs: time.Now().UnixMilli(),
 		Gpu: &pipelinepb.GpuStat{
 			TempC:       st.TempC,
@@ -137,7 +204,11 @@ func main() {
 	portMax, _ := strconv.Atoi(env("PORT_MAX", "50052"))
 
 	reader, sim := newReader()
-	a := &agent{node: nodeName, reader: reader, sim: sim}
+	a := &agent{node: nodeName, reader: reader, sim: sim, workerAddr: os.Getenv("WORKER_ADDR")}
+	if a.workerAddr != "" {
+		go a.watchWorker()
+		log.Printf("advertising worker %s while it is serving gRPC", a.workerAddr)
+	}
 
 	mon, err := kebpf.NewMonitor(uint16(portMin), uint16(portMax))
 	if err != nil {
