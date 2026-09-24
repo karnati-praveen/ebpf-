@@ -1,0 +1,337 @@
+% KubeEdgeInfer -- proposed-work code walkthrough (demo deck, 6 slides).
+%
+% Deliberately a separate document from kubeedgeinfer.tex: present it only if
+% there is time for the live demo. Compile the same way:
+%
+%     latexmk -xelatex kubeedgeinfer-code.tex
+
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+% ---------------------------------------------------------------- fonts
+% Fonts. Carlito and Caladea are the metric-compatible open equivalents of
+% Calibri and Cambria -- the pairing the .pptx uses -- so this compiles the same
+% on any machine without needing the Microsoft fonts. Two documented swaps:
+%
+%   * have the real fonts?  Carlito -> Calibri, Caladea -> Cambria below.
+%   * no XeLaTeX/LuaLaTeX?  replace this whole block with \usepackage{lmodern}
+%                           and drop \headfont (it falls back to \rmfamily).
+%
+% On Debian/Ubuntu the fonts come from fonts-crosextra-carlito and
+% fonts-crosextra-caladea; both are also freely downloadable on macOS/Windows.
+\usepackage{fontspec}
+\setsansfont{Carlito}
+\newfontfamily\headfont{Caladea}
+\setmonofont{DejaVu Sans Mono}[Scale=0.82]
+\renewcommand{\familydefault}{\sfdefault}
+
+% ---------------------------------------------------------------- palette
+\definecolor{keink}  {HTML}{141821}
+\definecolor{keink2} {HTML}{232A38}
+\definecolor{kemist} {HTML}{F1F3F7}
+\definecolor{kemist2}{HTML}{F7F8FA}
+\definecolor{keamber}{HTML}{E07B39}
+\definecolor{keteal} {HTML}{1F8A80}
+\definecolor{kemuted}{HTML}{6B7280}
+\definecolor{kebody} {HTML}{3E4658}
+\definecolor{kecode} {HTML}{D5DAE3}   % code foreground on the dark panel
+
+% ---------------------------------------------------------------- theme
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=keink,bg=white}
+\setbeamercolor{structure}{fg=keamber}
+\setbeamertemplate{frametitle}{%
+  \vspace{0.35em}%
+  {\scriptsize\bfseries\color{keamber}\MakeUppercase{\insertframesubtitle}}%
+  \par\vspace{0.15em}%
+  {\headfont\Large\bfseries\color{keink}\insertframetitle}\par\vspace{0.2em}%
+}
+\setbeamertemplate{footline}{%
+  \hfill{\tiny\color{kemuted}\insertframenumber}\hspace{1.2em}\vspace{0.6em}}
+\newcommand{\kefoot}[1]{\vfill{\scriptsize\itshape\color{kemuted}#1}}
+
+% ---------------------------------------------------------------- helpers
+% The dark code panel is this deck's motif: every source excerpt sits in one.
+% listings paints the panel itself (backgroundcolor plus a zero-width frame so
+% framesep extends the fill past the text) -- a colorbox cannot wrap verbatim
+% content, so the panel must come from listings rather than from a box around it.
+\lstdefinestyle{kepanel}{
+  basicstyle=\ttfamily\tiny\color{kecode},
+  keywordstyle=\color{keteal}\bfseries,
+  commentstyle=\color{kemuted}\itshape,
+  stringstyle=\color{keamber},
+  backgroundcolor=\color{keink},
+  frame=single, framerule=0pt, framesep=6pt, rulecolor=\color{keink},
+  fillcolor=\color{keink},
+  showstringspaces=false, breaklines=true, columns=fullflexible,
+  xleftmargin=6pt, xrightmargin=6pt,
+  aboveskip=2pt, belowskip=2pt,
+}
+% The path label above each panel. Kept a separate command rather than a
+% listings `title=' key so it survives languages whose name needs braces.
+\newcommand{\kepath}[1]{{\ttfamily\tiny\color{keamber}#1}\par\vspace{1pt}}
+
+% A light annotation card sitting beside the code.
+\newcommand{\kenote}[3][keteal]{%
+  \colorbox{kemist}{\begin{minipage}{\dimexpr\linewidth-14pt\relax}
+    \vspace{0.25em}{\textcolor{#1}{$\bullet$}\ \bfseries\color{keink}#2}\par
+    \vspace{0.2em}{\scriptsize\color{kebody}#3}\vspace{0.25em}
+  \end{minipage}}}
+
+\begin{document}
+
+% =============================================================== 1. Title
+{\setbeamercolor{background canvas}{bg=keink}
+\begin{frame}[plain]
+  \vspace{1.6em}
+  {\scriptsize\bfseries\color{keamber}\ttfamily APPENDIX / LIVE DEMO}
+  \par\vspace{0.9em}
+  {\headfont\LARGE\bfseries\color{white}A Walk Through the Code}
+  \par\vspace{0.9em}
+  {\small\color{white!62!keink}The four stages of the loop in real code, and
+   the commands that make the machines fix themselves on stage.}\par\vspace{1.4em}
+  {\footnotesize\ttfamily\color{white!45!keink}
+   \colorbox{keink2}{\strut\ tcpmon.c\ }\quad
+   \colorbox{keink2}{\strut\ partition.go\ }\quad
+   \colorbox{keink2}{\strut\ controller\ }\quad
+   \colorbox{keink2}{\strut\ run-demo.sh\ }}\par\vspace{1.8em}
+  {\scriptsize\itshape\color{kemuted}Kept separate from the main deck. Show
+   this only if there is time for the demo.}
+\end{frame}}
+
+% =============================================================== 2. Repo map
+\begin{frame}[shrink=20]
+  \framesubtitle{Orientation}
+  \frametitle{Where each part of the loop lives}
+  \footnotesize
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \bfseries Stage & \bfseries File & \bfseries Language &
+      \bfseries What it does\\
+    \midrule
+    {\color{keamber}\bfseries WATCH} & \texttt{internal/ebpf/bpf/tcpmon.c} &
+      C & Measures delay and speed of every connection\\
+    {\color{keamber}\bfseries WATCH} & \texttt{cmd/nodeagent} & Go &
+      Loads the kernel programs, adds GPU state, reports it all\\
+    {\color{keteal}\bfseries DECIDE} & \texttt{internal/partition/partition.go} &
+      Go & Works out the best cut, and decides when to apply it\\
+    {\color{keamber}\bfseries ACT} & \texttt{cmd/controller} & Go &
+      Collects the readings, saves the plan, sends it out\\
+    {\color{keteal}\bfseries HEAL} & \texttt{internal/controller} & Go &
+      Notices a dead machine in 3 seconds and forces a re-cut\\
+    {\color{keteal}\bfseries SERVE} & \texttt{worker/} & Python &
+      Machines that hold layers but no state, plus the router\\
+    {\color{keamber}\bfseries EVAL} & \texttt{bench/run.py}, \texttt{bench/dpsim} &
+      Python, Go & The tests: full cluster runs, and solver-only runs\\
+    \bottomrule
+  \end{tabular}
+  \kefoot{The generated network code and the compiled kernel program are
+          already in the repo, so a demo needs no extra build tools.}
+\end{frame}
+
+% =============================================================== 3. WATCH
+\begin{frame}[fragile,shrink=30]
+  \framesubtitle{1. WATCH}
+  \frametitle{Measuring network delay inside the kernel}
+  \begin{columns}[T]
+  \begin{column}{0.56\textwidth}
+    \kepath{internal/ebpf/bpf/tcpmon.c}
+    \lstset{style=kepanel,language=C}
+    \begin{lstlisting}
+struct flow_val {
+    __u64 bytes;         // cumulative payload bytes
+    __u64 srtt_us;       // most recent smoothed RTT
+    __u64 srtt_samples;  // cumulative tcp_probe hits
+};
+
+struct {
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __type(key,   struct flow_key);
+    __type(value, struct flow_val);
+} flows SEC(".maps");
+
+SEC("tp_btf/tcp_probe")
+int BPF_PROG(tcp_probe_hook, struct sock *sk,
+                             struct sk_buff *skb)
+{
+    struct tcp_sock *tp = (struct tcp_sock *)sk;
+    __u32 srtt = BPF_CORE_READ(tp, srtt_us) >> 3;
+    val->srtt_us = srtt;
+    __sync_fetch_and_add(&val->srtt_samples, 1);
+    return 0;
+}
+
+SEC("fentry/tcp_sendmsg")
+int BPF_PROG(tcp_sendmsg_hook, struct sock *sk,
+             struct msghdr *msg, size_t size)
+    \end{lstlisting}
+  \end{column}
+  \begin{column}{0.40\textwidth}
+    \kenote[keamber]{Why we use the kernel's own number}{%
+      Linux already tracks the round-trip time of every connection, because it
+      needs it to manage traffic. Reading that number costs nothing, and it
+      cannot be wrong the way a timer inside the program can.}\par\vspace{0.5em}
+    \kenote{Build once, run anywhere}{%
+      The program adjusts itself to the running kernel when it is loaded. So one
+      compiled file works on any modern Linux kernel, with no rebuilding.}\par\vspace{0.5em}
+    \kenote{We only watch what we need}{%
+      We only look at connections between our own machines. The controller then
+      matches each connection to the machine it came from.}
+  \end{column}
+  \end{columns}
+  \kefoot{Demo: show the live readings with \texttt{kubectl logs}}
+\end{frame}
+
+% =============================================================== 4. DECIDE
+\begin{frame}[fragile,shrink=30]
+  \framesubtitle{2. DECIDE}
+  \frametitle{The solver that picks the cut}
+  \begin{columns}[T]
+  \begin{column}{0.56\textwidth}
+    \kepath{internal/partition/partition.go}
+    \lstset{style=kepanel,language=Go}
+    \begin{lstlisting}
+// stageCost: receive + compute for one stage.
+// An empty stage is skipped by the router entirely,
+// so it costs nothing - not even its hop.
+func stageCost(in Input, worker, layers int) float64 {
+    if layers == 0 {
+        return 0
+    }
+    cost := float64(layers) * in.PerLayerMs /
+            math.Max(in.Workers[worker].Speed, 0.01)
+    if worker > 0 {
+        cost += in.LinkMs[worker-1]
+    }
+    return cost
+}
+
+// Optimal solves the linear partition in O(N^2 * K).
+for w := 1; w <= k; w++ {
+  for j := 0; j <= n; j++ {
+    for split := 0; split <= j; split++ {
+      cost := math.Max(f[split][w-1],
+              stageCost(in, w-1, j-split))
+      if cost < f[j][w] {
+        f[j][w] = cost
+        choice[j][w] = split
+      }
+    }
+  }
+}
+    \end{lstlisting}
+  \end{column}
+  \begin{column}{0.40\textwidth}
+    \kenote{\texttt{f[j][w]}}{%
+      The best we can do for the first $j$ layers on the first $w$ machines.
+      The final answer is \texttt{f[N][K]}, and \texttt{choice} tells us where
+      the cuts go.}\par\vspace{0.5em}
+    \kenote{Heat is just a slower speed}{%
+      Each machine has one \texttt{Speed} number. When it gets hot, that number
+      drops. So the solver has no special code for heat anywhere --- it just
+      sees a slower machine.}\par\vspace{0.5em}
+    \kenote[keamber]{A machine can get zero layers}{%
+      That one line is what lets the solver skip a machine with a bad network.
+      Nobody wrote a rule for skipping --- it falls out of the maths.}
+  \end{column}
+  \end{columns}
+  \kefoot{Demo: \texttt{go test ./internal/partition/...} --- it checks the
+          solver against brute force on 200 random cases.}
+\end{frame}
+
+% =============================================================== 5. ACT / HEAL
+\begin{frame}[fragile,shrink=30]
+  \framesubtitle{3--4. ACT and HEAL}
+  \frametitle{From a decision to a running system}
+  \begin{columns}[T]
+  \begin{column}{0.56\textwidth}
+    \kepath{internal/partition/partition.go -- Decider}
+    \lstset{style=kepanel,language=Go}
+    \begin{lstlisting}
+func (d *Decider) Decide(now time.Time, in Input,
+                         force bool) (*Result, bool, error) {
+    opt, err := Optimal(in)
+    if d.current == nil || force ||
+       workersChanged(d.current, in.Workers) {
+        d.current, d.lastChange = opt, now
+        return opt, true, nil          // healing path
+    }
+    currentCost := Evaluate(in, d.current.Splits())
+    improved := opt.BottleneckMs <
+                currentCost*(1-d.ImprovementFrac)
+    if improved && now.Sub(d.lastChange) >= d.Cooldown {
+        d.current, d.lastChange = opt, now
+        return opt, true, nil          // hysteresis passed
+    }
+    \end{lstlisting}
+    \vspace{0.5em}
+    \kepath{demo -- make a machine hot, then cool it again}
+    \lstset{style=kepanel,language=sh}
+    \begin{lstlisting}
+W2=$(docker inspect -f '{{range .NetworkSettings.Networks}}\
+     {{.IPAddress}}{{end}}' kubeedgeinfer-worker2)
+curl -X POST http://$W2:9101/gpu/override -d '{"temp_c": 92}'
+curl -X POST http://$W2:9101/gpu/override -d '{"clear": true}'
+    \end{lstlisting}
+  \end{column}
+  \begin{column}{0.40\textwidth}
+    \kenote{Three ways out, one function}{%
+      If a machine appears or dies, re-cut at once. If a new cut is clearly
+      better and enough time has passed, apply it. Otherwise keep the current
+      cut and just update its cost.}\par\vspace{0.5em}
+    \kenote{We compare fairly}{%
+      Before comparing, we re-score the cut we are already using with today's
+      readings. Otherwise we would be comparing against an old number.}\par\vspace{0.5em}
+    \kenote[keamber]{Changing the cut with no restart}{%
+      The controller saves the new layer ranges in Kubernetes and sends them to
+      the machines with a new version number. Machines refuse messages from an
+      old version. The router then fetches the new plan and replays the request
+      from the start. Machines keep no state, so replaying is always safe.}
+  \end{column}
+  \end{columns}
+  \kefoot{Layers move off the hot machine in about 35 seconds, and come back
+          once it cools down.}
+\end{frame}
+
+% =============================================================== 6. Runbook
+\begin{frame}[fragile,shrink=30]
+  \framesubtitle{Demo}
+  \frametitle{Runbook}
+  \footnotesize
+  \begin{enumerate}\itemsep0.55em
+    \item \textbf{One command starts everything} ---
+      \texttt{\small ./run-demo.sh}\newline
+      {\scriptsize\color{kebody}Builds everything, starts the cluster, and opens
+       a live dashboard on \texttt{localhost:8000} showing the machines, how busy
+       each one is, the network delays, and a log of every re-cut.}
+    \item \textbf{Watch the plan change} ---
+      \texttt{\small kubectl -n kubeedgeinfer get ipl demo -w}\newline
+      {\scriptsize\color{kebody}The layer ranges and the version number update as
+       the controller re-plans.}
+    \item \textbf{Send it some work} ---
+      \texttt{\small kubectl -n kubeedgeinfer port-forward svc/router 8080:8080}\newline
+      \texttt{\small curl -X POST localhost:8080/generate -d
+       '\{"prompt\_len":16,"max\_new\_tokens":8\}'}\newline
+      {\scriptsize\color{kebody}The router sends each request through the
+       machines in order.}
+    \item \textbf{Break something on purpose} ---
+      \texttt{\small curl -X POST http://\$W2:9101/gpu/override -d
+       '\{"temp\_c": 92\}'}\newline
+      {\scriptsize\color{kebody}Or press the buttons on the dashboard. Layers
+       move off the hot machine, then come back once it cools.}
+    \item \textbf{Reproduce the numbers} ---
+      \texttt{\small go run ./bench/dpsim}\newline
+      \texttt{\small python3 bench/run.py -{}-all \&\& python3 bench/plot.py}\newline
+      {\scriptsize\color{kebody}\texttt{dpsim} reproduces the numbers on slide
+       11 of the main deck with no cluster at all. \texttt{bench/run.py} needs
+       the running cluster and measures words per second and idle time.}
+  \end{enumerate}
+  \kefoot{You need: a modern Linux kernel, Docker, kind, kubectl and
+          Python 3.11 or newer.}
+\end{frame}
+
+\end{document}
