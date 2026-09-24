@@ -5,9 +5,9 @@
 # at all. You still get the thing a GPU is actually needed for: real GPT-2
 # sharded across a real pipeline on the real device, producing real tokens.
 #
-# What you do NOT get without Kubernetes: the controller, so no telemetry
-# loop, no repartitioning, no healing -- the split is fixed at startup. Use
-# the kind demo (./run-demo.sh) or a k3s cluster for those claims.
+# This script starts shards and router ONLY: no controller, so the split is
+# fixed at startup. For the full closed loop without Kubernetes -- telemetry,
+# repartitioning and healing -- use deploy/standalone/ instead.
 #
 #   ./scripts/run-single-gpu.sh              # 3 shards, GPT-2, auto device
 #   SHARDS=4 ./scripts/run-single-gpu.sh     # different shard count

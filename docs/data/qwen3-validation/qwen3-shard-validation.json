@@ -1,0 +1,122 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "prompt": "The key idea behind pipeline parallelism is",
+  "tokens": 16,
+  "reference": [
+    429,
+    279,
+    1852,
+    821,
+    646,
+    387,
+    15233,
+    304,
+    15279,
+    13,
+    1096,
+    374,
+    1576,
+    279,
+    821,
+    374
+  ],
+  "rows": [
+    {
+      "layout": "1 stage",
+      "mode": "stateless",
+      "max_abs_logit_diff": 2.002716064453125e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "1 stage",
+      "mode": "cached",
+      "max_abs_logit_diff": 2.193450927734375e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "14/14",
+      "mode": "stateless",
+      "max_abs_logit_diff": 2.002716064453125e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "14/14",
+      "mode": "cached",
+      "max_abs_logit_diff": 2.193450927734375e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "7/21",
+      "mode": "stateless",
+      "max_abs_logit_diff": 2.002716064453125e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "7/21",
+      "mode": "cached",
+      "max_abs_logit_diff": 2.193450927734375e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "21/7",
+      "mode": "stateless",
+      "max_abs_logit_diff": 2.002716064453125e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "21/7",
+      "mode": "cached",
+      "max_abs_logit_diff": 2.193450927734375e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "9/9/10",
+      "mode": "stateless",
+      "max_abs_logit_diff": 2.002716064453125e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "9/9/10",
+      "mode": "cached",
+      "max_abs_logit_diff": 2.193450927734375e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "7/7/7/7",
+      "mode": "stateless",
+      "max_abs_logit_diff": 2.002716064453125e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    },
+    {
+      "layout": "7/7/7/7",
+      "mode": "cached",
+      "max_abs_logit_diff": 2.193450927734375e-05,
+      "first_step_over_bound": null,
+      "teacher_argmax_ok": true,
+      "free_run_match": true
+    }
+  ],
+  "guards_ok": true
+}

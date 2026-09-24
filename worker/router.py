@@ -8,7 +8,7 @@ repartition, the router re-prefills the accumulated context on the new chain.
 
 HTTP API (default :8080):
   POST /generate  {"input_ids": [..]} or {"prompt_len": N}, "max_new_tokens": M
-  GET  /stats     per-stage window busy/wall (bubble-time source)
+  GET  /stats     per-stage window busy/wall (utilization proxy)
   GET  /pipeline  current stage layout
   GET  /metrics   cumulative counters
 """
@@ -35,6 +35,14 @@ log = logging.getLogger("router")
 GRPC_OPTS = [
     ("grpc.max_send_message_length", 64 * 1024 * 1024),
     ("grpc.max_receive_message_length", 64 * 1024 * 1024),
+    # Short reconnect backoff for known peers. gRPC's default grows toward
+    # 120 s, so a cached channel to a worker that died and came back kept
+    # failing fast with the stale dial error long after the worker was
+    # listening again -- making recovery time measure gRPC's backoff, not the
+    # system. Mirrors internal/peerconn on the Go side.
+    ("grpc.initial_reconnect_backoff_ms", 200),
+    ("grpc.min_reconnect_backoff_ms", 200),
+    ("grpc.max_reconnect_backoff_ms", 2000),
 ]
 
 
@@ -97,6 +105,7 @@ METRICS = {
     "ttft_ms_sum": 0.0,
     "duration_ms_sum": 0.0,
     "repartition_replays": 0,
+    "transition_ms_sum": 0.0,
     "errors": 0,
 }
 METRICS_LOCK = threading.Lock()
@@ -104,6 +113,60 @@ METRICS_LOCK = threading.Lock()
 
 class GenerationChanged(Exception):
     pass
+
+
+# KV_CACHE=1: after step 0, send only the newly generated token and let each
+# worker extend its per-request cache. Must match the workers' KV_CACHE; a
+# mismatch is rejected by the worker rather than producing wrong tokens.
+KV_CACHE = os.environ.get("KV_CACHE", "0") == "1"
+
+# Application-level link telemetry (the H3 comparison arm). For every
+# single-position decode step the router records, per stage, the RPC round trip
+# minus the worker's own compute_ms: the transport cost -- network plus
+# serialization plus gRPC overhead -- measured at the application layer, with
+# no kernel access. It is pushed to the controller's Telemetry service as
+# flows with src "app", alongside (never mixed with) eBPF flows. Enabled when
+# CONTROLLER_ADDR is set. Prefill steps carry a context-sized payload and are
+# excluded so every sample measures the same message size.
+CONTROLLER_ADDR = os.environ.get("CONTROLLER_ADDR", "")
+APP_LINK_ALPHA = 0.2
+APP_LINKS = {}  # stage addr -> [ewma_ms, samples]
+APP_LINKS_LOCK = threading.Lock()
+
+
+def _record_transport(addr, transport_ms):
+    with APP_LINKS_LOCK:
+        cur = APP_LINKS.get(addr)
+        if cur is None:
+            APP_LINKS[addr] = [transport_ms, 1]
+        else:
+            cur[0] = APP_LINK_ALPHA * transport_ms + (1 - APP_LINK_ALPHA) * cur[0]
+            cur[1] += 1
+
+
+def _push_app_links():
+    stub = rpc.TelemetryStub(grpc.insecure_channel(CONTROLLER_ADDR, options=GRPC_OPTS))
+    while True:
+        time.sleep(1.0)
+        with APP_LINKS_LOCK:
+            snap = {a: tuple(v) for a, v in APP_LINKS.items()}
+        if not snap:
+            continue
+        msg = pb.NodeTelemetry(node="router-app", timestamp_ms=int(time.time() * 1000))
+        for addr, (ms, n) in snap.items():
+            host, _, port = addr.rpartition(":")
+            msg.links.add(src_ip="app", dst_ip=host, dst_port=int(port),
+                          srtt_ms=ms, samples=n)
+        try:
+            stub.Report(msg, timeout=0.9)
+        except grpc.RpcError:
+            pass  # telemetry is best-effort
+
+
+# Worker errors that mean "this request's cache is gone or out of step" -- a
+# restarted worker, an evicted session, or a relaid-out shard. Recoverable by
+# replaying from step 0, exactly like a generation change.
+_REPLAYABLE = ("generation mismatch", "kv cache miss", "kv cache step mismatch")
 
 
 def _forward_chain(stages, generation, request_id, step, first_stage_ids):
@@ -120,12 +183,16 @@ def _forward_chain(stages, generation, request_id, step, first_stage_ids):
         else:
             req.hidden = hidden
             req.shape.extend(shape)
+        t_rpc = time.monotonic()
         try:
             reply = STATE.stub(stage.addr).Forward(req, timeout=120)
         except grpc.RpcError as e:
             raise GenerationChanged(f"stage {stage.name} unreachable: {e.code()}")
+        if KV_CACHE and step > 0 and not reply.error:
+            rpc_ms = (time.monotonic() - t_rpc) * 1000.0
+            _record_transport(stage.addr, max(0.0, rpc_ms - reply.compute_ms))
         if reply.error:
-            if "generation mismatch" in reply.error:
+            if any(k in reply.error for k in _REPLAYABLE):
                 raise GenerationChanged(reply.error)
             raise RuntimeError(f"stage {stage.name}: {reply.error}")
         hidden, shape = reply.hidden, list(reply.shape)
@@ -138,18 +205,32 @@ def generate(input_ids, max_new_tokens):
     ttft_ms = None
     out_tokens = []
     replays = 0
+    # Transition cost, measured directly. `transition_ms` runs from the moment
+    # a disruption is detected until the replayed step-0 forward completes on
+    # the new layout (waiting for the new layout + cache reconstruction).
+    # `reconstruct_ms` is only the replayed step-0 forward itself.
+    transition_ms = 0.0
+    reconstruct_ms = 0.0
+    disrupted_at = None
 
     stages, generation = STATE.wait_for_pipeline()
     step = 0
 
     while len(out_tokens) < max_new_tokens:
-        # Workers are stateless: send the full accumulated context each step.
-        # This keeps distributed output token-identical to single-process
-        # greedy decoding and makes repartition recovery trivial.
-        first_ids = list(input_ids) + out_tokens
+        if KV_CACHE and step > 0:
+            # Cached: workers hold this request's context; send one position.
+            first_ids = [out_tokens[-1]]
+        else:
+            # Step 0 (first prefill, or a replay after a disruption), or
+            # stateless mode: send the full accumulated context. After a
+            # disruption this rebuilds every stage's cache from scratch.
+            first_ids = list(input_ids) + out_tokens
+        t_fwd = time.monotonic()
         try:
             reply = _forward_chain(stages, generation, request_id, step, first_ids)
         except GenerationChanged as e:
+            if disrupted_at is None:
+                disrupted_at = time.monotonic()
             # The pipeline was repartitioned (or a stage died) mid-request.
             # Refresh the layout and replay the full accumulated context.
             # Healing needs heartbeat timeout + reconcile + apply (~5-7s),
@@ -165,6 +246,11 @@ def generate(input_ids, max_new_tokens):
             step = 0
             request_id = random.getrandbits(63)
             continue
+        if disrupted_at is not None:
+            now = time.monotonic()
+            reconstruct_ms += (now - t_fwd) * 1000.0
+            transition_ms += (now - disrupted_at) * 1000.0
+            disrupted_at = None
         out_tokens.append(reply.next_token)
         if ttft_ms is None:
             ttft_ms = (time.monotonic() - t_start) * 1000.0
@@ -177,12 +263,16 @@ def generate(input_ids, max_new_tokens):
         METRICS["ttft_ms_sum"] += ttft_ms
         METRICS["duration_ms_sum"] += duration_ms
         METRICS["repartition_replays"] += replays
+        METRICS["transition_ms_sum"] += transition_ms
     return {
         "tokens": out_tokens,
         "ttft_ms": round(ttft_ms, 2),
         "duration_ms": round(duration_ms, 2),
         "tokens_per_sec": round(len(out_tokens) / (duration_ms / 1000.0), 3),
         "replays": replays,
+        "transition_ms": round(transition_ms, 2),
+        "reconstruct_ms": round(reconstruct_ms, 2),
+        "kv_cache": KV_CACHE,
         "generation": generation,
     }
 
@@ -303,9 +393,13 @@ def main():
     server.add_insecure_port(f"[::]:{grpc_port}")
     server.start()
 
+    if CONTROLLER_ADDR:
+        threading.Thread(target=_push_app_links, daemon=True).start()
+        log.info("app-level link telemetry -> %s", CONTROLLER_ADDR)
+
     http_port = int(os.environ.get("HTTP_PORT", "8080"))
     httpd = ThreadingHTTPServer(("", http_port), Handler)
-    log.info("router: http :%d grpc :%d", http_port, grpc_port)
+    log.info("router: http :%d grpc :%d kv_cache=%s", http_port, grpc_port, KV_CACHE)
     httpd.serve_forever()
 
 

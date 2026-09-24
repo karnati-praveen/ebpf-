@@ -155,10 +155,10 @@ curl -s -X POST localhost:8080/generate \
 nvidia-smi                                   # 3 python processes on the GPU
 ```
 
-What you lose without Kubernetes: the controller, and therefore telemetry,
-repartitioning, and healing — the split is fixed at startup. Keep using the
-kind demo (`./run-demo.sh`) for those claims and this box for the
-"real model on real GPU" claim.
+This script starts shards and a router only, with no controller, so the split
+is fixed at startup. The controller itself no longer needs Kubernetes: for the
+full closed loop -- telemetry, repartitioning and healing -- on machines where
+k3s cannot run, use `deploy/standalone/` (see its README).
 
 ## Troubleshooting
 

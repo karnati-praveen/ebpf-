@@ -81,7 +81,7 @@ def plot_scenario(scenario):
     axes[0].set_ylabel("tokens/sec per request")
     axes[0].legend(loc="lower left", fontsize=8)
     axes[0].grid(alpha=0.3)
-    axes[1].set_ylabel("worst stage idle fraction\n(pipeline bubble)")
+    axes[1].set_ylabel("worst stage idle fraction\n(utilization proxy)")
     axes[1].set_xlabel("seconds since scenario start")
     axes[1].legend(loc="lower left", fontsize=8)
     axes[1].grid(alpha=0.3)

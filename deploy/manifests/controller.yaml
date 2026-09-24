@@ -31,7 +31,9 @@ spec:
         - name: controller
           image: kubeedgeinfer/controller:dev
           imagePullPolicy: IfNotPresent
-          args: []
+          # The binary defaults to -mode=standalone, so the Kubernetes
+          # deployment must ask for the k8s substrate explicitly.
+          args: ["-mode=k8s"]
           env:
             - name: NAMESPACE
               value: kubeedgeinfer

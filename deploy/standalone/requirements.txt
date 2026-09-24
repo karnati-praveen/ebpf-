@@ -1,0 +1,11 @@
+# Exact versions the Qwen3 backend was verified against (bench/verify_qwen3.py,
+# evidence in docs/data/qwen3-validation/). Pinned so every VM runs what was
+# tested. torch comes from the CPU wheel index; see setup-vm.sh.
+torch==2.14.0
+transformers==5.17.0
+tokenizers==0.23.2
+safetensors==0.8.0
+huggingface_hub==1.32.0
+grpcio==1.84.0
+protobuf==7.36.2
+numpy==2.5.3

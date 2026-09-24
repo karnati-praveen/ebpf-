@@ -50,7 +50,7 @@ func NewSim() *Sim {
 		// Full sustained load peaks at ambient+K = 70C, below the 80C
 		// throttle point: healthy load never self-throttles; only injected
 		// faults (or genuinely broken cooling) do.
-		K: envF("SIM_GPU_K", 25),
+		K:              envF("SIM_GPU_K", 25),
 		TauS:           envF("SIM_GPU_TAU_S", 20),
 		ThrottleTemp:   envF("SIM_GPU_THROTTLE_C", 80),
 		UnthrottleTemp: envF("SIM_GPU_UNTHROTTLE_C", 75),

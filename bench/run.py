@@ -3,7 +3,8 @@
 
 Runs four scenarios (baseline, netem, thermal, failure) against the dynamic
 controller and the static baseline, driving sustained load through the router
-while sampling per-stage idle fractions (bubble time), controller decisions,
+while sampling per-stage idle fractions (a utilization PROXY, not a direct
+bubble measurement), controller decisions,
 and node telemetry. Faults are injected from outside the cluster:
 
   netem    tc qdisc on a kind node's eth0 (network degradation)
@@ -26,7 +27,6 @@ import os
 import signal
 import socket
 import subprocess
-import sys
 import threading
 import time
 import urllib.request
@@ -204,6 +204,10 @@ class Sampler:
             for st in stats.get("stages", []):
                 idles.append(st.get("idle_fraction"))
                 layers.append(f"{st['name']}:{st['layers'][0]}-{st['layers'][1]}")
+            # NOTE: idle fraction is a UTILIZATION PROXY, not a direct
+            # measurement of pipeline bubbles. The column name is kept stable
+            # for compatibility with committed results; every human-facing label
+            # must say "utilization proxy", never "bubble time".
             row["idle_fractions"] = "|".join("" if v is None else f"{v:.4f}" for v in idles)
             row["worst_idle"] = max((v for v in idles if v is not None), default="")
             row["layout"] = "|".join(layers)
@@ -213,7 +217,12 @@ class Sampler:
         try:
             state = http_json(f"{self.ctrl_url}/state", timeout=3)
             row["ctrl_generation"] = state.get("generation")
+            # Two distinct predictions: bottleneck governs THROUGHPUT,
+            # pipeline governs per-request LATENCY. Recording only the first is
+            # what made the old fidelity check compare a throughput quantity
+            # against a latency observable.
             row["bottleneck_ms"] = state.get("bottleneck_ms")
+            row["pipeline_ms"] = state.get("pipeline_ms")
             row["ctrl_last_error"] = state.get("last_error", "")
             row["flows_json"] = json.dumps(state.get("telemetry", {}).get("flows", []),
                                              sort_keys=True, separators=(",", ":"))
@@ -418,6 +427,7 @@ def run_one(scenario, mode, improvement=None, cooldown=None, tag=None):
     write_csv(f"{prefix}_series.csv", series,
               ["t", "idle_fractions", "worst_idle", "layout",
                "router_generation", "ctrl_generation", "bottleneck_ms",
+               "pipeline_ms",
                "temps", "speeds", "telemetry_max_age_s", "ctrl_last_error",
                "flows_json"])
     write_csv(f"{prefix}_phases.csv", phases, ["phase", "t", "qdisc"])

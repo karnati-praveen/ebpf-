@@ -8,6 +8,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,12 +16,12 @@ import (
 	"sync"
 	"time"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/connectivity"
 
 	"kubeedgeinfer/gen/pipelinepb"
 	kebpf "kubeedgeinfer/internal/ebpf"
 	"kubeedgeinfer/internal/gpu"
+	"kubeedgeinfer/internal/peerconn"
 )
 
 func env(key, def string) string {
@@ -31,13 +32,21 @@ func env(key, def string) string {
 }
 
 type agent struct {
-	node   string
-	reader gpu.Reader // active telemetry source: sim, cputherm, or nvml
-	sim    *gpu.Sim   // non-nil only in sim mode (the only source that supports fault injection)
-	mon    *kebpf.Monitor
+	node     string
+	reader   gpu.Reader    // active telemetry source: sim, cputherm, nvml, or measured
+	sim      *gpu.Sim      // non-nil only in sim mode (the only source that supports fault injection)
+	measured *gpu.Measured // non-nil only in measured mode
+	mon      *kebpf.Monitor
 
 	mu    sync.Mutex
 	links []kebpf.LinkSnapshot
+
+	// workerAddr is the coordinator-reachable host:port of the shard worker
+	// co-located with this agent (WORKER_ADDR). It is advertised in every
+	// telemetry push only while workerReady, which is how the standalone
+	// controller discovers workers without an API server.
+	workerAddr  string
+	workerReady bool
 }
 
 // newReader selects the GPU/thermal telemetry source. GPU_MODE=sim (default)
@@ -45,22 +54,26 @@ type agent struct {
 // environments; GPU_MODE=cputherm reads real /sys/class/thermal state, for
 // running on laptops that have no discrete GPU but do thermally throttle
 // under sustained load; GPU_MODE=nvml requires building with -tags gpu.
-func newReader() (gpu.Reader, *gpu.Sim) {
+func newReader() (gpu.Reader, *gpu.Sim, *gpu.Measured) {
 	switch env("GPU_MODE", "sim") {
+	case "measured":
+		log.Printf("gpu telemetry: measured execution speed pushed by the co-located worker")
+		m := gpu.NewMeasured(10 * time.Second)
+		return m, nil, m
 	case "cputherm":
 		log.Printf("gpu telemetry: real CPU thermal (/sys/class/thermal)")
-		return gpu.NewCPUTherm(0, 0, 0), nil
+		return gpu.NewCPUTherm(0, 0, 0), nil, nil
 	case "nvml":
 		if r, err := newNVML(); err == nil {
 			log.Printf("gpu telemetry: real NVML")
-			return r, nil
+			return r, nil, nil
 		} else {
 			log.Printf("WARNING: GPU_MODE=nvml requested but unavailable (%v); falling back to sim", err)
 		}
 		fallthrough
 	default:
 		s := gpu.NewSim()
-		return s, s
+		return s, s, nil
 	}
 }
 
@@ -68,6 +81,11 @@ func (a *agent) handleGPU(w http.ResponseWriter, r *http.Request) {
 	if bf := r.URL.Query().Get("busy_frac"); bf != "" {
 		if v, err := strconv.ParseFloat(bf, 64); err == nil && a.sim != nil {
 			a.sim.ReportLoad(v)
+		}
+	}
+	if ms := r.URL.Query().Get("measured_speed"); ms != "" {
+		if v, err := strconv.ParseFloat(ms, 64); err == nil && a.measured != nil {
+			a.measured.Report(v)
 		}
 	}
 	json.NewEncoder(w).Encode(a.reader.Read())
@@ -102,10 +120,70 @@ func (a *agent) handleLinks(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(a.links)
 }
 
+// watchWorker tracks whether the co-located worker is serving gRPC.
+//
+// Readiness is the gRPC channel reaching READY -- a completed HTTP/2
+// handshake with a live gRPC server -- rather than a bare TCP accept. It
+// deliberately does NOT call the Worker.Stats RPC: Stats resets the worker's
+// busy-time window, and the router's /stats reads that same window for the
+// utilization figure, so polling it here would silently corrupt those
+// measurements.
+//
+// This signals "available for assignment". Whether a worker is ready to serve
+// a given layout is established separately by its AssignLayers acknowledgement.
+func (a *agent) watchWorker() {
+	for {
+		// Short backoff: a restarted worker must be re-detected within
+		// seconds, not after gRPC's default backoff of up to 120 s.
+		conn, err := peerconn.Dial(a.workerAddr)
+		if err != nil {
+			a.setWorkerReady(false)
+			time.Sleep(time.Second)
+			continue
+		}
+		conn.Connect()
+		for {
+			ctx, cancel := context.WithTimeout(context.Background(), 900*time.Millisecond)
+			st := conn.GetState()
+			if st != connectivity.Ready {
+				conn.WaitForStateChange(ctx, st)
+				st = conn.GetState()
+			}
+			cancel()
+			a.setWorkerReady(st == connectivity.Ready)
+			if st == connectivity.Shutdown {
+				break
+			}
+			if st == connectivity.TransientFailure || st == connectivity.Idle {
+				conn.Connect()
+			}
+			time.Sleep(time.Second)
+		}
+		conn.Close()
+	}
+}
+
+func (a *agent) setWorkerReady(ready bool) {
+	a.mu.Lock()
+	changed := a.workerReady != ready
+	a.workerReady = ready
+	a.mu.Unlock()
+	if changed {
+		log.Printf("worker %s ready=%v", a.workerAddr, ready)
+	}
+}
+
 func (a *agent) telemetry() *pipelinepb.NodeTelemetry {
 	st := a.reader.Read()
+	a.mu.Lock()
+	advertise := ""
+	if a.workerReady {
+		advertise = a.workerAddr
+	}
+	a.mu.Unlock()
 	msg := &pipelinepb.NodeTelemetry{
 		Node:        a.node,
+		WorkerAddr:  advertise,
 		TimestampMs: time.Now().UnixMilli(),
 		Gpu: &pipelinepb.GpuStat{
 			TempC:       st.TempC,
@@ -136,10 +214,23 @@ func main() {
 	portMin, _ := strconv.Atoi(env("PORT_MIN", "50051"))
 	portMax, _ := strconv.Atoi(env("PORT_MAX", "50052"))
 
-	reader, sim := newReader()
-	a := &agent{node: nodeName, reader: reader, sim: sim}
+	reader, sim, measured := newReader()
+	a := &agent{node: nodeName, reader: reader, sim: sim, measured: measured,
+		workerAddr: os.Getenv("WORKER_ADDR")}
+	if a.workerAddr != "" {
+		go a.watchWorker()
+		log.Printf("advertising worker %s while it is serving gRPC", a.workerAddr)
+	}
 
-	mon, err := kebpf.NewMonitor(uint16(portMin), uint16(portMax))
+	var mon *kebpf.Monitor
+	var err error
+	if env("EBPF", "on") == "off" {
+		// The application-only arm (H3): no kernel programs at all, so the
+		// agent's measured overhead is that arm's real overhead.
+		err = fmt.Errorf("disabled by EBPF=off")
+	} else {
+		mon, err = kebpf.NewMonitor(uint16(portMin), uint16(portMax))
+	}
 	if err != nil {
 		log.Printf("WARNING: eBPF monitor unavailable (%v); running without network telemetry", err)
 	} else {
@@ -170,8 +261,7 @@ func main() {
 	if controllerAddr != "" {
 		go func() {
 			for {
-				conn, err := grpc.NewClient(controllerAddr,
-					grpc.WithTransportCredentials(insecure.NewCredentials()))
+				conn, err := peerconn.Dial(controllerAddr)
 				if err != nil {
 					time.Sleep(2 * time.Second)
 					continue

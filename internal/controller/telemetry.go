@@ -21,8 +21,12 @@ type TelemetryStore struct {
 }
 
 type nodeState struct {
-	gpu      *pipelinepb.GpuStat
-	lastSeen time.Time
+	gpu *pipelinepb.GpuStat
+	// workerAddr is the shard worker co-located with this node agent. It is
+	// what lets the standalone substrate discover workers with no API server:
+	// the agent's once-per-second push already IS the liveness heartbeat.
+	workerAddr string
+	lastSeen   time.Time
 }
 
 type flowKey struct {
@@ -47,7 +51,7 @@ func (s *TelemetryStore) Report(ctx context.Context, msg *pipelinepb.NodeTelemet
 	now := time.Now()
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.nodes[msg.Node] = &nodeState{gpu: msg.Gpu, lastSeen: now}
+	s.nodes[msg.Node] = &nodeState{gpu: msg.Gpu, workerAddr: msg.WorkerAddr, lastSeen: now}
 	for _, l := range msg.Links {
 		key := flowKey{src: l.SrcIp, dst: l.DstIp, port: l.DstPort}
 		if l.Samples == 0 && l.BytesPerSec == 0 {
@@ -74,6 +78,27 @@ func (s *TelemetryStore) Node(node string, staleAfter time.Duration) (*pipelinep
 	return st.gpu, true
 }
 
+// LiveWorkers returns one WorkerRef per node whose agent heartbeat is fresh
+// and which reported a worker address, in deterministic (node, name) order.
+//
+// This is the standalone substrate's discovery path. It currently yields at
+// most one worker per node, because NodeTelemetry carries a single
+// worker_addr; several workers per machine need the additional repeated field
+// (plan 2.4), which is additive and wire-compatible.
+func (s *TelemetryStore) LiveWorkers(staleAfter time.Duration) []WorkerRef {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	var out []WorkerRef
+	for node, st := range s.nodes {
+		if st.workerAddr == "" || time.Since(st.lastSeen) > staleAfter {
+			continue
+		}
+		out = append(out, WorkerRef{Name: node, Addr: st.workerAddr, Node: node})
+	}
+	sortWorkers(out)
+	return out
+}
+
 // LinkSRTT returns the observed sRTT for src->dst:port, if fresh.
 func (s *TelemetryStore) LinkSRTT(src, dst string, port uint32, staleAfter time.Duration) (float64, bool) {
 	s.mu.Lock()
@@ -90,6 +115,43 @@ func (s *TelemetryStore) LinkSRTT(src, dst string, port uint32, staleAfter time.
 // feeding a stage is router->stage; matching by destination captures it
 // without knowing the router's pod IP.
 func (s *TelemetryStore) LinkSRTTToDst(dst string, port uint32, staleAfter time.Duration) (float64, bool) {
+	return s.LinkCost(LinkSourceAny, dst, port, staleAfter)
+}
+
+// LinkSource selects which telemetry the controller prices links with. This is
+// the H3 comparison: kernel (eBPF) measurements against application-level
+// ones, never silently mixed.
+type LinkSource string
+
+const (
+	// LinkSourceAny is the historical behaviour: the freshest flow from any
+	// source. Kept for LinkSRTTToDst; experiments should choose explicitly.
+	LinkSourceAny LinkSource = "any"
+	// LinkSourceEBPF uses only kernel-measured sRTT from node agents.
+	LinkSourceEBPF LinkSource = "ebpf"
+	// LinkSourceApp uses only the router's application-level transport cost.
+	LinkSourceApp LinkSource = "app"
+	// LinkSourceEBPFThenApp prefers eBPF and falls back to the application
+	// measurement when no fresh kernel sample exists.
+	LinkSourceEBPFThenApp LinkSource = "ebpf+app"
+	// LinkSourceNone ignores link telemetry: every hop costs DefaultLinkMs.
+	LinkSourceNone LinkSource = "none"
+)
+
+// appSrc is the src key the router uses for application-level flows.
+const appSrc = "app"
+
+// LinkCost returns the freshest link cost into dst:port from the chosen source.
+func (s *TelemetryStore) LinkCost(src LinkSource, dst string, port uint32, staleAfter time.Duration) (float64, bool) {
+	switch src {
+	case LinkSourceNone:
+		return 0, false
+	case LinkSourceEBPFThenApp:
+		if v, ok := s.LinkCost(LinkSourceEBPF, dst, port, staleAfter); ok {
+			return v, true
+		}
+		return s.LinkCost(LinkSourceApp, dst, port, staleAfter)
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	var (
@@ -99,6 +161,12 @@ func (s *TelemetryStore) LinkSRTTToDst(dst string, port uint32, staleAfter time.
 	)
 	for key, f := range s.flows {
 		if key.dst != dst || key.port != port || time.Since(f.lastSeen) > staleAfter {
+			continue
+		}
+		if src == LinkSourceEBPF && key.src == appSrc {
+			continue
+		}
+		if src == LinkSourceApp && key.src != appSrc {
 			continue
 		}
 		if !found || f.lastSeen.After(bestSeen) {
@@ -114,6 +182,11 @@ func (s *TelemetryStore) Snapshot() map[string]any {
 	defer s.mu.Unlock()
 	nodes := map[string]any{}
 	for name, st := range s.nodes {
+		// The router reports application-level links under a pseudo-node with
+		// no GPU stat and no worker; it is a telemetry source, not a node.
+		if st.gpu == nil && st.workerAddr == "" {
+			continue
+		}
 		nodes[name] = map[string]any{
 			"temp_c":       st.gpu.GetTempC(),
 			"throttled":    st.gpu.GetThrottled(),

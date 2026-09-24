@@ -8,28 +8,14 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"sort"
 	"sync"
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/kubernetes"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
 	"kubeedgeinfer/gen/pipelinepb"
 	"kubeedgeinfer/internal/partition"
+	"kubeedgeinfer/internal/peerconn"
 )
-
-var PipelineGVR = schema.GroupVersionResource{
-	Group:    "kubeedgeinfer.io",
-	Version:  "v1alpha1",
-	Resource: "inferencepipelines",
-}
 
 type Config struct {
 	Namespace        string
@@ -56,12 +42,21 @@ type Config struct {
 	// so it can be compared head-to-head against KubeEdgeInfer's own
 	// continuous-telemetry DECIDE loop under the same fault injection.
 	ProfileOnce bool
+
+	// Policy selects how voluntary repartitions are gated (the H2 arms), and
+	// Gate parameterises the transition gate. The gate's ContextLen is taken
+	// from the pipeline spec at decision time, not from here.
+	Policy partition.Policy
+	Gate   partition.GateParams
+
+	// LinkSource selects which link telemetry prices the hops (the H3 arms).
+	// Empty means LinkSourceAny, the historical behaviour.
+	LinkSource LinkSource
 }
 
 type Controller struct {
 	cfg     Config
-	kube    kubernetes.Interface
-	dyn     dynamic.Interface
+	src     Source
 	store   *TelemetryStore
 	decider *partition.Decider
 
@@ -72,21 +67,35 @@ type Controller struct {
 	lastPush       time.Time
 	lastError      string
 	conns          map[string]*grpc.ClientConn
-	frozenSpeed    map[string]float64 // node -> speed, captured once when ProfileOnce
-	frozenLinkMs   map[string]float64 // dst ip -> link ms, captured once when ProfileOnce
+	frozenSpeed    map[string]float64   // node -> speed, captured once when ProfileOnce
+	frozenLinkMs   map[string]float64   // dst ip -> link ms, captured once when ProfileOnce
+	decisions      []partition.Decision // bounded history of evaluated moves
+	lastDecisionAt time.Time
 }
 
-func New(cfg Config, kube kubernetes.Interface, dyn dynamic.Interface, store *TelemetryStore) *Controller {
+func New(cfg Config, src Source, store *TelemetryStore) *Controller {
 	return &Controller{
 		cfg:          cfg,
-		kube:         kube,
-		dyn:          dyn,
+		src:          src,
 		store:        store,
-		decider:      partition.NewDecider(cfg.ImprovementFrac, cfg.Cooldown),
+		decider:      newDecider(cfg),
 		conns:        map[string]*grpc.ClientConn{},
 		frozenSpeed:  map[string]float64{},
 		frozenLinkMs: map[string]float64{},
 	}
+}
+
+// newDecider builds a Decider from config. Always use this rather than
+// partition.NewDecider directly: the controller rebuilds its Decider after a
+// failed apply, and a bare NewDecider would silently reset the policy to
+// hysteresis in the middle of an experiment.
+func newDecider(cfg Config) *partition.Decider {
+	d := partition.NewDecider(cfg.ImprovementFrac, cfg.Cooldown)
+	if cfg.Policy != "" {
+		d.Policy = cfg.Policy
+	}
+	d.Gate = cfg.Gate
+	return d
 }
 
 func (c *Controller) Run(ctx context.Context) {
@@ -107,70 +116,40 @@ func (c *Controller) Run(ctx context.Context) {
 	}
 }
 
-type spec struct {
-	model       string
-	backend     string
-	totalLayers int
-	perLayerMs  float64
-	workers     int64
-	routerAddr  string
-}
-
-func specFrom(u *unstructured.Unstructured) spec {
-	s := spec{
-		model:       str(u, "spec", "model"),
-		backend:     str(u, "spec", "backend"),
-		totalLayers: int(num(u, "spec", "totalLayers")),
-		perLayerMs:  fnum(u, "spec", "perLayerMs"),
-		workers:     num(u, "spec", "workers"),
-		routerAddr:  str(u, "spec", "routerAddr"),
-	}
-	if s.backend == "" {
-		s.backend = "sim"
-	}
-	if s.perLayerMs == 0 {
-		s.perLayerMs = 30
-	}
-	if s.routerAddr == "" {
-		s.routerAddr = "router:50052"
-	}
-	return s
-}
-
 func (c *Controller) reconcile(ctx context.Context) error {
-	crs, err := c.dyn.Resource(PipelineGVR).Namespace(c.cfg.Namespace).List(ctx, metav1.ListOptions{})
-	if err != nil {
-		return fmt.Errorf("list pipelines: %w", err)
-	}
-	if len(crs.Items) == 0 {
-		return nil
-	}
-	cr := &crs.Items[0]
-	sp := specFrom(cr)
-
-	pods, err := c.livePods(ctx)
+	sp, ok, err := c.src.Spec(ctx)
 	if err != nil {
 		return err
 	}
-	if len(pods) == 0 {
-		return c.updateStatus(ctx, cr, nil, "NoWorkers")
+	if !ok {
+		return nil // nothing configured yet; idle
 	}
 
-	input := c.buildInput(sp, pods)
+	workers, err := c.src.Workers(ctx)
+	if err != nil {
+		return err
+	}
+	if len(workers) == 0 {
+		return c.report(ctx, nil, "NoWorkers")
+	}
+
+	input := c.buildInput(sp, workers)
 
 	if c.cfg.Static {
-		return c.reconcileStatic(ctx, cr, sp, input)
+		return c.reconcileStatic(ctx, sp, input)
 	}
 
+	c.decider.Gate.ContextLen = sp.ContextLen
 	res, changed, err := c.decider.Decide(time.Now(), input, false)
+	c.recordDecision()
 	if err != nil {
-		return c.updateStatus(ctx, cr, nil, "PartitionError: "+err.Error())
+		return c.report(ctx, nil, "PartitionError: "+err.Error())
 	}
 	if changed {
 		if err := c.apply(ctx, sp, res); err != nil {
 			// Force a fresh decision next tick rather than believing the
 			// half-applied split is active.
-			c.decider = partition.NewDecider(c.cfg.ImprovementFrac, c.cfg.Cooldown)
+			c.decider = newDecider(c.cfg)
 			return fmt.Errorf("apply: %w", err)
 		}
 		log.Printf("applied gen=%d bottleneck=%.1fms: %s",
@@ -181,12 +160,12 @@ func (c *Controller) reconcile(ctx context.Context) error {
 			return fmt.Errorf("reassert: %w", err)
 		}
 	}
-	return c.updateStatus(ctx, cr, res, "Running")
+	return c.report(ctx, res, "Running")
 }
 
 // reconcileStatic applies one equal split when all expected workers are up,
 // then never touches the pipeline again — the ablation baseline.
-func (c *Controller) reconcileStatic(ctx context.Context, cr *unstructured.Unstructured, sp spec, input partition.Input) error {
+func (c *Controller) reconcileStatic(ctx context.Context, sp PipelineSpec, input partition.Input) error {
 	c.mu.Lock()
 	applied := c.staticApplied
 	last := c.lastApplied
@@ -200,10 +179,10 @@ func (c *Controller) reconcileStatic(ctx context.Context, cr *unstructured.Unstr
 				log.Printf("static reassert: %v", err)
 			}
 		}
-		return c.updateStatus(ctx, cr, last, "RunningStatic")
+		return c.report(ctx, last, "RunningStatic")
 	}
-	if sp.workers > 0 && int64(len(input.Workers)) < sp.workers {
-		return c.updateStatus(ctx, cr, nil, "WaitingForWorkers")
+	if sp.Workers > 0 && int64(len(input.Workers)) < sp.Workers {
+		return c.report(ctx, nil, "WaitingForWorkers")
 	}
 	for i := range input.Workers {
 		input.Workers[i].Speed = 1 // static ignores telemetry by design
@@ -222,97 +201,53 @@ func (c *Controller) reconcileStatic(ctx context.Context, cr *unstructured.Unstr
 	c.staticApplied = true
 	c.mu.Unlock()
 	log.Printf("applied static split gen=%d: %s", c.generation, describe(res))
-	return c.updateStatus(ctx, cr, res, "RunningStatic")
+	return c.report(ctx, res, "RunningStatic")
 }
 
-type podInfo struct {
-	name, ip, node string
-}
-
-// livePods returns Running worker pods whose node agent heartbeat is fresh,
-// in a deterministic pipeline order. Dropping a pod whose heartbeat went
-// stale is the HEAL trigger: the Decider sees a changed worker set and
-// forces a repartition across survivors.
-//
-// Ordering is (node, pod name), not node alone: sort.Slice is not stable, so
-// with several workers on one node -- the single-machine GPU layout, where
-// every pod shares a node -- ordering by node alone leaves ties to be broken
-// arbitrarily. The Decider compares worker identity position-by-position, so
-// a reshuffle would look like a changed worker set and force a pointless
-// repartition on every tick.
-func (c *Controller) livePods(ctx context.Context) ([]podInfo, error) {
-	list, err := c.kube.CoreV1().Pods(c.cfg.Namespace).List(ctx, metav1.ListOptions{
-		LabelSelector: c.cfg.WorkerSelector,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("list pods: %w", err)
-	}
-	var pods []podInfo
-	for _, p := range list.Items {
-		if p.Status.Phase != corev1.PodRunning || p.Status.PodIP == "" || p.DeletionTimestamp != nil {
-			continue
-		}
-		if !podReady(&p) {
-			continue
-		}
-		if _, alive := c.store.Node(p.Spec.NodeName, c.cfg.HeartbeatTimeout); !alive {
-			continue
-		}
-		pods = append(pods, podInfo{name: p.Name, ip: p.Status.PodIP, node: p.Spec.NodeName})
-	}
-	sort.Slice(pods, func(i, j int) bool {
-		if pods[i].node != pods[j].node {
-			return pods[i].node < pods[j].node
-		}
-		return pods[i].name < pods[j].name
-	})
-	return pods, nil
-}
-
-func podReady(p *corev1.Pod) bool {
-	for _, cond := range p.Status.Conditions {
-		if cond.Type == corev1.PodReady {
-			return cond.Status == corev1.ConditionTrue
-		}
-	}
-	return false
-}
-
-func (c *Controller) buildInput(sp spec, pods []podInfo) partition.Input {
+func (c *Controller) buildInput(sp PipelineSpec, workers []WorkerRef) partition.Input {
 	input := partition.Input{
-		TotalLayers: sp.totalLayers,
-		PerLayerMs:  sp.perLayerMs,
+		TotalLayers:   sp.TotalLayers,
+		PerLayerMs:    sp.PerLayerMs,
+		EmbedMs:       sp.EmbedMs,
+		HeadMs:        sp.HeadMs,
+		ContextLen:    sp.ContextLen,
+		PerLayerByCtx: sp.PerLayerByCtx,
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	for _, p := range pods {
+	for _, p := range workers {
 		speed := 1.0
-		if gpu, ok := c.store.Node(p.node, c.cfg.HeartbeatTimeout); ok && gpu.GetSpeedFactor() > 0 {
+		if gpu, ok := c.store.Node(p.Node, c.cfg.HeartbeatTimeout); ok && gpu.GetSpeedFactor() > 0 {
 			speed = gpu.GetSpeedFactor()
 		}
 		if c.cfg.ProfileOnce {
-			if frozen, ok := c.frozenSpeed[p.node]; ok {
+			if frozen, ok := c.frozenSpeed[p.Node]; ok {
 				speed = frozen
 			} else {
-				c.frozenSpeed[p.node] = speed
+				c.frozenSpeed[p.Node] = speed
 			}
 		}
 		input.Workers = append(input.Workers, partition.Worker{
-			Name:  p.name,
-			Addr:  fmt.Sprintf("%s:%d", p.ip, c.cfg.WorkerPort),
-			Node:  p.node,
+			Name:  p.Name,
+			Addr:  p.Addr, // full host:port; workers may share a machine
+			Node:  p.Node,
 			Speed: speed,
 		})
 	}
 	// The router drives stages hub-and-spoke, so the transfer cost feeding
 	// stage i+1 is the network path into that stage's pod.
-	for i := 0; i+1 < len(pods); i++ {
+	for i := 0; i+1 < len(workers); i++ {
+		next := workers[i+1]
 		ms := c.cfg.DefaultLinkMs
-		if srtt, ok := c.store.LinkSRTTToDst(pods[i+1].ip, uint32(c.cfg.WorkerPort), 15*time.Second); ok {
+		src := c.cfg.LinkSource
+		if src == "" {
+			src = LinkSourceAny
+		}
+		if srtt, ok := c.store.LinkCost(src, next.ip(), next.port(), 15*time.Second); ok {
 			ms = srtt
 		}
 		if c.cfg.ProfileOnce {
-			key := pods[i+1].ip
+			key := next.Addr
 			if frozen, ok := c.frozenLinkMs[key]; ok {
 				ms = frozen
 			} else {
@@ -325,7 +260,7 @@ func (c *Controller) buildInput(sp spec, pods []podInfo) partition.Input {
 }
 
 // apply adopts a new split: it bumps the generation and pushes it out.
-func (c *Controller) apply(ctx context.Context, sp spec, res *partition.Result) error {
+func (c *Controller) apply(ctx context.Context, sp PipelineSpec, res *partition.Result) error {
 	c.mu.Lock()
 	c.generation++
 	gen := c.generation
@@ -353,18 +288,18 @@ func (c *Controller) reassertDue(now time.Time) (int64, bool) {
 // assigned while still looking unchanged to the Decider (same pod name and
 // IP). Re-pushing the *current* generation on a timer is what repairs that;
 // without it a single router restart wedges the pipeline permanently.
-func (c *Controller) push(ctx context.Context, sp spec, res *partition.Result, gen int64) error {
+func (c *Controller) push(ctx context.Context, sp PipelineSpec, res *partition.Result, gen int64) error {
 	for _, a := range res.Assignments {
 		client := pipelinepb.NewWorkerClient(c.conn(a.Worker.Addr))
 		reqCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 		reply, err := client.AssignLayers(reqCtx, &pipelinepb.AssignLayersRequest{
 			StartLayer:  int32(a.Start),
 			EndLayer:    int32(a.End),
-			TotalLayers: int32(sp.totalLayers),
-			Backend:     sp.backend,
-			Model:       sp.model,
+			TotalLayers: int32(sp.TotalLayers),
+			Backend:     sp.Backend,
+			Model:       sp.Model,
 			Generation:  gen,
-		})
+		}, grpc.WaitForReady(true)) // wait for a reconnecting worker, within the deadline
 		cancel()
 		if err != nil {
 			return fmt.Errorf("assign %s: %w", a.Worker.Name, err)
@@ -387,12 +322,12 @@ func (c *Controller) push(ctx context.Context, sp spec, res *partition.Result, g
 			EndLayer:   int32(a.End),
 		})
 	}
-	router := pipelinepb.NewRouterClient(c.conn(sp.routerAddr))
+	router := pipelinepb.NewRouterClient(c.conn(sp.RouterAddr))
 	reqCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	ack, err := router.SetPipeline(reqCtx, &pipelinepb.SetPipelineRequest{
 		Stages: stages, Generation: gen,
-	})
+	}, grpc.WaitForReady(true))
 	if err != nil {
 		return fmt.Errorf("router: %w", err)
 	}
@@ -414,44 +349,18 @@ func (c *Controller) conn(addr string) *grpc.ClientConn {
 	if conn, ok := c.conns[addr]; ok {
 		return conn
 	}
-	conn, _ := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, _ := peerconn.Dial(addr)
 	c.conns[addr] = conn
 	return conn
 }
 
-func (c *Controller) updateStatus(ctx context.Context, cr *unstructured.Unstructured, res *partition.Result, phase string) error {
+// report publishes status through the substrate. Failure is non-fatal by
+// design: losing status must not stop the control loop.
+func (c *Controller) report(ctx context.Context, res *partition.Result, phase string) error {
 	c.mu.Lock()
-	gen := c.generation
-	lastErr := c.lastError
+	st := Status{Phase: phase, Generation: c.generation, LastError: c.lastError, Result: res}
 	c.mu.Unlock()
-
-	status := map[string]any{
-		"phase":      phase,
-		"generation": gen,
-	}
-	if lastErr != "" {
-		status["lastError"] = lastErr
-	}
-	if res != nil {
-		status["bottleneckMs"] = fmt.Sprintf("%.2f", res.BottleneckMs)
-		var assignments []any
-		for _, a := range res.Assignments {
-			assignments = append(assignments, map[string]any{
-				"worker":     a.Worker.Name,
-				"node":       a.Worker.Node,
-				"startLayer": int64(a.Start),
-				"endLayer":   int64(a.End),
-			})
-		}
-		status["assignments"] = assignments
-	}
-	cr = cr.DeepCopy()
-	unstructured.SetNestedMap(cr.Object, status, "status")
-	_, err := c.dyn.Resource(PipelineGVR).Namespace(c.cfg.Namespace).Update(ctx, cr, metav1.UpdateOptions{})
-	if err != nil {
-		log.Printf("status update failed (non-fatal): %v", err)
-	}
-	return nil
+	return c.src.Report(ctx, st)
 }
 
 // State powers the debug endpoint consumed by the bench harness.
@@ -472,10 +381,52 @@ func (c *Controller) State() map[string]any {
 			})
 		}
 		out["assignments"] = stages
+		// Two distinct predictions: bottleneck governs throughput, pipeline
+		// governs per-request latency. Reporting only the first is what made
+		// the old fidelity check compare a throughput quantity against a
+		// latency observable.
 		out["bottleneck_ms"] = c.lastApplied.BottleneckMs
+		out["pipeline_ms"] = c.lastApplied.PipelineMs
 	}
+	// Read from immutable config, not c.decider: State runs on the HTTP
+	// goroutine and the reconcile loop may replace the Decider.
+	policy := c.cfg.Policy
+	if policy == "" {
+		policy = partition.PolicyHysteresis
+	}
+	out["policy"] = string(policy)
+	out["link_source"] = string(c.cfg.LinkSource)
+	out["decisions"] = c.decisions
 	out["telemetry"] = c.store.Snapshot()
 	return out
+}
+
+// maxDecisions bounds the history served by /state. The bench samples /state
+// every second, so a short window is enough to capture every decision.
+const maxDecisions = 64
+
+// recordDecision appends the Decider's latest verdict to the history if it is
+// new and meaningful. Threshold and cooldown rejections recur every tick while
+// a small improvement persists, so they are not kept -- only decisions that
+// reached a policy's actual decision point.
+func (c *Controller) recordDecision() {
+	d := c.decider.LastDecision()
+	if d == nil || !d.Time.After(c.lastDecisionAt) {
+		return
+	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.lastDecisionAt = d.Time
+	switch d.Reason {
+	case "below-improvement-threshold", "cooldown":
+		return
+	}
+	c.decisions = append(c.decisions, *d)
+	if len(c.decisions) > maxDecisions {
+		c.decisions = c.decisions[len(c.decisions)-maxDecisions:]
+	}
+	log.Printf("decision policy=%s reason=%s improvement=%.1f%% transition=%.0fms break-even=%.1fs executed=%v",
+		d.Policy, d.Reason, d.Improvement*100, d.TransitionMs, d.BreakEvenS, d.Executed)
 }
 
 func describe(res *partition.Result) string {
@@ -487,23 +438,4 @@ func describe(res *partition.Result) string {
 		s += fmt.Sprintf("%s[%d,%d)", a.Worker.Name, a.Start, a.End)
 	}
 	return s
-}
-
-// unstructured helpers
-
-func str(u *unstructured.Unstructured, fields ...string) string {
-	v, _, _ := unstructured.NestedString(u.Object, fields...)
-	return v
-}
-
-func num(u *unstructured.Unstructured, fields ...string) int64 {
-	v, _, _ := unstructured.NestedInt64(u.Object, fields...)
-	return v
-}
-
-func fnum(u *unstructured.Unstructured, fields ...string) float64 {
-	if v, ok, _ := unstructured.NestedFloat64(u.Object, fields...); ok {
-		return v
-	}
-	return float64(num(u, fields...))
 }
