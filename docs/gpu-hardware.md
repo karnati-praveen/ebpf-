@@ -1,5 +1,8 @@
 # Testing on real GPUs (worked example: RTX 4070 8GB + RTX 5050 8GB)
 
+> **Kubernetes-era guide** (k3s). For the current no-Kubernetes deployment use
+> [`deploy/standalone/README.md`](../deploy/standalone/README.md).
+
 ## Can you test this? Yes.
 
 Two machines with those cards is genuinely a good testbed — better than

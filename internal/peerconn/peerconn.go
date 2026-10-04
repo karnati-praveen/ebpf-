@@ -7,8 +7,13 @@
 // backoff, and fail-fast RPCs return the STALE dial error ("connection refused")
 // the whole time. In a device-loss experiment that made recovery time measure
 // gRPC's backoff schedule instead of the system -- about 14 s of it in the
-// local rehearsal. Capping the backoff at 2 s, and having control-plane RPCs
-// wait for readiness within their deadline, removes that confound.
+// local rehearsal. Capping the backoff at 2 s bounds that window.
+//
+// RPCs stay fail-fast on purpose. WaitForReady was tried and made things worse:
+// the controller's periodic re-push to a worker that had just died waited out
+// its full 30 s deadline, blocking every reconcile tick behind it and delaying
+// healing from ~3 s to 32 s. With a 2 s backoff, fail-fast costs at most a tick
+// or two, and a dead worker never stalls the control loop.
 package peerconn
 
 import (

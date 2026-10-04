@@ -182,7 +182,7 @@ sim benchmark and not a performance distribution.
 - `bench/analyze_journal.py`: produces per-run phase metrics, descriptive
   aggregates/CIs, comparisons, versioned CSV/JSON, and phase-marked plots.
 - `bench/fidelity.py`: includes uniquely tagged dynamic runs.
-- `JOURNAL_BENCHMARK_STATUS.md`: simple live status requested during execution.
+- `docs/journal-benchmark-status-2026-09-13.md`: simple live status requested during execution.
 - This report and its CSV/JSON audit tables document the measurements.
 
 ## Required physical-machine follow-up

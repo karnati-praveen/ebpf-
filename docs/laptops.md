@@ -1,5 +1,8 @@
 # Running KubeEdgeInfer across real laptops
 
+> **Kubernetes-era guide** (k3s). For the current no-Kubernetes deployment use
+> [`deploy/standalone/README.md`](../deploy/standalone/README.md).
+
 The kind cluster in this repo runs everything as containers on one host —
 useful for development, but it fakes two of the three signals the project's
 novelty depends on: network latency (via `tc netem`, not real WiFi) and GPU
