@@ -299,7 +299,7 @@ func (c *Controller) push(ctx context.Context, sp PipelineSpec, res *partition.R
 			Backend:     sp.Backend,
 			Model:       sp.Model,
 			Generation:  gen,
-		}, grpc.WaitForReady(true)) // wait for a reconnecting worker, within the deadline
+		}) // fail fast: a dead worker must not stall the reconcile loop
 		cancel()
 		if err != nil {
 			return fmt.Errorf("assign %s: %w", a.Worker.Name, err)
@@ -327,7 +327,7 @@ func (c *Controller) push(ctx context.Context, sp PipelineSpec, res *partition.R
 	defer cancel()
 	ack, err := router.SetPipeline(reqCtx, &pipelinepb.SetPipelineRequest{
 		Stages: stages, Generation: gen,
-	}, grpc.WaitForReady(true))
+	})
 	if err != nil {
 		return fmt.Errorf("router: %w", err)
 	}

@@ -1,5 +1,8 @@
 # Running on one GPU machine (worked example: a single L4)
 
+> **Kubernetes-era guide** (k3s). For the current no-Kubernetes deployment use
+> [`deploy/standalone/README.md`](../deploy/standalone/README.md).
+
 Commands for a **single** machine with one NVIDIA GPU. Run everything on that
 machine.
 

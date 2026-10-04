@@ -62,7 +62,11 @@ machine (plan 2.4 — one worker per VM suffices), the `keinfer` Go launcher
   worker that died kept failing fast with the stale "connection refused" for
   ~14 s after it was back (default backoff grows to 120 s), so device-loss
   recovery measured gRPC's backoff schedule. Fixed: `internal/peerconn` (2 s
-  max backoff) and WaitForReady on control RPCs; same options in the router.
+  max backoff); same options in the router. RPCs stay fail-fast: WaitForReady
+  on control RPCs stalled the reconcile loop on a dead worker (heal 3 s -> 32 s).
+- **Relayout raced in-flight compute.** AssignLayers took only the state lock,
+  so a forward could run while weights were being replaced. Fixed: lock order
+  compute -> state; queued forwards get a replayable generation mismatch.
 - **SSH hung on node restore.** The restart loop inherited the caller's output
   pipe, so `ssh vm2 start-worker-node.sh` never returned. Fixed: the loop is
   fully detached and ignores SIGHUP.

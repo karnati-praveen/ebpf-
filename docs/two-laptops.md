@@ -1,5 +1,8 @@
 # Running KubeEdgeInfer on two laptops
 
+> **Kubernetes-era guide** (k3s). For the current no-Kubernetes deployment use
+> [`deploy/standalone/README.md`](../deploy/standalone/README.md).
+
 The exact steps to go from two laptops on the same WiFi to a real cluster
 running this project — real network latency between two physical machines and
 real CPU thermal throttling, instead of the kind demo's simulated versions.
