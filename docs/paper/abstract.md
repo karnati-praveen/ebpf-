@@ -1,0 +1,26 @@
+# Draft abstract
+
+Title: KubeEdgeInfer: Measurement and Ablation of Transition-Aware Local LLM Inference
+
+Local large language model services face changing compute availability and
+communication conditions, but redistributing model layers can incur weight
+loading and key-value cache reconstruction costs. We present KubeEdgeInfer, a
+standalone prototype that combines contiguous-layer partitioning, live telemetry,
+hysteresis and an explicit transition gate. The controller compares useful-token
+capacity over a planning horizon rather than accepting every improved
+steady-state placement. We evaluate its measurement and decision mechanisms
+through separated endpoint/context cost ablations, transition-cost sensitivity,
+and a controlled worker-level queueing pilot. Decision-only experiments show
+that removing endpoint or context terms changes selected placements under a
+common reference model; these differences are predictions rather than measured
+speedups. Across 54 instrumented loopback windows and 66,003 RPCs, a 50 ms service at
+four-client concurrency produces a 150.0 ms RPC-minus-compute residual,
+of which 99.2% is measured lock waiting. Thus this signal can
+misattribute concurrency-induced delay to communication. Bounded FIFO admission
+and direct lock-wait measurements separate this effect while retaining client
+waiting in end-to-end metrics. The study provides reproducible ablations and
+identifies calibration requirements for adaptive inference. Demonstrating that
+repartitioning improves real distributed service, including transition downtime,
+remains the next experimental step.
+
+Status: prototype/pilot abstract; no distributed real-model gain is claimed.

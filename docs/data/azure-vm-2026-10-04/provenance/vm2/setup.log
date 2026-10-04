@@ -1,0 +1,90 @@
+[keinfer] system packages
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+ systemctl restart chrony.service cron.service multipathd.service packagekit.service polkit.service rsyslog.service ssh.service systemd-journald.service systemd-networkd.service systemd-resolved.service systemd-udevd.service udisks2.service walinuxagent.service
+
+Service restarts being deferred:
+ systemctl restart ModemManager.service
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart getty@tty1.service
+ systemctl restart networkd-dispatcher.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ azureuser @ session #3: bash[1680]
+ azureuser @ user manager service: systemd[1466]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+[keinfer] Go 1.26.1 (go.mod requires >= 1.26.1; Ubuntu's apt Go is too old)
+[keinfer] building controller and node agent
+go: downloading google.golang.org/grpc v1.82.0
+go: downloading k8s.io/client-go v0.36.2
+go: downloading golang.org/x/net v0.53.0
+go: downloading k8s.io/apimachinery v0.36.2
+go: downloading github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
+go: downloading k8s.io/klog/v2 v2.140.0
+go: downloading k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2
+go: downloading github.com/spf13/pflag v1.0.10
+go: downloading golang.org/x/term v0.42.0
+go: downloading google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af
+go: downloading k8s.io/api v0.36.2
+go: downloading golang.org/x/sys v0.47.0
+go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20260414002931-afd174a4e478
+go: downloading sigs.k8s.io/randfill v1.0.0
+go: downloading k8s.io/kube-openapi v0.0.0-20260317180543-43fb72c5454a
+go: downloading sigs.k8s.io/structured-merge-diff/v6 v6.3.2
+go: downloading github.com/fxamacker/cbor/v2 v2.9.0
+go: downloading sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730
+go: downloading sigs.k8s.io/yaml v1.6.0
+go: downloading github.com/google/gnostic-models v0.7.0
+go: downloading github.com/go-logr/logr v1.4.3
+go: downloading golang.org/x/oauth2 v0.36.0
+go: downloading golang.org/x/time v0.14.0
+go: downloading gopkg.in/inf.v0 v0.9.1
+go: downloading github.com/json-iterator/go v1.1.12
+go: downloading go.yaml.in/yaml/v2 v2.4.3
+go: downloading github.com/x448/float16 v0.8.4
+go: downloading golang.org/x/text v0.36.0
+go: downloading github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
+go: downloading go.yaml.in/yaml/v3 v3.0.4
+go: downloading github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
+go: downloading github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee
+go: downloading github.com/google/uuid v1.6.0
+go: downloading github.com/go-openapi/swag v0.23.0
+go: downloading github.com/go-openapi/jsonreference v0.20.2
+go: downloading gopkg.in/evanphx/json-patch.v4 v4.13.0
+go: downloading github.com/emicklei/go-restful/v3 v3.13.0
+go: downloading github.com/mailru/easyjson v0.7.7
+go: downloading gopkg.in/yaml.v3 v3.0.1
+go: downloading github.com/go-openapi/jsonpointer v0.21.0
+go: downloading github.com/josharian/intern v1.0.0
+go: downloading github.com/cilium/ebpf v0.22.0
+[keinfer] Python venv with pinned, verified versions (isolated; never --break-system-packages)
+[keinfer] pre-downloading Qwen/Qwen3-0.6B so the first assignment does not stall on the network
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 5743.57it/s]
+model cached
+[keinfer] eBPF prerequisites
+[keinfer]   kernel BTF present -- eBPF network telemetry will attach
+[keinfer] network
+[keinfer]   private IP 10.10.1.4 on eth0
+[keinfer] done. Next: start-coordinator.sh on VM1, start-worker-node.sh on every VM.

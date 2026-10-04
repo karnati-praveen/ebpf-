@@ -1,0 +1,95 @@
+Waiting for objective matrix PID 24706
+Starting demand matrix at 2026-10-04T11:34:10Z
+MATRIX 1/12 stable:0 throughput c1 r1
+1 runs, seed 20261015; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_throughput_c1_r1_20261004T113410
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 4/4 requests ok, 1 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_throughput_c1_r1_20261004T113410
+MATRIX 2/12 stable:0 throughput c2 r2
+1 runs, seed 20261016; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_throughput_c2_r2_20261004T113528
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_throughput_c2_r2_20261004T113528
+MATRIX 3/12 stable:0 throughput c1 r2
+1 runs, seed 20261017; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_throughput_c1_r2_20261004T113645
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 4/4 requests ok, 1 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_throughput_c1_r2_20261004T113645
+MATRIX 4/12 stable:0 auto-fixed c1 r2
+1 runs, seed 20261018; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_auto_c1_r2_20261004T113803
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 4/4 requests ok, 1 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c1_r2_20261004T113803
+MATRIX 5/12 stable:0 auto-remaining c2 r1
+1 runs, seed 20261019; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_auto_c2_r1_20261004T113919
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 6/6 requests ok, 6 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c2_r1_20261004T113919
+MATRIX 6/12 stable:0 auto-fixed c2 r1
+1 runs, seed 20261020; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_auto_c2_r1_20261004T114038
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 6/6 requests ok, 2 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c2_r1_20261004T114038
+MATRIX 7/12 stable:0 auto-fixed c1 r1
+1 runs, seed 20261021; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_auto_c1_r1_20261004T114157
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 4/4 requests ok, 1 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c1_r1_20261004T114157
+MATRIX 8/12 stable:0 auto-fixed c2 r2
+1 runs, seed 20261022; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_auto_c2_r2_20261004T114313
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 6/6 requests ok, 2 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c2_r2_20261004T114313
+MATRIX 9/12 stable:0 auto-remaining c1 r2
+1 runs, seed 20261023; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_auto_c1_r2_20261004T114429
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 4/4 requests ok, 1 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c1_r2_20261004T114429
+MATRIX 10/12 stable:0 throughput c2 r1
+1 runs, seed 20261024; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_throughput_c2_r1_20261004T114544
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_throughput_c2_r1_20261004T114544
+MATRIX 11/12 stable:0 auto-remaining c1 r1
+1 runs, seed 20261025; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_auto_c1_r1_20261004T114704
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 4/4 requests ok, 3 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c1_r1_20261004T114704
+MATRIX 12/12 stable:0 auto-remaining c2 r2
+1 runs, seed 20261026; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_auto_c2_r2_20261004T114823
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 6/6 requests ok, 2 decisions -> /home/azureuser/keinfer-demand/results/runs/stable_gate_ebpf+app_auto_c2_r2_20261004T114823
+Restoring original coordinator and clearing vm3 network fault
+FAULT_EVENT 1791114580.259003191 cleared
+[keinfer] started controller (logs: /home/azureuser/keinfer/logs/controller.log)
+[keinfer] started router (logs: /home/azureuser/keinfer/logs/router.log)
+[keinfer] coordinator: policy=hysteresis link-source=ebpf+app cost-model=full static=1 profile-once=0 ctx=128 workers=1
+[keinfer]   controller state: curl -s localhost:8081/state
+[keinfer]   generate:         curl -s -X POST localhost:8080/generate -d '{"prompt_len":64,"max_new_tokens":16}'
+Original coordinator restored
+MATRIX COMPLETE

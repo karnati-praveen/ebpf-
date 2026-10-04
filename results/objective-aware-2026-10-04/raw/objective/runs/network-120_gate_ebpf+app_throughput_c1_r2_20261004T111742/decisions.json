@@ -1,0 +1,179 @@
+[
+ {
+  "objective": "throughput",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 116.66,
+  "time": "2026-10-04T11:17:44.73927494Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 116.66,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "objective": "throughput",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 238.1521739130435,
+  "time": "2026-10-04T11:17:56.739490296Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 238.1521739130435,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    28
+   ]
+  ]
+ },
+ {
+  "objective": "throughput",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 119.84640491504271,
+  "time": "2026-10-04T11:17:58.739753857Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 119.84640491504271,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ },
+ {
+  "objective": "throughput",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 225.4852361258055,
+  "time": "2026-10-04T11:18:18.739567349Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 225.4852361258055,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    28
+   ]
+  ]
+ },
+ {
+  "objective": "throughput",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 179.33763424202795,
+  "time": "2026-10-04T11:18:20.739756534Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 179.33763424202795,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    27
+   ],
+   [
+    27,
+    28
+   ]
+  ]
+ },
+ {
+  "objective": "throughput",
+  "current_objective_ms": 169.3041901307626,
+  "optimal_objective_ms": 120.5190528740446,
+  "time": "2026-10-04T11:18:52.738914048Z",
+  "policy": "gate",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 169.3041901307626,
+  "optimal_bottleneck_ms": 120.5190528740446,
+  "improvement_frac": 0.2881507966166617,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 177.195850715977,
+  "tokens_adapt": 223.5808078259726,
+  "break_even_s": 10.599494555842552,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    27
+   ],
+   [
+    27,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ }
+]

@@ -1,0 +1,29 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "backend": "qwen3",
+  "totalLayers": 28,
+  "perLayerMs": 9.071,
+  "workers": 1,
+  "routerAddr": "127.0.0.1:50052",
+  "contextLen": 128,
+  "embedMs": 0.071,
+  "headMs": 50.49,
+  "perLayerByCtx": [
+    {
+      "contextLen": 128,
+      "perLayerMs": 6.567
+    },
+    {
+      "contextLen": 512,
+      "perLayerMs": 7.662
+    },
+    {
+      "contextLen": 1024,
+      "perLayerMs": 9.071
+    },
+    {
+      "contextLen": 2048,
+      "perLayerMs": 12.681
+    }
+  ]
+}

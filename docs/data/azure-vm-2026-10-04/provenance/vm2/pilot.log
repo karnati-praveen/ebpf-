@@ -1,0 +1,27 @@
+6 runs, seed 20260923; est. 0.5 h
+    1. compute:1.0 gate r1
+    2. network:120 hysteresis r1
+    3. loss:0 hysteresis r1
+    4. loss:0 gate r1
+    5. network:120 gate r1
+    6. compute:1.0 hysteresis r1
+
+=== compute-1.0_gate_ebpf+app_c2_r1_20261004T063126
+    restoring stopped node on vm3
+    ready: gen=1 layout=vm2:0-14|vm3:14-28
+    done: 26/26 requests ok, 16 decisions -> /home/azureuser/ebpf-/bench/results/pilot/compute-1.0_gate_ebpf+app_c2_r1_20261004T063126
+
+=== network-120_hysteresis_ebpf+app_c2_r1_20261004T063554
+    ready: gen=2 layout=vm2:0-18|vm3:18-28
+    done: 21/21 requests ok, 4 decisions -> /home/azureuser/ebpf-/bench/results/pilot/network-120_hysteresis_ebpf+app_c2_r1_20261004T063554
+
+=== loss-0_hysteresis_ebpf+app_c2_r1_20261004T064042
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 16/16 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/pilot/loss-0_hysteresis_ebpf+app_c2_r1_20261004T064042
+
+=== loss-0_gate_ebpf+app_c2_r1_20261004T064458
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 10/10 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/pilot/loss-0_gate_ebpf+app_c2_r1_20261004T064458
+
+=== network-120_gate_ebpf+app_c2_r1_20261004T070902
+    RUN FAILED: controller/router never became ready

@@ -1,0 +1,76 @@
+{
+  "run": "network-120_hysteresis_ebpf+app_c2_r3_20261004T100502",
+  "scenario": "network",
+  "magnitude": "120",
+  "policy": "hysteresis",
+  "policy_env": {
+    "POLICY": "hysteresis"
+  },
+  "link_source": "ebpf+app",
+  "cost_model": "full",
+  "kv_cache": "1",
+  "repeat": 3,
+  "workers": 2,
+  "target": "vm3",
+  "hosts": [
+    "vm3"
+  ],
+  "concurrency": 2,
+  "prompt_len": 64,
+  "new_tokens": 64,
+  "context_len": 128,
+  "phases_s": {
+    "pre": 40.0,
+    "fault": 120.0,
+    "post": 60.0
+  },
+  "t0": 1791108321.3998222,
+  "t_end": 1791108542.9004424,
+  "gate": {
+    "horizon_s": null,
+    "margin": null
+  },
+  "initial_state": {
+    "generation": 1,
+    "assignments": [
+      {
+        "end": 18,
+        "node": "vm2",
+        "speed": 1.0259,
+        "start": 0,
+        "worker": "vm2"
+      },
+      {
+        "end": 28,
+        "node": "vm3",
+        "speed": 0.995,
+        "start": 18,
+        "worker": "vm3"
+      }
+    ],
+    "bottleneck_ms": 117.73371859296482,
+    "pipeline_ms": 233.02468262454684
+  },
+  "agent_cpu_s": {
+    "vm3": {
+      "start": 11.41,
+      "end": 11.81
+    },
+    "local": {
+      "start": 11.56,
+      "end": 12.01
+    }
+  },
+  "worker_pids": {
+    "start": {
+      "local": "1561",
+      "vm3": "16872"
+    },
+    "end": {
+      "local": "1561",
+      "vm3": "16872"
+    }
+  },
+  "contaminated_by_unexpected_worker_restart": [],
+  "git": "24e8e7512891e19d06777d55a0ab69e8b380c4b8"
+}

@@ -1,0 +1,86 @@
+2026/10/04 06:22:19 gpu telemetry: measured execution speed pushed by the co-located worker
+2026/10/04 06:22:19 advertising worker 10.10.1.4:50051 while it is serving gRPC
+2026/10/04 06:22:19 eBPF tcpmon attached (ports 50051-50051)
+2026/10/04 06:22:19 pushing telemetry to 10.10.1.4:50053
+2026/10/04 06:22:19 node agent vm2 listening on :9101
+2026/10/04 06:22:20 worker 10.10.1.4:50051 ready=true
+2026/10/04 06:22:20 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 06:46:43 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:48:48 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:49:08 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:49:18 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:49:33 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:49:44 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:49:59 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:50:18 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded while waiting for connections to become ready
+2026/10/04 06:51:27 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:54:12 worker 10.10.1.4:50051 ready=false
+2026/10/04 06:54:50 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:55:25 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:56:01 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:56:25 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 06:56:25 worker 10.10.1.4:50051 ready=true
+2026/10/04 06:56:28 worker 10.10.1.4:50051 ready=false
+2026/10/04 06:59:35 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:07:55 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:08:32 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:08:33 worker 10.10.1.4:50051 ready=true
+2026/10/04 07:08:40 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:08:55 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:09:08 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:09:24 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:09:49 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:14:14 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:20:21 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:21:30 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:22:00 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:22:08 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:22:16 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:22:21 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:22:26 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:22:31 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:22:35 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:22:40 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:22:47 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:22:51 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:22:56 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:23:01 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:23:08 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:23:14 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:23:22 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:23:26 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 07:23:33 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:23:38 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:23:45 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:24:05 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:24:15 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:24:22 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:24:45 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 07:25:04 worker 10.10.1.4:50051 ready=false
+2026/10/04 07:25:29 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded
+2026/10/04 08:17:48 gpu telemetry: measured execution speed pushed by the co-located worker
+2026/10/04 08:17:48 advertising worker 10.10.1.4:50051 while it is serving gRPC
+2026/10/04 08:17:48 eBPF tcpmon attached (ports 50051-50051)
+2026/10/04 08:17:48 pushing telemetry to 10.10.1.4:50053
+2026/10/04 08:17:48 node agent vm2 listening on :9101
+2026/10/04 08:17:49 worker 10.10.1.4:50051 ready=true
+2026/10/04 08:17:49 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:17:52 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:17:55 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:17:58 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:18:01 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:18:04 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:18:07 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:18:10 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 08:47:50 worker 10.10.1.4:50051 ready=false
+2026/10/04 08:47:51 worker 10.10.1.4:50051 ready=true
+2026/10/04 09:17:51 worker 10.10.1.4:50051 ready=false
+2026/10/04 09:17:52 worker 10.10.1.4:50051 ready=true
+2026/10/04 09:27:16 telemetry push failed: rpc error: code = Unavailable desc = error reading from server: connection reset by peer
+2026/10/04 09:47:52 worker 10.10.1.4:50051 ready=false
+2026/10/04 09:47:53 worker 10.10.1.4:50051 ready=true
+2026/10/04 10:00:45 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.4:50053: connect: connection refused"
+2026/10/04 10:17:53 worker 10.10.1.4:50051 ready=false
+2026/10/04 10:17:54 worker 10.10.1.4:50051 ready=true
+2026/10/04 10:47:54 worker 10.10.1.4:50051 ready=false
+2026/10/04 10:47:55 worker 10.10.1.4:50051 ready=true

@@ -1,0 +1,63 @@
+[
+ {
+  "objective": "latency",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 231.2914364640884,
+  "time": "2026-10-04T11:40:41.299775266Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 231.2914364640884,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ]
+ },
+ {
+  "objective": "throughput",
+  "current_objective_ms": 223.35842225609755,
+  "optimal_objective_ms": 118.94435975609755,
+  "time": "2026-10-04T11:41:11.299800541Z",
+  "policy": "gate",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 223.35842225609755,
+  "optimal_bottleneck_ms": 118.94435975609755,
+  "improvement_frac": 0.46747313777262123,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 134.31326966306514,
+  "tokens_adapt": 226.54077297363108,
+  "break_even_s": 6.533536482016188,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ }
+]

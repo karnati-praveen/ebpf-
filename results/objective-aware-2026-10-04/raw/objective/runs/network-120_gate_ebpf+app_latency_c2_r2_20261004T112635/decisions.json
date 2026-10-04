@@ -1,0 +1,50 @@
+[
+ {
+  "objective": "latency",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 234.437,
+  "time": "2026-10-04T11:26:37.726208656Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 234.437,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    28
+   ]
+  ]
+ },
+ {
+  "objective": "latency",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 220.91688654353564,
+  "time": "2026-10-04T11:26:39.726485048Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 220.91688654353564,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ]
+ }
+]

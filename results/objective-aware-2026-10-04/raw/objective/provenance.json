@@ -1,0 +1,6 @@
+{
+  "seed": 20261004,
+  "model": "Qwen/Qwen3-0.6B",
+  "controller_sha256": "b963338477f3cfae5d1ff6c21ae653446637a824f23e2f75380a94502a2f18cc",
+  "scope": "real-model exploratory objective comparison; no algorithmic novelty claim"
+}

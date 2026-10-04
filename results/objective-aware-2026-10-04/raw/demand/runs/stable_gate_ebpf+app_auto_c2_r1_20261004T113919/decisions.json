@@ -1,0 +1,219 @@
+[
+ {
+  "objective": "latency",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 222.9548264384213,
+  "time": "2026-10-04T11:39:21.898164495Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 222.9548264384213,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ]
+ },
+ {
+  "remaining_tokens": 32,
+  "objective": "throughput",
+  "current_objective_ms": 224.3416267942584,
+  "optimal_objective_ms": 116.75099999999999,
+  "time": "2026-10-04T11:39:51.898474448Z",
+  "policy": "gate",
+  "reason": "gate-rejects",
+  "current_bottleneck_ms": 224.3416267942584,
+  "optimal_bottleneck_ms": 116.75099999999999,
+  "improvement_frac": 0.4795838754121577,
+  "transition_ms": 3054.2528,
+  "horizon_s": 7.178932057416269,
+  "tokens_stay": 32,
+  "tokens_adapt": 35.32885591914646,
+  "break_even_s": 6.368547727704887,
+  "gate_accepts": false,
+  "executed": false,
+  "from_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "remaining_tokens": 23,
+  "objective": "throughput",
+  "current_objective_ms": 222.08885941644562,
+  "optimal_objective_ms": 116.75099999999999,
+  "time": "2026-10-04T11:39:53.898512148Z",
+  "policy": "gate",
+  "reason": "gate-rejects",
+  "current_bottleneck_ms": 222.08885941644562,
+  "optimal_bottleneck_ms": 116.75099999999999,
+  "improvement_frac": 0.4743050132871518,
+  "transition_ms": 3054.2528,
+  "horizon_s": 5.108043766578249,
+  "tokens_stay": 23,
+  "tokens_adapt": 17.59120664129857,
+  "break_even_s": 6.439427613957998,
+  "gate_accepts": false,
+  "executed": false,
+  "from_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "remaining_tokens": 14,
+  "objective": "throughput",
+  "current_objective_ms": 223.870320855615,
+  "optimal_objective_ms": 116.75099999999999,
+  "time": "2026-10-04T11:39:55.89896279Z",
+  "policy": "gate",
+  "reason": "gate-rejects",
+  "current_bottleneck_ms": 223.870320855615,
+  "optimal_bottleneck_ms": 116.75099999999999,
+  "improvement_frac": 0.47848826251828863,
+  "transition_ms": 3054.2528,
+  "horizon_s": 3.1341844919786097,
+  "tokens_stay": 14,
+  "tokens_adapt": 0.6846338958861998,
+  "break_even_s": 6.383130035260294,
+  "gate_accepts": false,
+  "executed": false,
+  "from_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "remaining_tokens": 5,
+  "objective": "throughput",
+  "current_objective_ms": 222.08885941644562,
+  "optimal_objective_ms": 116.75099999999999,
+  "time": "2026-10-04T11:39:57.897857391Z",
+  "policy": "gate",
+  "reason": "gate-rejects",
+  "current_bottleneck_ms": 222.08885941644562,
+  "optimal_bottleneck_ms": 116.75099999999999,
+  "improvement_frac": 0.4743050132871518,
+  "transition_ms": 3054.2528,
+  "horizon_s": 1.1104442970822281,
+  "tokens_stay": 5,
+  "break_even_s": 6.439427613957998,
+  "gate_accepts": false,
+  "executed": false,
+  "from_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "remaining_tokens": 127,
+  "objective": "throughput",
+  "current_objective_ms": 223.78484154257347,
+  "optimal_objective_ms": 116.735,
+  "time": "2026-10-04T11:39:59.898501623Z",
+  "policy": "gate",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 223.78484154257347,
+  "optimal_bottleneck_ms": 116.735,
+  "improvement_frac": 0.4783605574205436,
+  "transition_ms": 3054.2528,
+  "horizon_s": 28.420674875906833,
+  "tokens_stay": 127,
+  "tokens_adapt": 217.2991996908111,
+  "break_even_s": 6.384834101852797,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ }
+]

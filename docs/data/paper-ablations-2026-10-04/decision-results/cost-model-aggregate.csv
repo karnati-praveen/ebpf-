@@ -1,0 +1,5 @@
+endpoints,context_table,cases,median_reference_regret_pct,maximum_reference_regret_pct,changed_split_cases,median_reference_prediction_error_pct
+false,false,60,18.084274042999997,42.2500720254,57,-40.98885750139337
+false,true,60,18.892694988800002,42.2500720254,60,-30.55872854550925
+true,false,60,4.06013310346,23.7987762062,38,-11.193676435238798
+true,true,60,0.0,0.0,0,0.0

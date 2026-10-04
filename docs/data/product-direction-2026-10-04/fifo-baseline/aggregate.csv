@@ -1,0 +1,2 @@
+mode,workers,concurrency,windows,requests,failures,mean_tokens_per_s,min_tokens_per_s,max_tokens_per_s,mean_window_median_ttft_ms,mean_window_p95_ttft_ms,mean_window_median_completion_ms,pooled_median_client_completion_ms,pooled_p95_client_completion_ms,max_routing_wait_ms
+replicas,3,4,3,129,0,20.24667765376073,20.242794402216163,20.253844247833168,141.48666666666668,142.06333333333333,2263.5733333333333,2266.8952920002994,4533.119121999789,2267.7585719998206

@@ -1,0 +1,6 @@
+[keinfer] started controller (logs: /home/azureuser/keinfer/logs/controller.log)
+[keinfer] started router (logs: /home/azureuser/keinfer/logs/router.log)
+[keinfer] coordinator: policy=hysteresis link-source=ebpf+app cost-model=full static=1 profile-once=0 ctx=128 workers=1
+[keinfer]   controller state: curl -s localhost:8081/state
+[keinfer]   generate:         curl -s -X POST localhost:8080/generate -d '{"prompt_len":64,"max_new_tokens":16}'
+{"assignments": [{"end": 28, "node": "vm2", "speed": 1, "start": 0, "worker": "vm2"}], "bottleneck_ms": 234.437, "decisions": null, "generation": 1, "last_error": "", "link_source": "ebpf+app", "pipeline_ms": 234.437, "policy": "hysteresis", "static": true, "telemetry": {"flows": [{"bytes_per_sec": 0, "dst": "10.10.1.5", "port": 50051, "src": "10.10.1.4", "srtt_ms": 0.513}, {"bytes_per_sec": 29.996386005417683, "dst": "10.10.1.4", "port": 50051, "src": "10.10.1.4", "srtt_ms": 4.486}], "nodes": {"vm2": {"age_s": 0.784884233, "speed_factor": 1, "temp_c": -1, "throttled": false}}}}

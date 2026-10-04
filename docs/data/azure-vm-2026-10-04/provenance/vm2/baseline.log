@@ -1,0 +1,19 @@
+BASELINE START 10:34:59
+[keinfer] stopped
+3 runs, seed 20261006; est. 0.3 h
+    1. stable:0 static r3
+    2. stable:0 static r1
+    3. stable:0 static r2
+
+=== stable_static_ebpf+app_c2_r3_20261004T103509
+    ready: gen=1 layout=vm2:0-28
+    done: 16/16 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm-single/stable_static_ebpf+app_c2_r3_20261004T103509
+
+=== stable_static_ebpf+app_c2_r1_20261004T103931
+    ready: gen=1 layout=vm2:0-28
+    done: 16/16 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm-single/stable_static_ebpf+app_c2_r1_20261004T103931
+
+=== stable_static_ebpf+app_c2_r2_20261004T104350
+    ready: gen=1 layout=vm2:0-28
+    done: 16/16 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm-single/stable_static_ebpf+app_c2_r2_20261004T104350
+BASELINE DONE 10:48:16

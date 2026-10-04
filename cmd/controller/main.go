@@ -34,27 +34,30 @@ func kubeConfig() (*rest.Config, error) {
 
 func main() {
 	var (
-		namespace   = flag.String("namespace", envOr("NAMESPACE", "kubeedgeinfer"), "namespace to operate in")
-		selector    = flag.String("worker-selector", "app=keinfer-worker", "label selector for shard workers")
-		workerPort  = flag.Int("worker-port", 50051, "worker gRPC port")
-		static      = flag.Bool("static", os.Getenv("STATIC_MODE") == "1", "apply one equal split and never repartition (baseline)")
-		grpcAddr    = flag.String("grpc-addr", ":50053", "telemetry gRPC listen address")
-		httpAddr    = flag.String("http-addr", ":8081", "debug/state HTTP listen address")
-		interval    = flag.Duration("interval", 2*time.Second, "reconcile interval")
-		cooldown    = flag.Duration("cooldown", envDurationOr("COOLDOWN_S", 30*time.Second), "repartition cooldown")
-		improvement = flag.Float64("improvement", envFloatOr("IMPROVEMENT_FRAC", 0.15), "min fractional bottleneck improvement to repartition")
-		heartbeat   = flag.Duration("heartbeat-timeout", 3*time.Second, "node agent staleness before a node is dead")
-		reassert    = flag.Duration("reassert-interval", 10*time.Second, "how often to re-push the current layout so a restarted worker/router recovers (0 disables)")
-		defLink     = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
-		mode        = flag.String("mode", envOr("KEINFER_MODE", "standalone"), "substrate: standalone | k8s")
-		configPath  = flag.String("config", envOr("KEINFER_CONFIG", "keinfer.json"), "standalone: pipeline config file")
-		policy      = flag.String("policy", envOr("DECISION_POLICY", "hysteresis"), "voluntary-move policy: none | hysteresis | gate | gate-force")
-		gateHorizon = flag.Float64("gate-horizon-s", envFloatOr("GATE_HORIZON_S", 30), "transition gate planning horizon, seconds")
-		gateFixed   = flag.Float64("gate-transition-fixed-ms", envFloatOr("GATE_TRANSITION_FIXED_MS", 2000), "transition downtime independent of context (weight reload, orchestration)")
-		gatePrefill = flag.Float64("gate-prefill-ms-per-token-layer", envFloatOr("GATE_PREFILL_MS_PER_TOKEN_LAYER", 0.21), "measured prefill cost per token per layer, for cache reconstruction")
-		gateMargin  = flag.Float64("gate-margin", envFloatOr("GATE_MARGIN", 0.13), "required fractional token advantage before a voluntary move")
-		linkSource  = flag.String("link-source", envOr("LINK_SOURCE", "any"), "link telemetry: ebpf | app | ebpf+app | none | any")
-		profileOnce = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
+		namespace     = flag.String("namespace", envOr("NAMESPACE", "kubeedgeinfer"), "namespace to operate in")
+		selector      = flag.String("worker-selector", "app=keinfer-worker", "label selector for shard workers")
+		workerPort    = flag.Int("worker-port", 50051, "worker gRPC port")
+		static        = flag.Bool("static", os.Getenv("STATIC_MODE") == "1", "apply one equal split and never repartition (baseline)")
+		grpcAddr      = flag.String("grpc-addr", ":50053", "telemetry gRPC listen address")
+		httpAddr      = flag.String("http-addr", ":8081", "debug/state HTTP listen address")
+		interval      = flag.Duration("interval", 2*time.Second, "reconcile interval")
+		cooldown      = flag.Duration("cooldown", envDurationOr("COOLDOWN_S", 30*time.Second), "repartition cooldown")
+		improvement   = flag.Float64("improvement", envFloatOr("IMPROVEMENT_FRAC", 0.15), "min fractional bottleneck improvement to repartition")
+		heartbeat     = flag.Duration("heartbeat-timeout", 3*time.Second, "node agent staleness before a node is dead")
+		reassert      = flag.Duration("reassert-interval", 10*time.Second, "how often to re-push the current layout so a restarted worker/router recovers (0 disables)")
+		defLink       = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
+		mode          = flag.String("mode", envOr("KEINFER_MODE", "standalone"), "substrate: standalone | k8s")
+		configPath    = flag.String("config", envOr("KEINFER_CONFIG", "keinfer.json"), "standalone: pipeline config file")
+		policy        = flag.String("policy", envOr("DECISION_POLICY", "hysteresis"), "voluntary-move policy: none | hysteresis | gate | gate-force")
+		objective     = flag.String("objective", envOr("PLACEMENT_OBJECTIVE", "throughput"), "placement and transition objective: throughput | latency | auto")
+		workloadURL   = flag.String("workload-url", envOr("WORKLOAD_URL", ""), "router /workload URL; required for auto or remaining-work-aware")
+		remainingWork = flag.Bool("remaining-work-aware", os.Getenv("REMAINING_WORK_AWARE") == "1", "cap gate horizon by live remaining output budget")
+		gateHorizon   = flag.Float64("gate-horizon-s", envFloatOr("GATE_HORIZON_S", 30), "transition gate planning horizon, seconds")
+		gateFixed     = flag.Float64("gate-transition-fixed-ms", envFloatOr("GATE_TRANSITION_FIXED_MS", 2000), "transition downtime independent of context (weight reload, orchestration)")
+		gatePrefill   = flag.Float64("gate-prefill-ms-per-token-layer", envFloatOr("GATE_PREFILL_MS_PER_TOKEN_LAYER", 0.21), "measured prefill cost per token per layer, for cache reconstruction")
+		gateMargin    = flag.Float64("gate-margin", envFloatOr("GATE_MARGIN", 0.13), "required fractional token advantage before a voluntary move")
+		linkSource    = flag.String("link-source", envOr("LINK_SOURCE", "any"), "link telemetry: ebpf | app | ebpf+app | none | any")
+		profileOnce   = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
 	)
 	flag.Parse()
 
@@ -65,6 +68,15 @@ func main() {
 	// previous unconditional kubeConfig() call was fatal before anything else
 	// ran.
 	var src controller.Source
+	if *objective != "throughput" && *objective != "latency" && *objective != "auto" {
+		log.Fatalf("unknown -objective %q", *objective)
+	}
+	if (*objective == "auto" || *remainingWork) && (*workloadURL == "" || *static) {
+		log.Fatal("auto/remaining-work-aware requires -workload-url and nonstatic mode")
+	}
+	if *remainingWork && *policy != "gate" && *policy != "gate-force" {
+		log.Fatal("remaining-work-aware requires gate or gate-force")
+	}
 	switch partition.Policy(*policy) {
 	case partition.PolicyNone, partition.PolicyHysteresis, partition.PolicyGate, partition.PolicyGateForce:
 	default:
@@ -112,7 +124,9 @@ func main() {
 		ReassertInterval: *reassert,
 		ProfileOnce:      *profileOnce,
 		Policy:           partition.Policy(*policy),
-		LinkSource:       controller.LinkSource(*linkSource),
+		Objective:        partition.Objective(*objective),
+		WorkloadURL:      *workloadURL, RemainingWorkAware: *remainingWork,
+		LinkSource: controller.LinkSource(*linkSource),
 		Gate: partition.GateParams{
 			HorizonS:               *gateHorizon,
 			TransitionFixedMs:      *gateFixed,

@@ -1,0 +1,11 @@
+arm,hypothetical_remaining_tokens,candidates,accepted,rejected,calibration_warmed_candidates
+fixed,0,71,28,43,58
+remaining-work,16,71,0,71,58
+remaining-work,64,71,0,71,58
+remaining-work,256,71,28,43,58
+remaining-work,1024,71,28,43,58
+probabilistic,0,71,0,71,58
+probabilistic-transition,0,71,0,71,58
+online-calibrated,0,71,19,52,58
+oracle-phase-horizon,0,71,51,20,58
+oracle-future-trace,0,71,32,39,0

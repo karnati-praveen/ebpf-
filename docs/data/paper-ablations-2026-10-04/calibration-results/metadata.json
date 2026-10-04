@@ -1,0 +1,158 @@
+{
+  "scope": "Short instrumentation calibration, original versus wrapped worker; simulated loopback compute",
+  "window_s": 8.0,
+  "schedule": [
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "instrumented": false,
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "instrumented": true,
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "instrumented": false,
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "instrumented": true,
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "instrumented": true,
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "instrumented": false,
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "instrumented": true,
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "instrumented": false,
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "instrumented": false,
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "instrumented": true,
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "instrumented": true,
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "instrumented": false,
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "instrumented": false,
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "instrumented": true,
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "instrumented": false,
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "instrumented": true,
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "instrumented": true,
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "instrumented": false,
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "instrumented": false,
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "instrumented": true,
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "instrumented": true,
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "instrumented": true,
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "instrumented": false,
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "instrumented": false,
+      "repeat": 3
+    }
+  ],
+  "started_utc": "2026-10-04 06:32:35",
+  "completed_utc": "2026-10-04 06:35:55",
+  "runtime_environment_reference": "../queue-results/metadata.json",
+  "source_hashes_captured_after_run": {
+    "queue_ablation.py": "e9179908931c256baaa05e6e0143974541b47e648e8d4fb9e09cded4ab91fc16",
+    "calibration.py": "2f1f076bba4eb5b51885ac1793bbd67fef586e9b5cbb56e35afb30f7dd01d794"
+  },
+  "captured_after_completion": true
+}

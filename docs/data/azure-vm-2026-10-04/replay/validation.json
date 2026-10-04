@@ -1,0 +1,9 @@
+{
+  "measured_runs": 33,
+  "candidate_count": 71,
+  "replay_rows": 710,
+  "causal_calibration": "passed: completed observations strictly earlier than candidate",
+  "remaining_horizon_monotonicity": "passed",
+  "required_measured_artifacts": "passed",
+  "unique_replay_rows": "passed"
+}

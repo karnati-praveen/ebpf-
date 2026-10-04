@@ -1,0 +1,4 @@
+phase,t,qdisc
+clean,1789305717.6272156,qdisc noqueue 0: root refcnt 2
+fault,1789305747.8865106,qdisc noqueue 0: root refcnt 2
+recover,1789305816.5568838,qdisc noqueue 0: root refcnt 2

@@ -1,0 +1,4 @@
+phase,t,qdisc
+clean,1789303793.4315705,qdisc noqueue 0: root refcnt 2
+fault,1789303813.5507212,qdisc netem 8003: root refcnt 5 limit 1000 delay 80ms
+recover,1789303873.6700156,qdisc noqueue 0: root refcnt 2

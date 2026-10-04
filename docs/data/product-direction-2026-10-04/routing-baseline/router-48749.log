@@ -1,0 +1,4 @@
+2026-10-04 05:57:04,732 router INFO router: http :48749 grpc :49253 kv_cache=True
+2026-10-04 05:57:40,510 router INFO pipeline gen=2: w2[0,28)
+2026-10-04 05:58:21,295 router INFO pipeline gen=3: w2[0,28)
+2026-10-04 06:00:11,103 router INFO pipeline gen=6: w2[0,28)

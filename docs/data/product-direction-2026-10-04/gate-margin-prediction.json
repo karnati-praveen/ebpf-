@@ -1,0 +1,15 @@
+{
+  "classification": "algebraic model prediction, not a measured distributed crossover",
+  "source": "docs/phase4-dpsweep-measured-ctx2048.csv, thermal speed=0.7",
+  "transition_s": 14.04224,
+  "current_bottleneck_ms": 225.7571,
+  "optimal_bottleneck_ms": 185.0857,
+  "break_even_zero_margin_s": 77.94507639038733,
+  "minimum_horizon_with_default_0_13_margin_s": 190.8540607286134,
+  "assumptions": [
+    "stationary saturated useful-token rates",
+    "zero useful work during transition downtime",
+    "fixed costs and persistent degradation",
+    "excludes recovery after degradation ends"
+  ]
+}

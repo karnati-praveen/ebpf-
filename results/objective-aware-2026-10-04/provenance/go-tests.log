@@ -1,0 +1,80 @@
+=== RUN   TestGateRejectsWhenHorizonTooShort
+--- PASS: TestGateRejectsWhenHorizonTooShort (0.00s)
+=== RUN   TestGateAcceptsWhenHorizonLongEnough
+--- PASS: TestGateAcceptsWhenHorizonLongEnough (0.00s)
+=== RUN   TestBreakEvenHorizonIsTheDecisionBoundary
+    decider_test.go:78: break-even horizon for a 0.7x derate at ctx 2048: 77.9 s
+--- PASS: TestBreakEvenHorizonIsTheDecisionBoundary (0.00s)
+=== RUN   TestGateForceExecutesButRecordsTheRejection
+--- PASS: TestGateForceExecutesButRecordsTheRejection (0.00s)
+=== RUN   TestHysteresisIgnoresTransitionCost
+--- PASS: TestHysteresisIgnoresTransitionCost (0.00s)
+=== RUN   TestNoneMovesOnAnyStrictImprovement
+--- PASS: TestNoneMovesOnAnyStrictImprovement (0.00s)
+=== RUN   TestRecoveryBypassesEveryPolicy
+--- PASS: TestRecoveryBypassesEveryPolicy (0.00s)
+=== RUN   TestKeptSplitRefreshesPipelineMs
+--- PASS: TestKeptSplitRefreshesPipelineMs (0.00s)
+=== RUN   TestUnknownPolicyIsAnError
+--- PASS: TestUnknownPolicyIsAnError (0.00s)
+=== RUN   TestForecastFiniteWorkAndDeadline
+--- PASS: TestForecastFiniteWorkAndDeadline (0.00s)
+=== RUN   TestForecastProbabilityRetainsPairedScenarios
+--- PASS: TestForecastProbabilityRetainsPairedScenarios (0.00s)
+=== RUN   TestForecastRejectsInvalidInputs
+--- PASS: TestForecastRejectsInvalidInputs (0.00s)
+=== RUN   TestTransitionCalibrationWarmupAndVariance
+--- PASS: TestTransitionCalibrationWarmupAndVariance (0.00s)
+=== RUN   TestLatencyAvoidsHopWhileThroughputSplits
+--- PASS: TestLatencyAvoidsHopWhileThroughputSplits (0.00s)
+=== RUN   TestLatencyDPMatchesExhaustiveThreeWorkerLayouts
+--- PASS: TestLatencyDPMatchesExhaustiveThreeWorkerLayouts (0.00s)
+=== RUN   TestLatencyGatePricesPipelineAndRecoveryBypassesGate
+--- PASS: TestLatencyGatePricesPipelineAndRecoveryBypassesGate (0.00s)
+=== RUN   TestObjectiveRejectsUnknownMode
+--- PASS: TestObjectiveRejectsUnknownMode (0.00s)
+=== RUN   TestLiveRemainingBudgetShortensGateAndRecoveryStillWorks
+--- PASS: TestLiveRemainingBudgetShortensGateAndRecoveryStillWorks (0.00s)
+=== RUN   TestOptimalHomogeneous
+--- PASS: TestOptimalHomogeneous (0.00s)
+=== RUN   TestOptimalThrottledWorkerGetsFewerLayers
+--- PASS: TestOptimalThrottledWorkerGetsFewerLayers (0.00s)
+=== RUN   TestOptimalSlowLinkShrinksDownstream
+--- PASS: TestOptimalSlowLinkShrinksDownstream (0.00s)
+=== RUN   TestOptimalDropsStageOnSevereLinkDegradation
+--- PASS: TestOptimalDropsStageOnSevereLinkDegradation (0.00s)
+=== RUN   TestOptimalMatchesBruteForce
+--- PASS: TestOptimalMatchesBruteForce (0.00s)
+=== RUN   TestDeciderHysteresis
+--- PASS: TestDeciderHysteresis (0.00s)
+=== RUN   TestDeciderWorkerSetChangeForces
+--- PASS: TestDeciderWorkerSetChangeForces (0.00s)
+=== RUN   TestPipelineMsIsSumOfStages
+--- PASS: TestPipelineMsIsSumOfStages (0.00s)
+=== RUN   TestBottleneckVersusPipelineIsStageCount
+--- PASS: TestBottleneckVersusPipelineIsStageCount (0.00s)
+=== RUN   TestEvaluatePipelineRejectsBadSplits
+--- PASS: TestEvaluatePipelineRejectsBadSplits (0.00s)
+=== RUN   TestOptimalMatchesBruteForceWithEndpoints
+--- PASS: TestOptimalMatchesBruteForceWithEndpoints (0.01s)
+=== RUN   TestEndpointCostSkewsSplitAwayFromLastStage
+    pipeline_test.go:167: even split [[0 14] [14 28]] -> 176.7ms; optimum [[0 16] [16 28]] -> 157.7ms; mis-split costs 10.7%
+--- PASS: TestEndpointCostSkewsSplitAwayFromLastStage (0.00s)
+PASS
+ok  	kubeedgeinfer/internal/partition	0.016s
+=== RUN   TestLinkCostSelectsSourceWithoutMixing
+--- PASS: TestLinkCostSelectsSourceWithoutMixing (0.00s)
+=== RUN   TestLinkCostFallbackAndIsolation
+--- PASS: TestLinkCostFallbackAndIsolation (0.00s)
+=== RUN   TestRouterTelemetryIsNotAWorker
+--- PASS: TestRouterTelemetryIsNotAWorker (0.00s)
+=== RUN   TestWorkloadAutoObjectiveAndUnavailableHold
+--- PASS: TestWorkloadAutoObjectiveAndUnavailableHold (0.00s)
+=== RUN   TestWorkloadRejectsStaleAndInconsistentSnapshots
+--- PASS: TestWorkloadRejectsStaleAndInconsistentSnapshots (0.00s)
+PASS
+ok  	kubeedgeinfer/internal/controller	0.018s
+=== RUN   TestOracleChargesDowntimeAcrossSnapshotBoundary
+--- PASS: TestOracleChargesDowntimeAcrossSnapshotBoundary (0.00s)
+PASS
+ok  	kubeedgeinfer/cmd/gate-replay	0.003s

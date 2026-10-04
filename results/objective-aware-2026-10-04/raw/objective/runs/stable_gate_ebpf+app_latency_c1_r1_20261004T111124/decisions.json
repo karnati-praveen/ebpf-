@@ -1,0 +1,25 @@
+[
+ {
+  "objective": "latency",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 226.44354293441512,
+  "time": "2026-10-04T11:11:27.311383343Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 226.44354293441512,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    28
+   ],
+   [
+    28,
+    28
+   ]
+  ]
+ }
+]

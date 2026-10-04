@@ -1,0 +1,82 @@
+[
+ {
+  "time": "2026-10-04T09:10:24.964380058Z",
+  "policy": "hysteresis",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 118.96465022421525,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T09:11:26.963874698Z",
+  "policy": "hysteresis",
+  "reason": "hysteresis-passed",
+  "current_bottleneck_ms": 213.7690096813231,
+  "optimal_bottleneck_ms": 162.91177873152125,
+  "improvement_frac": 0.2379074077464149,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    26
+   ],
+   [
+    26,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T09:13:28.964171857Z",
+  "policy": "hysteresis",
+  "reason": "hysteresis-passed",
+  "current_bottleneck_ms": 159.99718995878607,
+  "optimal_bottleneck_ms": 118.71778070264251,
+  "improvement_frac": 0.2580008390570908,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    26
+   ],
+   [
+    26,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ }
+]

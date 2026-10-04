@@ -1,0 +1,15 @@
+{
+  "matrices": {
+    "objective": {
+      "completed_runs": 20,
+      "source_files_verified": 103
+    },
+    "demand": {
+      "completed_runs": 12,
+      "source_files_verified": 76
+    }
+  },
+  "all_verified": true,
+  "tested_source_archives_verified": 2,
+  "measured_requests": 240
+}

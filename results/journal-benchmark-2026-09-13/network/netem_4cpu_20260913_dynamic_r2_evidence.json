@@ -1,0 +1,291 @@
+{
+  "controller_after": {
+    "assignments": [
+      {
+        "end": 4,
+        "node": "kubeedgeinfer-worker",
+        "speed": 1,
+        "start": 0,
+        "worker": "keinfer-worker-7b2rw"
+      },
+      {
+        "end": 8,
+        "node": "kubeedgeinfer-worker2",
+        "speed": 1,
+        "start": 4,
+        "worker": "keinfer-worker-w6p5n"
+      },
+      {
+        "end": 12,
+        "node": "kubeedgeinfer-worker3",
+        "speed": 1,
+        "start": 8,
+        "worker": "keinfer-worker-nngc6"
+      }
+    ],
+    "bottleneck_ms": 120.717,
+    "generation": 7,
+    "last_error": "",
+    "static": false,
+    "telemetry": {
+      "flows": [
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.244.2.8",
+          "port": 50051,
+          "src": "10.244.0.18",
+          "srtt_ms": 30.604
+        },
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.96.123.174",
+          "port": 50052,
+          "src": "10.244.0.18",
+          "srtt_ms": 0.322
+        },
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.244.2.8",
+          "port": 50051,
+          "src": "10.244.2.1",
+          "srtt_ms": 0.039
+        },
+        {
+          "bytes_per_sec": 544471.2789863077,
+          "dst": "10.244.2.8",
+          "port": 50051,
+          "src": "10.244.0.17",
+          "srtt_ms": 2.037
+        },
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.244.4.8",
+          "port": 50051,
+          "src": "10.244.0.18",
+          "srtt_ms": 0.332
+        },
+        {
+          "bytes_per_sec": 1035.8369188713298,
+          "dst": "10.244.4.8",
+          "port": 50051,
+          "src": "10.244.0.17",
+          "srtt_ms": 10.922
+        },
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.244.1.8",
+          "port": 50051,
+          "src": "10.244.0.18",
+          "srtt_ms": 0.423
+        },
+        {
+          "bytes_per_sec": 535239.732391772,
+          "dst": "10.244.1.8",
+          "port": 50051,
+          "src": "10.244.0.17",
+          "srtt_ms": 0.301
+        }
+      ],
+      "nodes": {
+        "kubeedgeinfer-worker": {
+          "age_s": 0.916937899,
+          "speed_factor": 1,
+          "temp_c": 69.38463844754745,
+          "throttled": false
+        },
+        "kubeedgeinfer-worker2": {
+          "age_s": 0.995822452,
+          "speed_factor": 1,
+          "temp_c": 62.60658335065765,
+          "throttled": false
+        },
+        "kubeedgeinfer-worker3": {
+          "age_s": 0.465410949,
+          "speed_factor": 1,
+          "temp_c": 69.43053518431587,
+          "throttled": false
+        }
+      }
+    }
+  },
+  "controller_before": {
+    "assignments": [
+      {
+        "end": 4,
+        "node": "kubeedgeinfer-worker",
+        "speed": 1,
+        "start": 0,
+        "worker": "keinfer-worker-7b2rw"
+      },
+      {
+        "end": 8,
+        "node": "kubeedgeinfer-worker2",
+        "speed": 1,
+        "start": 4,
+        "worker": "keinfer-worker-w6p5n"
+      },
+      {
+        "end": 12,
+        "node": "kubeedgeinfer-worker3",
+        "speed": 1,
+        "start": 8,
+        "worker": "keinfer-worker-nngc6"
+      }
+    ],
+    "bottleneck_ms": 120.977,
+    "generation": 5,
+    "last_error": "",
+    "static": false,
+    "telemetry": {
+      "flows": [
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.244.1.7",
+          "port": 50051,
+          "src": "10.244.1.1",
+          "srtt_ms": 0.073
+        },
+        {
+          "bytes_per_sec": 104.89909787245378,
+          "dst": "10.244.2.8",
+          "port": 50051,
+          "src": "10.244.0.18",
+          "srtt_ms": 0.761
+        },
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.244.1.7",
+          "port": 50051,
+          "src": "10.244.0.18",
+          "srtt_ms": 0.247
+        },
+        {
+          "bytes_per_sec": 222.78570310054468,
+          "dst": "10.96.123.174",
+          "port": 50052,
+          "src": "10.244.0.18",
+          "srtt_ms": 0.692
+        },
+        {
+          "bytes_per_sec": 94.90870759888675,
+          "dst": "10.244.4.8",
+          "port": 50051,
+          "src": "10.244.0.18",
+          "srtt_ms": 1.766
+        },
+        {
+          "bytes_per_sec": 0,
+          "dst": "10.244.2.8",
+          "port": 50051,
+          "src": "10.244.2.1",
+          "srtt_ms": 0.058
+        },
+        {
+          "bytes_per_sec": 230.7780153193983,
+          "dst": "10.244.1.8",
+          "port": 50051,
+          "src": "10.244.0.18",
+          "srtt_ms": 4.521
+        }
+      ],
+      "nodes": {
+        "kubeedgeinfer-worker": {
+          "age_s": 0.684557868,
+          "speed_factor": 1,
+          "temp_c": 68.07915248761687,
+          "throttled": false
+        },
+        "kubeedgeinfer-worker2": {
+          "age_s": 0.762787383,
+          "speed_factor": 1,
+          "temp_c": 68.07600097004575,
+          "throttled": false
+        },
+        "kubeedgeinfer-worker3": {
+          "age_s": 0.232888005,
+          "speed_factor": 1,
+          "temp_c": 69.54204130308955,
+          "throttled": false
+        }
+      }
+    }
+  },
+  "host_after": {
+    "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/loop4       32G   22G  8.4G  73% /workspaces\n",
+    "memory": "               total        used        free      shared  buff/cache   available\nMem:            15Gi       4.9Gi       260Mi       112Mi        10Gi        10Gi\nSwap:             0B          0B          0B\n",
+    "nodes": "NAME                          STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION     CONTAINER-RUNTIME\nkubeedgeinfer-control-plane   Ready    control-plane   33m   v1.34.0   172.18.0.5    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\nkubeedgeinfer-worker          Ready    <none>          33m   v1.34.0   172.18.0.2    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\nkubeedgeinfer-worker2         Ready    <none>          33m   v1.34.0   172.18.0.4    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\nkubeedgeinfer-worker3         Ready    <none>          33m   v1.34.0   172.18.0.3    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\n",
+    "pods": "NAMESPACE            NAME                                                  READY   STATUS    RESTARTS      AGE     IP            NODE                          NOMINATED NODE   READINESS GATES\nkube-system          coredns-66bc5c9577-mmxgw                              1/1     Running   0             33m     10.244.0.4    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          coredns-66bc5c9577-r486w                              1/1     Running   0             33m     10.244.0.2    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          etcd-kubeedgeinfer-control-plane                      1/1     Running   0             33m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kindnet-lvt9p                                         1/1     Running   0             33m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kindnet-mxq4r                                         1/1     Running   0             33m     172.18.0.3    kubeedgeinfer-worker3         <none>           <none>\nkube-system          kindnet-qh4fj                                         1/1     Running   0             33m     172.18.0.2    kubeedgeinfer-worker          <none>           <none>\nkube-system          kindnet-sv4sx                                         1/1     Running   0             33m     172.18.0.4    kubeedgeinfer-worker2         <none>           <none>\nkube-system          kube-apiserver-kubeedgeinfer-control-plane            1/1     Running   0             33m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kube-controller-manager-kubeedgeinfer-control-plane   1/1     Running   1 (32m ago)   33m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kube-proxy-8v5q5                                      1/1     Running   0             33m     172.18.0.2    kubeedgeinfer-worker          <none>           <none>\nkube-system          kube-proxy-ldmsd                                      1/1     Running   0             33m     172.18.0.3    kubeedgeinfer-worker3         <none>           <none>\nkube-system          kube-proxy-tffjf                                      1/1     Running   0             33m     172.18.0.4    kubeedgeinfer-worker2         <none>           <none>\nkube-system          kube-proxy-vwq2w                                      1/1     Running   0             33m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kube-scheduler-kubeedgeinfer-control-plane            1/1     Running   1 (32m ago)   33m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkubeedgeinfer        controller-688559bc66-49lcw                           1/1     Running   0             3m31s   10.244.0.18   kubeedgeinfer-control-plane   <none>           <none>\nkubeedgeinfer        keinfer-nodeagent-8s8ff                               1/1     Running   0             20m     172.18.0.4    kubeedgeinfer-worker2         <none>           <none>\nkubeedgeinfer        keinfer-nodeagent-96s9m                               1/1     Running   0             20m     172.18.0.2    kubeedgeinfer-worker          <none>           <none>\nkubeedgeinfer        keinfer-nodeagent-hb2lb                               1/1     Running   0             20m     172.18.0.3    kubeedgeinfer-worker3         <none>           <none>\nkubeedgeinfer        keinfer-worker-7b2rw                                  1/1     Running   0             2m25s   10.244.4.8    kubeedgeinfer-worker          <none>           <none>\nkubeedgeinfer        keinfer-worker-nngc6                                  1/1     Running   0             111s    10.244.1.8    kubeedgeinfer-worker3         <none>           <none>\nkubeedgeinfer        keinfer-worker-w6p5n                                  1/1     Running   0             3m1s    10.244.2.8    kubeedgeinfer-worker2         <none>           <none>\nkubeedgeinfer        router-5fb5cf977c-bl84q                               1/1     Running   0             3m31s   10.244.0.17   kubeedgeinfer-control-plane   <none>           <none>\nlocal-path-storage   local-path-provisioner-7b8c8ddbd6-7f6wn               1/1     Running   0             33m     10.244.0.3    kubeedgeinfer-control-plane   <none>           <none>\n",
+    "utc": "2026-09-13T12:59:29+00:00\n"
+  },
+  "host_before": {
+    "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/loop4       32G   22G  8.4G  73% /workspaces\n",
+    "memory": "               total        used        free      shared  buff/cache   available\nMem:            15Gi       5.0Gi       265Mi       112Mi        10Gi        10Gi\nSwap:             0B          0B          0B\n",
+    "nodes": "NAME                          STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION     CONTAINER-RUNTIME\nkubeedgeinfer-control-plane   Ready    control-plane   30m   v1.34.0   172.18.0.5    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\nkubeedgeinfer-worker          Ready    <none>          30m   v1.34.0   172.18.0.2    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\nkubeedgeinfer-worker2         Ready    <none>          30m   v1.34.0   172.18.0.4    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\nkubeedgeinfer-worker3         Ready    <none>          30m   v1.34.0   172.18.0.3    <none>        Debian GNU/Linux 12 (bookworm)   6.8.0-1064-azure   containerd://2.1.3\n",
+    "pods": "NAMESPACE            NAME                                                  READY   STATUS    RESTARTS      AGE     IP            NODE                          NOMINATED NODE   READINESS GATES\nkube-system          coredns-66bc5c9577-mmxgw                              1/1     Running   0             30m     10.244.0.4    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          coredns-66bc5c9577-r486w                              1/1     Running   0             30m     10.244.0.2    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          etcd-kubeedgeinfer-control-plane                      1/1     Running   0             30m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kindnet-lvt9p                                         1/1     Running   0             30m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kindnet-mxq4r                                         1/1     Running   0             30m     172.18.0.3    kubeedgeinfer-worker3         <none>           <none>\nkube-system          kindnet-qh4fj                                         1/1     Running   0             30m     172.18.0.2    kubeedgeinfer-worker          <none>           <none>\nkube-system          kindnet-sv4sx                                         1/1     Running   0             30m     172.18.0.4    kubeedgeinfer-worker2         <none>           <none>\nkube-system          kube-apiserver-kubeedgeinfer-control-plane            1/1     Running   0             30m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kube-controller-manager-kubeedgeinfer-control-plane   1/1     Running   1 (29m ago)   30m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kube-proxy-8v5q5                                      1/1     Running   0             30m     172.18.0.2    kubeedgeinfer-worker          <none>           <none>\nkube-system          kube-proxy-ldmsd                                      1/1     Running   0             30m     172.18.0.3    kubeedgeinfer-worker3         <none>           <none>\nkube-system          kube-proxy-tffjf                                      1/1     Running   0             30m     172.18.0.4    kubeedgeinfer-worker2         <none>           <none>\nkube-system          kube-proxy-vwq2w                                      1/1     Running   0             30m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkube-system          kube-scheduler-kubeedgeinfer-control-plane            1/1     Running   1 (29m ago)   30m     172.18.0.5    kubeedgeinfer-control-plane   <none>           <none>\nkubeedgeinfer        controller-76cd9b98f7-slqzb                           1/1     Running   0             3m56s   10.244.0.15   kubeedgeinfer-control-plane   <none>           <none>\nkubeedgeinfer        keinfer-nodeagent-8s8ff                               1/1     Running   0             16m     172.18.0.4    kubeedgeinfer-worker2         <none>           <none>\nkubeedgeinfer        keinfer-nodeagent-96s9m                               1/1     Running   0             16m     172.18.0.2    kubeedgeinfer-worker          <none>           <none>\nkubeedgeinfer        keinfer-nodeagent-hb2lb                               1/1     Running   0             16m     172.18.0.3    kubeedgeinfer-worker3         <none>           <none>\nkubeedgeinfer        keinfer-worker-hjlqh                                  1/1     Running   0             2m15s   10.244.4.7    kubeedgeinfer-worker          <none>           <none>\nkubeedgeinfer        keinfer-worker-kwqvz                                  1/1     Running   0             3m26s   10.244.2.7    kubeedgeinfer-worker2         <none>           <none>\nkubeedgeinfer        keinfer-worker-sdlrn                                  1/1     Running   0             2m51s   10.244.1.7    kubeedgeinfer-worker3         <none>           <none>\nkubeedgeinfer        router-5cb8d4b9f7-2xfxj                               1/1     Running   0             3m56s   10.244.0.16   kubeedgeinfer-control-plane   <none>           <none>\nlocal-path-storage   local-path-provisioner-7b8c8ddbd6-7f6wn               1/1     Running   0             30m     10.244.0.3    kubeedgeinfer-control-plane   <none>           <none>\n",
+    "utc": "2026-09-13T12:55:58+00:00\n"
+  },
+  "mode": "dynamic",
+  "nodeagent_logs": "[pod/keinfer-nodeagent-8s8ff/nodeagent] 2026/09/13 12:39:30 eBPF tcpmon attached (ports 50051-50052)\n[pod/keinfer-nodeagent-8s8ff/nodeagent] 2026/09/13 12:39:30 pushing telemetry to 10.96.247.81:50053\n[pod/keinfer-nodeagent-8s8ff/nodeagent] 2026/09/13 12:39:30 node agent kubeedgeinfer-worker2 listening on :9101\n[pod/keinfer-nodeagent-96s9m/nodeagent] 2026/09/13 12:39:27 eBPF tcpmon attached (ports 50051-50052)\n[pod/keinfer-nodeagent-96s9m/nodeagent] 2026/09/13 12:39:27 pushing telemetry to 10.96.247.81:50053\n[pod/keinfer-nodeagent-96s9m/nodeagent] 2026/09/13 12:39:27 node agent kubeedgeinfer-worker listening on :9101\n[pod/keinfer-nodeagent-96s9m/nodeagent] 2026/09/13 12:44:12 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 10.96.247.81:50053: connect: connection refused\"\n[pod/keinfer-nodeagent-96s9m/nodeagent] 2026/09/13 12:48:15 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded while waiting for connections to become ready\n[pod/keinfer-nodeagent-96s9m/nodeagent] 2026/09/13 12:52:07 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 10.96.247.81:50053: connect: connection refused\"\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:39:28 eBPF tcpmon attached (ports 50051-50052)\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:39:28 pushing telemetry to 10.96.247.81:50053\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:39:28 node agent kubeedgeinfer-worker3 listening on :9101\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:40:21 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 10.96.247.81:50053: connect: connection refused\"\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:44:13 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded while waiting for connections to become ready\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:48:13 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 10.96.247.81:50053: connect: connection refused\"\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:52:08 telemetry push failed: rpc error: code = DeadlineExceeded desc = context deadline exceeded while waiting for connections to become ready\n[pod/keinfer-nodeagent-hb2lb/nodeagent] 2026/09/13 12:56:03 telemetry push failed: rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial tcp 10.96.247.81:50053: connect: connection refused\"\n",
+  "pipeline_after": {
+    "generation": 7,
+    "stages": [
+      {
+        "addr": "10.244.4.8:50051",
+        "layers": [
+          0,
+          4
+        ],
+        "name": "keinfer-worker-7b2rw"
+      },
+      {
+        "addr": "10.244.2.8:50051",
+        "layers": [
+          4,
+          8
+        ],
+        "name": "keinfer-worker-w6p5n"
+      },
+      {
+        "addr": "10.244.1.8:50051",
+        "layers": [
+          8,
+          12
+        ],
+        "name": "keinfer-worker-nngc6"
+      }
+    ]
+  },
+  "pipeline_before": {
+    "generation": 5,
+    "stages": [
+      {
+        "addr": "10.244.4.8:50051",
+        "layers": [
+          0,
+          4
+        ],
+        "name": "keinfer-worker-7b2rw"
+      },
+      {
+        "addr": "10.244.2.8:50051",
+        "layers": [
+          4,
+          8
+        ],
+        "name": "keinfer-worker-w6p5n"
+      },
+      {
+        "addr": "10.244.1.8:50051",
+        "layers": [
+          8,
+          12
+        ],
+        "name": "keinfer-worker-nngc6"
+      }
+    ]
+  },
+  "qdisc_after_cleanup": "qdisc noqueue 0: root refcnt 2",
+  "qdisc_before": "qdisc noqueue 0: root refcnt 2",
+  "scenario": "netem",
+  "tag": "netem_4cpu_20260913_dynamic_r2"
+}

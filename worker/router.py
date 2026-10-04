@@ -24,6 +24,7 @@ from concurrent import futures
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import grpc
+from workload import WORKLOAD
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "gen"))
 
@@ -200,6 +201,16 @@ def _forward_chain(stages, generation, request_id, step, first_stage_ids):
 
 
 def generate(input_ids, max_new_tokens):
+    # A stable tracking key survives cache replay's changes to request_id.
+    key = object()
+    WORKLOAD.begin(key, max_new_tokens)
+    try:
+        return _generate(input_ids, max_new_tokens, key)
+    finally:
+        WORKLOAD.finish(key)
+
+
+def _generate(input_ids, max_new_tokens, workload_key):
     request_id = random.getrandbits(63)
     t_start = time.monotonic()
     ttft_ms = None
@@ -252,6 +263,7 @@ def generate(input_ids, max_new_tokens):
             transition_ms += (now - disrupted_at) * 1000.0
             disrupted_at = None
         out_tokens.append(reply.next_token)
+        WORKLOAD.produced(workload_key)
         if ttft_ms is None:
             ttft_ms = (time.monotonic() - t_start) * 1000.0
         step += 1
@@ -319,6 +331,9 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
+        if self.path == "/workload":
+            self._send(200, WORKLOAD.snapshot())
+            return
         if self.path == "/stats":
             self._send(200, collect_stats())
         elif self.path == "/pipeline":

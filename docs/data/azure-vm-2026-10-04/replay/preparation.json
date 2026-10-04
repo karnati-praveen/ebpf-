@@ -1,0 +1,32 @@
+{
+  "candidates": 71,
+  "eligible": 71,
+  "transition_observations": 34,
+  "excluded": [
+    {
+      "run": "loss-0_gate_ebpf+app_c2_r1_20261004T102621",
+      "reason": "recovery/loss or contamination; excluded from voluntary gate replay"
+    },
+    {
+      "run": "loss-0_gate_ebpf+app_c2_r2_20261004T102202",
+      "reason": "recovery/loss or contamination; excluded from voluntary gate replay"
+    },
+    {
+      "run": "loss-0_hysteresis_ebpf+app_c2_r1_20261004T103039",
+      "reason": "recovery/loss or contamination; excluded from voluntary gate replay"
+    },
+    {
+      "run": "loss-0_hysteresis_ebpf+app_c2_r2_20261004T100918",
+      "reason": "recovery/loss or contamination; excluded from voluntary gate replay"
+    },
+    {
+      "run": "loss-0_static_ebpf+app_c2_r1_20261004T101333",
+      "reason": "recovery/loss or contamination; excluded from voluntary gate replay"
+    },
+    {
+      "run": "loss-0_static_ebpf+app_c2_r2_20261004T101748",
+      "reason": "recovery/loss or contamination; excluded from voluntary gate replay"
+    }
+  ],
+  "warning": "Candidate replay only; inferred flow costs, hypothetical remaining work, correlated history, endogenous future trace. No measured new-policy outcomes."
+}

@@ -1,0 +1,351 @@
+{
+  "scope": "Instrumented synthetic one-layer worker over loopback; no router/controller/eBPF/real model",
+  "python": "3.14.2 (main, Aug 27 2026, 12:34:32) [GCC 13.3.0]",
+  "platform": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.39",
+  "cpu_count": 4,
+  "packages": {
+    "grpcio": "1.83.1",
+    "protobuf": "7.36.1",
+    "numpy": "2.5.3"
+  },
+  "window_s": 15.0,
+  "repeats": 3,
+  "schedule": [
+    {
+      "service_ms": 50,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 1
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 1
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 2
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 2
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 2,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 5,
+      "concurrency": 4,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 4,
+      "mode": "admitted",
+      "repeat": 3
+    },
+    {
+      "service_ms": 50,
+      "concurrency": 1,
+      "mode": "direct",
+      "repeat": 3
+    },
+    {
+      "service_ms": 20,
+      "concurrency": 2,
+      "mode": "direct",
+      "repeat": 3
+    }
+  ],
+  "git_head": "c00de4de9d5327165f6d32965329c21e4b3dd7ef",
+  "source_sha256": {
+    "worker/server.py": "8c292e4d7fd3fb534ac801aaccd9efff131b101235db5d899ac99754cce9244d",
+    "worker/backends/sim.py": "18883e99e74d94c60dde5baa36244ccb9412b63333dc82868bda313021fe6aea",
+    "worker/router.py": "e4a0a8edd1db0a977e426aa987bbd98683f5348d47ed9181f63a26326f2638c0"
+  },
+  "instrumentation": "Timed compute_lock acquisition, returned in gRPC trailing metadata; existing Forward code and compute timer preserved",
+  "admission": "FIFO cap of one RPC in flight per selected worker; wait moves to client, not removed from end-to-end timing",
+  "started_utc": "2026-10-04 06:15:55",
+  "completed_utc": "2026-10-04 06:29:37",
+  "completed_windows": 54,
+  "instrumentation_script_sha256_captured_after_run": "e9179908931c256baaa05e6e0143974541b47e648e8d4fb9e09cded4ab91fc16"
+}

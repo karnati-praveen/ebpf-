@@ -1,0 +1,3 @@
+action,t_local,t_remote,detail
+on,1791112991.384703,1791112991.8213828,network_on delay_ms=120 jitter_ms=0 iface=eth0
+off,1791113031.8239045,1791113032.55336,cleared

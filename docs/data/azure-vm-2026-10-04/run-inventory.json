@@ -1,0 +1,233 @@
+[
+  {
+    "run": "compute-0.5_gate-force_ebpf+app_c2_r1_20261004T091852",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_gate-force_ebpf+app_c2_r2_20261004T090158",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_gate-force_ebpf+app_c2_r3_20261004T091432",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_gate_ebpf+app_c2_r1_20261004T083226",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_gate_ebpf+app_c2_r2_20261004T085332",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_gate_ebpf+app_c2_r3_20261004T085741",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_hysteresis_ebpf+app_c2_r1_20261004T093133",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_hysteresis_ebpf+app_c2_r2_20261004T094409",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_hysteresis_ebpf+app_c2_r3_20261004T092304",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_static_ebpf+app_c2_r1_20261004T095233",
+    "arm": "vm",
+    "requests": 20,
+    "successful": 20,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_static_ebpf+app_c2_r2_20261004T082826",
+    "arm": "vm",
+    "requests": 20,
+    "successful": 20,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "compute-0.5_static_ebpf+app_c2_r3_20261004T084928",
+    "arm": "vm",
+    "requests": 20,
+    "successful": 20,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "loss-0_gate_ebpf+app_c2_r1_20261004T102621",
+    "arm": "vm",
+    "requests": 20,
+    "successful": 20,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "loss-0_gate_ebpf+app_c2_r2_20261004T102202",
+    "arm": "vm",
+    "requests": 20,
+    "successful": 20,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "loss-0_hysteresis_ebpf+app_c2_r1_20261004T103039",
+    "arm": "vm",
+    "requests": 20,
+    "successful": 20,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "loss-0_hysteresis_ebpf+app_c2_r2_20261004T100918",
+    "arm": "vm",
+    "requests": 20,
+    "successful": 20,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "loss-0_static_ebpf+app_c2_r1_20261004T101333",
+    "arm": "vm",
+    "requests": 21,
+    "successful": 12,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "loss-0_static_ebpf+app_c2_r2_20261004T101748",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 12,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_gate-force_ebpf+app_c2_r1_20261004T095637",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_gate-force_ebpf+app_c2_r2_20261004T090610",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_gate-force_ebpf+app_c2_r3_20261004T084055",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_gate_ebpf+app_c2_r1_20261004T093955",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_gate_ebpf+app_c2_r2_20261004T084509",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_gate_ebpf+app_c2_r3_20261004T094821",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_hysteresis_ebpf+app_c2_r1_20261004T091022",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_hysteresis_ebpf+app_c2_r2_20261004T093544",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_hysteresis_ebpf+app_c2_r3_20261004T100502",
+    "arm": "vm",
+    "requests": 22,
+    "successful": 22,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_static_ebpf+app_c2_r1_20261004T083641",
+    "arm": "vm",
+    "requests": 24,
+    "successful": 24,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_static_ebpf+app_c2_r2_20261004T100045",
+    "arm": "vm",
+    "requests": 24,
+    "successful": 24,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "network-120_static_ebpf+app_c2_r3_20261004T092716",
+    "arm": "vm",
+    "requests": 24,
+    "successful": 24,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "stable_static_ebpf+app_c2_r1_20261004T103931",
+    "arm": "vm-single",
+    "requests": 16,
+    "successful": 16,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "stable_static_ebpf+app_c2_r2_20261004T104350",
+    "arm": "vm-single",
+    "requests": 16,
+    "successful": 16,
+    "unexpected_restarts": []
+  },
+  {
+    "run": "stable_static_ebpf+app_c2_r3_20261004T103509",
+    "arm": "vm-single",
+    "requests": 16,
+    "successful": 16,
+    "unexpected_restarts": []
+  }
+]

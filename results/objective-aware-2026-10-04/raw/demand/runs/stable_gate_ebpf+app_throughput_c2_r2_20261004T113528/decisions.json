@@ -1,0 +1,25 @@
+[
+ {
+  "objective": "throughput",
+  "current_objective_ms": 0,
+  "optimal_objective_ms": 119.48511791730475,
+  "time": "2026-10-04T11:35:31.342342306Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 119.48511791730475,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ }
+]

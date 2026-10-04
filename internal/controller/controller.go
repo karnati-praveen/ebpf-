@@ -18,15 +18,17 @@ import (
 )
 
 type Config struct {
-	Namespace        string
-	WorkerSelector   string // label selector for shard worker pods
-	WorkerPort       int
-	Static           bool
-	HeartbeatTimeout time.Duration
-	DefaultLinkMs    float64
-	ImprovementFrac  float64
-	Cooldown         time.Duration
-	Interval         time.Duration
+	WorkloadURL        string
+	RemainingWorkAware bool
+	Namespace          string
+	WorkerSelector     string // label selector for shard worker pods
+	WorkerPort         int
+	Static             bool
+	HeartbeatTimeout   time.Duration
+	DefaultLinkMs      float64
+	ImprovementFrac    float64
+	Cooldown           time.Duration
+	Interval           time.Duration
 	// ReassertInterval is how often the controller re-pushes the current
 	// assignment even when nothing changed. Workers and the router hold
 	// their layout in memory only, so a restarted pod comes back empty; the
@@ -46,8 +48,9 @@ type Config struct {
 	// Policy selects how voluntary repartitions are gated (the H2 arms), and
 	// Gate parameterises the transition gate. The gate's ContextLen is taken
 	// from the pipeline spec at decision time, not from here.
-	Policy partition.Policy
-	Gate   partition.GateParams
+	Policy    partition.Policy
+	Objective partition.Objective
+	Gate      partition.GateParams
 
 	// LinkSource selects which link telemetry prices the hops (the H3 arms).
 	// Empty means LinkSourceAny, the historical behaviour.
@@ -55,10 +58,13 @@ type Config struct {
 }
 
 type Controller struct {
-	cfg     Config
-	src     Source
-	store   *TelemetryStore
-	decider *partition.Decider
+	workload          *WorkloadSnapshot
+	workloadError     string
+	decisionObjective partition.Objective
+	cfg               Config
+	src               Source
+	store             *TelemetryStore
+	decider           *partition.Decider
 
 	mu             sync.Mutex
 	generation     int64
@@ -95,6 +101,10 @@ func newDecider(cfg Config) *partition.Decider {
 		d.Policy = cfg.Policy
 	}
 	d.Gate = cfg.Gate
+	d.Objective = cfg.Objective
+	if cfg.Objective == partition.Objective("auto") {
+		d.Objective = partition.ObjectiveLatency
+	}
 	return d
 }
 
@@ -140,6 +150,10 @@ func (c *Controller) reconcile(ctx context.Context) error {
 	}
 
 	c.decider.Gate.ContextLen = sp.ContextLen
+	c.observeWorkload(ctx)
+	c.mu.Lock()
+	c.decisionObjective = c.decider.Objective
+	c.mu.Unlock()
 	res, changed, err := c.decider.Decide(time.Now(), input, false)
 	c.recordDecision()
 	if err != nil {
@@ -190,7 +204,7 @@ func (c *Controller) reconcileStatic(ctx context.Context, sp PipelineSpec, input
 	for i := range input.LinkMs {
 		input.LinkMs[i] = c.cfg.DefaultLinkMs
 	}
-	res, err := partition.Optimal(input)
+	res, err := partition.OptimalForObjective(input, c.cfg.Objective)
 	if err != nil {
 		return err
 	}
@@ -395,6 +409,28 @@ func (c *Controller) State() map[string]any {
 		policy = partition.PolicyHysteresis
 	}
 	out["policy"] = string(policy)
+	objective := c.cfg.Objective
+	if objective == "" {
+		objective = partition.ObjectiveThroughput
+	}
+	out["objective"] = string(objective)
+	out["workload"] = c.workload
+	out["workload_error"] = c.workloadError
+	out["remaining_work_aware"] = c.cfg.RemainingWorkAware
+	if objective == partition.Objective("auto") {
+		objective = c.decisionObjective
+		if objective == "" {
+			objective = partition.ObjectiveLatency
+		}
+	}
+	out["active_objective"] = string(objective)
+	if c.lastApplied != nil {
+		if objective == partition.ObjectiveLatency {
+			out["objective_ms"] = c.lastApplied.PipelineMs
+		} else {
+			out["objective_ms"] = c.lastApplied.BottleneckMs
+		}
+	}
 	out["link_source"] = string(c.cfg.LinkSource)
 	out["decisions"] = c.decisions
 	out["telemetry"] = c.store.Snapshot()

@@ -1,0 +1,36 @@
+[
+  {
+    "mode": "pipeline",
+    "workers": 3,
+    "concurrency": 4,
+    "windows": 3,
+    "requests": 120,
+    "failures": 0,
+    "mean_tokens_per_s": 19.867549399785513,
+    "min_tokens_per_s": 19.86425757968939,
+    "max_tokens_per_s": 19.8702953838761,
+    "mean_window_median_ttft_ms": 199.54500000000002,
+    "mean_window_p95_ttft_ms": 200.09666666666666,
+    "mean_window_median_completion_ms": 3209.935,
+    "pooled_median_client_completion_ms": 3211.09902850003,
+    "pooled_p95_client_completion_ms": 3213.181557000098,
+    "max_routing_wait_ms": 0.007183999969129218
+  },
+  {
+    "mode": "replicas",
+    "workers": 3,
+    "concurrency": 4,
+    "windows": 3,
+    "requests": 129,
+    "failures": 0,
+    "mean_tokens_per_s": 20.247490205032182,
+    "min_tokens_per_s": 20.24134203120923,
+    "max_tokens_per_s": 20.253160065136555,
+    "mean_window_median_ttft_ms": 141.45333333333335,
+    "mean_window_p95_ttft_ms": 141.99333333333334,
+    "mean_window_median_completion_ms": 2263.54,
+    "pooled_median_client_completion_ms": 2265.5485209998005,
+    "pooled_p95_client_completion_ms": 2268.6808460002794,
+    "max_routing_wait_ms": 31727.298238000003
+  }
+]

@@ -1,0 +1,104 @@
+[
+ {
+  "time": "2026-10-04T06:35:57.741645511Z",
+  "policy": "hysteresis",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 231.49698824923473,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T06:36:02.697274488Z",
+  "policy": "hysteresis",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 122.20256967761873,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T06:37:27.741697574Z",
+  "policy": "hysteresis",
+  "reason": "hysteresis-passed",
+  "current_bottleneck_ms": 204.40577814297453,
+  "optimal_bottleneck_ms": 158.61516175760502,
+  "improvement_frac": 0.22401820927655286,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    25
+   ],
+   [
+    25,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T06:39:29.74205822Z",
+  "policy": "hysteresis",
+  "reason": "hysteresis-passed",
+  "current_bottleneck_ms": 159.61710398445095,
+  "optimal_bottleneck_ms": 123.34546386468477,
+  "improvement_frac": 0.22724156255397018,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    25
+   ],
+   [
+    25,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ }
+]

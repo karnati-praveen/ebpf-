@@ -1,0 +1,155 @@
+MAIN START 08:28:26
+24 runs, seed 20261004; est. 2.1 h
+    1. compute:0.5 static r2
+    2. compute:0.5 gate r1
+    3. network:120 static r1
+    4. network:120 gate-force r3
+    5. network:120 gate r2
+    6. compute:0.5 static r3
+    7. compute:0.5 gate r2
+    8. compute:0.5 gate r3
+    9. compute:0.5 gate-force r2
+   10. network:120 gate-force r2
+   11. network:120 hysteresis r1
+   12. compute:0.5 gate-force r3
+   13. compute:0.5 gate-force r1
+   14. compute:0.5 hysteresis r3
+   15. network:120 static r3
+   16. compute:0.5 hysteresis r1
+   17. network:120 hysteresis r2
+   18. network:120 gate r1
+   19. compute:0.5 hysteresis r2
+   20. network:120 gate r3
+   21. compute:0.5 static r1
+   22. network:120 gate-force r1
+   23. network:120 static r2
+   24. network:120 hysteresis r3
+
+=== compute-0.5_static_ebpf+app_c2_r2_20261004T082826
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 20/20 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_static_ebpf+app_c2_r2_20261004T082826
+
+=== compute-0.5_gate_ebpf+app_c2_r1_20261004T083226
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 10 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_gate_ebpf+app_c2_r1_20261004T083226
+
+=== network-120_static_ebpf+app_c2_r1_20261004T083641
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 24/24 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_static_ebpf+app_c2_r1_20261004T083641
+
+=== network-120_gate-force_ebpf+app_c2_r3_20261004T084055
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_gate-force_ebpf+app_c2_r3_20261004T084055
+
+=== network-120_gate_ebpf+app_c2_r2_20261004T084509
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 5 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_gate_ebpf+app_c2_r2_20261004T084509
+
+=== compute-0.5_static_ebpf+app_c2_r3_20261004T084928
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 20/20 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_static_ebpf+app_c2_r3_20261004T084928
+
+=== compute-0.5_gate_ebpf+app_c2_r2_20261004T085332
+    ready: gen=2 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 5 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_gate_ebpf+app_c2_r2_20261004T085332
+
+=== compute-0.5_gate_ebpf+app_c2_r3_20261004T085741
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 30 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_gate_ebpf+app_c2_r3_20261004T085741
+
+=== compute-0.5_gate-force_ebpf+app_c2_r2_20261004T090158
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_gate-force_ebpf+app_c2_r2_20261004T090158
+
+=== network-120_gate-force_ebpf+app_c2_r2_20261004T090610
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_gate-force_ebpf+app_c2_r2_20261004T090610
+
+=== network-120_hysteresis_ebpf+app_c2_r1_20261004T091022
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_hysteresis_ebpf+app_c2_r1_20261004T091022
+
+=== compute-0.5_gate-force_ebpf+app_c2_r3_20261004T091432
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 5 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_gate-force_ebpf+app_c2_r3_20261004T091432
+
+=== compute-0.5_gate-force_ebpf+app_c2_r1_20261004T091852
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_gate-force_ebpf+app_c2_r1_20261004T091852
+
+=== compute-0.5_hysteresis_ebpf+app_c2_r3_20261004T092304
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_hysteresis_ebpf+app_c2_r3_20261004T092304
+
+=== network-120_static_ebpf+app_c2_r3_20261004T092716
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 24/24 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_static_ebpf+app_c2_r3_20261004T092716
+
+=== compute-0.5_hysteresis_ebpf+app_c2_r1_20261004T093133
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_hysteresis_ebpf+app_c2_r1_20261004T093133
+
+=== network-120_hysteresis_ebpf+app_c2_r2_20261004T093544
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_hysteresis_ebpf+app_c2_r2_20261004T093544
+
+=== network-120_gate_ebpf+app_c2_r1_20261004T093955
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_gate_ebpf+app_c2_r1_20261004T093955
+
+=== compute-0.5_hysteresis_ebpf+app_c2_r2_20261004T094409
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 22/22 requests ok, 5 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_hysteresis_ebpf+app_c2_r2_20261004T094409
+
+=== network-120_gate_ebpf+app_c2_r3_20261004T094821
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_gate_ebpf+app_c2_r3_20261004T094821
+
+=== compute-0.5_static_ebpf+app_c2_r1_20261004T095233
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 20/20 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/compute-0.5_static_ebpf+app_c2_r1_20261004T095233
+
+=== network-120_gate-force_ebpf+app_c2_r1_20261004T095637
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_gate-force_ebpf+app_c2_r1_20261004T095637
+
+=== network-120_static_ebpf+app_c2_r2_20261004T100045
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 24/24 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_static_ebpf+app_c2_r2_20261004T100045
+
+=== network-120_hysteresis_ebpf+app_c2_r3_20261004T100502
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 22/22 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/network-120_hysteresis_ebpf+app_c2_r3_20261004T100502
+CORE DONE 10:09:17
+6 runs, seed 20261005; est. 0.5 h
+    1. loss:0 hysteresis r2
+    2. loss:0 static r1
+    3. loss:0 static r2
+    4. loss:0 gate r2
+    5. loss:0 gate r1
+    6. loss:0 hysteresis r1
+
+=== loss-0_hysteresis_ebpf+app_c2_r2_20261004T100918
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 20/20 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/loss-0_hysteresis_ebpf+app_c2_r2_20261004T100918
+
+=== loss-0_static_ebpf+app_c2_r1_20261004T101333
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 12/21 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/loss-0_static_ebpf+app_c2_r1_20261004T101333
+
+=== loss-0_static_ebpf+app_c2_r2_20261004T101748
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 12/22 requests ok, 0 decisions -> /home/azureuser/ebpf-/bench/results/vm/loss-0_static_ebpf+app_c2_r2_20261004T101748
+
+=== loss-0_gate_ebpf+app_c2_r2_20261004T102202
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 20/20 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/loss-0_gate_ebpf+app_c2_r2_20261004T102202
+
+=== loss-0_gate_ebpf+app_c2_r1_20261004T102621
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 20/20 requests ok, 3 decisions -> /home/azureuser/ebpf-/bench/results/vm/loss-0_gate_ebpf+app_c2_r1_20261004T102621
+
+=== loss-0_hysteresis_ebpf+app_c2_r1_20261004T103039
+    ready: gen=2 layout=vm2:0-19|vm3:19-28
+    done: 20/20 requests ok, 4 decisions -> /home/azureuser/ebpf-/bench/results/vm/loss-0_hysteresis_ebpf+app_c2_r1_20261004T103039
+MAIN DONE 10:34:58

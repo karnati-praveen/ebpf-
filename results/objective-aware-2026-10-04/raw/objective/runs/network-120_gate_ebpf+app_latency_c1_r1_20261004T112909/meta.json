@@ -1,0 +1,79 @@
+{
+  "run": "network-120_gate_ebpf+app_latency_c1_r1_20261004T112909",
+  "scenario": "network",
+  "magnitude": "120",
+  "policy": "gate",
+  "policy_env": {
+    "POLICY": "gate"
+  },
+  "objective": "latency",
+  "link_source": "ebpf+app",
+  "cost_model": "full",
+  "kv_cache": "1",
+  "repeat": 1,
+  "worker_device": "cpu",
+  "cost_profile": "",
+  "workers": 2,
+  "target": "vm3",
+  "hosts": [
+    "vm3"
+  ],
+  "concurrency": 1,
+  "prompt_len": 64,
+  "new_tokens": 32,
+  "context_len": 128,
+  "phases_s": {
+    "pre": 10.0,
+    "fault": 40.0,
+    "post": 10.0
+  },
+  "t0": 1791113360.8711815,
+  "t_end": 1791113422.052703,
+  "gate": {
+    "horizon_s": null,
+    "margin": null
+  },
+  "initial_state": {
+    "generation": 1,
+    "assignments": [
+      {
+        "end": 28,
+        "node": "vm2",
+        "speed": 1.0119,
+        "start": 0,
+        "worker": "vm2"
+      },
+      {
+        "end": 28,
+        "node": "vm3",
+        "speed": 0.9919,
+        "start": 28,
+        "worker": "vm3"
+      }
+    ],
+    "bottleneck_ms": 231.68000790591955,
+    "pipeline_ms": 231.68000790591955
+  },
+  "agent_cpu_s": {
+    "vm3": {
+      "start": 2.79,
+      "end": 2.85
+    },
+    "local": {
+      "start": 19.72,
+      "end": 19.84
+    }
+  },
+  "worker_pids": {
+    "start": {
+      "local": "1561",
+      "vm3": "46552"
+    },
+    "end": {
+      "local": "1561",
+      "vm3": "46552"
+    }
+  },
+  "contaminated_by_unexpected_worker_restart": [],
+  "git": ""
+}

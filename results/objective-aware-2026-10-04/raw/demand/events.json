@@ -1,0 +1,122 @@
+[
+  {
+    "index": 1,
+    "scenario": "stable:0",
+    "objective": "throughput",
+    "concurrency": 1,
+    "repeat": 1,
+    "start": 1791113650.348722,
+    "end": 1791113728.5841212,
+    "returncode": 0
+  },
+  {
+    "index": 2,
+    "scenario": "stable:0",
+    "objective": "throughput",
+    "concurrency": 2,
+    "repeat": 2,
+    "start": 1791113728.584635,
+    "end": 1791113805.128405,
+    "returncode": 0
+  },
+  {
+    "index": 3,
+    "scenario": "stable:0",
+    "objective": "throughput",
+    "concurrency": 1,
+    "repeat": 2,
+    "start": 1791113805.1289964,
+    "end": 1791113883.5174205,
+    "returncode": 0
+  },
+  {
+    "index": 4,
+    "scenario": "stable:0",
+    "objective": "auto-fixed",
+    "concurrency": 1,
+    "repeat": 2,
+    "start": 1791113883.5179915,
+    "end": 1791113959.1489577,
+    "returncode": 0
+  },
+  {
+    "index": 5,
+    "scenario": "stable:0",
+    "objective": "auto-remaining",
+    "concurrency": 2,
+    "repeat": 1,
+    "start": 1791113959.1495914,
+    "end": 1791114038.543675,
+    "returncode": 0
+  },
+  {
+    "index": 6,
+    "scenario": "stable:0",
+    "objective": "auto-fixed",
+    "concurrency": 2,
+    "repeat": 1,
+    "start": 1791114038.5442753,
+    "end": 1791114117.2373888,
+    "returncode": 0
+  },
+  {
+    "index": 7,
+    "scenario": "stable:0",
+    "objective": "auto-fixed",
+    "concurrency": 1,
+    "repeat": 1,
+    "start": 1791114117.2380698,
+    "end": 1791114192.9791832,
+    "returncode": 0
+  },
+  {
+    "index": 8,
+    "scenario": "stable:0",
+    "objective": "auto-fixed",
+    "concurrency": 2,
+    "repeat": 2,
+    "start": 1791114192.9800425,
+    "end": 1791114269.1160123,
+    "returncode": 0
+  },
+  {
+    "index": 9,
+    "scenario": "stable:0",
+    "objective": "auto-remaining",
+    "concurrency": 1,
+    "repeat": 2,
+    "start": 1791114269.1168032,
+    "end": 1791114344.5513065,
+    "returncode": 0
+  },
+  {
+    "index": 10,
+    "scenario": "stable:0",
+    "objective": "throughput",
+    "concurrency": 2,
+    "repeat": 1,
+    "start": 1791114344.552043,
+    "end": 1791114424.8963099,
+    "returncode": 0
+  },
+  {
+    "index": 11,
+    "scenario": "stable:0",
+    "objective": "auto-remaining",
+    "concurrency": 1,
+    "repeat": 1,
+    "start": 1791114424.897129,
+    "end": 1791114503.798097,
+    "returncode": 0
+  },
+  {
+    "index": 12,
+    "scenario": "stable:0",
+    "objective": "auto-remaining",
+    "concurrency": 2,
+    "repeat": 2,
+    "start": 1791114503.798882,
+    "end": 1791114579.9334183,
+    "returncode": 0
+  }
+]

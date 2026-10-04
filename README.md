@@ -1,5 +1,7 @@
 # KubeEdgeInfer
 
+Experiment data and reports are organized in [results/](results/README.md).
+
 A closed-loop, eBPF-driven framework for heterogeneous distributed LLM
 inference on consumer edge devices. It runs standalone on plain Linux machines
 (`deploy/standalone/`) or on Kubernetes (kind/k3s).

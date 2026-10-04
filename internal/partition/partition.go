@@ -154,9 +154,41 @@ func stageCost(in Input, perLayer float64, worker, start, end int) float64 {
 	return cost
 }
 
+type Objective string
+
+const (
+	ObjectiveThroughput Objective = "throughput"
+	ObjectiveLatency    Objective = "latency"
+)
+
+func (o Objective) normalized() Objective {
+	if o == "" {
+		return ObjectiveThroughput
+	}
+	return o
+}
+
+func ObjectiveCost(in Input, splits [][2]int, objective Objective) float64 {
+	if objective.normalized() == ObjectiveLatency {
+		return EvaluatePipeline(in, splits)
+	}
+	return Evaluate(in, splits)
+}
+
 // Optimal solves the linear partition exactly via DP in O(N^2 * K).
 // Workers may receive zero layers (stage dropped from the chain).
 func Optimal(in Input) (*Result, error) {
+	return OptimalForObjective(in, ObjectiveThroughput)
+}
+
+// OptimalForObjective minimizes the sum for latency or the maximum for
+// saturated throughput. Endpoint and hop costs are included in both objectives.
+// Zero-layer stages allow the latency planner to choose whole-model execution.
+func OptimalForObjective(in Input, objective Objective) (*Result, error) {
+	objective = objective.normalized()
+	if objective != ObjectiveLatency && objective != ObjectiveThroughput {
+		return nil, fmt.Errorf("unknown objective %q", objective)
+	}
 	n, k := in.TotalLayers, len(in.Workers)
 	if k == 0 {
 		return nil, fmt.Errorf("no workers")
@@ -187,7 +219,11 @@ func Optimal(in Input) (*Result, error) {
 				if math.IsInf(f[split][w-1], 1) {
 					continue
 				}
-				cost := math.Max(f[split][w-1], stageCost(in, perLayer, w-1, split, j))
+				stage := stageCost(in, perLayer, w-1, split, j)
+				cost := math.Max(f[split][w-1], stage)
+				if objective == ObjectiveLatency {
+					cost = f[split][w-1] + stage
+				}
 				if cost < f[j][w] {
 					f[j][w] = cost
 					choice[j][w] = split
@@ -197,8 +233,7 @@ func Optimal(in Input) (*Result, error) {
 	}
 
 	res := &Result{
-		Assignments:  make([]Assignment, k),
-		BottleneckMs: f[n][k],
+		Assignments: make([]Assignment, k),
 	}
 	j := n
 	for w := k; w >= 1; w-- {
@@ -207,7 +242,9 @@ func Optimal(in Input) (*Result, error) {
 		j = start
 	}
 	for i, a := range res.Assignments {
-		res.PipelineMs += stageCost(in, perLayer, i, a.Start, a.End)
+		cost := stageCost(in, perLayer, i, a.Start, a.End)
+		res.PipelineMs += cost
+		res.BottleneckMs = math.Max(res.BottleneckMs, cost)
 	}
 	return res, nil
 }
@@ -289,6 +326,7 @@ const (
 // request from step 0 through the WHOLE chain, so every layer re-prefills the
 // context, not only the layers that moved.
 type GateParams struct {
+	RemainingTokens        *float64
 	HorizonS               float64
 	TransitionFixedMs      float64
 	PrefillMsPerTokenLayer float64
@@ -305,26 +343,32 @@ func (g GateParams) TransitionMs(totalLayers int) float64 {
 // quantity the verdict used. Rejected moves are recorded too, because
 // evaluating whether a rejection was justified needs them.
 type Decision struct {
-	Time         time.Time `json:"time"`
-	Policy       Policy    `json:"policy"`
-	Reason       string    `json:"reason"`
-	CurrentMs    float64   `json:"current_bottleneck_ms"`
-	OptimalMs    float64   `json:"optimal_bottleneck_ms"`
-	Improvement  float64   `json:"improvement_frac"`
-	TransitionMs float64   `json:"transition_ms,omitempty"`
-	HorizonS     float64   `json:"horizon_s,omitempty"`
-	TokensStay   float64   `json:"tokens_stay,omitempty"`
-	TokensAdapt  float64   `json:"tokens_adapt,omitempty"`
-	BreakEvenS   float64   `json:"break_even_s,omitempty"`
-	GateAccepts  bool      `json:"gate_accepts"`
-	Executed     bool      `json:"executed"`
-	FromSplits   [][2]int  `json:"from_splits,omitempty"`
-	ToSplits     [][2]int  `json:"to_splits"`
+	RemainingTokens    *float64  `json:"remaining_tokens,omitempty"`
+	Objective          Objective `json:"objective"`
+	CurrentObjectiveMs float64   `json:"current_objective_ms"`
+	OptimalObjectiveMs float64   `json:"optimal_objective_ms"`
+	Time               time.Time `json:"time"`
+	Policy             Policy    `json:"policy"`
+	Reason             string    `json:"reason"`
+	CurrentMs          float64   `json:"current_bottleneck_ms"`
+	OptimalMs          float64   `json:"optimal_bottleneck_ms"`
+	Improvement        float64   `json:"improvement_frac"`
+	TransitionMs       float64   `json:"transition_ms,omitempty"`
+	HorizonS           float64   `json:"horizon_s,omitempty"`
+	TokensStay         float64   `json:"tokens_stay,omitempty"`
+	TokensAdapt        float64   `json:"tokens_adapt,omitempty"`
+	BreakEvenS         float64   `json:"break_even_s,omitempty"`
+	GateAccepts        bool      `json:"gate_accepts"`
+	Executed           bool      `json:"executed"`
+	FromSplits         [][2]int  `json:"from_splits,omitempty"`
+	ToSplits           [][2]int  `json:"to_splits"`
 }
 
 // Decider decides when to adopt a new split. Recovery -- a changed worker set
 // -- always forces a new split, whatever the policy.
 type Decider struct {
+	HoldVoluntary   bool
+	Objective       Objective
 	ImprovementFrac float64
 	Cooldown        time.Duration
 	Policy          Policy
@@ -347,7 +391,7 @@ func (d *Decider) LastDecision() *Decision { return d.last }
 
 // Decide returns the split to apply and whether it is a change.
 func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, error) {
-	opt, err := Optimal(in)
+	opt, err := OptimalForObjective(in, d.Objective)
 	if err != nil {
 		return nil, false, err
 	}
@@ -356,8 +400,9 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 		if d.current != nil {
 			from = d.current.Splits()
 		}
-		d.last = &Decision{Time: now, Policy: d.policy(), Reason: "recovery-or-initial",
-			OptimalMs: opt.BottleneckMs, GateAccepts: true, Executed: true,
+		d.last = &Decision{Time: now, Policy: d.policy(), Objective: d.Objective.normalized(), Reason: "recovery-or-initial",
+			OptimalObjectiveMs: ObjectiveCost(in, opt.Splits(), d.Objective),
+			OptimalMs:          opt.BottleneckMs, GateAccepts: true, Executed: true,
 			FromSplits: from, ToSplits: opt.Splits()}
 		d.current = opt
 		d.lastChange = now
@@ -366,27 +411,34 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 
 	curSplits := d.current.Splits()
 	currentCost := Evaluate(in, curSplits)
+	currentScore := ObjectiveCost(in, curSplits, d.Objective)
+	optimalScore := ObjectiveCost(in, opt.Splits(), d.Objective)
 	keep := func() (*Result, bool, error) {
 		kept := &Result{Assignments: d.current.Assignments, BottleneckMs: currentCost,
 			PipelineMs: EvaluatePipeline(in, curSplits)}
 		d.current = kept
 		return kept, false, nil
 	}
-	if splitsEqual(curSplits, opt.Splits()) || !(opt.BottleneckMs < currentCost) {
+	if splitsEqual(curSplits, opt.Splits()) || !(optimalScore < currentScore) {
 		return keep()
 	}
 
 	dec := &Decision{Time: now, Policy: d.policy(), CurrentMs: currentCost,
-		OptimalMs: opt.BottleneckMs, Improvement: (currentCost - opt.BottleneckMs) / currentCost,
+		Objective: d.Objective.normalized(), CurrentObjectiveMs: currentScore, OptimalObjectiveMs: optimalScore,
+		OptimalMs: opt.BottleneckMs, Improvement: (currentScore - optimalScore) / currentScore,
 		FromSplits: curSplits, ToSplits: opt.Splits()}
 	d.last = dec
+	if d.HoldVoluntary {
+		dec.Reason = "no-active-or-fresh-workload"
+		return keep()
+	}
 
 	execute := false
 	switch d.policy() {
 	case PolicyNone:
 		dec.Reason, dec.GateAccepts, execute = "strictly-better", true, true
 	case PolicyHysteresis, PolicyGate, PolicyGateForce:
-		if opt.BottleneckMs >= currentCost*(1-d.ImprovementFrac) {
+		if optimalScore >= currentScore*(1-d.ImprovementFrac) {
 			dec.Reason = "below-improvement-threshold"
 			return keep()
 		}
@@ -398,7 +450,7 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 			dec.Reason, dec.GateAccepts, execute = "hysteresis-passed", true, true
 			break
 		}
-		d.evaluateGate(dec, in.TotalLayers, currentCost, opt.BottleneckMs)
+		d.evaluateGate(dec, in.TotalLayers, currentScore, optimalScore)
 		execute = dec.GateAccepts || d.policy() == PolicyGateForce
 		switch {
 		case dec.GateAccepts:
@@ -432,8 +484,12 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 //	H* = T * current / (current - optimal)
 func (d *Decider) evaluateGate(dec *Decision, totalLayers int, current, optimal float64) {
 	h := d.Gate.HorizonS * 1000
+	if d.Gate.RemainingTokens != nil {
+		h = math.Min(h, math.Max(0, *d.Gate.RemainingTokens)*current)
+		dec.RemainingTokens = d.Gate.RemainingTokens
+	}
 	t := d.Gate.TransitionMs(totalLayers)
-	dec.HorizonS = d.Gate.HorizonS
+	dec.HorizonS = h / 1000
 	dec.TransitionMs = t
 	dec.TokensStay = h / current
 	dec.TokensAdapt = math.Max(0, h-t) / optimal

@@ -1,0 +1,15 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<01:08,  4.53it/s]Loading weights:  16%|█▌        | 50/311 [00:00<00:01, 192.97it/s]Loading weights:  35%|███▌      | 109/311 [00:00<00:00, 333.15it/s]Loading weights:  50%|████▉     | 155/311 [00:00<00:00, 355.77it/s]Loading weights:  65%|██████▌   | 203/311 [00:00<00:00, 387.28it/s]Loading weights:  81%|████████  | 252/311 [00:00<00:00, 417.00it/s]Loading weights:  95%|█████████▌| 297/311 [00:00<00:00, 413.12it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 347.10it/s]
+reference  : [429, 279, 1852, 821, 646, 387, 15233, 304, 15279, 13, 1096, 374, 1576, 279, 821, 374, 15233, 304, 264, 15301, 11, 892, 3363, 429, 279, 821, 374, 15233, 304, 264, 8500, 11]
+Traceback (most recent call last):
+  File "/home/azureuser/ebpf-/bench/verify_qwen3.py", line 393, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/azureuser/ebpf-/bench/verify_qwen3.py", line 371, in main
+    ok = relayout(args.tokens, prompt, ref_gen)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/ebpf-/bench/verify_qwen3.py", line 310, in relayout
+    _wait_port(p)
+  File "/home/azureuser/ebpf-/bench/verify_qwen3.py", line 241, in _wait_port
+    raise RuntimeError(f"timeout waiting for port {port}")
+RuntimeError: timeout waiting for port 50271

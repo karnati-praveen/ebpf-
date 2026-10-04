@@ -1,0 +1,39 @@
+{
+  "scope": "Synthetic sleep-based compute using existing worker and router processes over loopback; not real-model or physical multi-node performance",
+  "python": "3.14.2 (main, Aug 27 2026, 12:34:32) [GCC 13.3.0]",
+  "platform": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.39",
+  "cpu_count": 4,
+  "total_layers": 28,
+  "sim_per_layer_ms": 5,
+  "sim_hidden_dim": 1024,
+  "prompt_len": 16,
+  "max_new_tokens": 16,
+  "kv_cache_router": true,
+  "concurrency": [
+    1,
+    2,
+    4
+  ],
+  "worker_counts": [
+    1,
+    2,
+    3
+  ],
+  "modes": [
+    "pipeline",
+    "replicas"
+  ],
+  "repeats": 3,
+  "admission_window_s": 30,
+  "replica_policy": "per-client cyclic routing, starting at client index",
+  "controller_used": false,
+  "nodeagent_used": false,
+  "timing": "Closed-loop arrivals; each client sends its next request after completion; include final drain separately",
+  "metrics": "Token completions within admission window and all completions over full observation; router-provided TTFT and completion timing",
+  "run_started_utc": "2026-10-04 05:26:34",
+  "source_state": "Working tree includes pre-existing user edits in controller, peerconn, worker/server.py and generated Go RPC code",
+  "run_completed_utc": "2026-10-04 05:56:44",
+  "completed_windows": 54,
+  "observed_requests": 1146,
+  "observed_failures": 0
+}

@@ -116,6 +116,7 @@ class Run:
         mag = f"-{magnitude}" if scenario != "stable" else ""
         cm = "" if args.cost_model == "full" else f"_{args.cost_model}"
         self.name = (f"{scenario}{mag}_{policy}_{args.link_source}{cm}"
+                     f"_{args.objective}"
                      f"_c{args.concurrency}_r{repeat}_{stamp}")
         self.dir = os.path.join(args.out, self.name)
         os.makedirs(self.dir, exist_ok=False)
@@ -170,7 +171,8 @@ class Run:
         env = dict(os.environ)
         env.update(POLICIES[self.policy])
         env.update({"LINK_SOURCE": self.a.link_source, "CONTEXT_LEN": str(self.a.context_len),
-                    "COST_MODEL": self.a.cost_model, "ROUTER": "1"})
+                    "COST_MODEL": self.a.cost_model, "ROUTER": "1",
+                    "PLACEMENT_OBJECTIVE": self.a.objective})
         for k in ("GATE_HORIZON_S", "GATE_MARGIN", "COOLDOWN_S", "IMPROVEMENT_FRAC"):
             v = getattr(self.a, k.lower())
             if v is not None:
@@ -199,6 +201,25 @@ class Run:
         for _ in range(self.a.warmup_requests):
             http_json(f"{self.router}/generate",
                       {"prompt_len": self.a.prompt_len, "max_new_tokens": 16}, timeout=900)
+
+    def verify_layout_output(self):
+        if not self.a.correctness_reference:
+            return
+        prompt = [1, 42, 77, 35, 99, 4, 16, 18, 2, 128, 64, 7]
+        response = http_json(f"{self.router}/generate", {"input_ids": prompt, "max_new_tokens": 8}, timeout=120)
+        reference = self.a.correctness_reference
+        if os.path.exists(reference):
+            with open(reference) as fh:
+                expected = json.load(fh)["tokens"]
+        else:
+            expected = response["tokens"]
+            with open(reference, "w") as fh:
+                json.dump({"input_ids": prompt, "tokens": expected, "source_run": self.name}, fh, indent=2)
+        with open(os.path.join(self.dir, "correctness.json"), "w") as fh:
+            json.dump({"input_ids": prompt, "tokens": response["tokens"], "expected": expected,
+                       "exact_match": response["tokens"] == expected}, fh, indent=2)
+        if response["tokens"] != expected:
+            raise RuntimeError("layout changed deterministic greedy output")
 
     # -- load and sampling --------------------------------------------------------
     def load_worker(self):
@@ -231,6 +252,8 @@ class Run:
             try:
                 st = http_json(f"{self.ctrl}/state", timeout=3)
                 row.update(
+                    objective=st.get("objective"), active_objective=st.get("active_objective"),
+                    workload_json=json.dumps(st.get("workload"), sort_keys=True), workload_error=st.get("workload_error", ""),
                     generation=st.get("generation"),
                     bottleneck_ms=st.get("bottleneck_ms", ""),
                     pipeline_ms=st.get("pipeline_ms", ""),
@@ -275,6 +298,7 @@ class Run:
         print(f"    ready: gen={st0.get('generation')} layout="
               + "|".join(f"{a['node']}:{a['start']}-{a['end']}" for a in st0['assignments']))
         self.warmup()
+        self.verify_layout_output()
 
         hosts = [(h, False) for h in self.a.hosts] + [("local", True)]
         cpu0 = {h: agent_cpu_seconds(h, loc) for h, loc in hosts}
@@ -329,13 +353,16 @@ class Run:
               "transition_ms", "reconstruct_ms", "generation", "error"])
         dump("series.csv", self.series,
              ["t", "generation", "bottleneck_ms", "pipeline_ms", "layout", "speeds", "flows_json",
-              "last_error"])
+              "last_error", "objective", "active_objective", "workload_json", "workload_error"])
         dump("faults.csv", self.faults, ["action", "t_local", "t_remote", "detail"])
         with open(os.path.join(self.dir, "decisions.json"), "w") as fh:
             json.dump([self.decisions[k] for k in sorted(self.decisions)], fh, indent=1)
         meta = {
             "run": self.name, "scenario": self.scenario, "magnitude": self.magnitude,
             "policy": self.policy, "policy_env": POLICIES[self.policy],
+            "objective": self.a.objective,
+            "remaining_work_aware": os.environ.get("REMAINING_WORK_AWARE", "0") == "1",
+            "workload_url": os.environ.get("WORKLOAD_URL", ""),
             "link_source": self.a.link_source, "cost_model": self.a.cost_model,
             "kv_cache": os.environ.get("KV_CACHE", "1"), "repeat": self.repeat,
             "worker_device": os.environ.get("WORKER_DEVICE", "cpu"),
@@ -375,10 +402,12 @@ def main():
     ap.add_argument("--target", default="", help="SSH host to inject faults on")
     ap.add_argument("--scenarios", required=True, help="e.g. network:120,compute:1.0,stable:0,loss:0")
     ap.add_argument("--policies", default="static,none,hysteresis,gate,gate-force")
+    ap.add_argument("--objective", default="throughput", choices=["throughput", "latency", "auto"])
     ap.add_argument("--link-source", default="ebpf+app", choices=["ebpf", "app", "ebpf+app", "none"])
     ap.add_argument("--cost-model", default="full", choices=["full", "layer-proportional"],
                     help="ablation A9/A10: drop endpoint and context-dependent cost terms")
     ap.add_argument("--repeats", type=int, default=3)
+    ap.add_argument("--repeat-offset", type=int, default=0, help="repeat index offset for external counterbalanced matrices")
     ap.add_argument("--seed", type=int, default=20260923)
     ap.add_argument("--concurrency", type=int, default=2)
     ap.add_argument("--prompt-len", type=int, default=64)
@@ -390,6 +419,7 @@ def main():
     ap.add_argument("--post-s", type=float, default=90)
     ap.add_argument("--drain-s", type=float, default=300)
     ap.add_argument("--warmup-requests", type=int, default=3)
+    ap.add_argument("--correctness-reference", default="", help="shared fixed-prompt output reference for layout correctness")
     ap.add_argument("--gate-horizon-s", type=float, default=None)
     ap.add_argument("--gate-margin", type=float, default=None)
     ap.add_argument("--cooldown-s", type=float, default=None)
@@ -419,7 +449,7 @@ def main():
         sys.exit("--target must be one of --hosts")
 
     schedule = [(s, m, p, r) for s, m in scenarios for p in policies
-                for r in range(1, args.repeats + 1)]
+                for r in range(1 + args.repeat_offset, args.repeats + 1 + args.repeat_offset)]
     random.Random(args.seed).shuffle(schedule)
     print(f"{len(schedule)} runs, seed {args.seed}; est. "
           f"{len(schedule) * (args.pre_s + args.fault_s + args.post_s + 90) / 3600:.1f} h")

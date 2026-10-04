@@ -1,0 +1,81 @@
+{
+  "run": "stable_gate_ebpf+app_auto_c2_r1_20261004T114038",
+  "scenario": "stable",
+  "magnitude": "0",
+  "policy": "gate",
+  "policy_env": {
+    "POLICY": "gate"
+  },
+  "objective": "auto",
+  "remaining_work_aware": false,
+  "workload_url": "http://127.0.0.1:8080/workload",
+  "link_source": "ebpf+app",
+  "cost_model": "full",
+  "kv_cache": "1",
+  "repeat": 1,
+  "worker_device": "cpu",
+  "cost_profile": "",
+  "workers": 2,
+  "target": "vm3",
+  "hosts": [
+    "vm3"
+  ],
+  "concurrency": 2,
+  "prompt_len": 64,
+  "new_tokens": 64,
+  "context_len": 128,
+  "phases_s": {
+    "pre": 10.0,
+    "fault": 40.0,
+    "post": 10.0
+  },
+  "t0": 1791114052.4068909,
+  "t_end": 1791114112.408858,
+  "gate": {
+    "horizon_s": null,
+    "margin": null
+  },
+  "initial_state": {
+    "generation": 1,
+    "assignments": [
+      {
+        "end": 28,
+        "node": "vm2",
+        "speed": 1.0136,
+        "start": 0,
+        "worker": "vm2"
+      },
+      {
+        "end": 28,
+        "node": "vm3",
+        "speed": 0.9872,
+        "start": 28,
+        "worker": "vm3"
+      }
+    ],
+    "bottleneck_ms": 231.2914364640884,
+    "pipeline_ms": 231.2914364640884
+  },
+  "agent_cpu_s": {
+    "vm3": {
+      "start": 3.74,
+      "end": 3.84
+    },
+    "local": {
+      "start": 20.97,
+      "end": 21.09
+    }
+  },
+  "worker_pids": {
+    "start": {
+      "local": "1561",
+      "vm3": "46552"
+    },
+    "end": {
+      "local": "1561",
+      "vm3": "46552"
+    }
+  },
+  "contaminated_by_unexpected_worker_restart": [],
+  "git": ""
+}

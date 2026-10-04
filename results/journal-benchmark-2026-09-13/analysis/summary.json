@@ -1,0 +1,293 @@
+[
+  {
+    "scenario": "netem",
+    "mode": "dynamic",
+    "requests_ok": 90,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 6.998,
+    "repartitions": 2,
+    "overall": {
+      "n": 90,
+      "tokens_per_sec_mean": 2.372,
+      "ttft_ms_mean": 429.1,
+      "ttft_ms_p95": 448.6
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.219,
+      "ttft_ms_mean": 442.2,
+      "ttft_ms_p95": 448.5
+    },
+    "after_recovery": {
+      "n": 21,
+      "tokens_per_sec_mean": 2.451,
+      "ttft_ms_mean": 434.1,
+      "ttft_ms_p95": 448.4
+    },
+    "tag": "netem_4cpu_20260913_dynamic_r1"
+  },
+  {
+    "scenario": "netem",
+    "mode": "static",
+    "requests_ok": 93,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.289,
+    "repartitions": 0,
+    "overall": {
+      "n": 93,
+      "tokens_per_sec_mean": 2.459,
+      "ttft_ms_mean": 414.0,
+      "ttft_ms_p95": 449.2
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.264,
+      "ttft_ms_mean": 441.5,
+      "ttft_ms_p95": 448.0
+    },
+    "after_recovery": {
+      "n": 24,
+      "tokens_per_sec_mean": 2.681,
+      "ttft_ms_mean": 376.3,
+      "ttft_ms_p95": 445.9
+    },
+    "tag": "netem_4cpu_20260913_static_r1"
+  },
+  {
+    "scenario": "netem",
+    "mode": "profileonly",
+    "requests_ok": 93,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.286,
+    "repartitions": 0,
+    "overall": {
+      "n": 93,
+      "tokens_per_sec_mean": 2.458,
+      "ttft_ms_mean": 414.7,
+      "ttft_ms_p95": 448.3
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.261,
+      "ttft_ms_mean": 441.6,
+      "ttft_ms_p95": 448.3
+    },
+    "after_recovery": {
+      "n": 24,
+      "tokens_per_sec_mean": 2.688,
+      "ttft_ms_mean": 375.9,
+      "ttft_ms_p95": 446.1
+    },
+    "tag": "netem_4cpu_20260913_profileonly_r1"
+  },
+  {
+    "scenario": "netem",
+    "mode": "profileonly",
+    "requests_ok": 93,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.276,
+    "repartitions": 0,
+    "overall": {
+      "n": 93,
+      "tokens_per_sec_mean": 2.457,
+      "ttft_ms_mean": 413.8,
+      "ttft_ms_p95": 447.4
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.262,
+      "ttft_ms_mean": 441.1,
+      "ttft_ms_p95": 447.4
+    },
+    "after_recovery": {
+      "n": 24,
+      "tokens_per_sec_mean": 2.682,
+      "ttft_ms_mean": 375.4,
+      "ttft_ms_p95": 444.1
+    },
+    "tag": "netem_4cpu_20260913_profileonly_r2"
+  },
+  {
+    "scenario": "netem",
+    "mode": "dynamic",
+    "requests_ok": 90,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.082,
+    "repartitions": 2,
+    "overall": {
+      "n": 90,
+      "tokens_per_sec_mean": 2.4,
+      "ttft_ms_mean": 418.6,
+      "ttft_ms_p95": 449.3
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.217,
+      "ttft_ms_mean": 442.5,
+      "ttft_ms_p95": 449.3
+    },
+    "after_recovery": {
+      "n": 21,
+      "tokens_per_sec_mean": 2.576,
+      "ttft_ms_mean": 388.7,
+      "ttft_ms_p95": 446.9
+    },
+    "tag": "netem_4cpu_20260913_dynamic_r2"
+  },
+  {
+    "scenario": "netem",
+    "mode": "static",
+    "requests_ok": 93,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.292,
+    "repartitions": 0,
+    "overall": {
+      "n": 93,
+      "tokens_per_sec_mean": 2.46,
+      "ttft_ms_mean": 413.9,
+      "ttft_ms_p95": 448.8
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.265,
+      "ttft_ms_mean": 441.4,
+      "ttft_ms_p95": 448.8
+    },
+    "after_recovery": {
+      "n": 24,
+      "tokens_per_sec_mean": 2.687,
+      "ttft_ms_mean": 376.2,
+      "ttft_ms_p95": 446.1
+    },
+    "tag": "netem_4cpu_20260913_static_r2"
+  },
+  {
+    "scenario": "netem",
+    "mode": "static",
+    "requests_ok": 93,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.289,
+    "repartitions": 0,
+    "overall": {
+      "n": 93,
+      "tokens_per_sec_mean": 2.459,
+      "ttft_ms_mean": 414.0,
+      "ttft_ms_p95": 448.1
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.264,
+      "ttft_ms_mean": 441.5,
+      "ttft_ms_p95": 448.1
+    },
+    "after_recovery": {
+      "n": 24,
+      "tokens_per_sec_mean": 2.682,
+      "ttft_ms_mean": 376.1,
+      "ttft_ms_p95": 444.7
+    },
+    "tag": "netem_4cpu_20260913_static_r3"
+  },
+  {
+    "scenario": "netem",
+    "mode": "profileonly",
+    "requests_ok": 93,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.289,
+    "repartitions": 0,
+    "overall": {
+      "n": 93,
+      "tokens_per_sec_mean": 2.459,
+      "ttft_ms_mean": 414.1,
+      "ttft_ms_p95": 448.6
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.264,
+      "ttft_ms_mean": 441.9,
+      "ttft_ms_p95": 448.6
+    },
+    "after_recovery": {
+      "n": 24,
+      "tokens_per_sec_mean": 2.682,
+      "ttft_ms_mean": 375.9,
+      "ttft_ms_p95": 445.4
+    },
+    "tag": "netem_4cpu_20260913_profileonly_r3"
+  },
+  {
+    "scenario": "netem",
+    "mode": "dynamic",
+    "requests_ok": 90,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 7.094,
+    "repartitions": 2,
+    "overall": {
+      "n": 90,
+      "tokens_per_sec_mean": 2.4,
+      "ttft_ms_mean": 418.5,
+      "ttft_ms_p95": 448.9
+    },
+    "during_fault": {
+      "n": 51,
+      "tokens_per_sec_mean": 2.222,
+      "ttft_ms_mean": 442.3,
+      "ttft_ms_p95": 448.9
+    },
+    "after_recovery": {
+      "n": 21,
+      "tokens_per_sec_mean": 2.563,
+      "ttft_ms_mean": 388.5,
+      "ttft_ms_p95": 447.4
+    },
+    "tag": "netem_4cpu_20260913_dynamic_r3"
+  },
+  {
+    "scenario": "failure",
+    "mode": "dynamic",
+    "requests_ok": 133,
+    "requests_error": 0,
+    "throughput_tokens_per_sec": 6.569,
+    "repartitions": 2,
+    "overall": {
+      "n": 133,
+      "tokens_per_sec_mean": 2.304,
+      "ttft_ms_mean": 450.8,
+      "ttft_ms_p95": 538.1
+    },
+    "during_fault": {
+      "n": 48,
+      "tokens_per_sec_mean": 1.847,
+      "ttft_ms_mean": 537.0,
+      "ttft_ms_p95": 537.9
+    },
+    "after_recovery": {
+      "n": 58,
+      "tokens_per_sec_mean": 2.538,
+      "ttft_ms_mean": 400.9,
+      "ttft_ms_p95": 537.5
+    },
+    "tag": "failure_4cpu_20260913_dynamic_r1"
+  },
+  {
+    "scenario": "failure",
+    "mode": "static",
+    "requests_ok": 30,
+    "requests_error": 18,
+    "throughput_tokens_per_sec": 1.438,
+    "repartitions": 0,
+    "overall": {
+      "n": 30,
+      "tokens_per_sec_mean": 2.719,
+      "ttft_ms_mean": 378.2,
+      "ttft_ms_p95": 369.2
+    },
+    "during_fault": {
+      "n": 0
+    },
+    "after_recovery": {
+      "n": 0
+    },
+    "tag": "failure_4cpu_20260913_static_r1"
+  }
+]

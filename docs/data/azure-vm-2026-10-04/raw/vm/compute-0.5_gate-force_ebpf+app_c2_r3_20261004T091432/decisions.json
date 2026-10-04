@@ -1,0 +1,144 @@
+[
+ {
+  "time": "2026-10-04T09:14:35.249626502Z",
+  "policy": "gate-force",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 118.51806352750151,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T09:15:37.249012436Z",
+  "policy": "gate-force",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 188.5284763128312,
+  "optimal_bottleneck_ms": 144.6740067017712,
+  "improvement_frac": 0.2326145655486597,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 159.1271546173219,
+  "tokens_adapt": 186.25147539838,
+  "break_even_s": 13.130101259119535,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    23
+   ],
+   [
+    23,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T09:17:39.249521836Z",
+  "policy": "gate-force",
+  "reason": "gate-rejects-forced",
+  "current_bottleneck_ms": 142.0893276915844,
+  "optimal_bottleneck_ms": 117.38975082275506,
+  "improvement_frac": 0.1738313304039388,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 211.13478744242678,
+  "tokens_adapt": 229.54088420108292,
+  "break_even_s": 17.57020896579869,
+  "gate_accepts": false,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    23
+   ],
+   [
+    23,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T09:17:53.249628492Z",
+  "policy": "gate-force",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 223.50748403088951,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T09:17:55.263666075Z",
+  "policy": "gate-force",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 117.93444762000603,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    18
+   ],
+   [
+    18,
+    28
+   ]
+  ]
+ }
+]

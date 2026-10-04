@@ -1,0 +1,36 @@
+wrote docs/data/azure-vm-2026-10-04/raw/vm/runs_summary.csv (30 runs)
+
+RESULTS TABLE (median across repeats)
+scenario | policy | n | thru pre | thru fault | thru post | TTFT p95 | ITL p95 | compl rate | recovery s | restored | moves ok/rej | transition ms
+compute:0.5 [ebpf+app,full,kv1,c2] | gate | 3 | 6.40 | 5.27 | 6.30 | 1663 | 448 | 1.00 | 21.9 | 0.98 | 2/7 | 4815
+compute:0.5 [ebpf+app,full,kv1,c2] | gate-force | 3 | 6.40 | 5.27 | 6.30 | 1618 | 455 | 1.00 | 21.6 | 0.98 | 2/0 | 4697
+compute:0.5 [ebpf+app,full,kv1,c2] | hysteresis | 3 | 6.40 | 5.27 | 6.30 | 1613 | 450 | 1.00 | 22.1 | 0.98 | 2/0 | 4723
+compute:0.5 [ebpf+app,full,kv1,c2] | static | 3 | 6.40 | 4.21 | 6.30 | 1815 | 495 | 1.00 | 16.6 | 0.98 | 0/0 | -
+loss:0 [ebpf+app,full,kv1,c2] | gate | 2 | 6.40 | 3.69 | 7.37 | 1834 | 515 | 1.00 | 26.7 | 1.15 | 0/0 | 7771
+loss:0 [ebpf+app,full,kv1,c2] | hysteresis | 2 | 6.40 | 4.22 | 6.32 | 1802 | 491 | 1.00 | 25.0 | 0.99 | 0/0 | 7651
+loss:0 [ebpf+app,full,kv1,c2] | static | 2 | 6.40 | 0.00 | 6.32 | - | - | 0.00 | 145.6 | 0.99 | 0/0 | 10618
+network:120 [ebpf+app,full,kv1,c2] | gate | 3 | 6.40 | 5.27 | 6.30 | 1915 | 419 | 1.00 | 19.0 | 0.99 | 2/0 | 3664
+network:120 [ebpf+app,full,kv1,c2] | gate-force | 3 | 6.40 | 5.27 | 6.30 | 1885 | 404 | 1.00 | 18.9 | 0.99 | 2/0 | 3682
+network:120 [ebpf+app,full,kv1,c2] | hysteresis | 3 | 6.40 | 5.27 | 6.30 | 1883 | 403 | 1.00 | 18.9 | 0.98 | 2/0 | 3630
+network:120 [ebpf+app,full,kv1,c2] | static | 3 | 6.40 | 5.27 | 8.38 | 1624 | 359 | 1.00 | 13.1 | 1.31 | 0/0 | -
+
+PAIRED COMPARISONS on fault_throughput, SESOI=10% (relative difference, bootstrap 95% CI)
+
+H1  adaptation vs initially-optimized
+  compute:0.5 [ebpf+app,full,kv1,c2] pairs=3 mean=+25.3% CI=[+25.0%, +25.9%] -> benefit
+  loss:0 [ebpf+app,full,kv1,c2] pairs=0 mean=- CI=- -> insufficient-pairs
+  network:120 [ebpf+app,full,kv1,c2] pairs=3 mean=-0.0% CI=[-0.7%, +0.7%] -> inconclusive
+
+H2a hysteresis vs no hysteresis
+  compute:0.5 [ebpf+app,full,kv1,c2] pairs=0 mean=- CI=- -> insufficient-pairs
+  loss:0 [ebpf+app,full,kv1,c2] pairs=0 mean=- CI=- -> insufficient-pairs
+  network:120 [ebpf+app,full,kv1,c2] pairs=0 mean=- CI=- -> insufficient-pairs
+
+H2b gate vs hysteresis
+  compute:0.5 [ebpf+app,full,kv1,c2] pairs=3 mean=-0.3% CI=[-0.8%, +0.0%] -> inconclusive
+  loss:0 [ebpf+app,full,kv1,c2] pairs=2 mean=-12.5% CI=[-25.0%, +0.0%] -> inconclusive
+  network:120 [ebpf+app,full,kv1,c2] pairs=3 mean=-3.3% CI=[-10.0%, +0.0%] -> inconclusive
+
+    gate-force vs gate (rejected-move counterfactual)
+  compute:0.5 [ebpf+app,full,kv1,c2] pairs=3 mean=+0.0% CI=[-0.0%, +0.0%] -> inconclusive
+  network:120 [ebpf+app,full,kv1,c2] pairs=3 mean=+3.7% CI=[-0.7%, +11.1%] -> inconclusive

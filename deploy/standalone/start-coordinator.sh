@@ -22,7 +22,8 @@ source "$(dirname "$0")/common.sh"
 
 WORKERS="${1:-}"
 [[ "$WORKERS" =~ ^[0-9]+$ ]] || die "usage: $0 <expected-worker-count>"
-[[ -x "$BIN/controller" ]] || die "run setup-vm.sh first"
+CONTROLLER_BIN="${CONTROLLER_BIN:-$BIN/controller}"
+[[ -x "$CONTROLLER_BIN" ]] || die "run setup-vm.sh first"
 CONTEXT_LEN="${CONTEXT_LEN:-512}"
 
 # Pipeline config: the measured Azure cost model. headMs is lm_head plus the
@@ -56,7 +57,8 @@ supervise controller env \
   ${GATE_TRANSITION_FIXED_MS:+GATE_TRANSITION_FIXED_MS=$GATE_TRANSITION_FIXED_MS} \
   ${GATE_PREFILL_MS_PER_TOKEN_LAYER:+GATE_PREFILL_MS_PER_TOKEN_LAYER=$GATE_PREFILL_MS_PER_TOKEN_LAYER} \
   ${GATE_MARGIN:+GATE_MARGIN=$GATE_MARGIN} \
-  "$BIN/controller" -mode=standalone -config="$CFG" \
+  "$CONTROLLER_BIN" -mode=standalone -config="$CFG" \
+    -objective="${PLACEMENT_OBJECTIVE:-throughput}" \
   -grpc-addr=":$CONTROLLER_GRPC_PORT" -http-addr=":$CONTROLLER_HTTP_PORT" \
   -policy="${POLICY:-hysteresis}" -link-source="${LINK_SOURCE:-ebpf+app}"
 

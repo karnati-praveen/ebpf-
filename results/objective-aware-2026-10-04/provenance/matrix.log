@@ -1,0 +1,149 @@
+MATRIX 1/20 stable:0 throughput c1 r1
+1 runs, seed 20261005; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_throughput_c1_r1_20261004T110838
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_throughput_c1_r1_20261004T110838
+MATRIX 2/20 network:120 throughput c2 r2
+1 runs, seed 20261006; est. 0.0 h
+    1. network:120 gate r2
+
+=== network-120_gate_ebpf+app_throughput_c2_r2_20261004T111004
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 10/10 requests ok, 3 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_throughput_c2_r2_20261004T111004
+MATRIX 3/20 stable:0 latency c1 r1
+1 runs, seed 20261007; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_latency_c1_r1_20261004T111124
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_latency_c1_r1_20261004T111124
+MATRIX 4/20 network:120 throughput c2 r1
+1 runs, seed 20261008; est. 0.0 h
+    1. network:120 gate r1
+
+=== network-120_gate_ebpf+app_throughput_c2_r1_20261004T111240
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 10/10 requests ok, 3 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_throughput_c2_r1_20261004T111240
+MATRIX 5/20 network:120 latency c2 r1
+1 runs, seed 20261009; est. 0.0 h
+    1. network:120 gate r1
+
+=== network-120_gate_ebpf+app_latency_c2_r1_20261004T111400
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_latency_c2_r1_20261004T111400
+MATRIX 6/20 stable:0 latency c2 r2
+1 runs, seed 20261010; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_latency_c2_r2_20261004T111516
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_latency_c2_r2_20261004T111516
+MATRIX 7/20 network:120 latency c1 r2
+1 runs, seed 20261011; est. 0.0 h
+    1. network:120 gate r2
+
+=== network-120_gate_ebpf+app_latency_c1_r2_20261004T111628
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_latency_c1_r2_20261004T111628
+MATRIX 8/20 network:120 throughput c1 r2
+1 runs, seed 20261012; est. 0.0 h
+    1. network:120 gate r2
+
+=== network-120_gate_ebpf+app_throughput_c1_r2_20261004T111742
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 5/5 requests ok, 6 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_throughput_c1_r2_20261004T111742
+MATRIX 9/20 stable:0 throughput c1 r2
+1 runs, seed 20261013; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_throughput_c1_r2_20261004T111904
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_throughput_c1_r2_20261004T111904
+MATRIX 10/20 stable:0 latency c1 r3
+1 runs, seed 20261014; est. 0.0 h
+    1. stable:0 gate r3
+
+=== stable_gate_ebpf+app_latency_c1_r3_20261004T112019
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_latency_c1_r3_20261004T112019
+MATRIX 11/20 stable:0 throughput c2 r2
+1 runs, seed 20261015; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_throughput_c2_r2_20261004T112135
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 14/14 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_throughput_c2_r2_20261004T112135
+MATRIX 12/20 network:120 throughput c1 r1
+1 runs, seed 20261016; est. 0.0 h
+    1. network:120 gate r1
+
+=== network-120_gate_ebpf+app_throughput_c1_r1_20261004T112249
+    ready: gen=1 layout=vm2:0-19|vm3:19-28
+    done: 5/5 requests ok, 3 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_throughput_c1_r1_20261004T112249
+MATRIX 13/20 stable:0 throughput c2 r3
+1 runs, seed 20261017; est. 0.0 h
+    1. stable:0 gate r3
+
+=== stable_gate_ebpf+app_throughput_c2_r3_20261004T112404
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 14/14 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_throughput_c2_r3_20261004T112404
+MATRIX 14/20 stable:0 latency c2 r1
+1 runs, seed 20261018; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_latency_c2_r1_20261004T112519
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_latency_c2_r1_20261004T112519
+MATRIX 15/20 network:120 latency c2 r2
+1 runs, seed 20261019; est. 0.0 h
+    1. network:120 gate r2
+
+=== network-120_gate_ebpf+app_latency_c2_r2_20261004T112635
+    ready: gen=2 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 2 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_latency_c2_r2_20261004T112635
+MATRIX 16/20 stable:0 throughput c1 r3
+1 runs, seed 20261020; est. 0.0 h
+    1. stable:0 gate r3
+
+=== stable_gate_ebpf+app_throughput_c1_r3_20261004T112750
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_throughput_c1_r3_20261004T112750
+MATRIX 17/20 network:120 latency c1 r1
+1 runs, seed 20261021; est. 0.0 h
+    1. network:120 gate r1
+
+=== network-120_gate_ebpf+app_latency_c1_r1_20261004T112909
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/network-120_gate_ebpf+app_latency_c1_r1_20261004T112909
+MATRIX 18/20 stable:0 throughput c2 r1
+1 runs, seed 20261022; est. 0.0 h
+    1. stable:0 gate r1
+
+=== stable_gate_ebpf+app_throughput_c2_r1_20261004T113024
+    ready: gen=1 layout=vm2:0-18|vm3:18-28
+    done: 14/14 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_throughput_c2_r1_20261004T113024
+MATRIX 19/20 stable:0 latency c1 r2
+1 runs, seed 20261023; est. 0.0 h
+    1. stable:0 gate r2
+
+=== stable_gate_ebpf+app_latency_c1_r2_20261004T113138
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_latency_c1_r2_20261004T113138
+MATRIX 20/20 stable:0 latency c2 r3
+1 runs, seed 20261024; est. 0.0 h
+    1. stable:0 gate r3
+
+=== stable_gate_ebpf+app_latency_c2_r3_20261004T113254
+    ready: gen=1 layout=vm2:0-28|vm3:28-28
+    done: 8/8 requests ok, 1 decisions -> /home/azureuser/keinfer-objective/results/runs/stable_gate_ebpf+app_latency_c2_r3_20261004T113254
+Restoring original coordinator and clearing vm3 network fault
+FAULT_EVENT 1791113646.808124253 cleared
+[keinfer] started controller (logs: /home/azureuser/keinfer/logs/controller.log)
+[keinfer] started router (logs: /home/azureuser/keinfer/logs/router.log)
+[keinfer] coordinator: policy=hysteresis link-source=ebpf+app cost-model=full static=1 profile-once=0 ctx=128 workers=1
+[keinfer]   controller state: curl -s localhost:8081/state
+[keinfer]   generate:         curl -s -X POST localhost:8080/generate -d '{"prompt_len":64,"max_new_tokens":16}'
+Original coordinator restored
+MATRIX COMPLETE

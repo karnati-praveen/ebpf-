@@ -1,0 +1,7 @@
+2026-10-04 05:26:35,557 worker INFO worker ? listening on :58541
+2026-10-04 05:33:21,831 worker INFO assigned layers [18, 28) of 28 backend=sim gen=5
+2026-10-04 05:34:58,682 worker INFO assigned layers [0, 28) of 28 backend=sim gen=6
+2026-10-04 05:36:41,846 worker INFO assigned layers [0, 28) of 28 backend=sim gen=7
+2026-10-04 05:38:25,139 worker INFO assigned layers [18, 28) of 28 backend=sim gen=8
+2026-10-04 05:49:59,158 worker INFO assigned layers [18, 28) of 28 backend=sim gen=15
+2026-10-04 05:51:38,239 worker INFO assigned layers [0, 28) of 28 backend=sim gen=16

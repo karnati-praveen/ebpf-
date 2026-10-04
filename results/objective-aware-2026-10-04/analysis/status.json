@@ -1,0 +1,9 @@
+{
+  "completed_runs": 32,
+  "excluded": 0,
+  "expected_objective_runs": 20,
+  "expected_demand_runs": 12,
+  "total_requests": 240,
+  "failed_requests": 0,
+  "scope": "Exploratory run-level descriptive analysis; no significance or novelty claim"
+}

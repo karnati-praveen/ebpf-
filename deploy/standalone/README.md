@@ -208,3 +208,34 @@ laptops; the same scripts run there unchanged.
   `/sys/kernel/btf/vmlinux`.
 - **Network fault has no effect.** `fault.sh status` — zero packets on class 1:3
   means Accelerated Networking is bypassing the qdisc.
+# Objective-aware placement (opt-in)
+
+The default remains `PLACEMENT_OBJECTIVE=throughput`. Set
+`PLACEMENT_OBJECTIVE=latency` to minimize the sum of stage, endpoint and hop
+costs; zero-layer assignments let it select a whole model on one worker.
+The transition gate uses the selected objective's cost rather than always
+pricing saturated throughput.
+
+For live workload selection with the updated router:
+
+```bash
+PLACEMENT_OBJECTIVE=auto POLICY=gate REMAINING_WORK_AWARE=1 \
+  WORKLOAD_URL=http://127.0.0.1:8080/workload \
+  ./deploy/standalone/start-coordinator.sh 2
+```
+
+`auto` selects latency for one admitted request and throughput for multiple
+requests. The remaining-work option caps the planning horizon by the live
+unproduced output-token budget times current objective cost. Idle or unavailable
+workload data holds voluntary moves; worker-loss recovery still bypasses the
+gate. Disable `REMAINING_WORK_AWARE` for an auto-objective/fixed-horizon comparator.
+These modes require a nonstatic controller; the remaining-work gate requires
+`gate` or `gate-force`. `/state` exposes the objective, workload snapshot and
+gate diagnostics. A failed or completed request removes its budget, and cache
+replay does not reset generated-token progress.
+
+This horizon is a service-capacity approximation, not a completion-time promise:
+future arrivals, prefill, queued work, runtime batching and uncertainty are not
+fully modeled. The Hugging Face worker still transiently loads the whole model,
+so these modes do not establish pooled-memory capacity. See
+[the experiment results](../../results/objective-aware-2026-10-04/README.md).

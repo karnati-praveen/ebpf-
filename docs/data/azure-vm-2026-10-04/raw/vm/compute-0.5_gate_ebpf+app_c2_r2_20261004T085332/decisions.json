@@ -1,0 +1,149 @@
+[
+ {
+  "time": "2026-10-04T08:53:35.597247349Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 227.21166892808682,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:53:37.597125526Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 120.99631711572009,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:54:39.597587236Z",
+  "policy": "gate",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 208.84824481327803,
+  "optimal_bottleneck_ms": 150.71592429745746,
+  "improvement_frac": 0.2783471825094537,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 143.64497066672345,
+  "tokens_adapt": 178.78500447516788,
+  "break_even_s": 10.972817373124538,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    24
+   ],
+   [
+    24,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:56:39.598070983Z",
+  "policy": "gate",
+  "reason": "gate-rejects",
+  "current_bottleneck_ms": 148.5715631772355,
+  "optimal_bottleneck_ms": 123.82078582870066,
+  "improvement_frac": 0.16659161968302702,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 201.92289398080905,
+  "tokens_adapt": 217.61893223063515,
+  "break_even_s": 18.33377216579868,
+  "gate_accepts": false,
+  "executed": false,
+  "from_splits": [
+   [
+    0,
+    24
+   ],
+   [
+    24,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    20
+   ],
+   [
+    20,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:56:41.597637986Z",
+  "policy": "gate",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 147.28096394545116,
+  "optimal_bottleneck_ms": 116.61124603026339,
+  "improvement_frac": 0.2082395246037838,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 203.69231159507606,
+  "tokens_adapt": 231.07331511582456,
+  "break_even_s": 14.667017732638943,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    24
+   ],
+   [
+    24,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ }
+]

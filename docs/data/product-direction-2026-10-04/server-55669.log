@@ -1,0 +1,19 @@
+2026-10-04 05:26:34,573 worker INFO worker ? listening on :55669
+2026-10-04 05:26:41,343 worker INFO assigned layers [0, 28) of 28 backend=sim gen=1
+2026-10-04 05:28:22,644 worker INFO assigned layers [0, 28) of 28 backend=sim gen=2
+2026-10-04 05:30:04,107 worker INFO assigned layers [0, 14) of 28 backend=sim gen=3
+2026-10-04 05:31:42,385 worker INFO assigned layers [0, 28) of 28 backend=sim gen=4
+2026-10-04 05:33:21,682 worker INFO assigned layers [0, 9) of 28 backend=sim gen=5
+2026-10-04 05:34:58,679 worker INFO assigned layers [0, 28) of 28 backend=sim gen=6
+2026-10-04 05:36:41,844 worker INFO assigned layers [0, 28) of 28 backend=sim gen=7
+2026-10-04 05:38:25,137 worker INFO assigned layers [0, 9) of 28 backend=sim gen=8
+2026-10-04 05:40:02,240 worker INFO assigned layers [0, 28) of 28 backend=sim gen=9
+2026-10-04 05:41:41,535 worker INFO assigned layers [0, 14) of 28 backend=sim gen=10
+2026-10-04 05:43:19,441 worker INFO assigned layers [0, 28) of 28 backend=sim gen=11
+2026-10-04 05:45:00,680 worker INFO assigned layers [0, 28) of 28 backend=sim gen=12
+2026-10-04 05:46:41,920 worker INFO assigned layers [0, 14) of 28 backend=sim gen=13
+2026-10-04 05:48:19,872 worker INFO assigned layers [0, 28) of 28 backend=sim gen=14
+2026-10-04 05:49:59,156 worker INFO assigned layers [0, 9) of 28 backend=sim gen=15
+2026-10-04 05:51:38,237 worker INFO assigned layers [0, 28) of 28 backend=sim gen=16
+2026-10-04 05:53:21,506 worker INFO assigned layers [0, 28) of 28 backend=sim gen=17
+2026-10-04 05:55:02,753 worker INFO assigned layers [0, 28) of 28 backend=sim gen=18

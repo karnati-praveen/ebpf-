@@ -1,0 +1,72 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "device": "cpu",
+  "device_name": "CPU",
+  "dtype": "torch.float32",
+  "torch_version": "2.14.0+cpu",
+  "transformers_version": "5.17.0",
+  "total_layers": 28,
+  "samples_per_context": 5,
+  "warmup_per_context": 2,
+  "per_layer_by_ctx": [
+    {
+      "context_len": 128,
+      "ms": 6.566603714285841
+    },
+    {
+      "context_len": 512,
+      "ms": 7.662245857142734
+    },
+    {
+      "context_len": 1024,
+      "ms": 9.070771428571536
+    },
+    {
+      "context_len": 2048,
+      "ms": 12.68085771428673
+    }
+  ],
+  "embed_ms": 0.07095099999077092,
+  "head_ms": 50.486457499999915,
+  "prefill_ms_per_token_layer": 0.3666895098179408,
+  "reload_half_model_ms": 1740.0135030000001,
+  "reload_samples_ms": [
+    1891.605840000011,
+    1740.0135030000001,
+    1602.1199669999646
+  ],
+  "measurements": [
+    {
+      "context_len": 128,
+      "decode_ms_per_layer": 6.566603714285841,
+      "decode_head_ms": 50.622301999993624,
+      "decode_embed_ms": 0.06760099999780778,
+      "prefill_ms_per_token_layer": 0.38998689174107076,
+      "prefill_layer_ms": 1397.7130199999976
+    },
+    {
+      "context_len": 512,
+      "decode_ms_per_layer": 7.662245857142734,
+      "decode_head_ms": 50.486102000007804,
+      "decode_embed_ms": 0.06550100000879411,
+      "prefill_ms_per_token_layer": 0.3475554919782363,
+      "prefill_layer_ms": 4982.555532999996
+    },
+    {
+      "context_len": 1024,
+      "decode_ms_per_layer": 9.070771428571536,
+      "decode_head_ms": 50.486812999992026,
+      "decode_embed_ms": 0.07430099998373407,
+      "prefill_ms_per_token_layer": 0.3473521633300778,
+      "prefill_layer_ms": 9959.28122699999
+    },
+    {
+      "context_len": 2048,
+      "decode_ms_per_layer": 12.68085771428673,
+      "decode_head_ms": 50.45651000000362,
+      "decode_embed_ms": 0.07650100002365434,
+      "prefill_ms_per_token_layer": 0.3858235276576452,
+      "prefill_layer_ms": 22124.664370000006
+    }
+  ]
+}

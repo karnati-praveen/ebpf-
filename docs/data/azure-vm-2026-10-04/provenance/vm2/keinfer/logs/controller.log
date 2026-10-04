@@ -1,0 +1,432 @@
+2026/10/04 06:22:22 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:22:24 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:22:45 applied gen=1 bottleneck=265.1ms: vm2[0,28)
+2026/10/04 06:22:45 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:22:52 applied gen=2 bottleneck=134.8ms: vm2[0,17) -> vm3[17,28)
+2026/10/04 06:23:16 decision policy=hysteresis reason=hysteresis-passed improvement=27.5% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:23:19 applied gen=3 bottleneck=191.5ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 06:23:27 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:23:29 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:23:30 applied gen=1 bottleneck=219.1ms: vm2[0,28)
+2026/10/04 06:23:31 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:23:33 applied gen=2 bottleneck=131.4ms: vm2[0,20) -> vm3[20,28)
+2026/10/04 06:24:30 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:24:32 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:24:35 applied gen=1 bottleneck=126.2ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 06:25:40 decision policy=hysteresis reason=hysteresis-passed improvement=23.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:25:43 applied gen=2 bottleneck=174.9ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 06:27:40 decision policy=hysteresis reason=hysteresis-passed improvement=18.5% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:27:44 applied gen=3 bottleneck=137.9ms: vm2[0,22) -> vm3[22,28)
+2026/10/04 06:29:09 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:29:11 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:29:39 applied gen=1 bottleneck=126.5ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 06:30:45 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:30:48 applied gen=2 bottleneck=261.5ms: vm2[0,28)
+2026/10/04 06:31:29 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:31:31 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:31:42 applied gen=1 bottleneck=142.5ms: vm2[0,14) -> vm3[14,28)
+2026/10/04 06:32:03 decision policy=gate reason=gate-rejects improvement=16.8% transition=3054ms break-even=18.2s executed=false
+2026/10/04 06:32:05 decision policy=gate reason=gate-rejects improvement=15.4% transition=3054ms break-even=19.8s executed=false
+2026/10/04 06:32:09 decision policy=gate reason=gate-rejects improvement=17.0% transition=3054ms break-even=17.9s executed=false
+2026/10/04 06:32:11 decision policy=gate reason=gate-rejects improvement=16.1% transition=3054ms break-even=19.0s executed=false
+2026/10/04 06:32:15 decision policy=gate reason=gate-rejects improvement=15.6% transition=3054ms break-even=19.6s executed=false
+2026/10/04 06:32:17 decision policy=gate reason=gate-rejects improvement=15.9% transition=3054ms break-even=19.2s executed=false
+2026/10/04 06:32:19 decision policy=gate reason=gate-rejects improvement=16.0% transition=3054ms break-even=19.1s executed=false
+2026/10/04 06:32:37 decision policy=gate reason=gate-rejects improvement=17.0% transition=3054ms break-even=17.9s executed=false
+2026/10/04 06:32:43 decision policy=gate reason=gate-rejects improvement=15.8% transition=3054ms break-even=19.3s executed=false
+2026/10/04 06:32:47 decision policy=gate reason=gate-rejects improvement=15.5% transition=3054ms break-even=19.6s executed=false
+2026/10/04 06:32:49 decision policy=gate reason=gate-rejects improvement=16.5% transition=3054ms break-even=18.5s executed=false
+2026/10/04 06:32:51 decision policy=gate reason=gate-rejects improvement=16.3% transition=3054ms break-even=18.8s executed=false
+2026/10/04 06:33:07 decision policy=gate reason=gate-rejects improvement=18.3% transition=3054ms break-even=16.7s executed=false
+2026/10/04 06:33:09 decision policy=gate reason=gate-rejects improvement=20.0% transition=3054ms break-even=15.2s executed=false
+2026/10/04 06:33:11 decision policy=gate reason=gate-accepts improvement=21.0% transition=3054ms break-even=14.5s executed=true
+2026/10/04 06:33:14 applied gen=2 bottleneck=118.5ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 06:35:55 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:35:57 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:36:02 applied gen=1 bottleneck=231.5ms: vm2[0,28)
+2026/10/04 06:36:02 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:36:28 applied gen=2 bottleneck=122.2ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 06:37:27 decision policy=hysteresis reason=hysteresis-passed improvement=22.4% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:37:42 applied gen=3 bottleneck=158.6ms: vm2[0,25) -> vm3[25,28)
+2026/10/04 06:39:29 decision policy=hysteresis reason=hysteresis-passed improvement=22.7% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:39:32 applied gen=4 bottleneck=123.3ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 06:40:43 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:40:45 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:40:51 applied gen=1 bottleneck=120.3ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 06:41:51 reconcile: reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 06:41:53 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:41:58 applied gen=2 bottleneck=224.0ms: vm2[0,28)
+2026/10/04 06:43:51 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:44:23 applied gen=3 bottleneck=117.4ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 06:44:59 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 06:45:01 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:45:30 applied gen=1 bottleneck=121.6ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 06:46:29 reconcile: reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 06:46:31 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:46:46 applied gen=2 bottleneck=229.4ms: vm2[0,28)
+2026/10/04 06:48:31 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 06:50:05 reconcile: apply: assign vm2: rpc error: code = DeadlineExceeded desc = Deadline Exceeded
+2026/10/04 08:18:10 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:18:41 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:22:49 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:22:51 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:22:51 applied gen=1 bottleneck=121.5ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:26:58 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:27:02 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:28:27 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:28:29 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:32:27 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:32:29 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:32:32 applied gen=1 bottleneck=121.5ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 08:33:31 decision policy=gate reason=gate-accepts improvement=23.6% transition=3054ms break-even=13.0s executed=true
+2026/10/04 08:33:37 applied gen=2 bottleneck=150.1ms: vm2[0,23) -> vm3[23,28)
+2026/10/04 08:35:33 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 08:35:35 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 08:35:37 decision policy=gate reason=gate-rejects improvement=18.6% transition=3054ms break-even=16.4s executed=false
+2026/10/04 08:35:39 decision policy=gate reason=gate-rejects improvement=19.3% transition=3054ms break-even=15.8s executed=false
+2026/10/04 08:35:41 decision policy=gate reason=gate-rejects improvement=18.1% transition=3054ms break-even=16.9s executed=false
+2026/10/04 08:35:43 decision policy=gate reason=gate-rejects improvement=17.5% transition=3054ms break-even=17.4s executed=false
+2026/10/04 08:35:45 decision policy=gate reason=gate-rejects improvement=18.5% transition=3054ms break-even=16.5s executed=false
+2026/10/04 08:35:47 decision policy=gate reason=gate-accepts improvement=20.6% transition=3054ms break-even=14.8s executed=true
+2026/10/04 08:35:51 applied gen=3 bottleneck=119.2ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:36:42 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:36:44 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:40:56 controller: mode=standalone policy=gate-force link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:40:58 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:41:01 applied gen=1 bottleneck=121.9ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 08:42:00 decision policy=gate-force reason=gate-accepts improvement=23.9% transition=3054ms break-even=12.8s executed=true
+2026/10/04 08:42:04 applied gen=2 bottleneck=171.8ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 08:44:02 decision policy=gate-force reason=gate-accepts improvement=25.9% transition=3054ms break-even=11.8s executed=true
+2026/10/04 08:44:06 applied gen=3 bottleneck=124.2ms: vm2[0,20) -> vm3[20,28)
+2026/10/04 08:45:10 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:45:12 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:45:15 applied gen=1 bottleneck=120.2ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 08:46:14 decision policy=gate reason=gate-accepts improvement=23.8% transition=3054ms break-even=12.8s executed=true
+2026/10/04 08:46:17 applied gen=2 bottleneck=168.9ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 08:47:52 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:47:54 applied gen=3 bottleneck=223.0ms: vm2[0,28)
+2026/10/04 08:47:54 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:47:56 applied gen=4 bottleneck=178.6ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 08:48:26 decision policy=gate reason=gate-accepts improvement=29.6% transition=3054ms break-even=10.3s executed=true
+2026/10/04 08:48:29 applied gen=5 bottleneck=117.4ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 08:49:29 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:49:34 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:53:33 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:53:35 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:53:37 applied gen=1 bottleneck=227.2ms: vm2[0,28)
+2026/10/04 08:53:37 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:53:41 applied gen=2 bottleneck=121.0ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 08:54:39 decision policy=gate reason=gate-accepts improvement=27.8% transition=3054ms break-even=11.0s executed=true
+2026/10/04 08:54:45 applied gen=3 bottleneck=150.7ms: vm2[0,24) -> vm3[24,28)
+2026/10/04 08:56:39 decision policy=gate reason=gate-rejects improvement=16.7% transition=3054ms break-even=18.3s executed=false
+2026/10/04 08:56:41 decision policy=gate reason=gate-accepts improvement=20.8% transition=3054ms break-even=14.7s executed=true
+2026/10/04 08:56:45 applied gen=4 bottleneck=116.6ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 08:57:42 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 08:57:44 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 08:57:47 applied gen=1 bottleneck=117.5ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 08:58:46 decision policy=gate reason=gate-accepts improvement=27.9% transition=3054ms break-even=10.9s executed=true
+2026/10/04 08:58:52 applied gen=2 bottleneck=147.6ms: vm2[0,23) -> vm3[23,28)
+2026/10/04 09:00:48 decision policy=gate reason=gate-rejects improvement=17.6% transition=3054ms break-even=17.4s executed=false
+2026/10/04 09:00:50 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:00:52 decision policy=gate reason=gate-rejects improvement=18.4% transition=3054ms break-even=16.6s executed=false
+2026/10/04 09:00:54 decision policy=gate reason=gate-rejects improvement=17.9% transition=3054ms break-even=17.1s executed=false
+2026/10/04 09:00:56 decision policy=gate reason=gate-rejects improvement=18.5% transition=3054ms break-even=16.5s executed=false
+2026/10/04 09:00:58 decision policy=gate reason=gate-rejects improvement=18.7% transition=3054ms break-even=16.3s executed=false
+2026/10/04 09:01:00 decision policy=gate reason=gate-rejects improvement=18.4% transition=3054ms break-even=16.6s executed=false
+2026/10/04 09:01:02 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:01:04 decision policy=gate reason=gate-rejects improvement=19.2% transition=3054ms break-even=15.9s executed=false
+2026/10/04 09:01:06 decision policy=gate reason=gate-rejects improvement=19.8% transition=3054ms break-even=15.5s executed=false
+2026/10/04 09:01:08 decision policy=gate reason=gate-rejects improvement=17.7% transition=3054ms break-even=17.2s executed=false
+2026/10/04 09:01:10 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:01:12 decision policy=gate reason=gate-rejects improvement=18.3% transition=3054ms break-even=16.7s executed=false
+2026/10/04 09:01:14 decision policy=gate reason=gate-rejects improvement=18.5% transition=3054ms break-even=16.5s executed=false
+2026/10/04 09:01:16 decision policy=gate reason=gate-rejects improvement=18.2% transition=3054ms break-even=16.7s executed=false
+2026/10/04 09:01:18 decision policy=gate reason=gate-rejects improvement=19.5% transition=3054ms break-even=15.7s executed=false
+2026/10/04 09:01:20 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:01:22 decision policy=gate reason=gate-rejects improvement=18.2% transition=3054ms break-even=16.8s executed=false
+2026/10/04 09:01:24 decision policy=gate reason=gate-rejects improvement=18.8% transition=3054ms break-even=16.2s executed=false
+2026/10/04 09:01:26 decision policy=gate reason=gate-rejects improvement=18.6% transition=3054ms break-even=16.4s executed=false
+2026/10/04 09:01:28 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:01:30 decision policy=gate reason=gate-rejects improvement=18.4% transition=3054ms break-even=16.6s executed=false
+2026/10/04 09:01:32 decision policy=gate reason=gate-rejects improvement=19.5% transition=3054ms break-even=15.7s executed=false
+2026/10/04 09:01:34 decision policy=gate reason=gate-rejects improvement=19.2% transition=3054ms break-even=15.9s executed=false
+2026/10/04 09:01:36 decision policy=gate reason=gate-rejects improvement=19.6% transition=3054ms break-even=15.6s executed=false
+2026/10/04 09:01:38 decision policy=gate reason=gate-rejects improvement=17.8% transition=3054ms break-even=17.2s executed=false
+2026/10/04 09:01:40 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:01:42 decision policy=gate reason=gate-rejects improvement=19.0% transition=3054ms break-even=16.1s executed=false
+2026/10/04 09:01:44 decision policy=gate reason=gate-rejects improvement=17.6% transition=3054ms break-even=17.4s executed=false
+2026/10/04 09:01:46 decision policy=gate reason=gate-rejects improvement=18.5% transition=3054ms break-even=16.5s executed=false
+2026/10/04 09:01:48 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:01:50 decision policy=gate reason=gate-rejects improvement=17.6% transition=3054ms break-even=17.3s executed=false
+2026/10/04 09:01:52 decision policy=gate reason=gate-rejects improvement=19.6% transition=3054ms break-even=15.6s executed=false
+2026/10/04 09:01:54 decision policy=gate reason=gate-rejects improvement=17.4% transition=3054ms break-even=17.6s executed=false
+2026/10/04 09:01:56 decision policy=gate reason=gate-rejects improvement=18.8% transition=3054ms break-even=16.2s executed=false
+2026/10/04 09:01:58 decision policy=gate reason=gate-rejects improvement=19.1% transition=3054ms break-even=16.0s executed=false
+2026/10/04 09:01:59 controller: mode=standalone policy=gate-force link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:02:01 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:02:05 applied gen=1 bottleneck=118.9ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:03:03 decision policy=gate-force reason=gate-accepts improvement=23.9% transition=3054ms break-even=12.8s executed=true
+2026/10/04 09:03:09 applied gen=2 bottleneck=143.2ms: vm2[0,23) -> vm3[23,28)
+2026/10/04 09:05:05 decision policy=gate-force reason=gate-rejects-forced improvement=17.4% transition=3054ms break-even=17.6s executed=true
+2026/10/04 09:05:09 applied gen=3 bottleneck=119.0ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:06:11 controller: mode=standalone policy=gate-force link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:06:13 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:06:17 applied gen=1 bottleneck=116.9ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:07:15 decision policy=gate-force reason=gate-accepts improvement=25.3% transition=3054ms break-even=12.1s executed=true
+2026/10/04 09:07:19 applied gen=2 bottleneck=177.8ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 09:09:17 decision policy=gate-force reason=gate-accepts improvement=27.8% transition=3054ms break-even=11.0s executed=true
+2026/10/04 09:09:21 applied gen=3 bottleneck=120.3ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:10:22 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:10:24 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:10:28 applied gen=1 bottleneck=119.0ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:11:26 decision policy=hysteresis reason=hysteresis-passed improvement=23.8% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:11:30 applied gen=2 bottleneck=162.9ms: vm2[0,26) -> vm3[26,28)
+2026/10/04 09:13:28 decision policy=hysteresis reason=hysteresis-passed improvement=25.8% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:13:32 applied gen=3 bottleneck=118.7ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:14:33 controller: mode=standalone policy=gate-force link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:14:35 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:14:38 applied gen=1 bottleneck=118.5ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:15:37 decision policy=gate-force reason=gate-accepts improvement=23.3% transition=3054ms break-even=13.1s executed=true
+2026/10/04 09:15:43 applied gen=2 bottleneck=144.7ms: vm2[0,23) -> vm3[23,28)
+2026/10/04 09:17:39 decision policy=gate-force reason=gate-rejects-forced improvement=17.4% transition=3054ms break-even=17.6s executed=true
+2026/10/04 09:17:42 applied gen=3 bottleneck=117.4ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:17:53 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:17:55 applied gen=4 bottleneck=223.5ms: vm2[0,28)
+2026/10/04 09:17:55 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:17:58 applied gen=5 bottleneck=117.9ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:18:53 controller: mode=standalone policy=gate-force link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:18:55 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:18:58 applied gen=1 bottleneck=117.8ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:19:57 decision policy=gate-force reason=gate-rejects-forced improvement=18.5% transition=3054ms break-even=16.5s executed=true
+2026/10/04 09:20:03 applied gen=2 bottleneck=144.5ms: vm2[0,23) -> vm3[23,28)
+2026/10/04 09:21:57 decision policy=gate-force reason=gate-rejects-forced improvement=15.9% transition=3054ms break-even=19.3s executed=true
+2026/10/04 09:22:00 applied gen=3 bottleneck=122.2ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:23:05 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:23:07 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:23:10 applied gen=1 bottleneck=118.0ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:24:09 decision policy=hysteresis reason=hysteresis-passed improvement=27.2% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:24:15 applied gen=2 bottleneck=144.4ms: vm2[0,23) -> vm3[23,28)
+2026/10/04 09:26:11 decision policy=hysteresis reason=hysteresis-passed improvement=17.4% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:26:15 applied gen=3 bottleneck=119.9ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:27:16 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:27:24 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:31:34 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:31:36 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:31:40 applied gen=1 bottleneck=119.1ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:32:38 decision policy=hysteresis reason=hysteresis-passed improvement=23.3% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:32:44 applied gen=2 bottleneck=147.9ms: vm2[0,23) -> vm3[23,28)
+2026/10/04 09:34:40 decision policy=hysteresis reason=hysteresis-passed improvement=17.6% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:34:44 applied gen=3 bottleneck=117.3ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:35:45 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:35:47 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:35:50 applied gen=1 bottleneck=117.2ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:36:49 decision policy=hysteresis reason=hysteresis-passed improvement=22.7% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:36:52 applied gen=2 bottleneck=163.5ms: vm2[0,26) -> vm3[26,28)
+2026/10/04 09:38:51 decision policy=hysteresis reason=hysteresis-passed improvement=23.6% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:38:54 applied gen=3 bottleneck=122.6ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:39:56 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:39:58 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:40:01 applied gen=1 bottleneck=117.5ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:41:00 decision policy=gate reason=gate-accepts improvement=25.5% transition=3054ms break-even=12.0s executed=true
+2026/10/04 09:41:03 applied gen=2 bottleneck=178.4ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 09:43:02 decision policy=gate reason=gate-accepts improvement=29.6% transition=3054ms break-even=10.3s executed=true
+2026/10/04 09:43:06 applied gen=3 bottleneck=119.1ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:44:10 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:44:12 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:44:12 applied gen=1 bottleneck=118.0ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:45:12 decision policy=hysteresis reason=hysteresis-passed improvement=28.3% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:45:18 applied gen=2 bottleneck=150.5ms: vm2[0,24) -> vm3[24,28)
+2026/10/04 09:47:12 decision policy=hysteresis reason=hysteresis-passed improvement=20.8% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:47:16 applied gen=3 bottleneck=119.7ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 09:47:54 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:47:56 applied gen=4 bottleneck=222.2ms: vm2[0,28)
+2026/10/04 09:47:56 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:47:59 applied gen=5 bottleneck=117.8ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:48:21 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:48:23 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:48:23 applied gen=1 bottleneck=118.5ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:49:21 decision policy=gate reason=gate-accepts improvement=24.1% transition=3054ms break-even=12.7s executed=true
+2026/10/04 09:49:25 applied gen=2 bottleneck=171.7ms: vm2[0,27) -> vm3[27,28)
+2026/10/04 09:51:23 decision policy=gate reason=gate-accepts improvement=24.8% transition=3054ms break-even=12.3s executed=true
+2026/10/04 09:51:27 applied gen=3 bottleneck=127.2ms: vm2[0,20) -> vm3[20,28)
+2026/10/04 09:52:33 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:52:39 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:56:38 controller: mode=standalone policy=gate-force link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 09:56:40 decision policy=gate-force reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 09:56:40 applied gen=1 bottleneck=119.5ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 09:57:36 decision policy=gate-force reason=gate-accepts improvement=20.8% transition=3054ms break-even=14.7s executed=true
+2026/10/04 09:57:39 applied gen=2 bottleneck=153.4ms: vm2[0,24) -> vm3[24,28)
+2026/10/04 09:59:38 decision policy=gate-force reason=gate-accepts improvement=20.8% transition=3054ms break-even=14.7s executed=true
+2026/10/04 09:59:41 applied gen=3 bottleneck=119.5ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 10:00:45 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:00:53 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:05:03 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:05:05 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:05:05 applied gen=1 bottleneck=117.7ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:06:05 decision policy=hysteresis reason=hysteresis-passed improvement=23.4% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:06:09 applied gen=2 bottleneck=169.2ms: vm2[0,26) -> vm3[26,28)
+2026/10/04 10:08:05 decision policy=hysteresis reason=hysteresis-passed improvement=19.2% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:08:09 applied gen=3 bottleneck=133.0ms: vm2[0,21) -> vm3[21,28)
+2026/10/04 10:09:18 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:09:20 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:09:24 applied gen=1 bottleneck=117.9ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:10:22 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:10:25 applied gen=2 bottleneck=228.7ms: vm2[0,28)
+2026/10/04 10:12:22 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:12:31 applied gen=3 bottleneck=117.0ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:13:34 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:13:36 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:14:37 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:39 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:41 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:43 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:45 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:47 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:49 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:51 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:53 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:55 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:56 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:14:58 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:00 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:03 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:05 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:06 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:09 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:10 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:12 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:15 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:16 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:18 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:21 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:23 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:24 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:27 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:29 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:30 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:33 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:34 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:37 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:38 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:41 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:42 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:44 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:47 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:48 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:51 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:53 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:54 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:56 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:15:59 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:01 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:02 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:04 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:07 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:08 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:10 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:12 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:15 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:16 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:18 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:21 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:22 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:24 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:27 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:29 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:30 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:32 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:16:35 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:17:49 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:17:51 applied static split gen=1: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:18:51 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:18:53 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:18:55 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:18:57 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:18:59 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:01 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:03 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:05 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:07 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:09 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:11 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:13 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:15 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:17 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:19 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:21 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:23 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:25 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:27 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:29 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:31 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:33 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:35 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:37 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:39 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:41 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:43 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:45 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:47 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:49 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:51 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:53 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:55 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:57 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:19:59 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:01 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:03 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:05 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:07 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:09 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:11 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:13 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:15 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:17 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:19 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:21 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:23 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:25 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:27 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:29 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:31 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:33 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:35 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:37 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:39 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:41 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:43 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:45 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:47 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:20:49 static reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:22:03 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:22:05 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:22:08 applied gen=1 bottleneck=122.2ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 10:23:08 reconcile: reassert: assign vm3: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 10.10.1.5:50051: connect: connection refused"
+2026/10/04 10:23:09 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:23:11 applied gen=2 bottleneck=229.8ms: vm2[0,28)
+2026/10/04 10:25:07 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:25:15 applied gen=3 bottleneck=120.6ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:26:22 controller: mode=standalone policy=gate link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:26:24 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:26:27 applied gen=1 bottleneck=121.8ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 10:27:26 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:27:29 applied gen=2 bottleneck=220.1ms: vm2[0,28)
+2026/10/04 10:29:26 decision policy=gate reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:29:34 applied gen=3 bottleneck=117.1ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:30:39 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=false profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:30:41 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:30:43 applied gen=1 bottleneck=223.7ms: vm2[0,28)
+2026/10/04 10:30:43 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:30:47 applied gen=2 bottleneck=119.6ms: vm2[0,19) -> vm3[19,28)
+2026/10/04 10:31:45 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:31:48 applied gen=3 bottleneck=223.2ms: vm2[0,28)
+2026/10/04 10:33:45 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:33:54 applied gen=4 bottleneck=117.1ms: vm2[0,18) -> vm3[18,28)
+2026/10/04 10:35:03 decision policy=hysteresis reason=recovery-or-initial improvement=0.0% transition=0ms break-even=0.0s executed=true
+2026/10/04 10:35:05 applied gen=5 bottleneck=230.4ms: vm2[0,28)
+2026/10/04 10:35:09 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:35:11 applied static split gen=1: vm2[0,28)
+2026/10/04 10:39:31 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:39:33 applied static split gen=1: vm2[0,28)
+2026/10/04 10:43:50 controller: mode=standalone policy=hysteresis link-source=ebpf+app ns=kubeedgeinfer static=true profile-once=false improvement=0.15 cooldown=30s grpc=:50053 http=:8081
+2026/10/04 10:43:52 applied static split gen=1: vm2[0,28)

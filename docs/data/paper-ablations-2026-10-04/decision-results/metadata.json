@@ -1,0 +1,30 @@
+{
+  "classification": "deterministic production-code decisions; no observed inference or transition outcomes",
+  "provenance_captured_after_run_utc": "2026-10-04 06:35 UTC",
+  "git_head": "c00de4de9d5327165f6d32965329c21e4b3dd7ef",
+  "go_version": "go version go1.27.0 linux/amd64",
+  "sha256": {
+    "internal/partition/partition.go": "549ac822e20ed89037d382cf68e50190ba84eea92e5ea99a05e5ff4e453542e9",
+    "docs/data/paper-ablations-2026-10-04/decision_sweep.go": "359764dd1237389a8de5f89827a657a8bee8fa970386f53fe3b674e7f1320eb8",
+    "docs/data/azure-d4-2026-09/per-layer-cost.csv": "0bd29744ed7e21418d56d40adab8be63e87e15193909e9bdf498b81cbdd1edae"
+  },
+  "reference_parameters": {
+    "layers": 28,
+    "workers": 2,
+    "context_layer_cost_ms": {
+      "128": 5.55,
+      "512": 6.25,
+      "1024": 7.18,
+      "2048": 9.49
+    },
+    "embed_ms": 0.09,
+    "head_ms": 43.8,
+    "transition_fixed_ms": 2000,
+    "replay_ms_per_token_layer": 0.21,
+    "improvement_frac": 0.15,
+    "cooldown_s": 0
+  },
+  "assumptions": "Approximate historical measured components, hypothetical speed/hop snapshots, stationary saturated rates and zero work during modeled downtime; no memory feasibility constraints",
+  "cost_rows": 240,
+  "policy_rows": 18000
+}

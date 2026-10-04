@@ -1,0 +1,16 @@
+{
+  "out": "/workspaces/ebpf-/docs/data/product-direction-2026-10-04/routing-baseline",
+  "window": 30.0,
+  "repeats": 3,
+  "modes": "pipeline,replicas",
+  "workers": "3",
+  "concurrency": "4",
+  "replica_policy": "available",
+  "scope": "synthetic loopback worker/router probe; not real-model inference",
+  "python": "3.14.2 (main, Aug 27 2026, 12:34:32) [GCC 13.3.0]",
+  "total_layers": 28,
+  "sim_per_layer_ms": 5,
+  "sim_hidden_dim": 1024,
+  "prompt_len": 16,
+  "max_new_tokens": 16
+}

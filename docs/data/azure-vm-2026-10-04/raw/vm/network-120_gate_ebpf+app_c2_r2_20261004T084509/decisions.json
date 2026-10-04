@@ -1,0 +1,144 @@
+[
+ {
+  "time": "2026-10-04T08:45:12.311914312Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 120.15784408084697,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:46:14.311610119Z",
+  "policy": "gate",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 221.74452716297787,
+  "optimal_bottleneck_ms": 168.8914084507042,
+  "improvement_frac": 0.2383514009950183,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 135.29082491380086,
+  "tokens_adapt": 159.54480720589694,
+  "break_even_s": 12.814075299116183,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    27
+   ],
+   [
+    27,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:47:52.312579056Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 223.0184550989346,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    27
+   ],
+   [
+    27,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:47:54.311888065Z",
+  "policy": "gate",
+  "reason": "recovery-or-initial",
+  "current_bottleneck_ms": 0,
+  "optimal_bottleneck_ms": 178.55591712707184,
+  "improvement_frac": 0,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    27
+   ],
+   [
+    27,
+    28
+   ]
+  ]
+ },
+ {
+  "time": "2026-10-04T08:48:26.312230078Z",
+  "policy": "gate",
+  "reason": "gate-accepts",
+  "current_bottleneck_ms": 166.8516602389239,
+  "optimal_bottleneck_ms": 117.43391966889287,
+  "improvement_frac": 0.2961776975983763,
+  "transition_ms": 3054.2528,
+  "horizon_s": 30,
+  "tokens_stay": 179.8004284586763,
+  "tokens_adapt": 229.45455006504113,
+  "break_even_s": 10.312230882899348,
+  "gate_accepts": true,
+  "executed": true,
+  "from_splits": [
+   [
+    0,
+    27
+   ],
+   [
+    27,
+    28
+   ]
+  ],
+  "to_splits": [
+   [
+    0,
+    19
+   ],
+   [
+    19,
+    28
+   ]
+  ]
+ }
+]
