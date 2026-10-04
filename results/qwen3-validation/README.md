@@ -1,3 +1,1 @@
-# qwen3-validation
-
-Artifacts are listed in this experiment folder. Relative artifact links preserve the original research files.
+../../docs/data/qwen3-validation/README.md

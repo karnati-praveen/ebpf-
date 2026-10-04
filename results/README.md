@@ -2,6 +2,21 @@
 
 Start here to find raw data, analysis, reports and logs by experiment.
 
+Every result folder has a local guide: `README.md`, or `EXPERIMENT.md` when an
+original README already exists. It names the experiment, original execution
+environment and source, producing script, evidence type and folder contents.
+Individual run guides include the saved policy, workload, repeat and IST start
+time from `meta.json`. Unknown historical dates or paths are explicitly marked.
+
+[Folder-by-folder index](folders.csv) maps every browsable folder to its guide.
+[Experiment registry](experiments.json) records the source descriptions used
+to generate them. Regenerate the guides and artifact catalog with:
+
+```bash
+python3 scripts/document-results.py
+python3 scripts/index-results.py
+```
+
 | Experiment | Folder | Evidence |
 |---|---|---|
 | Objective-aware placement and live remaining-work gate | [objective-aware-2026-10-04](objective-aware-2026-10-04/) | New Azure real-model runs; objective and automatic-demand matrices kept separate |

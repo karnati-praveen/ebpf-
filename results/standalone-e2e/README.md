@@ -1,3 +1,1 @@
-# standalone-e2e
-
-Artifacts are listed in this experiment folder. Relative artifact links preserve the original research files.
+../../docs/data/standalone-e2e/README.md
