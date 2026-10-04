@@ -12,7 +12,12 @@ GO_VERSION="${GO_VERSION:-1.26.1}"
 
 log "system packages"
 sudo apt-get update -qq
-sudo apt-get install -y -qq python3-venv python3-dev git curl iproute2 stress-ng >/dev/null
+sudo apt-get install -y -qq python3-venv python3-dev git curl iproute2 stress-ng earlyoom >/dev/null
+# A relayout briefly holds a full FP32 model copy (~4.6 GB peak for Qwen3-0.6B).
+# On small VMs, running out of memory with swap thrashes the whole machine for
+# hours (SSH included); earlyoom kills the largest process within seconds
+# instead. The supervisor restarts it and vmrun flags that run contaminated.
+sudo systemctl enable --now earlyoom >/dev/null 2>&1 || true
 
 log "Go $GO_VERSION (go.mod requires >= 1.26.1; Ubuntu's apt Go is too old)"
 if [[ ! -x "$STATE_DIR/go/bin/go" ]] || ! "$STATE_DIR/go/bin/go" version | grep -q "go$GO_VERSION"; then

@@ -37,4 +37,11 @@ supervise nodeagent sudo env \
   PORT_MIN="$WORKER_PORT" PORT_MAX="$WORKER_PORT" GPU_MODE=measured EBPF="${EBPF:-on}" \
   "$BIN/nodeagent"
 
+# Per-process memory every 5 s, so an out-of-memory event during a run can be
+# attributed afterwards (logs/mem.log survives a reboot; dmesg does not).
+stop_one memlog
+supervise memlog bash -c 'while sleep 5; do
+  echo "$(date -u +%s) avail_mb=$(awk "/MemAvailable/{print int(\$2/1024)}" /proc/meminfo) $(ps -eo rss=,comm= --sort=-rss | head -4 | awk "{printf \"%s:%dMB \", \$2, \$1/1024}")"
+done'
+
 log "node $NODE_NAME: worker $IP:$WORKER_PORT, reporting to $COORD:$CONTROLLER_GRPC_PORT, KV_CACHE=$KV_CACHE"

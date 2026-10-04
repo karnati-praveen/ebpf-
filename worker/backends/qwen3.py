@@ -47,6 +47,17 @@ import pipeline_pb2 as pb
 log = logging.getLogger("qwen3")
 
 
+def _return_freed_memory():
+    """Hand freed heap pages back to the OS after a load. Measured on a 2-vCPU
+    VM: the resident set after reloading a 18-layer shard drops from 2.4 GB to
+    2.0 GB. It does not lower the ~4.6 GB peak while from_pretrained runs."""
+    try:
+        import ctypes
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
+    except (OSError, AttributeError):
+        pass  # not glibc
+
+
 def _kv_cache_enabled():
     return os.environ.get("KV_CACHE", "0") == "1"
 
@@ -255,6 +266,7 @@ class Qwen3Backend:
         gc.collect()
         if self.device == "cuda":
             torch.cuda.empty_cache()
+        _return_freed_memory()
 
     # ---- session management (cached mode) --------------------------------
 
