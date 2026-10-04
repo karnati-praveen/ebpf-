@@ -1,5 +1,7 @@
 # Codespace thermal benchmark — 2026-09-12
 
+> **Kubernetes-era result** (kind, simulated backend). Kept for provenance.
+
 ## Scope and environment
 
 This report records a small comparison of the simulated thermal scenario in

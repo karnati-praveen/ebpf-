@@ -13,9 +13,9 @@ decision** driven by kernel-level measurements:
 ```
    ┌─────────────┐    ┌──────────────┐    ┌──────────────┐    ┌─────────────┐
    │  1. WATCH   │ →  │  2. DECIDE   │ →  │   3. ACT     │ →  │  4. HEAL    │
-   │ eBPF + NVML │    │ linear-part. │    │ K8s ctrl re- │    │ heartbeat + │
-   │  telemetry  │    │ DP + hyster. │    │ assigns lay- │    │ forced re-  │
-   │             │    │              │    │ ers via gRPC │    │ partition   │
+   │ eBPF + NVML │    │ linear-part. │    │ controller   │    │ heartbeat + │
+   │  telemetry  │    │ DP + hyster. │    │ reassigns    │    │ forced re-  │
+   │             │    │              │    │ layers (gRPC)│    │ partition   │
    └─────────────┘    └──────────────┘    └──────────────┘    └─────────────┘
           ▲                                                          │
           └────────────────── loop repeats every 2s ─────────────────┘

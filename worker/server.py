@@ -53,8 +53,16 @@ class WorkerServicer(rpc.WorkerServicer):
         self.total_layers = req.total_layers
         self.generation = req.generation
 
+    # Lock order is ALWAYS compute_lock, then state_lock. Swapping weights must
+    # be serialized against execution: previously AssignLayers took only
+    # state_lock, so a forward already computing could have its layers
+    # replaced underneath it and fail mid-request. Taking compute_lock here
+    # makes a relayout wait for in-flight compute, and Forward re-checks the
+    # generation once it holds compute_lock, so a request queued behind a
+    # relayout gets a replayable generation mismatch instead of running on
+    # the wrong layers.
     def AssignLayers(self, req, ctx):
-        with self.state_lock:
+        with self.compute_lock, self.state_lock:
             if req.generation < self.generation:
                 # Accept anyway: a restarted controller resets its counter.
                 log.warning(
@@ -81,15 +89,15 @@ class WorkerServicer(rpc.WorkerServicer):
         return pb.AssignLayersReply(ok=True)
 
     def Forward(self, req, ctx):
-        with self.state_lock:
-            gen, backend = self.generation, self.backend
-        if backend is None:
-            return pb.ForwardReply(error="no layers assigned")
-        if req.generation != gen:
-            return pb.ForwardReply(
-                error=f"generation mismatch: worker={gen} request={req.generation}"
-            )
         with self.compute_lock:
+            with self.state_lock:
+                gen, backend = self.generation, self.backend
+            if backend is None:
+                return pb.ForwardReply(error="no layers assigned")
+            if req.generation != gen:
+                return pb.ForwardReply(
+                    error=f"generation mismatch: worker={gen} request={req.generation}"
+                )
             t0 = time.monotonic()
             try:
                 reply = backend.forward(req)
