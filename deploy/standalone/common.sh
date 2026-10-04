@@ -9,6 +9,11 @@ BIN="$STATE_DIR/bin"
 export HF_HOME="${HF_HOME:-$STATE_DIR/hf}"
 mkdir -p "$LOG_DIR" "$PID_DIR"
 
+# Machine-specific cost profile written by bench/profile_qwen3.py --env. Copy
+# the same file to every machine: the workers' measured speed and the
+# controller's cost model must share one reference.
+[[ -f "$STATE_DIR/profile.env" ]] && source "$STATE_DIR/profile.env"
+
 MODEL="${MODEL:-Qwen/Qwen3-0.6B}"
 WORKER_PORT="${WORKER_PORT:-50051}"
 AGENT_HTTP_PORT="${AGENT_HTTP_PORT:-9101}"
@@ -21,6 +26,8 @@ ROUTER_HTTP_PORT="${ROUTER_HTTP_PORT:-8080}"
 # The worker divides this profile's prediction by its observed decode time to
 # report measured speed; the controller partitions with the same table.
 PER_LAYER_PROFILE="${PER_LAYER_PROFILE:-128:5.55,512:6.25,1024:7.18,2048:9.49}"
+HEAD_MS="${HEAD_MS:-43.8}"    # lm_head + final-norm excess (docs/phase4-prelim-findings.md)
+EMBED_MS="${EMBED_MS:-0.09}"
 
 log() { echo "[keinfer] $*"; }
 die() { echo "[keinfer] ERROR: $*" >&2; exit 1; }

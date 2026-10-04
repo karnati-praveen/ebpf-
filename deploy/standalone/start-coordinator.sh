@@ -30,9 +30,9 @@ CONTEXT_LEN="${CONTEXT_LEN:-512}"
 CFG="$STATE_DIR/keinfer.json"
 COST_MODEL="${COST_MODEL:-full}"
 [[ "$COST_MODEL" == full || "$COST_MODEL" == layer-proportional ]] || die "COST_MODEL must be full or layer-proportional"
-python3 - "$CFG" "$WORKERS" "$CONTEXT_LEN" "$PER_LAYER_PROFILE" "$ROUTER_GRPC_PORT" "$MODEL" "$COST_MODEL" <<'PY'
+python3 - "$CFG" "$WORKERS" "$CONTEXT_LEN" "$PER_LAYER_PROFILE" "$ROUTER_GRPC_PORT" "$MODEL" "$COST_MODEL" "$HEAD_MS" "$EMBED_MS" <<'PY'
 import json, sys
-cfg, workers, ctx, profile, rport, model, cost_model = sys.argv[1:]
+cfg, workers, ctx, profile, rport, model, cost_model, head_ms, embed_ms = sys.argv[1:]
 table = [{"contextLen": int(c), "perLayerMs": float(m)}
          for c, m in (p.split(":") for p in profile.split(",") if p)]
 spec = {
@@ -42,7 +42,7 @@ spec = {
 }
 if cost_model == "full":
     # Measured endpoint costs and the context-dependent per-layer table.
-    spec.update({"embedMs": 0.09, "headMs": 43.8, "perLayerByCtx": table})
+    spec.update({"embedMs": float(embed_ms), "headMs": float(head_ms), "perLayerByCtx": table})
 # layer-proportional: one scalar per-layer cost, no endpoint terms (A9/A10).
 json.dump(spec, open(cfg, "w"), indent=2)
 PY
