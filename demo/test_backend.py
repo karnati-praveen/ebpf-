@@ -65,6 +65,7 @@ class Tests(unittest.TestCase):
             rt.args=SimpleNamespace(command='solo',device='cpu')
             rt.device={'selected':'cpu'}; rt.remote=None; rt.state=initial; rt.message=''; rt.events=[]; rt.generation=-1
             rt.lifecycle=threading.RLock(); rt.ports={'router_http':1,'controller_http':2}
+            rt.recovery_started=None; rt.recoveries=[]; rt.ctrl_state={}; rt.stage_stats=[]
             rt.workers={'w1':{'name':'w1','local':True,'status':'up','port':3}, 'w2':{'name':'w2','local':True,'status':'stopped' if stopped else 'up','port':4}}
             rt.processes={'w1':SimpleNamespace(poll=lambda:1 if crashed else None),'w2':SimpleNamespace(poll=lambda:None)}
             rt.closed=SimpleNamespace(wait=iter((False,True)).__next__)
@@ -83,7 +84,15 @@ class Tests(unittest.TestCase):
     def test_chat_limits_busy_and_template(self):
         rt=Runtime.__new__(Runtime); rt.state='ready'; rt.args=type('Args',(),{'command':'solo'})()
         rt.chat_lock=threading.Lock(); rt.chat_lock.acquire()
-        self.assertEqual(rt.chat({})[0],409); rt.chat_lock.release()
+        rt.user_waiting=threading.Event(); rt.closed=threading.Event(); rt.history=[]
+        # Background load never queues behind a busy pipeline...
+        self.assertEqual(rt.chat({},background=True)[0],409)
+        # ...but a person's message waits for the running request instead of failing.
+        threading.Timer(.3,rt.chat_lock.release).start()
+        start=time.monotonic()
+        with self.assertRaises(KeyError): rt.chat({})
+        self.assertGreaterEqual(time.monotonic()-start,.25)
+        self.assertFalse(rt.user_waiting.is_set())
         rt.tokenizer=type('Tokenizer',(),{'apply_chat_template':lambda self,*a,**kw:[1]*500})()
         with self.assertRaisesRegex(ValueError,'512'): rt.chat({'messages':[{'role':'user','content':'hi'}]})
         self.assertFalse(rt.chat_lock.locked())

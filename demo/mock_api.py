@@ -8,7 +8,7 @@ from pathlib import Path
 class Mock:
     def __init__(self, gpu=False, single=False, mode='solo'):
         self.token=secrets.token_urlsafe(32); self.started=time.monotonic(); self.lock=threading.RLock(); self.busy=False
-        self.gpu=gpu; self.gpu_capable=gpu; self.requested="auto"; self.single=single or mode=="join"; self.mode=mode; self.recover_until=0; self.generation=1; self.events=[]; self.requests=0; self.tokens=0; self.load=False; self.stopped=False
+        self.gpu=gpu; self.gpu_capable=gpu; self.requested="auto"; self.single=single or mode=="join"; self.mode=mode; self.recover_until=0; self.generation=1; self.events=[]; self.requests=0; self.tokens=0; self.load=False; self.stopped=False; self.chat_lock=threading.Lock(); self.history=[]
         self.workers=[dict(name='w1',node='this-laptop',local=True,status='up',layers=[0,28] if single else [0,14],speed=1.0)]
         if mode=='join':self.workers=[dict(name='w2',node='this-laptop',local=True,status='up',layers=[14,28],speed=0.95)]
         elif not single:self.workers.append(dict(name='w2',node='friend' if mode=='host' else 'this-laptop',local=mode!='host',status='up',layers=[14,28],speed=0.95))
@@ -20,7 +20,7 @@ class Mock:
             self.recover_until=0; live=[w for w in self.workers if w['status']=='up']
             for w in self.workers:w['layers']=([0,28] if len(live)==1 else [0,14] if w['name']=='w1' else [14,28]) if w['status']=='up' else None
             self.generation+=1; self.event('healed' if len(live)==1 else 'restored','Layer assignments recovered.')
-        return dict(app_state=state,message='Shardwise development mock — simulated inference and hardware',progress=min(elapsed/6,1) if state in ('downloading','calibrating','loading') else None,mode=self.mode,device=dict(requested=self.requested,selected='cuda' if self.gpu else 'cpu',reason='Mock device for UI testing',gpu_name='RTX 4060' if self.gpu else None),workers=self.workers,generation=self.generation,policy='hysteresis',events=self.events,metrics=dict(requests=self.requests,tokens=self.tokens,avg_ttft_ms=420,avg_duration_ms=2000,repartition_replays=0),recovery_demo=dict(available=not self.single,reason='Use the host dashboard to control Pair recovery.' if self.mode=='join' else 'Only one worker fits in available memory.' if self.single else None),faults_available=['slow','net'] if self.mode=='host' else [],load_on=self.load)
+        return dict(app_state=state,message='Shardwise development mock — simulated inference and hardware',progress=min(elapsed/6,1) if state in ('downloading','calibrating','loading') else None,mode=self.mode,device=dict(requested=self.requested,selected='cuda' if self.gpu else 'cpu',reason='Mock device for UI testing',gpu_name='RTX 4060' if self.gpu else None),workers=self.workers,generation=self.generation,policy='hysteresis',events=self.events,metrics=dict(requests=self.requests,tokens=self.tokens,avg_ttft_ms=420,avg_duration_ms=2000,repartition_replays=0),recovery_demo=dict(available=not self.single,reason='Use the host dashboard to control Pair recovery.' if self.mode=='join' else 'Only one worker fits in available memory.' if self.single else None),faults_available=['slow','net'] if self.mode=='host' else [],load_on=self.load,telemetry=dict(predicted_token_ms=176.7,predicted_bottleneck_ms=93.1,nodes={w['name']:dict(speed=w['speed'],age_s=0.6,temp_c=None) for w in self.workers},links=[],stages=[dict(name=w['name'],busy_pct=48.0,forwards=120) for w in self.workers if w['status']=='up'],decisions=[dict(t=datetime.now(timezone.utc).isoformat(),reason='recovery-or-initial',executed=True,gate_accepts=True,improvement_pct=0,to=[w['layers'] for w in self.workers if w['layers']],predicted_ms=80.0)],history=self.history,recoveries=[],recovering_for_s=None),pairing=dict(mode=self.mode,lan_ip='192.168.1.20',pair_port=8766,code='ab12-cd34' if self.mode=='host' else None,friend=None,host='192.168.1.10' if self.mode=='join' else None,ports=[8766,8767,8768,8769]))
     def hw(self):return dict(cpu=dict(model='Mock Intel CPU',cores=8,util_pct=37.5),ram=dict(total_mb=16000,used_mb=9100),gpu=dict(name='RTX 4060',util_pct=62,temp_c=58,vram_used_mb=3200,vram_total_mb=8192) if self.gpu else None)
 
 class Handler(BaseHTTPRequestHandler):
@@ -29,7 +29,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         with self.server.mock.lock:
             if self.path=='/':
-                raw=Path(__file__).with_name('app.html').read_text().replace('__SESSION_TOKEN__',self.server.mock.token).encode(); self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.end_headers();self.wfile.write(raw)
+                raw=Path(__file__).with_name('app.html').read_text().replace('__SESSION_TOKEN__',self.server.mock.token).replace('<body>','<body><div style="position:sticky;top:0;z-index:99;background:#c43145;color:#fff;text-align:center;font:700 16px system-ui;padding:8px">DEVELOPER MOCK — every value on this page is FAKE. Run `shardwise solo` for the real app.</div>',1).encode(); self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.end_headers();self.wfile.write(raw)
             elif self.path=='/api/status':self.reply(200,self.server.mock.status())
             elif self.path=='/api/hw':self.reply(200,self.server.mock.hw())
             else:self.reply(404,dict(error='not found'))
@@ -42,16 +42,17 @@ class Handler(BaseHTTPRequestHandler):
             d=json.loads(self.rfile.read(length)); assert isinstance(d,dict)
         except (ValueError,AssertionError):return self.reply(400,dict(error='invalid JSON'))
         if self.path=='/api/chat':
+            # Like the real app, a second chat waits for the first instead of failing.
             with m.lock:
-                if m.busy:return self.reply(409,dict(error='busy'))
                 if m.status()['app_state']!='ready':return self.reply(503,dict(error='not ready'))
                 if not isinstance(d.get('messages'),list) or not d['messages']:return self.reply(400,dict(error='messages required'))
-                m.busy=True
+            if not m.chat_lock.acquire(timeout=30):return self.reply(409,dict(error='busy'))
+            m.busy=True
             try:
                 time.sleep(2)
-                with m.lock:m.requests+=1;m.tokens+=57
-                self.reply(200,dict(text='This is simulated text for UI testing. The real app runs Qwen3 across the assigned workers and recovers when a worker stops.',tokens=57,ttft_ms=420,duration_ms=2000,tokens_per_sec=28.5,device='cuda' if m.gpu else 'cpu',replays=0,transition_ms=0))
-            finally:m.busy=False
+                with m.lock:m.requests+=1;m.tokens+=57;m.history=(m.history+[dict(t=datetime.now(timezone.utc).isoformat(),tokens_per_sec=28.5,ttft_ms=420,ms_per_token=35.1,replays=0,generation=m.generation,source='chat')])[-60:]
+                self.reply(200,dict(text='This is simulated text for UI testing. The real app runs Qwen3 across the assigned workers and recovers when a worker stops.',tokens=57,ttft_ms=420,duration_ms=2000,tokens_per_sec=28.5,generation=m.generation,device='cuda' if m.gpu else 'cpu',replays=0,transition_ms=0))
+            finally:m.busy=False;m.chat_lock.release()
             return
         with m.lock:
             try:
@@ -69,6 +70,10 @@ class Handler(BaseHTTPRequestHandler):
                 elif self.path=='/api/load':
                     if not isinstance(d.get('on'),bool):raise ValueError('on must be boolean')
                     m.load=d['on']
+                elif self.path=='/api/pair':
+                    target={'invite':'host','join':'join','leave':'solo'}.get(d.get('action'))
+                    if not target:raise ValueError('action must be invite, join or leave')
+                    m.mode=target;m.event('moved','Mock pairing '+target)
                 elif self.path=='/api/exit':m.stopped=True
                 else:return self.reply(404,dict(error='not found'))
                 self.reply(200,dict(ok=True))

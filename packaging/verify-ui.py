@@ -54,12 +54,12 @@ async def verify(shots):
             chat = {'messages': [{'role': 'user', 'content': 'hello'}], 'max_new_tokens': 128}
             first = asyncio.create_task(page.request.post(urls['cpu']+'/api/chat', data=chat, headers={'X-Session-Token': token}))
             await asyncio.sleep(.2)
-            assert (await page.request.post(urls['cpu']+'/api/chat', data=chat, headers={'X-Session-Token': token})).status == 409
+            assert (await page.request.post(urls['cpu']+'/api/chat', data=chat, headers={'X-Session-Token': token})).status == 200  # waits, never rejected
             assert (await first).status == 200
             await page.locator('#prompt').fill('Explain the demo')
             await page.locator('#send').click()
             await page.wait_for_function("document.querySelector('.message.assistant')")
-            assert '57 tokens' in await page.locator('.message.assistant').inner_text()
+            assert '57 tokens' in await page.locator('.message.assistant').last.inner_text()
             await page.get_by_role('button', name='Inspect w1 layers').click()
             await page.get_by_role('button', name='Stop w2').click()
             await page.wait_for_function("document.getElementById('state').textContent==='recovering'")
@@ -75,6 +75,12 @@ async def verify(shots):
             await page.locator('#load').check()
             await page.wait_for_timeout(1100)
             assert await page.locator('#load').is_checked()
+            await page.get_by_role('button', name='Invite a laptop').click()
+            await page.wait_for_function("document.getElementById('pair-body').textContent.includes('ab12-cd34')")
+            await page.screenshot(path=str(shots/'invite.png'), full_page=True)
+            page.once('dialog', lambda dialog: dialog.accept())
+            await page.get_by_role('button', name='Stop sharing').click()
+            await page.wait_for_function("document.getElementById('pair-join')")
             await page.emulate_media(color_scheme='dark')
             await page.screenshot(path=str(shots/'dark.png'), full_page=True)
             await page.goto(urls['gpu-pair'])

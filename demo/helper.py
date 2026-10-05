@@ -55,11 +55,14 @@ class Helper:
 
 class DelayedRelay:
     """App-owned worker TCP proxy; delays only worker-to-router traffic."""
-    def __init__(self, target_port):
+    def __init__(self, target_port, preferred_port=0):
         import socket
         self.socket = socket.socket()
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.bind(('0.0.0.0', 0)); self.socket.listen()
+        # A fixed port lets users allow Shardwise through a firewall once.
+        try: self.socket.bind(('0.0.0.0', preferred_port))
+        except OSError: self.socket.bind(('0.0.0.0', 0))
+        self.socket.listen()
         self.socket.settimeout(.5)
         self.port = self.socket.getsockname()[1]
         self.target_port = target_port
