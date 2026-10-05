@@ -58,6 +58,28 @@ class Tests(unittest.TestCase):
                 start=time.monotonic(); client.sendall(b'hello'); self.assertEqual(client.recv(64),b'hello')
                 self.assertGreaterEqual(time.monotonic()-start,.09)
         finally: relay.close(); listener.close()
+    def test_monitor_waits_for_all_workers_and_restore(self):
+        from types import SimpleNamespace
+        def check(stages, initial='loading', stopped=False, crashed=False):
+            rt=Runtime.__new__(Runtime)
+            rt.args=SimpleNamespace(command='solo',device='cpu')
+            rt.device={'selected':'cpu'}; rt.remote=None; rt.state=initial; rt.message=''; rt.events=[]; rt.generation=-1
+            rt.lifecycle=threading.RLock(); rt.ports={'router_http':1,'controller_http':2}
+            rt.workers={'w1':{'name':'w1','local':True,'status':'up','port':3}, 'w2':{'name':'w2','local':True,'status':'stopped' if stopped else 'up','port':4}}
+            rt.processes={'w1':SimpleNamespace(poll=lambda:1 if crashed else None),'w2':SimpleNamespace(poll=lambda:None)}
+            rt.closed=SimpleNamespace(wait=iter((False,True)).__next__)
+            # The monitor calls wait(timeout); adapt a finite one-pass event.
+            sequence=iter((False,True)); rt.closed.wait=lambda _:next(sequence)
+            with patch('app.request',side_effect=lambda url: {'stages':stages,'generation':1} if url.endswith('/pipeline') else {'assignments':[]}): rt.monitor()
+            return rt.state
+        one=[{'name':'w1','addr':'127.0.0.1:3','layers':[0,28]}]
+        both=[{'name':'w1','addr':'127.0.0.1:3','layers':[0,14]},{'name':'w2','addr':'127.0.0.1:4','layers':[14,28]}]
+        self.assertEqual(check(one),'loading')
+        self.assertEqual(check(one,initial='recovering'),'recovering')
+        self.assertEqual(check(both),'ready')
+        self.assertEqual(check(one,initial='recovering',stopped=True),'ready')
+        self.assertEqual(check(both,initial='ready',crashed=True),'failed')
+
     def test_chat_limits_busy_and_template(self):
         rt=Runtime.__new__(Runtime); rt.state='ready'; rt.args=type('Args',(),{'command':'solo'})()
         rt.chat_lock=threading.Lock(); rt.chat_lock.acquire()
