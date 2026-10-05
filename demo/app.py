@@ -188,6 +188,22 @@ class Runtime:
                     self.message = 'Friend worker connected; use host dashboard for chat'
                     continue
                 if self.state == 'failed': continue
+                if not self.lifecycle.acquire(False): continue
+                try: processes = list(self.processes.items())
+                finally: self.lifecycle.release()
+                crashed = next(((name,proc) for name,proc in processes if proc.poll() is not None),None)
+                if crashed:
+                    name,proc=crashed
+                    if name in self.workers: self.workers[name]['status']='down'
+                    self.state,self.message='failed',f'{name} exited; inspect logs/{name}.log'
+                    if self.device['selected']=='cuda' and self.args.device=='auto':
+                        self.event('rejected','GPU runtime failed; restarting on CPU')
+                        self.args.device='cpu'
+                        def fallback():
+                            with self.lifecycle:
+                                self.cleanup_pipeline(); self.workers.clear(); self.initialize()
+                        threading.Thread(target=fallback,daemon=True).start()
+                    continue
                 if self.remote:
                     try:
                         friend = request(f"http://{self.remote['ip']}:{self.remote['port']}/status", {}, self.pair_token)
@@ -209,22 +225,13 @@ class Runtime:
                 complete = bool(stages) and stages[0]['layers'][0] == 0 and stages[-1]['layers'][1] == 28
                 live = all(self.workers[s['name']]['status'] == 'up' and (not self.workers[s['name']]['local'] or s['addr'].endswith(':'+str(self.workers[s['name']]['port']))) for s in stages)
                 live = live and all(self.processes.get(s['name']) and self.processes[s['name']].poll() is None for s in stages if self.workers[s['name']]['local'])
-                if complete and live:
+                assigned = {s['name'] for s in stages}
+                expected = {w['name'] for w in self.workers.values() if w['status']=='up'}
+                contiguous = all(a['layers'][1]==b['layers'][0] for a,b in zip(stages,stages[1:]))
+                if complete and live and contiguous and expected.issubset(assigned):
                     self.state, self.message = 'ready', 'Ready for real inference'
             except Exception:
                 pass
-            for name, proc in list(self.processes.items()):
-                if proc.poll() is not None and self.state not in ('stopped', 'failed'):
-                    if name in self.workers: self.workers[name]['status'] = 'down'
-                    self.state, self.message = 'failed', f'{name} exited; inspect logs/{name}.log'
-                    if self.device['selected'] == 'cuda' and self.args.device == 'auto':
-                        self.event('rejected', 'GPU runtime failed; restarting on CPU')
-                        self.args.device = 'cpu'
-                        def fallback():
-                            with self.lifecycle:
-                                self.cleanup_pipeline(); self.workers.clear(); self.initialize()
-                        threading.Thread(target=fallback,daemon=True).start()
-                    break
 
     def control_worker(self, name, action, remote_control=False):
         if name not in self.workers or action not in ('stop', 'restore'): raise ValueError('Unknown worker or action')
@@ -325,7 +332,11 @@ def handler(runtime, pair=False):
                     else: raise ValueError('Unknown endpoint')
                 elif self.path == '/api/chat':
                     code,result=runtime.chat(body); self.send(code,result); return
-                elif self.path == '/api/worker': runtime.control_worker(body['name'],body['action']); result={'ok':True}
+                elif self.path == '/api/worker':
+                    if runtime.state not in ('ready','recovering'):
+                        self.send(409,{'error':'Pipeline is initializing or unavailable'}); return
+                    with runtime.lifecycle: runtime.control_worker(body['name'],body['action'])
+                    result={'ok':True}
                 elif self.path == '/api/fault':
                     if runtime.args.command != 'host' or not runtime.remote or body.get('node') not in ('friend','w2',runtime.workers.get('w2',{}).get('node')): raise ValueError('No enrolled friend')
                     result=request(f"http://{runtime.remote['ip']}:{runtime.remote['port']}/fault", {'action':body['action']},runtime.pair_token)
@@ -343,6 +354,8 @@ def handler(runtime, pair=False):
                         runtime.load_thread=threading.Thread(target=background,daemon=True); runtime.load_thread.start()
                     result={'ok':True}
                 elif self.path == '/api/mode':
+                    if runtime.chat_lock.locked() or runtime.state != 'ready':
+                        self.send(409,{'error':'busy'}); return
                     if runtime.args.command != 'solo': raise ValueError('Restart host/join explicitly to switch device')
                     if body.get('device') not in ('auto','cpu','cuda'): raise ValueError('Invalid device')
                     runtime.args.device=body['device']; runtime.state='loading'
