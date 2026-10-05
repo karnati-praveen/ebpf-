@@ -7,7 +7,7 @@ for name in controller nodeagent uv; do
   line=$(printf '%s\n' "$listing" | awk -v path="./opt/shardwise/bin/$name" '$NF==path {print $1}')
   [[ "$line" == '-rwxr-xr-x' ]] || { echo "Unsafe/missing binary mode: $name ($line)" >&2; exit 1; }
 done
-if printf '%s\n' "$listing" | awk '{print $NF}' | rg '/(mock_api\.py|__pycache__|test[^/]*)(/|$)' >/dev/null; then
+if printf '%s\n' "$listing" | awk '$NF ~ /\/(mock_api\.py|__pycache__|test[^/]*)(\/|$)/ {found=1} END {exit !found}'; then
   echo 'Package unexpectedly includes development mocks/tests/bytecode' >&2; exit 1
 fi
 printf '%s\n' "$listing" | awk '$6=="./usr/bin/shardwise" && $7=="->" && $8=="/opt/shardwise/app/demo/keinfer-demo" {found=1} END {exit !found}'
