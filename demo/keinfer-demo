@@ -5,7 +5,17 @@ export SHARDWISE_HOME="${SHARDWISE_HOME:-${KEINFER_DEMO_HOME:-$HOME/.local/share
 export KEINFER_DEMO_HOME="$SHARDWISE_HOME"
 RUNTIME_PY="$KEINFER_DEMO_HOME/runtime/bin/python"
 case "${1:-solo}" in
-  stop|status) [[ -x "$RUNTIME_PY" ]] || RUNTIME_PY="$(command -v python3)"; exec "$RUNTIME_PY" "$APP_ROOT/demo/app.py" "$@" ;;
+  stop|status)
+    if [[ ! -f "$KEINFER_DEMO_HOME/state/app.json" ]]; then
+      echo 'Shardwise is not running'
+      exit 0
+    fi
+    if [[ ! -x "$RUNTIME_PY" ]]; then
+      echo 'Shardwise runtime is unavailable; restore setup before controlling the recorded instance. No processes were signalled.' >&2
+      exit 1
+    fi
+    exec "$RUNTIME_PY" "$APP_ROOT/demo/app.py" "$@"
+    ;;
 esac
 mkdir -p "$KEINFER_DEMO_HOME/state"
 # Serialize setup as well as execution, before altering the runtime environment.
