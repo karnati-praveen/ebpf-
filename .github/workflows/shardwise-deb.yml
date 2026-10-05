@@ -1,0 +1,105 @@
+# Builds the Shardwise laptop installer (.deb) and publishes it for download.
+#
+#   push to demo/laptop-app or main -> rolling pre-release "shardwise-latest"
+#                                      (fixed link, always the newest build)
+#   push a tag v1.2.3                -> versioned release v1.2.3
+#   any run                          -> also kept as a workflow artifact
+#
+# Direct download of the newest build:
+#   https://github.com/<owner>/<repo>/releases/download/shardwise-latest/shardwise_amd64.deb
+name: Shardwise installer
+
+on:
+  push:
+    branches: [demo/laptop-app, main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shardwise-deb-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Test
+        run: |
+          pip install -q 'grpcio==1.84.0' 'protobuf==7.36.2' 'numpy==2.5.3'
+          go vet ./...
+          go test ./...
+          python3 -m py_compile worker/*.py demo/*.py packaging/*.py
+          bash -n demo/shardwise demo/runtime-setup.sh packaging/*.sh
+          (cd worker && python3 -m unittest test_router_workload test_workload)
+
+      - name: Package version
+        id: ver
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then v="${GITHUB_REF_NAME#v}"; else v="0.1.0+ci${GITHUB_RUN_NUMBER}"; fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Build .deb
+        run: |
+          packaging/build-deb.sh "${{ steps.ver.outputs.version }}"
+          packaging/verify-deb.sh dist/*.deb
+          # A fixed name gives a link that never changes between builds.
+          cp dist/shardwise_*_amd64.deb dist/shardwise_amd64.deb
+          (cd dist && sha256sum shardwise_amd64.deb > shardwise_amd64.deb.sha256)
+          ls -la dist
+
+      - name: Install test (clean Ubuntu 22.04 and 24.04)
+        run: |
+          for v in 22.04 24.04; do
+            docker run --rm -v "$PWD/dist:/d:ro" "ubuntu:$v" bash -c '
+              set -e
+              apt-get update -qq >/dev/null
+              apt-get install -y -qq /d/shardwise_amd64.deb >/dev/null
+              /opt/shardwise/bin/controller -h 2>&1 | head -1
+              useradd -m u && su u -c "shardwise status"'
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shardwise-deb
+          path: |
+            dist/shardwise_amd64.deb
+            dist/shardwise_amd64.deb.sha256
+
+      - name: Publish rolling download (shardwise-latest)
+        if: github.ref_type == 'branch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete shardwise-latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create shardwise-latest dist/shardwise_amd64.deb dist/shardwise_amd64.deb.sha256 \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "Shardwise installer (latest build)" \
+            --notes "Newest build from \`$GITHUB_REF_NAME\` ($GITHUB_SHA), version ${{ steps.ver.outputs.version }}.
+
+          Install on Ubuntu 22.04/24.04 x86_64 (on Windows: inside WSL2 Ubuntu, see demo/WINDOWS.md):
+          \`\`\`
+          wget https://github.com/$GITHUB_REPOSITORY/releases/download/shardwise-latest/shardwise_amd64.deb
+          sudo apt install ./shardwise_amd64.deb
+          shardwise
+          \`\`\`"
+
+      - name: Publish versioned release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/shardwise_*_amd64.deb dist/shardwise_amd64.deb dist/shardwise_amd64.deb.sha256 \
+            --title "Shardwise $GITHUB_REF_NAME" --generate-notes
