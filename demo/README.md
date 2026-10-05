@@ -1,6 +1,6 @@
 # Shardwise laptop demo
 
-Run real Qwen3-0.6B inference on Ubuntu using a CPU or a compatible NVIDIA GPU. Watch 28 model layers move between workers, stop one worker, and observe recovery. Solo runs independently on each laptop. Pair connects any number of trusted laptops (one invites, the others join). Splitting on one device demonstrates placement and recovery; it does not promise faster inference.
+Run real Qwen2.5-0.5B-Instruct inference (~1 GB model download, once) on Ubuntu using a CPU or a compatible NVIDIA GPU. Watch the model's 24 layers move between workers, stop one worker, and observe recovery. Solo runs independently on each laptop. Pair connects any number of trusted laptops (one invites, the others join). Splitting on one device demonstrates placement and recovery; it does not promise faster inference.
 
 ## Install
 
@@ -33,9 +33,9 @@ Build the installer with `packaging/build-deb.sh 0.1.0` after installing Go, cur
 2. Wait through downloading, calibration, and loading. Device **Auto** tests CUDA and falls back to CPU if needed.
 3. Ask a short question. Each answer reports real timing and token counts.
 4. Inspect the two coloured layer bars. Layer ranges are half-open internally: `[0,14]` represents layers 0–13.
-5. Stop one worker. Watch the survivor receive all 28 layers, then restore the worker.
+5. Stop one worker. Watch the survivor receive all 24 layers, then restore the worker.
 
-Two CPU workers require at least 11 GB free RAM; CUDA requires approximately 3 GB free VRAM per worker. These are startup checks, not guarantees of peak memory. An 8 GB laptop normally starts one worker, with recovery controls disabled and a reason displayed. Chat still works. Switching the device restarts the pipeline and may recalibrate.
+Two CPU workers on one laptop require at least 7 GB free RAM; CUDA requires approximately 3 GB free VRAM per worker. These are startup checks, not guarantees of peak memory. A laptop with less free RAM starts one worker, with recovery controls disabled and a reason displayed. Chat still works. Switching the device restarts the pipeline and may recalibrate.
 
 `shardwise status` reports the running application; `shardwise stop` stops its own processes and clears its active faults.
 
@@ -57,7 +57,7 @@ The terminal works too: `shardwise host` prints the code, and `shardwise join HO
 
 - **0:00–1:00:** Show device selection and genuine CPU/RAM or GPU/VRAM readings. Explain Solo versus Pair.
 - **1:00–2:00:** Ask “Explain distributed inference in three sentences.” Point to generated text and measured timings.
-- **2:00–3:00:** Click the layer bars and explain that the workers together hold 28 layers.
+- **2:00–3:00:** Click the layer bars and explain that the workers together hold all 24 layers.
 - **3:00–4:00:** Stop a worker, observe the recovering state, and show all layers assigned to the survivor. Ask another question when ready.
 - **4:00–5:00:** Restore it, show the returned split and controller event log. In Pair, optionally demonstrate an available slow/transport fault and clear it.
 

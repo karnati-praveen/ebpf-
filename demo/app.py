@@ -22,9 +22,10 @@ from helper import Slowdown, TunnelHub, TunnelClient
 
 ROOT = Path(__file__).resolve().parents[1]
 HOME = Path(os.environ.get('SHARDWISE_HOME', os.environ.get('KEINFER_DEMO_HOME', '~/.local/share/shardwise'))).expanduser()
-MODEL = 'Qwen/Qwen3-0.6B'
-MODEL_REVISION = 'c1899de289a04d12100db370d81485cdf75e47ca'
-LAYERS = 28
+# Small enough to download quickly (~1 GB) and run on any laptop CPU.
+MODEL = 'Qwen/Qwen2.5-0.5B-Instruct'
+MODEL_REVISION = '7ae557604adf67be50417f59c2c2f167def9a775'
+LAYERS = 24
 MAX_FRIENDS = 15
 
 
@@ -219,9 +220,12 @@ class Runtime:
     def prepare(self):
         from huggingface_hub import snapshot_download
         from transformers import AutoTokenizer
-        self.state, self.message = 'downloading', 'Downloading or checking cached Qwen3 model'
+        self.state, self.message = 'downloading', f'Downloading or checking the cached model ({MODEL.split("/")[-1]}, ~1 GB once)'
         snapshot_download(MODEL, revision=MODEL_REVISION, cache_dir=str(HOME/'hf'/'hub'), allow_patterns=['*.json', '*.safetensors', '*.txt', '*.jinja', '*.model'])
         self.tokenizer = AutoTokenizer.from_pretrained(MODEL, revision=MODEL_REVISION, cache_dir=str(HOME/'hf'/'hub'), local_files_only=True)
+        from transformers import AutoConfig
+        layers = AutoConfig.from_pretrained(MODEL, revision=MODEL_REVISION, cache_dir=str(HOME/'hf'/'hub'), local_files_only=True).num_hidden_layers
+        if layers != LAYERS: raise RuntimeError(f'{MODEL} has {layers} layers, expected {LAYERS}')
         self.device, count = select(self.args.device)
         self.env['WORKER_DEVICE'] = self.device['selected']
         import torch, transformers
@@ -325,6 +329,8 @@ class Runtime:
             data = request(f'http://{host}:{pp}/enroll', {'node': socket.gethostname(), 'session': self.session}, code)
         except urllib.error.HTTPError as e:
             raise self.pair_error(e) from None
+        if (data.get('model'), data.get('revision')) != (MODEL, MODEL_REVISION):
+            raise RuntimeError(f"The inviting laptop runs {data.get('model') or 'an older Shardwise'}, this one runs {MODEL}. Install the same Shardwise version on every laptop.")
         self.reach(data['controller_port'], 'controller')
         self.reach(data['tunnel_port'], 'worker tunnel')
         self.session, self.my_name, self.reference = data['session'], data['name'], data['profile']
@@ -373,7 +379,7 @@ class Runtime:
             self.event('restored', f"{node} ({ip}) joined as {friend['name']}")
         friend.update(ip=ip, last_seen=time.monotonic())
         friend['worker_port'] = self.hub.register(session)
-        return {'session': session, 'name': friend['name'], 'profile': self.profile, 'controller_port': self.ports['controller'],
+        return {'session': session, 'name': friend['name'], 'profile': self.profile, 'model': MODEL, 'revision': MODEL_REVISION, 'controller_port': self.ports['controller'],
                 'tunnel_port': self.hub.port, 'worker_port': friend['worker_port']}
 
     def drop_friend(self, session, why):

@@ -20,13 +20,13 @@ esac
 mkdir -p "$KEINFER_DEMO_HOME/state"
 # Serialize setup as well as execution, before altering the runtime environment.
 exec 9>"$KEINFER_DEMO_HOME/state/launcher.lock"
-if ! flock -n 9; then
+if ! flock -w 5 9; then
   echo 'Demo already running or setting up; use shardwise status or stop' >&2
   exit 1
 fi
 # A directly launched app does not own launcher.lock; inspect its runtime lock too.
 exec 8>"$KEINFER_DEMO_HOME/state/lock"
-if ! flock -n 8; then
+if ! flock -w 5 8; then
   echo 'Demo already running; use shardwise status or stop' >&2
   exit 1
 fi

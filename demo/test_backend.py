@@ -19,7 +19,7 @@ class Tests(unittest.TestCase):
     def test_cpu_memory_worker_policy(self):
         with patch('hwdetect.hardware',return_value={'ram':{'free_mb':12000},'gpu':None}):
             device,count=select('cpu'); self.assertEqual(count,2); self.assertEqual(device['selected'],'cpu')
-        with patch('hwdetect.hardware',return_value={'ram':{'free_mb':8000},'gpu':None}): self.assertEqual(select('cpu')[1],1)
+        with patch('hwdetect.hardware',return_value={'ram':{'free_mb':6000},'gpu':None}): self.assertEqual(select('cpu')[1],1)
         with patch('hwdetect.hardware',return_value={'ram':{'free_mb':2000},'gpu':None}):
             with self.assertRaisesRegex(RuntimeError,'RAM'): select('cpu')
     def test_force_gpu_failure(self):
@@ -120,8 +120,9 @@ class Tests(unittest.TestCase):
             sequence=iter((False,True)); rt.closed.wait=lambda _:next(sequence)
             with patch('app.request',side_effect=lambda url: {'stages':stages,'generation':1} if url.endswith('/pipeline') else {'assignments':[]}): rt.monitor()
             return rt.state
-        one=[{'name':'w1','addr':'127.0.0.1:3','layers':[0,28]}]
-        both=[{'name':'w1','addr':'127.0.0.1:3','layers':[0,14]},{'name':'w2','addr':'127.0.0.1:4','layers':[14,28]}]
+        import app; n=app.LAYERS
+        one=[{'name':'w1','addr':'127.0.0.1:3','layers':[0,n]}]
+        both=[{'name':'w1','addr':'127.0.0.1:3','layers':[0,n//2]},{'name':'w2','addr':'127.0.0.1:4','layers':[n//2,n]}]
         self.assertEqual(check(one),'loading')
         self.assertEqual(check(one,initial='recovering'),'recovering')
         self.assertEqual(check(both),'ready')

@@ -42,7 +42,7 @@ Depends: iproute2, curl, ca-certificates, xdg-utils
 Recommends: stress-ng
 Installed-Size: $(du -sk "$dest" | cut -f1)
 Description: Local CPU and NVIDIA distributed inference demonstration
- Runs Qwen3 workers locally or across two trusted laptops.
+ Runs a small language model split across one or more trusted laptops.
  Downloads a managed Python runtime and model on first launch.
 EOF
 cat > "$pkg/DEBIAN/postinst" <<'EOF'

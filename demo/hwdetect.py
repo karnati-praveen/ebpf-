@@ -64,5 +64,5 @@ def select(requested='auto', probe=True):
             reason = f'Using CPU: {e}'
     free = hw['ram']['free_mb'] or 0
     if not cuda and free < 3072: raise RuntimeError('At least 3 GB available RAM is required for real inference')
-    workers = (2 if (hw['gpu']['free_mb'] or 0) >= 6144 else 1) if cuda else (2 if free >= 11264 else 1)
+    workers = (2 if (hw['gpu']['free_mb'] or 0) >= 6144 else 1) if cuda else (2 if free >= 7168 else 1)
     return {'requested': requested, 'selected': 'cuda' if cuda else 'cpu', 'reason': reason, 'gpu_name': hw['gpu']['name'] if cuda else None}, workers

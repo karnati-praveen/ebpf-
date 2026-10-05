@@ -66,7 +66,7 @@ async def verify(shots):
             await page.screenshot(path=str(shots/'recovering.png'), full_page=True)
             await page.wait_for_function("document.getElementById('state').textContent==='ready'")
             assert await page.locator('#walk li.done').count() == 4
-            assert await page.locator('.worker.w1 .assigned').count() == 28
+            assert await page.locator('.worker.w1 .assigned').count() == 24
             assert await page.get_by_role('button', name='Stop w1').is_disabled()
             await page.get_by_role('button', name='Restore w2').click()
             await page.wait_for_function("document.getElementById('state').textContent==='recovering'")
@@ -95,7 +95,7 @@ async def verify(shots):
             await page.get_by_role('button', name='Stop w2').click()
             await page.wait_for_function("document.getElementById('state').textContent==='recovering'")
             await page.wait_for_function("document.getElementById('state').textContent==='ready'")
-            assert await page.locator('.worker.w1 .assigned').count() + await page.locator('.worker.w3 .assigned').count() == 28
+            assert await page.locator('.worker.w1 .assigned').count() + await page.locator('.worker.w3 .assigned').count() == 24
             await page.goto(urls['cpu'])
             page.on('dialog', lambda dialog: dialog.accept())
             await page.locator('#execution').select_option('cpu')

@@ -18,7 +18,7 @@ networkingMode=mirrored
 memory=12GB
 ```
 
-Choose a memory limit your physical laptop can support; a 12 GB limit does not create additional RAM. Two CPU workers still require 11 GB **free** RAM inside WSL. An 8 GB physical laptop should use one worker.
+Choose a memory limit your physical laptop can support; a 12 GB limit does not create additional RAM. Two CPU workers on one laptop need 7 GB **free** RAM inside WSL; with less, Shardwise starts one worker (pairing still works).
 
 Then run:
 
