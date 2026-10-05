@@ -20,6 +20,8 @@ curl --fail --location --retry 3 --proto '=https' -o "$stage/uv.tar.gz" "https:/
 printf '%s  %s\n' "$uv_sha" "$stage/uv.tar.gz" | sha256sum --check --status
 tar -xzf "$stage/uv.tar.gz" -C "$stage" uv-x86_64-unknown-linux-gnu/uv
 install -m755 "$stage/uv-x86_64-unknown-linux-gnu/uv" "$dest/bin/uv"
+# Go may restore cached executable modes; enforce non-writable executable binaries.
+chmod 755 "$dest/bin/controller" "$dest/bin/nodeagent" "$dest/bin/uv"
 # Archive filters avoid test, mock, bytecode, and developer artifact leakage.
 tar -cf - --exclude='__pycache__' --exclude='*.pyc' --exclude='mock_api.py' --exclude='test*' --exclude='*.log' demo worker deploy/standalone bench/profile_qwen3.py | tar -xf - -C "$dest/app"
 find "$dest/app" -type f -perm /111 -exec chmod 755 {} +
