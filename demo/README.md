@@ -14,7 +14,7 @@ shardwise solo
 
 You can also open **Shardwise Demo** from the applications menu. The terminal prints a localhost browser URL. Keep the terminal open during the demo.
 
-First launch downloads a managed Python 3.12 environment, pinned dependencies, and model assets. The CPU dependencies use about 2.5 GB before model downloads; reserve additional room for the model and download caches. CUDA runtime size has not yet been measured and may be substantially larger. Internet is required for setup; subsequent launches reuse cached assets. Interrupted downloads can be resumed by running the same command again. The application does not install NVIDIA drivers.
+First launch downloads a managed Python 3.12 environment, pinned dependencies, and model assets. The measured CPU runtime uses about 1 GB, and the model cache uses about 1.5 GiB; reserve additional room for download caches. The installer is approximately 48 MiB. CUDA runtime size has not yet been measured and may be substantially larger. Internet is required for setup; subsequent launches reuse cached assets. Interrupted downloads can be resumed by running the same command again. The application does not install NVIDIA drivers.
 
 From a source checkout, install Go and [uv](https://docs.astral.sh/uv/getting-started/installation/), then:
 
