@@ -165,7 +165,7 @@ def main():
         ],
     )
     rpc.add_WorkerServicer_to_server(servicer, server)
-    server.add_insecure_port(f"[::]:{port}")
+    server.add_insecure_port(f"{os.environ.get('GRPC_HOST', '[::]')}:{port}")
     server.start()
     log.info("worker %s listening on :%d", os.environ.get("WORKER_NAME", "?"), port)
     server.wait_for_termination()

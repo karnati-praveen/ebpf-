@@ -224,7 +224,8 @@ class Qwen3Backend:
         # Qwen3-0.6B (~2.4 GB FP32); a larger tier would need per-tensor
         # loading of only the assigned weights.
         model = AutoModelForCausalLM.from_pretrained(
-            self.model_name, dtype=dtype, attn_implementation="sdpa"
+            self.model_name, dtype=dtype, attn_implementation="sdpa",
+            revision=os.environ.get("MODEL_REVISION"),
         )
         model.eval()
         model.to(self.device)

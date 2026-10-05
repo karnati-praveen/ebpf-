@@ -1,4 +1,6 @@
-# KubeEdgeInfer
+# Shardwise
+
+The research core and historical experiment artifacts use the KubeEdgeInfer name.
 
 Experiment data and reports are organized in [results/](results/README.md).
 

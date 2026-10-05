@@ -39,7 +39,9 @@ def profile(args):
     contexts = sorted(set(int(c) for c in args.contexts.split(",")))
     if not contexts or min(contexts) < 1 or args.samples < 1 or args.warmup < 0:
         raise ValueError("contexts and samples must be positive; warmup must be nonnegative")
-    total = AutoConfig.from_pretrained(args.model).num_hidden_layers
+    total = AutoConfig.from_pretrained(
+        args.model, revision=os.environ.get("MODEL_REVISION")
+    ).num_hidden_layers
     backend = Qwen3Backend(args.model)
     backend.load(0, total, total)
     sync = torch.cuda.synchronize if args.device == "cuda" else lambda: None
