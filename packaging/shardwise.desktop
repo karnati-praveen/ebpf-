@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=KubeEdgeInfer Demo
+Name=Shardwise Demo
 Comment=Show real inference and worker recovery on CPU or NVIDIA GPU
-Exec=keinfer-demo solo
-Icon=keinfer-demo
+Exec=shardwise solo
+Icon=shardwise
 Terminal=true
 Categories=Education;Science;

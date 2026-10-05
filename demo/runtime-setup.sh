@@ -5,8 +5,8 @@ case "$flavor" in cpu|cuda|auto) ;; *) echo 'Usage: runtime-setup.sh [cpu|cuda|a
 if [[ "$flavor" == auto ]]; then
   if command -v nvidia-smi >/dev/null && nvidia-smi -L >/dev/null 2>&1; then flavor=cuda; else flavor=cpu; fi
 fi
-app_home=${KEINFER_DEMO_HOME:-$HOME/.local/share/keinfer-demo}
-app_bin=${KEINFER_BIN:-/opt/keinfer-demo/bin}
+app_home=${SHARDWISE_HOME:-${KEINFER_DEMO_HOME:-$HOME/.local/share/shardwise}}
+app_bin=${SHARDWISE_BIN:-${KEINFER_BIN:-/opt/shardwise/bin}}
 uv_bin="$app_bin/uv"
 if [[ ! -x "$uv_bin" ]]; then uv_bin=$(command -v uv || true); fi
 [[ -n "$uv_bin" ]] || { echo 'uv is missing. Install the demo package or uv before setup.' >&2; exit 1; }
