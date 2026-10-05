@@ -128,10 +128,10 @@ or repeated benchmark outputs.
 replaces it with the stable endpoint:
 
 ```text
-https://kubeedgeinfer-control-plane:6443
+https://shardwise-control-plane:6443
 ```
 
-The API server certificate contains `DNS:kubeedgeinfer-control-plane`, and
+The API server certificate contains `DNS:shardwise-control-plane`, and
 Docker resolves that name to the container's current address after a normal
 Codespace restart. The repair is guarded, preserves the original kubelet config,
 and restarts kubelet only when the hostname endpoint is absent.

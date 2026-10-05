@@ -72,7 +72,7 @@ def summarize(prefix):
     phases = {r["phase"]: float(r["t"]) for r in read_csv(prefix + "_phases.csv")}
     with open(prefix + "_evidence.json") as f:
         evidence = json.load(f)
-    node = "kubeedgeinfer-worker3" if scenario == "failure" else "kubeedgeinfer-worker2"
+    node = "shardwise-worker3" if scenario == "failure" else "shardwise-worker2"
     dst = target_ip(evidence, node)
     baseline_rows = [r for r in series if phases["clean"] <= float(r["t"]) < phases["fault"]]
     baseline_layout = Counter(layout(r) for r in baseline_rows if layout(r)).most_common(1)[0][0]

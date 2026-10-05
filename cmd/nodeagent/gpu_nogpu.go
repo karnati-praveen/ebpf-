@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"kubeedgeinfer/internal/gpu"
+	"shardwise/internal/gpu"
 )
 
 func newNVML() (gpu.Reader, error) {

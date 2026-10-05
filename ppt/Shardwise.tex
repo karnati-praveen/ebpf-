@@ -1,12 +1,12 @@
 % =====================================================================
-%  KubeEdgeInfer -- project presentation (Beamer)
+%  Shardwise -- project presentation (Beamer)
 %
 %  A closed-loop, eBPF-driven Kubernetes framework for heterogeneous
 %  distributed LLM inference on consumer edge clusters.
 %
 %  Build:
-%      pdflatex KubeEdgeInfer.tex
-%      pdflatex KubeEdgeInfer.tex      % twice, for the table of contents
+%      pdflatex Shardwise.tex
+%      pdflatex Shardwise.tex      % twice, for the table of contents
 %
 %  Figures are read from ../bench/results/ -- run
 %      python3 bench/run.py --all && python3 bench/plot.py
@@ -70,7 +70,7 @@
 \setbeamertemplate{footline}{%
   \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=2.2ex,dp=1.2ex,leftskip=1em,%
         rightskip=1em]{}%
-    {\tiny\color{keMuted}KubeEdgeInfer\hfill\insertframenumber}%
+    {\tiny\color{keMuted}Shardwise\hfill\insertframenumber}%
   \end{beamercolorbox}}%
 }
 
@@ -123,7 +123,7 @@
   \end{frame}}
 
 % ---------------------------------------------------------------- title ---
-\title{KubeEdgeInfer}
+\title{Shardwise}
 \subtitle{A closed-loop, eBPF-driven Kubernetes framework for heterogeneous
 distributed LLM inference on consumer edge clusters}
 \author{Karnati Praveen}
@@ -330,7 +330,7 @@ distributed LLM inference on consumer edge clusters}
     \color{keNavy}\bfseries Dynamic / continuous repartition &
     Llumnix $\cdot$ ServerlessLLM $\cdot$ AnchorTP
     \newline {\color{keMuted}\scriptsize Dynamic, but pays a stateful migration cost.} &
-    \cellcolor{keWash}\hl{KubeEdgeInfer (this work)}
+    \cellcolor{keWash}\hl{Shardwise (this work)}
     \newline {\color{keMuted}\scriptsize Continuous repartition made cheap by stateless workers.} \\
   \end{tabular}
       \vspace{0.7em}
@@ -527,7 +527,7 @@ for w := 1; w <= k; w++ {
         Container runtime & Docker 29.3.0-1 $\cdot$ storage driver
           \texttt{overlayfs} $\cdot$ cgroup driver \texttt{cgroupfs}, v2 \\
         Cluster & kind v0.29.0 $\cdot$ kubectl v1.35.2 $\cdot$ 1 control-plane
-          + 3 workers labeled \texttt{kubeedgeinfer.io/worker=true} \\
+          + 3 workers labeled \texttt{shardwise.io/worker=true} \\
         Toolchain & Go 1.26.1 $\cdot$ Python 3.12.1 $\cdot$ cilium/ebpf v0.22.0
           $\cdot$ grpc-go v1.82.0 $\cdot$ client-go v0.36.2 \\
         \bottomrule
@@ -572,7 +572,7 @@ for w := 1; w <= k; w++ {
           on worker2 \\
         \texttt{thermal} & \texttt{POST /gpu/override \{"temp\_c": 92\}} $\to$
           speed derated to $0.4\times$ \\
-        \texttt{failure} & \texttt{docker stop kubeedgeinfer-worker3} (last
+        \texttt{failure} & \texttt{docker stop shardwise-worker3} (last
           stage), then restart \\
         \texttt{combo} & netem + thermal simultaneously --- the joint-fault
           test for C3 \\
@@ -894,7 +894,7 @@ ok  internal/partition
   \vspace{0.5em}
   {\scriptsize\color{keMuted}\itshape Section 11 (proposed-work code, Docker/VM
   configuration and the live demo) is in the companion deck:
-  \texttt{KubeEdgeInfer\_Code\_Demo.pptx}}
+  \texttt{Shardwise\_Code\_Demo.pptx}}
 \end{frame}
 
 \end{document}

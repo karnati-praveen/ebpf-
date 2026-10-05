@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"kubeedgeinfer/internal/partition"
+	"shardwise/internal/partition"
 	"math"
 	"os"
 	"sort"

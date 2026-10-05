@@ -51,7 +51,7 @@ document, which still gives you real GPT-2 on the real GPU.
 ```
 
 This installs k3s and nvidia-container-toolkit, and labels the node
-`kubeedgeinfer.io/worker=true` plus `kubeedgeinfer.io/gpu=true`.
+`shardwise.io/worker=true` plus `shardwise.io/gpu=true`.
 
 ## 2. Build GPU images and deploy
 
@@ -69,13 +69,13 @@ The agent runs on a minimal image; the NVIDIA runtime is what injects
 the simulated thermal model.
 
 ```bash
-kubectl -n kubeedgeinfer patch ds keinfer-nodeagent \
+kubectl -n shardwise patch ds shardwise-nodeagent \
   -p '{"spec":{"template":{"spec":{"runtimeClassName":"nvidia"}}}}'
-kubectl -n kubeedgeinfer set env ds/keinfer-nodeagent \
+kubectl -n shardwise set env ds/shardwise-nodeagent \
   NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 # verify -- must say "real NVML", not "falling back to sim"
-kubectl -n kubeedgeinfer logs ds/keinfer-nodeagent | grep -i 'gpu telemetry'
+kubectl -n shardwise logs ds/shardwise-nodeagent | grep -i 'gpu telemetry'
 ```
 
 ## 4. Run 3 shards on the one GPU
@@ -85,27 +85,27 @@ machine gives a one-stage pipeline with nothing to partition. Swap it for a
 Deployment whose replicas share the L4:
 
 ```bash
-kubectl -n kubeedgeinfer delete ds keinfer-worker --ignore-not-found
+kubectl -n shardwise delete ds shardwise-worker --ignore-not-found
 kubectl apply -f deploy/manifests/workers-singlenode.yaml
-kubectl -n kubeedgeinfer get pods -w      # 3 shards + router + controller
+kubectl -n shardwise get pods -w      # 3 shards + router + controller
 ```
 
 (On a single node the deploy script imports images straight into k3s's
-containerd, so the manifests use plain `kubeedgeinfer/*:dev` tags with no
+containerd, so the manifests use plain `shardwise/*:dev` tags with no
 registry prefix.)
 
 ## 5. Switch to the real model
 
 ```bash
-kubectl -n kubeedgeinfer patch inferencepipeline demo --type=merge \
+kubectl -n shardwise patch inferencepipeline demo --type=merge \
   -p '{"spec":{"backend":"gpt2","workers":3}}'
 ```
 
 ## 6. Watch it
 
 ```bash
-kubectl -n kubeedgeinfer port-forward svc/router 18080:8080 &
-kubectl -n kubeedgeinfer port-forward svc/controller 18081:8081 &
+kubectl -n shardwise port-forward svc/router 18080:8080 &
+kubectl -n shardwise port-forward svc/controller 18081:8081 &
 python3 demo/serve.py            # http://localhost:8000
 ```
 
@@ -127,7 +127,7 @@ Confirm the GPU is actually working:
 
 ```bash
 nvidia-smi                       # 3 python processes holding memory
-kubectl -n kubeedgeinfer logs deploy/keinfer-worker-shard | grep device=
+kubectl -n shardwise logs deploy/shardwise-worker-shard | grep device=
                                  # "device=cuda", not device=cpu
 ```
 

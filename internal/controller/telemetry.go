@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"kubeedgeinfer/gen/pipelinepb"
+	"shardwise/gen/pipelinepb"
 )
 
 // TelemetryStore implements the Telemetry gRPC service and keeps the latest

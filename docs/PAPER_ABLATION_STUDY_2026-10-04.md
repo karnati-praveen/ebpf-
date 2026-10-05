@@ -1,6 +1,6 @@
 # Paper-focused ablation study — 4 October 2026
 
-Companion manuscript: [KubeEdgeInfer draft](paper/kubeedgeinfer-draft.md).
+Companion manuscript: [Shardwise draft](paper/shardwise-draft.md).
 Data, scripts and exported figures:
 [paper-ablations-2026-10-04](data/paper-ablations-2026-10-04/README.md).
 
@@ -268,7 +268,7 @@ Equivalence needs an explicit equivalence test, not overlapping intervals.
 
 ## Paper materials and claim traceability
 
-- [Working manuscript](paper/kubeedgeinfer-draft.md): abstract, introduction,
+- [Working manuscript](paper/shardwise-draft.md): abstract, introduction,
   related work, system equations, methods, results, discussion and conclusion.
 - [Bibliography](paper/references.bib): primary arXiv metadata checked in this
   session. A final submission needs a broader literature review and venue format.

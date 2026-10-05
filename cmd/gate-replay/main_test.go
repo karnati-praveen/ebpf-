@@ -1,7 +1,7 @@
 package main
 
 import (
-	"kubeedgeinfer/internal/partition"
+	"shardwise/internal/partition"
 	"math"
 	"testing"
 )

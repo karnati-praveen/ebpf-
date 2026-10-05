@@ -1,10 +1,10 @@
 # Draft abstract
 
-Title: KubeEdgeInfer: Measurement and Ablation of Transition-Aware Local LLM Inference
+Title: Shardwise: Measurement and Ablation of Transition-Aware Local LLM Inference
 
 Local large language model services face changing compute availability and
 communication conditions, but redistributing model layers can incur weight
-loading and key-value cache reconstruction costs. We present KubeEdgeInfer, a
+loading and key-value cache reconstruction costs. We present Shardwise, a
 standalone prototype that combines contiguous-layer partitioning, live telemetry,
 hysteresis and an explicit transition gate. The controller compares useful-token
 capacity over a planning horizon rather than accepting every improved

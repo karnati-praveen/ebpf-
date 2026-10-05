@@ -156,21 +156,21 @@ index b93af48..71b58ef 100644
 +WORKER_DEVICE=cuda ./deploy/standalone/setup-vm.sh
 +
 +# On one representative GPU: measure decoder, endpoints and replay prefill.
-+WORKER_DEVICE=cuda ~/keinfer/venv/bin/python bench/profile_qwen3.py \
-+  --out ~/keinfer/qwen3-gpu-profile.json
++WORKER_DEVICE=cuda ~/shardwise/venv/bin/python bench/profile_qwen3.py \
++  --out ~/shardwise/qwen3-gpu-profile.json
 +
-+# Copy that JSON file to ~/keinfer/qwen3-gpu-profile.json on every machine.
++# Copy that JSON file to ~/shardwise/qwen3-gpu-profile.json on every machine.
 +# Then on EVERY worker, including the coordinator:
-+WORKER_DEVICE=cuda COST_PROFILE=~/keinfer/qwen3-gpu-profile.json \
++WORKER_DEVICE=cuda COST_PROFILE=~/shardwise/qwen3-gpu-profile.json \
 +  ./deploy/standalone/start-worker-node.sh <coordinator-private-ip>
 +
 +# On the coordinator:
-+WORKER_DEVICE=cuda COST_PROFILE=~/keinfer/qwen3-gpu-profile.json \
++WORKER_DEVICE=cuda COST_PROFILE=~/shardwise/qwen3-gpu-profile.json \
 +  ./deploy/standalone/start-coordinator.sh 2
 +
 +# Before measurements, validate a relayout. More tokens give a fast GPU time
 +# to trigger it while a request is active.
-+WORKER_DEVICE=cuda ~/keinfer/venv/bin/python bench/verify_qwen3.py \
++WORKER_DEVICE=cuda ~/shardwise/venv/bin/python bench/verify_qwen3.py \
 +  --relayout --tokens 128
 +```
 +
@@ -203,8 +203,8 @@ index ac0877f..ccb1e9c 100755
  AGENT_HTTP_PORT="${AGENT_HTTP_PORT:-9101}"
  CONTROLLER_GRPC_PORT="${CONTROLLER_GRPC_PORT:-50053}"
 @@ -25,6 +27,46 @@ PER_LAYER_PROFILE="${PER_LAYER_PROFILE:-128:5.55,512:6.25,1024:7.18,2048:9.49}"
- log() { echo "[keinfer] $*"; }
- die() { echo "[keinfer] ERROR: $*" >&2; exit 1; }
+ log() { echo "[shardwise] $*"; }
+ die() { echo "[shardwise] ERROR: $*" >&2; exit 1; }
  
 +# One reference cost profile is shared by the coordinator and all workers.
 +# Workers compare their own decode timing with this table to report relative
@@ -294,7 +294,7 @@ index 685fa1f..e311ce7 100755
  WORKERS="${1:-}"
  [[ "$WORKERS" =~ ^[0-9]+$ ]] || die "usage: $0 <expected-worker-count>"
 @@ -30,9 +31,9 @@ CONTEXT_LEN="${CONTEXT_LEN:-512}"
- CFG="$STATE_DIR/keinfer.json"
+ CFG="$STATE_DIR/shardwise.json"
  COST_MODEL="${COST_MODEL:-full}"
  [[ "$COST_MODEL" == full || "$COST_MODEL" == layer-proportional ]] || die "COST_MODEL must be full or layer-proportional"
 -python3 - "$CFG" "$WORKERS" "$CONTEXT_LEN" "$PER_LAYER_PROFILE" "$ROUTER_GRPC_PORT" "$MODEL" "$COST_MODEL" <<'PY'

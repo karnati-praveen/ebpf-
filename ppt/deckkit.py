@@ -1,4 +1,4 @@
-"""Shared slide-building helpers for the KubeEdgeInfer decks.
+"""Shared slide-building helpers for the Shardwise decks.
 
 Deliberately small: a handful of primitives (title, bullets, table, code box,
 figure) styled once here so both decks look like one document. 16:9.

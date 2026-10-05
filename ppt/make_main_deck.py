@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the KubeEdgeInfer main presentation (sections 1-10).
+"""Build the Shardwise main presentation (sections 1-10).
 
     python3 ppt/make_main_deck.py
 
@@ -17,7 +17,7 @@ from pptx.enum.text import PP_ALIGN
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "bench", "results")
-OUT = os.path.join(ROOT, "ppt", "KubeEdgeInfer_Presentation_Full.pptx")
+OUT = os.path.join(ROOT, "ppt", "Shardwise_Presentation_Full.pptx")
 
 with open(os.path.join(RESULTS, "summary.json")) as f:
     SUMMARY = json.load(f)
@@ -45,7 +45,7 @@ prs = new_deck()
 # ===========================================================================
 title_slide(
     prs,
-    "KubeEdgeInfer",
+    "Shardwise",
     "A closed-loop, eBPF-driven Kubernetes framework for heterogeneous "
     "distributed LLM inference on consumer edge clusters",
     [
@@ -269,7 +269,7 @@ cells = [
      "Partition solved once from an offline profile.", INK, WHITE),
     (1, 0, "Llumnix  ·  ServerlessLLM  ·  AnchorTP",
      "Dynamic, but pays a stateful migration cost.", INK, WHITE),
-    (1, 1, "KubeEdgeInfer  (this work)",
+    (1, 1, "Shardwise  (this work)",
      "Continuous repartition made cheap by stateless workers.", BLUE, WASH),
 ]
 for r, c, head, sub, col, bg in cells:
@@ -652,18 +652,18 @@ callout(s, MARGIN + 6.85, y + 2.6, 5.85, 1.32,
 # -------------------------------------------------------------- CRD ------
 s, y = slide(prs, "The partition as a declarative Kubernetes resource",
              kicker="Proposed Work  ·  Stage 4")
-code_box(s, MARGIN, y, 6.1, 3.15, """apiVersion: kubeedgeinfer.io/v1alpha1
+code_box(s, MARGIN, y, 6.1, 3.15, """apiVersion: shardwise.io/v1alpha1
 kind: InferencePipeline
 metadata:
   name: demo
-  namespace: kubeedgeinfer
+  namespace: shardwise
 spec:
   model: gpt2
   backend: sim          # sim | gpt2
   totalLayers: 12
   perLayerMs: 30        # base per-layer cost
   workers: 3
-  routerAddr: router.kubeedgeinfer.svc:50052""",
+  routerAddr: router.shardwise.svc:50052""",
          size=11, caption="deploy/manifests/pipeline.yaml")
 bullets(s, MARGIN + 6.55, y - 0.05, 6.15, [
     (0, "The user declares **what** to run. The controller decides **how** it "
@@ -678,7 +678,7 @@ bullets(s, MARGIN + 6.55, y - 0.05, 6.15, [
         "Kubernetes API object - KServe, Volcano and Ray Serve all operate at "
         "the granularity of a whole model replica.", INK),
 ], size=13, gap=10)
-code_box(s, MARGIN, y + 3.42, BODY_W, 1.0, """$ kubectl -n kubeedgeinfer get ipl demo
+code_box(s, MARGIN, y + 3.42, BODY_W, 1.0, """$ kubectl -n shardwise get ipl demo
 NAME   PHASE     BOTTLENECK   GENERATION
 demo   Serving   121.4        7""", size=11.5, caption="observed state")
 
@@ -706,7 +706,7 @@ host = [
                           "driver overlayfs · cgroup driver cgroupfs, v2"],
     ["Cluster", "kind v0.29.0 · kubectl v1.35.2 · 1 control-plane + "
                 "3 worker nodes"],
-    ["Node labels", "kubeedgeinfer.io/worker=true on all three workers; "
+    ["Node labels", "shardwise.io/worker=true on all three workers; "
                     "node-id w1 / w2 / w3"],
 ]
 table(s, MARGIN, y, 6.45, (1.75, 4.7), host, font=10, row_h=0.44, head_h=0.32)
@@ -753,10 +753,10 @@ faults = [
     ["Scenario", "Injection method"],
     ["baseline", "none - steady load only"],
     ["netem", "tc qdisc add dev eth0 root netem delay 80ms inside the "
-              "kubeedgeinfer-worker2 container"],
+              "shardwise-worker2 container"],
     ["thermal", "POST /gpu/override {\"temp_c\": 92} to the node agent on "
                 "worker2 → speed derated to 0.4×"],
-    ["failure", "docker stop kubeedgeinfer-worker3 (last stage), then restart"],
+    ["failure", "docker stop shardwise-worker3 (last stage), then restart"],
     ["combo", "netem and thermal injected simultaneously - the joint-fault "
               "test for contribution C3"],
 ]
@@ -890,7 +890,7 @@ fig_slide(
 fig_slide(
     "Node failure: healing without lost requests",
     "failure.png",
-    "bench/results/failure.png - kubeedgeinfer-worker3 (last stage) stopped "
+    "bench/results/failure.png - shardwise-worker3 (last stage) stopped "
     "and later restarted.",
     bullets_right=[
         (0, "A heartbeat older than 3 s marks the node gone. The worker-set "
@@ -989,7 +989,7 @@ distributed : [11, 314, 716, 257, 1263, 4336]
 single-proc : [11, 314, 716, 257, 1263, 4336]
 MATCH""", size=11, caption="token-identical output")
 code_box(s, MARGIN + 6.85, y + 2.12, 5.85, 1.85, """$ make test
-ok  kubeedgeinfer/internal/partition
+ok  shardwise/internal/partition
     TestOptimalMatchesBruteForce (200 cases)
     TestDeciderHysteresis
     TestEmptyStageBypass""", size=11, caption="optimiser unit tests")
@@ -1004,7 +1004,7 @@ section_slide(prs, "SECTION 7", "Comparison",
 s, y = slide(prs, "Capability comparison against prior systems",
              kicker="Comparison")
 cmp_rows = [
-    ["Capability", "Petals", "vLLM", "EdgeShard", "Llumnix", "KubeEdgeInfer"],
+    ["Capability", "Petals", "vLLM", "EdgeShard", "Llumnix", "Shardwise"],
     ["Heterogeneous edge support", "partial", "✗", "✓", "✗",
      "✓"],
     ["Kernel-level telemetry (eBPF)", "✗", "✗", "✗", "✗",
@@ -1235,11 +1235,11 @@ para(tf, "Thank you", size=42, color=WHITE, bold=True, first=True, after=0)
 tf = tb(s, 1.4, 3.62, 10.0, 1.4)
 para(tf, "The live code walkthrough and demo continue in the companion deck:",
      size=15, color=RGBColor(0xB9, 0xCC, 0xDE), first=True, after=8)
-para(tf, "KubeEdgeInfer_Code_Demo.pptx", size=17, color=WHITE, bold=True,
+para(tf, "Shardwise_Code_Demo.pptx", size=17, color=WHITE, bold=True,
      font=MONO, after=8)
 para(tf, "github.com/karnati-praveen/ebpf-   ·   ./run-demo.sh",
      size=13.5, color=RGBColor(0x8F, 0xBC, 0xEE), font=MONO, after=0)
 
-paginate(prs, "KubeEdgeInfer  ·  eBPF-driven distributed LLM inference")
+paginate(prs, "Shardwise  ·  eBPF-driven distributed LLM inference")
 prs.save(OUT)
 print(f"wrote {OUT}  ({len(prs.slides.__iter__.__self__._sldIdLst)} slides)")

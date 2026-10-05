@@ -1,4 +1,4 @@
-"""KubeEdgeInfer shard worker.
+"""Shardwise shard worker.
 
 Serves a contiguous range of model layers. The controller re-assigns the
 range at runtime via AssignLayers (hot, no restart); the router drives

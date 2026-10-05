@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Build the 15-slide KubeEdgeInfer presentation.
+"""Build the 15-slide Shardwise presentation.
 
     python3 ppt/make_deck15.py
 
 Same eleven sections as the long deck, compressed to a 15-slide limit. The
-code walkthrough stays in its own demo deck (KubeEdgeInfer_Code_Demo.pptx).
+code walkthrough stays in its own demo deck (Shardwise_Code_Demo.pptx).
 Result numbers are read from bench/results/summary.json at build time.
 """
 
@@ -19,7 +19,7 @@ from pptx.enum.text import PP_ALIGN
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "bench", "results")
-OUT = os.path.join(ROOT, "ppt", "KubeEdgeInfer_Presentation.pptx")
+OUT = os.path.join(ROOT, "ppt", "Shardwise_Presentation.pptx")
 
 with open(os.path.join(RESULTS, "summary.json")) as f:
     SUMMARY = json.load(f)
@@ -51,7 +51,7 @@ prs = new_deck()
 # ===========================================================================
 title_slide(
     prs,
-    "KubeEdgeInfer",
+    "Shardwise",
     "A closed-loop, eBPF-driven Kubernetes framework for heterogeneous "
     "distributed LLM inference on consumer edge clusters",
     [
@@ -253,7 +253,7 @@ cells = [(0, 0, "not applicable", "", FAINT, WASH),
           "solved once, offline", INK, WHITE),
          (1, 0, "Llumnix\nServerlessLLM · AnchorTP",
           "dynamic, but stateful", INK, WHITE),
-         (1, 1, "KubeEdgeInfer\n(this work)",
+         (1, 1, "Shardwise\n(this work)",
           "continuous, stateless", BLUE, WASH)]
 for r, c, head, sub, col, bg in cells:
     x = gx + c * (cw2 + 0.14)
@@ -463,7 +463,7 @@ host = [
     ["Container runtime", "Docker 29.3.0-1 · storage driver overlayfs · cgroup "
                           "driver cgroupfs, v2"],
     ["Cluster", "kind v0.29.0 · kubectl v1.35.2 · 1 control-plane + 3 workers "
-                "labeled kubeedgeinfer.io/worker=true"],
+                "labeled shardwise.io/worker=true"],
     ["Toolchain", "Go 1.26.1 · Python 3.12.1 · cilium/ebpf v0.22.0 · grpc-go "
                   "v1.82.0 · client-go v0.36.2"],
 ]
@@ -496,7 +496,7 @@ faults = [
     ["Scenario", "Injection method"],
     ["netem", "tc qdisc add dev eth0 root netem delay 80ms on worker2"],
     ["thermal", "POST /gpu/override {\"temp_c\": 92} → speed derated to 0.4×"],
-    ["failure", "docker stop kubeedgeinfer-worker3 (last stage), then restart"],
+    ["failure", "docker stop shardwise-worker3 (last stage), then restart"],
     ["combo", "netem + thermal simultaneously - the joint-fault test for C3"],
 ]
 table(s, MARGIN + 6.75, y + 3.02, 5.95, (1.4, 4.55), faults, font=9.5,
@@ -824,9 +824,9 @@ for col, chunk, start in ((MARGIN, refs[:half], 1),
              after=6, spacing=1.14, indent=(0.42, -0.42))
 tf = tb(s, MARGIN, y + 4.42, BODY_W, 0.4)
 para(tf, "Section 11 (proposed-work code, Docker/VM configuration and the live "
-         "demo) is in the companion deck: KubeEdgeInfer_Code_Demo.pptx",
+         "demo) is in the companion deck: Shardwise_Code_Demo.pptx",
      size=11, color=MUTED, italic=True, first=True, after=0)
 
-paginate(prs, "KubeEdgeInfer  ·  eBPF-driven distributed LLM inference")
+paginate(prs, "Shardwise  ·  eBPF-driven distributed LLM inference")
 prs.save(OUT)
 print(f"wrote {OUT}  ({len(prs.slides.__iter__.__self__._sldIdLst)} slides)")

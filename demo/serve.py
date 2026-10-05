@@ -5,7 +5,7 @@ Serves demo/dashboard.html and same-origin JSON proxies for the router and
 controller (neither sets CORS headers, so the browser can't call them
 directly), plus:
 
-  POST /api/fault  {"node": "kubeedgeinfer-worker2", "temp_c": 92}
+  POST /api/fault  {"node": "shardwise-worker2", "temp_c": 92}
                    {"node": "...", "clear": true}
       -> forwards a GPU override to that kind node's node agent (port 9101);
          resolves the node's container IP via `docker inspect`.

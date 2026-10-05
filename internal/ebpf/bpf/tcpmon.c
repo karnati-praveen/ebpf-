@@ -1,4 +1,4 @@
-// KubeEdgeInfer TCP link monitor (CO-RE).
+// Shardwise TCP link monitor (CO-RE).
 //
 // Two hooks observe inter-stage pipeline traffic:
 //   tp_btf/tcp_probe   -> per-flow smoothed RTT (client-side sockets)

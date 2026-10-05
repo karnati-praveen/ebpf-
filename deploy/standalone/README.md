@@ -36,21 +36,21 @@ layers and the LM head.
 WORKER_DEVICE=cuda ./deploy/standalone/setup-vm.sh
 
 # On one representative GPU: measure decoder, endpoints and replay prefill.
-WORKER_DEVICE=cuda ~/keinfer/venv/bin/python bench/profile_qwen3.py \
-  --out ~/keinfer/qwen3-gpu-profile.json
+WORKER_DEVICE=cuda ~/shardwise/venv/bin/python bench/profile_qwen3.py \
+  --out ~/shardwise/qwen3-gpu-profile.json
 
-# Copy that JSON file to ~/keinfer/qwen3-gpu-profile.json on every machine.
+# Copy that JSON file to ~/shardwise/qwen3-gpu-profile.json on every machine.
 # Then on EVERY worker, including the coordinator:
-WORKER_DEVICE=cuda COST_PROFILE=~/keinfer/qwen3-gpu-profile.json \
+WORKER_DEVICE=cuda COST_PROFILE=~/shardwise/qwen3-gpu-profile.json \
   ./deploy/standalone/start-worker-node.sh <coordinator-private-ip>
 
 # On the coordinator:
-WORKER_DEVICE=cuda COST_PROFILE=~/keinfer/qwen3-gpu-profile.json \
+WORKER_DEVICE=cuda COST_PROFILE=~/shardwise/qwen3-gpu-profile.json \
   ./deploy/standalone/start-coordinator.sh 2
 
 # Before measurements, validate a relayout. More tokens give a fast GPU time
 # to trigger it while a request is active.
-WORKER_DEVICE=cuda ~/keinfer/venv/bin/python bench/verify_qwen3.py \
+WORKER_DEVICE=cuda ~/shardwise/venv/bin/python bench/verify_qwen3.py \
   --relayout --tokens 128
 ```
 
@@ -132,13 +132,13 @@ The controller assigns every worker within seconds of its node agent reporting.
 Expect an uneven split (e.g. 18/10 at ctx 512): the last stage also carries the
 LM head, which costs as much as several layers.
 
-Logs: `~/keinfer/logs/{controller,router,worker,nodeagent}.log`.
+Logs: `~/shardwise/logs/{controller,router,worker,nodeagent}.log`.
 Stop: `./deploy/standalone/stop.sh`.
 
 ## 5. Verify correctness on the VMs (once)
 
 ```bash
-~/keinfer/venv/bin/python bench/verify_qwen3.py --relayout --tokens 32
+~/shardwise/venv/bin/python bench/verify_qwen3.py --relayout --tokens 32
 ```
 
 Must print `RELAYOUT OK`: distributed output identical to single-process
@@ -198,7 +198,7 @@ laptops; the same scripts run there unchanged.
 
 ## Troubleshooting
 
-- **Controller shows no assignments.** `tail ~/keinfer/logs/nodeagent.log` on
+- **Controller shows no assignments.** `tail ~/shardwise/logs/nodeagent.log` on
   each VM: it logs `worker <addr> ready=true` once the worker serves gRPC. If
   not, the worker is still loading or crashed (`logs/worker.log`).
 - **`kv cache protocol error`.** Router and workers disagree on `KV_CACHE`.

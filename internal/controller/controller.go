@@ -1,4 +1,4 @@
-// Package controller implements KubeEdgeInfer's DECIDE/ACT/HEAL loop: it
+// Package controller implements Shardwise's DECIDE/ACT/HEAL loop: it
 // aggregates node-agent telemetry, computes the optimal layer split, and
 // applies it to workers and router over gRPC, tracking everything in the
 // InferencePipeline custom resource.
@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"kubeedgeinfer/gen/pipelinepb"
-	"kubeedgeinfer/internal/partition"
-	"kubeedgeinfer/internal/peerconn"
+	"shardwise/gen/pipelinepb"
+	"shardwise/internal/partition"
+	"shardwise/internal/peerconn"
 )
 
 type Config struct {
@@ -41,7 +41,7 @@ type Config struct {
 	// its first observed eBPF/GPU reading, then reuses that snapshot forever
 	// instead of tracking live telemetry. This reproduces the "offline
 	// profiling pass, decided once" pattern used by EdgeShard/PipeEdge/Galaxy
-	// so it can be compared head-to-head against KubeEdgeInfer's own
+	// so it can be compared head-to-head against Shardwise's own
 	// continuous-telemetry DECIDE loop under the same fault injection.
 	ProfileOnce bool
 

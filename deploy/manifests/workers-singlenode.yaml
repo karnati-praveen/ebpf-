@@ -7,9 +7,9 @@
 #
 # Use INSTEAD of the worker DaemonSet (the router still comes from
 # workers.yaml):
-#   kubectl -n kubeedgeinfer delete ds keinfer-worker --ignore-not-found
+#   kubectl -n shardwise delete ds shardwise-worker --ignore-not-found
 #   kubectl apply -f deploy/manifests/workers-singlenode.yaml
-#   kubectl -n kubeedgeinfer scale deploy/keinfer-worker-shard --replicas=3
+#   kubectl -n shardwise scale deploy/shardwise-worker-shard --replicas=3
 #
 # GPU access: this requests no nvidia.com/gpu resource on purpose. The L4 is
 # a single allocatable GPU, so requesting it would let exactly one shard
@@ -21,26 +21,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keinfer-worker-shard
-  namespace: kubeedgeinfer
+  name: shardwise-worker-shard
+  namespace: shardwise
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: keinfer-worker
+      app: shardwise-worker
   template:
     metadata:
       labels:
         # Same label the controller selects on, so these shards are picked up
         # as pipeline stages exactly like the DaemonSet pods were.
-        app: keinfer-worker
+        app: shardwise-worker
     spec:
       nodeSelector:
-        kubeedgeinfer.io/worker: "true"
+        shardwise.io/worker: "true"
       runtimeClassName: nvidia
       containers:
         - name: worker
-          image: kubeedgeinfer/worker:dev
+          image: shardwise/worker:dev
           imagePullPolicy: IfNotPresent
           command: ["python3", "server.py"]
           ports:

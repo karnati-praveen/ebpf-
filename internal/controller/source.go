@@ -5,7 +5,7 @@ import (
 	"net"
 	"strconv"
 
-	"kubeedgeinfer/internal/partition"
+	"shardwise/internal/partition"
 )
 
 // The controller's substrate -- Kubernetes or standalone -- is reached only

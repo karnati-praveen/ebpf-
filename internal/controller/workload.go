@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"kubeedgeinfer/internal/partition"
+	"shardwise/internal/partition"
 	"math"
 	"net/http"
 	"time"

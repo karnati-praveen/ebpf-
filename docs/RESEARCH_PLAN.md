@@ -255,14 +255,14 @@ A means, not a milestone. Kubernetes stays working throughout.
 - **2.5** Per-worker ports: `controller.go:302` and `:311` assume one global
   `cfg.WorkerPort`. Remove it; advertise coordinator-reachable addresses.
 - **2.6** Readiness via RPC-level health, not TCP accept.
-- **2.7** Launcher `cmd/keinfer`. Reuse **only the isolated-venv portion** of
+- **2.7** Launcher `cmd/shardwise`. Reuse **only the isolated-venv portion** of
   `scripts/run-single-gpu.sh:38-85` — **not** its `--break-system-packages` fallback,
   which mutates the system interpreter. If a venv cannot be created, fail with
   instructions.
 - **2.8** Preserve the deterministic `(node, name)` sort (`controller.go:263-268`) and
   its comment at `:238-242` — it exists because of a real Decider-thrash bug.
 
-**Acceptance:** `./run-demo.sh` unchanged; `keinfer up` runs the full loop with no
+**Acceptance:** `./run-demo.sh` unchanged; `shardwise up` runs the full loop with no
 Docker/kubectl; discovery and inference verified across two machines.
 
 ### Phase 3 — Qwen3-0.6B, KV caching, recovery

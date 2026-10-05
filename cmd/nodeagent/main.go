@@ -1,4 +1,4 @@
-// The node agent is KubeEdgeInfer's WATCH stage: it attaches the tcpmon eBPF
+// The node agent is Shardwise's WATCH stage: it attaches the tcpmon eBPF
 // programs for inter-stage network telemetry, runs the (simulated or NVML)
 // GPU reader, serves both to the co-located worker over HTTP, and pushes a
 // NodeTelemetry snapshot to the controller every second — which doubles as
@@ -18,10 +18,10 @@ import (
 
 	"google.golang.org/grpc/connectivity"
 
-	"kubeedgeinfer/gen/pipelinepb"
-	kebpf "kubeedgeinfer/internal/ebpf"
-	"kubeedgeinfer/internal/gpu"
-	"kubeedgeinfer/internal/peerconn"
+	"shardwise/gen/pipelinepb"
+	kebpf "shardwise/internal/ebpf"
+	"shardwise/internal/gpu"
+	"shardwise/internal/peerconn"
 )
 
 func env(key, def string) string {

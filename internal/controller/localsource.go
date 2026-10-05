@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"kubeedgeinfer/internal/partition"
+	"shardwise/internal/partition"
 )
 
 // LocalSource reads a JSON config file for the spec and derives the worker set

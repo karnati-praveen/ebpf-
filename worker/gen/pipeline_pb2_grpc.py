@@ -5,7 +5,7 @@ import warnings
 
 import pipeline_pb2 as pipeline__pb2
 
-GRPC_GENERATED_VERSION = '1.82.1'
+GRPC_GENERATED_VERSION = '1.83.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -39,17 +39,17 @@ class WorkerStub:
             channel: A grpc.Channel.
         """
         self.AssignLayers = channel.unary_unary(
-                '/kubeedgeinfer.v1.Worker/AssignLayers',
+                '/shardwise.v1.Worker/AssignLayers',
                 request_serializer=pipeline__pb2.AssignLayersRequest.SerializeToString,
                 response_deserializer=pipeline__pb2.AssignLayersReply.FromString,
                 _registered_method=True)
         self.Forward = channel.unary_unary(
-                '/kubeedgeinfer.v1.Worker/Forward',
+                '/shardwise.v1.Worker/Forward',
                 request_serializer=pipeline__pb2.ForwardRequest.SerializeToString,
                 response_deserializer=pipeline__pb2.ForwardReply.FromString,
                 _registered_method=True)
         self.Stats = channel.unary_unary(
-                '/kubeedgeinfer.v1.Worker/Stats',
+                '/shardwise.v1.Worker/Stats',
                 request_serializer=pipeline__pb2.StatsRequest.SerializeToString,
                 response_deserializer=pipeline__pb2.StatsReply.FromString,
                 _registered_method=True)
@@ -100,9 +100,9 @@ def add_WorkerServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'kubeedgeinfer.v1.Worker', rpc_method_handlers)
+            'shardwise.v1.Worker', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('kubeedgeinfer.v1.Worker', rpc_method_handlers)
+    server.add_registered_method_handlers('shardwise.v1.Worker', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -127,7 +127,7 @@ class Worker:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/kubeedgeinfer.v1.Worker/AssignLayers',
+            '/shardwise.v1.Worker/AssignLayers',
             pipeline__pb2.AssignLayersRequest.SerializeToString,
             pipeline__pb2.AssignLayersReply.FromString,
             options,
@@ -154,7 +154,7 @@ class Worker:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/kubeedgeinfer.v1.Worker/Forward',
+            '/shardwise.v1.Worker/Forward',
             pipeline__pb2.ForwardRequest.SerializeToString,
             pipeline__pb2.ForwardReply.FromString,
             options,
@@ -181,7 +181,7 @@ class Worker:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/kubeedgeinfer.v1.Worker/Stats',
+            '/shardwise.v1.Worker/Stats',
             pipeline__pb2.StatsRequest.SerializeToString,
             pipeline__pb2.StatsReply.FromString,
             options,
@@ -209,7 +209,7 @@ class RouterStub:
             channel: A grpc.Channel.
         """
         self.SetPipeline = channel.unary_unary(
-                '/kubeedgeinfer.v1.Router/SetPipeline',
+                '/shardwise.v1.Router/SetPipeline',
                 request_serializer=pipeline__pb2.SetPipelineRequest.SerializeToString,
                 response_deserializer=pipeline__pb2.Ack.FromString,
                 _registered_method=True)
@@ -238,9 +238,9 @@ def add_RouterServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'kubeedgeinfer.v1.Router', rpc_method_handlers)
+            'shardwise.v1.Router', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('kubeedgeinfer.v1.Router', rpc_method_handlers)
+    server.add_registered_method_handlers('shardwise.v1.Router', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -265,7 +265,7 @@ class Router:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/kubeedgeinfer.v1.Router/SetPipeline',
+            '/shardwise.v1.Router/SetPipeline',
             pipeline__pb2.SetPipelineRequest.SerializeToString,
             pipeline__pb2.Ack.FromString,
             options,
@@ -293,7 +293,7 @@ class TelemetryStub:
             channel: A grpc.Channel.
         """
         self.Report = channel.unary_unary(
-                '/kubeedgeinfer.v1.Telemetry/Report',
+                '/shardwise.v1.Telemetry/Report',
                 request_serializer=pipeline__pb2.NodeTelemetry.SerializeToString,
                 response_deserializer=pipeline__pb2.Ack.FromString,
                 _registered_method=True)
@@ -322,9 +322,9 @@ def add_TelemetryServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'kubeedgeinfer.v1.Telemetry', rpc_method_handlers)
+            'shardwise.v1.Telemetry', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('kubeedgeinfer.v1.Telemetry', rpc_method_handlers)
+    server.add_registered_method_handlers('shardwise.v1.Telemetry', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -349,7 +349,7 @@ class Telemetry:
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/kubeedgeinfer.v1.Telemetry/Report',
+            '/shardwise.v1.Telemetry/Report',
             pipeline__pb2.NodeTelemetry.SerializeToString,
             pipeline__pb2.Ack.FromString,
             options,

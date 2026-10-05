@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KubeEdgeInfer — live</title>
+<title>Shardwise — live</title>
 <style>
   :root {
     color-scheme: light;
@@ -106,7 +106,7 @@
 <body>
   <div class="topbar">
     <span id="conn" class="dot"></span>
-    <h1>KubeEdgeInfer — live pipeline</h1>
+    <h1>Shardwise — live pipeline</h1>
     <span id="updated" style="font-size:11px;color:var(--muted)"></span>
     <span id="err"></span>
     <span class="spacer"></span>
@@ -225,7 +225,7 @@ function renderStack(stages) {
     stack.appendChild(seg);
     const lab = document.createElement("span");
     lab.style.width = w + "%";
-    lab.innerHTML = `<span class="swatch" style="background:${workerColor(s.name)}"></span>${s.name.replace(/^keinfer-worker-/, "…")} [${s.layers[0]},${s.layers[1]})`;
+    lab.innerHTML = `<span class="swatch" style="background:${workerColor(s.name)}"></span>${s.name.replace(/^shardwise-worker-/, "…")} [${s.layers[0]},${s.layers[1]})`;
     labels.appendChild(lab);
   }
 }
@@ -239,7 +239,7 @@ function renderBars(stats) {
     const row = document.createElement("div");
     row.className = "bar-row";
     row.innerHTML =
-      `<span class="bar-name"><span class="swatch" style="background:${workerColor(s.name)}"></span>${s.name.replace(/^keinfer-worker-/, "…")}</span>` +
+      `<span class="bar-name"><span class="swatch" style="background:${workerColor(s.name)}"></span>${s.name.replace(/^shardwise-worker-/, "…")}</span>` +
       `<div class="bar-track"><div class="bar-fill" style="width:${(frac * 100).toFixed(1)}%;background:${workerColor(s.name)}"></div></div>` +
       `<span class="bar-val">${s.error ? "n/a" : (frac * 100).toFixed(0) + "%"}</span>`;
     attachTip(row.children[1],
@@ -321,7 +321,7 @@ async function tick() {
   if (pipeline) {
     if (lastGen !== null && pipeline.generation !== lastGen)
       logEvent(`↻ repartitioned: gen ${lastGen} → <b>${pipeline.generation}</b>: ` +
-        pipeline.stages.map(s => `${s.name.replace(/^keinfer-worker-/, "…")}[${s.layers[0]},${s.layers[1]})`).join(" → "));
+        pipeline.stages.map(s => `${s.name.replace(/^shardwise-worker-/, "…")}[${s.layers[0]},${s.layers[1]})`).join(" → "));
     lastGen = pipeline.generation;
     renderStack(pipeline.stages || []);
   }

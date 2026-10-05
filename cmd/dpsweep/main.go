@@ -25,7 +25,7 @@ import (
 	"os"
 	"strconv"
 
-	"kubeedgeinfer/internal/partition"
+	"shardwise/internal/partition"
 )
 
 // measuredQwen3_06B is the decode-time per-layer cost table measured on an

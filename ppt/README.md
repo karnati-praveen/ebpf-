@@ -5,18 +5,18 @@ from the code or the measurements.
 
 | File | What it is |
 |---|---|
-| `KubeEdgeInfer_Presentation.pptx` | Main deck, 41 slides — sections 1–10 (title → references) |
-| `KubeEdgeInfer_Code_Demo.pptx` | Section 11, 23 slides — code walkthrough + live demo, kept separate so it can be driven at demo speed |
-| `KubeEdgeInfer.tex` | The same content as one Beamer deck (50 frames), for anyone who wants LaTeX |
+| `Shardwise_Presentation.pptx` | Main deck, 41 slides — sections 1–10 (title → references) |
+| `Shardwise_Code_Demo.pptx` | Section 11, 23 slides — code walkthrough + live demo, kept separate so it can be driven at demo speed |
+| `Shardwise.tex` | The same content as one Beamer deck (50 frames), for anyone who wants LaTeX |
 
 ## Regenerating
 
 ```bash
 pip install python-pptx
-python3 ppt/make_main_deck.py      # -> KubeEdgeInfer_Presentation.pptx
-python3 ppt/make_code_deck.py      # -> KubeEdgeInfer_Code_Demo.pptx
+python3 ppt/make_main_deck.py      # -> Shardwise_Presentation.pptx
+python3 ppt/make_code_deck.py      # -> Shardwise_Code_Demo.pptx
 
-pdflatex ppt/KubeEdgeInfer.tex     # twice; needs texlive-latex-recommended + -extra
+pdflatex ppt/Shardwise.tex     # twice; needs texlive-latex-recommended + -extra
 ```
 
 `deckkit.py` holds the shared styling primitives (title, bullets, table, code

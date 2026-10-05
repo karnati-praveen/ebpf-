@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"encoding/json"
-	"kubeedgeinfer/internal/partition"
+	"shardwise/internal/partition"
 	"net/http"
 	"net/http/httptest"
 	"testing"

@@ -18,7 +18,7 @@ import (
 )
 
 var PipelineGVR = schema.GroupVersionResource{
-	Group:    "kubeedgeinfer.io",
+	Group:    "shardwise.io",
 	Version:  "v1alpha1",
 	Resource: "inferencepipelines",
 }

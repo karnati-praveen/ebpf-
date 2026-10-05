@@ -1,4 +1,4 @@
-"""KubeEdgeInfer router.
+"""Shardwise router.
 
 Front door of the pipeline: accepts generation requests over HTTP, drives the
 stage chain over gRPC, and streams telemetry-friendly timing back. The
