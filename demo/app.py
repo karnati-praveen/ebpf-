@@ -268,6 +268,9 @@ class Runtime:
         finally: self.chat_lock.release()
 
     def close(self):
+        if self.args.command == 'host' and self.remote:
+            try: request(f"http://{self.remote['ip']}:{self.remote['port']}/fault", {'action': 'clear'}, self.pair_token, timeout=2)
+            except Exception: pass
         self.closed.set()
         self.state = 'stopped'
         self.kill('calibration')

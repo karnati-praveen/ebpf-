@@ -44,7 +44,7 @@ class Helper:
             self.slow.clear()
             self._signal(signal.SIGCONT)
         elif action != 'status': raise ValueError('Only slow, net, clear and status are supported')
-        return {'ok': True, 'slow': self.slow.is_set()}
+        return {'ok': True, 'slow': self.slow.is_set(), 'net': bool(getattr(self.runtime, 'relay', None) and self.runtime.relay.delay)}
 
     def close(self):
         self.slow.clear()
