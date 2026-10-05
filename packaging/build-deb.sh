@@ -58,5 +58,5 @@ EOF
 chmod 755 "$pkg/DEBIAN/postinst" "$pkg/DEBIAN/prerm"
 find "$pkg" -type d -exec chmod 755 {} +
 dpkg-deb --build --root-owner-group "$pkg" "$root/dist/shardwise_${version}_amd64.deb"
-sha256sum "$root/dist/shardwise_${version}_amd64.deb" > "$root/dist/shardwise_${version}_amd64.deb.sha256"
+(cd "$root/dist" && sha256sum "shardwise_${version}_amd64.deb" > "shardwise_${version}_amd64.deb.sha256")
 du -h "$root/dist/shardwise_${version}_amd64.deb"
