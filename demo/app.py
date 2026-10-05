@@ -364,7 +364,10 @@ def handler(runtime, pair=False):
                     if body.get('device') not in ('auto','cpu','cuda'): raise ValueError('Invalid device')
                     if body['device'] != 'cpu':
                         import torch
-                        if torch.version.cuda is None and (body['device'] == 'cuda' or hardware()['gpu']):
+                        gpu = hardware()['gpu']
+                        if body['device'] == 'cuda' and not gpu:
+                            raise ValueError('Forced GPU unavailable: NVIDIA GPU/driver not detected. Select CPU or Auto.')
+                        if torch.version.cuda is None and gpu:
                             raise ValueError('This runtime has CPU-only PyTorch. Exit and launch shardwise again to install the detected GPU runtime; then switch devices.')
                     if not runtime.chat_lock.acquire(False):
                         self.send(409,{'error':'busy'}); return
