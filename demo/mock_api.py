@@ -8,7 +8,7 @@ from pathlib import Path
 class Mock:
     def __init__(self, gpu=False, single=False, mode='solo'):
         self.token=secrets.token_urlsafe(32); self.started=time.monotonic(); self.lock=threading.RLock(); self.busy=False
-        self.gpu=gpu; self.single=single; self.mode=mode; self.recover_until=0; self.generation=1; self.events=[]; self.requests=0; self.tokens=0; self.load=False; self.stopped=False
+        self.gpu=gpu; self.gpu_capable=gpu; self.requested="auto"; self.single=single; self.mode=mode; self.recover_until=0; self.generation=1; self.events=[]; self.requests=0; self.tokens=0; self.load=False; self.stopped=False
         self.workers=[dict(name='w1',node='this-laptop',local=True,status='up',layers=[0,28] if single else [0,14],speed=1.0)]
         if not single:self.workers.append(dict(name='w2',node='friend' if mode=='host' else 'this-laptop',local=mode!='host',status='up',layers=[14,28],speed=0.95))
     def event(self,kind,text):self.events.append(dict(t=datetime.now(timezone.utc).isoformat(),kind=kind,text=text))
@@ -19,7 +19,7 @@ class Mock:
             self.recover_until=0; live=[w for w in self.workers if w['status']=='up']
             for w in self.workers:w['layers']=([0,28] if len(live)==1 else [0,14] if w['name']=='w1' else [14,28]) if w['status']=='up' else None
             self.generation+=1; self.event('healed' if len(live)==1 else 'restored','Layer assignments recovered.')
-        return dict(app_state=state,message='Development mock — simulated inference and hardware',progress=min(elapsed/6,1) if state in ('downloading','calibrating','loading') else None,mode=self.mode,device=dict(requested='auto',selected='cuda' if self.gpu else 'cpu',reason='Mock device for UI testing',gpu_name='RTX 4060' if self.gpu else None),workers=self.workers,generation=self.generation,policy='hysteresis',events=self.events,metrics=dict(requests=self.requests,tokens=self.tokens,avg_ttft_ms=420,avg_duration_ms=2000,repartition_replays=0),recovery_demo=dict(available=not self.single,reason='Only one worker fits in available memory.' if self.single else None),faults_available=['slow','net'] if self.mode=='host' else [],load_on=self.load)
+        return dict(app_state=state,message='Development mock — simulated inference and hardware',progress=min(elapsed/6,1) if state in ('downloading','calibrating','loading') else None,mode=self.mode,device=dict(requested=self.requested,selected='cuda' if self.gpu else 'cpu',reason='Mock device for UI testing',gpu_name='RTX 4060' if self.gpu else None),workers=self.workers,generation=self.generation,policy='hysteresis',events=self.events,metrics=dict(requests=self.requests,tokens=self.tokens,avg_ttft_ms=420,avg_duration_ms=2000,repartition_replays=0),recovery_demo=dict(available=not self.single,reason='Only one worker fits in available memory.' if self.single else None),faults_available=['slow','net'] if self.mode=='host' else [],load_on=self.load)
     def hw(self):return dict(cpu=dict(model='Mock Intel CPU',cores=8,util_pct=37.5),ram=dict(total_mb=16000,used_mb=9100),gpu=dict(name='RTX 4060',util_pct=62,temp_c=58,vram_used_mb=3200,vram_total_mb=8192) if self.gpu else None)
 
 class Handler(BaseHTTPRequestHandler):
@@ -64,7 +64,7 @@ class Handler(BaseHTTPRequestHandler):
                     m.event('fault','Mock fault '+d['action'])
                 elif self.path=='/api/mode':
                     if d.get('device') not in ('auto','cpu','cuda'):raise ValueError('invalid device')
-                    m.gpu=d['device']=='cuda';m.started=time.monotonic()
+                    m.requested=d['device'];m.gpu=d['device']=='cuda' or d['device']=='auto' and m.gpu_capable;m.started=time.monotonic()
                 elif self.path=='/api/load':
                     if not isinstance(d.get('on'),bool):raise ValueError('on must be boolean')
                     m.load=d['on']
