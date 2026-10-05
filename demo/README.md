@@ -14,7 +14,7 @@ keinfer-demo solo
 
 You can also open **KubeEdgeInfer Demo** from the applications menu. The terminal prints a localhost browser URL. Keep the terminal open during the demo.
 
-First launch downloads a managed Python 3.12 environment, pinned dependencies, and model assets. Reserve several GB of disk; CUDA packages can exceed the CPU download estimate. Internet is required for setup; subsequent launches reuse cached assets. Interrupted downloads can be resumed by running the same command again. The application does not install NVIDIA drivers.
+First launch downloads a managed Python 3.12 environment, pinned dependencies, and model assets. The CPU dependencies use about 2.5 GB before model downloads; reserve additional room for the model and download caches. CUDA runtime size has not yet been measured and may be substantially larger. Internet is required for setup; subsequent launches reuse cached assets. Interrupted downloads can be resumed by running the same command again. The application does not install NVIDIA drivers.
 
 From a source checkout, install Go and [uv](https://docs.astral.sh/uv/getting-started/installation/), then:
 
@@ -53,7 +53,7 @@ Copy the printed join command and token into the friend's terminal:
 keinfer-demo join HOST_IP TOKEN
 ```
 
-The host browser provides chat and pipeline controls. The friend's browser reports its local worker and real hardware; send chat from the host. Pair uses the shared CPU execution profile to avoid mixing incompatible CPU/CUDA configurations. Each laptop needs enough memory for its worker, including holding all layers during recovery.
+The host browser provides chat and pipeline controls. The friend's browser reports its local worker and real hardware; send chat from the host. Each laptop selects its own available CPU/CUDA device. The host supplies a shared reference profile for placement normalization; per-device calibration remains separate. Mixed CPU/GPU Pair inference has not yet been validated on physical NVIDIA hardware. Restart Pair to change devices; the dashboard device selector is available only in Solo. Each laptop needs enough memory for its worker, including holding all layers during recovery.
 
 The host enrollment port is TCP 8766. Controller, worker, and helper ports are dynamically assigned and printed during startup. Permit those actual ports between the two laptop IPs on the trusted network. Do not expose them to the internet; the session uses authenticated control but is not a public TLS service. Corporate Wi-Fi may isolate clients; try a phone hotspot if the laptops cannot reach one another.
 
