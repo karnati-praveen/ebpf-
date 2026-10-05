@@ -47,6 +47,30 @@ def lan_ip():
             return None
 
 
+def wsl():
+    """'nat' or 'mirrored' under Windows WSL2, None on a normal Linux laptop."""
+    try:
+        if 'microsoft' not in Path('/proc/sys/kernel/osrelease').read_text().lower(): return None
+    except OSError:
+        return None
+    ip = lan_ip() or ''
+    # WSL's default NAT gives the VM a private 172.16.0.0/12 address other
+    # laptops cannot reach; mirrored mode shares the Windows LAN address.
+    a = ip.split('.')
+    return 'nat' if len(a) == 4 and a[0] == '172' and 16 <= int(a[1]) <= 31 else 'mirrored'
+
+
+def open_browser(url):
+    """Best effort only: never crash and never take over the terminal."""
+    try:
+        if wsl():
+            subprocess.Popen(['explorer.exe', url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        elif os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY'):
+            subprocess.Popen(['xdg-open', url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    except OSError:
+        pass
+
+
 def pair_code():
     # Short enough to read aloud and type on the other laptop; the pair
     # servers lock out after repeated wrong codes.
@@ -154,7 +178,8 @@ class Runtime:
                 'code': self.pair_token if self.args.command == 'host' else None,
                 'friend': self.remote['ip'] if self.remote and self.args.command == 'host' else None,
                 'host': self.args.host if self.args.command == 'join' else None,
-                'ports': sorted({self.args.pair_port, self.ports['controller'], self.ports['helper'], self.args.pair_port + 3})}
+                'ports': sorted({self.args.pair_port, self.ports['controller'], self.ports['helper'], self.args.pair_port + 3}),
+                'warning': 'This Windows WSL setup uses NAT networking, so other laptops cannot reach it. Turn on mirrored networking (see WINDOWS.md), then restart Shardwise.' if wsl() == 'nat' else None}
 
     def cleanup_pipeline(self):
         if self.helper: self.helper.close(); self.helper = None
@@ -562,10 +587,7 @@ def main():
     url = f"http://127.0.0.1:{runtime.ports['app']}"
     print(f'Dashboard: {url}',flush=True)
     if not args.no_browser:
-        def browser():
-            import webbrowser
-            webbrowser.open(url)
-        threading.Thread(target=browser,daemon=True).start()
+        threading.Thread(target=open_browser,args=(url,),daemon=True).start()
     threading.Thread(target=runtime.initialize,daemon=True).start()
     try: runtime.server.serve_forever()
     finally:

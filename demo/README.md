@@ -39,25 +39,19 @@ Two CPU workers require at least 11 GB free RAM; CUDA requires approximately 3 G
 
 `shardwise status` reports the running application; `shardwise stop` stops its own processes and clears its active faults.
 
-## Pair quickstart
+## Pair quickstart (two laptops)
 
-Use a trusted shared Wi-Fi network; a phone hotspot is convenient. On the host:
+Put both laptops on the same trusted Wi-Fi; a phone hotspot is the most reliable. Start Shardwise on both (`shardwise`), then in the dashboard's **Connect another laptop** card:
 
-```bash
-shardwise host
-```
+1. On the laptop that will run the chat, click **Invite a laptop**. It shows this laptop's **address** (e.g. `192.168.1.20`) and a **pairing code** (e.g. `ab12-cd34`).
+2. On the other laptop, type both into **Join a laptop** and click **Join**.
+3. The inviting laptop shows *Connected*, and the layer strip splits the model across both laptops within a few seconds.
 
-Copy the printed join command and token into the friend's terminal:
+**Stop sharing** (inviting laptop) or **Disconnect** (other laptop) returns to Solo. Turning the other laptop's Wi-Fi off is a real device loss: the inviting laptop heals to all 28 layers and shows the measured recovery time.
 
-```bash
-shardwise join HOST_IP TOKEN
-```
+The terminal still works too: `shardwise host` prints the code, and `shardwise join HOST_IP CODE` joins.
 
-The host browser provides chat and pipeline controls. The friend's browser reports its local worker and real hardware; send chat from the host. Each laptop selects its own available CPU/CUDA device. The host supplies a shared reference profile for placement normalization; per-device calibration remains separate. Mixed CPU/GPU Pair inference has not yet been validated on physical NVIDIA hardware. Restart Pair to change devices; the dashboard device selector is available only in Solo. Each laptop needs enough memory for its worker, including holding all layers during recovery.
-
-The host enrollment port is TCP 8766. Controller, worker, and helper ports are dynamically assigned and printed during startup. Permit those actual ports between the two laptop IPs on the trusted network. Do not expose them to the internet; the session uses authenticated control but is not a public TLS service. Corporate Wi-Fi may isolate clients; try a phone hotspot if the laptops cannot reach one another.
-
-Pair fault buttons appear only when supported. **Slow down** pauses only the demo worker. **100 ms transport delay** delays the application's worker transport relay; it does not change the laptop's network configuration. **Clear faults** removes both effects. These are application-level fault demonstrations, not kernel netem or eBPF benchmarks.
+Pairing uses fixed TCP ports **8766–8769**; allow them if a firewall is active (`sudo ufw allow 8766:8769/tcp` on Ubuntu, or see [WINDOWS.md](WINDOWS.md)). A wrong code is rejected, and 20 wrong codes lock the invite until a new one is created. Do not expose these ports to the internet; the session is authenticated but not a public TLS service. Each laptop selects its own CPU/GPU; mixed CPU/GPU pairs have not yet been validated on physical NVIDIA hardware. Each laptop needs enough memory to hold all layers during a recovery.
 
 ## Five-minute presentation
 
@@ -73,7 +67,7 @@ Pair fault buttons appear only when supported. **Slow down** pauses only the dem
 - **No NVIDIA GPU or incompatible driver:** Auto uses CPU and shows a reason. Force GPU reports an error. Check `nvidia-smi`; install a suitable driver through Ubuntu's normal driver tooling if needed.
 - **One worker only:** close other memory-heavy programs; restart. Do not expect two workers on every 8 GB laptop.
 - **Port or duplicate instance:** the application selects free local ports. Use `shardwise status` and `shardwise stop` before relaunching. Pair enrollment on 8766 must be available.
-- **Pair cannot connect:** verify host IP, token, firewall, and Wi-Fi client isolation. Check the startup terminal for actual ports.
+- **Pair cannot connect:** check the address and code, that both laptops are on the same network (try a phone hotspot; guest Wi-Fi often isolates devices), and that TCP 8766–8769 are allowed. On Windows, WSL must use mirrored networking; the card shows a red warning when it does not.
 - **Backend unreachable:** the UI keeps reconnecting. Inspect the terminal and logs under `~/.local/share/shardwise/logs`.
 - **Input too long:** shorten the conversation to fit the 512-token context, including the requested output budget. Start a fresh browser conversation if needed.
 

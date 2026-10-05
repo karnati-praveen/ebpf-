@@ -97,4 +97,16 @@ class Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'512'): rt.chat({'messages':[{'role':'user','content':'hi'}]})
         self.assertFalse(rt.chat_lock.locked())
 
+    def test_wsl_detection_and_browser_never_crash(self):
+        import app
+        with patch('app.Path.read_text',return_value='5.15.153.1-microsoft-standard-WSL2'), patch('app.lan_ip',return_value='172.29.1.5'):
+            self.assertEqual(app.wsl(),'nat')
+        with patch('app.Path.read_text',return_value='5.15.153.1-microsoft-standard-WSL2'), patch('app.lan_ip',return_value='192.168.1.20'):
+            self.assertEqual(app.wsl(),'mirrored')
+        with patch('app.Path.read_text',return_value='6.8.0-generic'):
+            self.assertIsNone(app.wsl())
+        with patch('app.wsl',return_value='nat'), patch('app.subprocess.Popen',side_effect=FileNotFoundError):
+            app.open_browser('http://127.0.0.1:1')  # must not raise
+        code=app.pair_code(); self.assertRegex(code,r'^[0-9a-f]{4}-[0-9a-f]{4}$')
+
 if __name__=='__main__': unittest.main()

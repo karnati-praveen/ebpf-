@@ -2,8 +2,15 @@
 set -euo pipefail
 flavor=${1:-auto}
 case "$flavor" in cpu|cuda|auto) ;; *) echo 'Usage: runtime-setup.sh [cpu|cuda|auto]' >&2; exit 2;; esac
+cuda_driver_ok() {
+  # torch's cu130 wheels need a driver that supports CUDA >= 13. With an older
+  # driver, use the CPU runtime instead of downloading ~3 GB that cannot run.
+  local v
+  v=$(nvidia-smi 2>/dev/null | sed -n 's/.*CUDA Version: *\([0-9][0-9]*\)\..*/\1/p' | head -1)
+  [[ -n "$v" && "$v" -ge 13 ]]
+}
 if [[ "$flavor" == auto ]]; then
-  if command -v nvidia-smi >/dev/null && nvidia-smi -L >/dev/null 2>&1; then flavor=cuda; else flavor=cpu; fi
+  if command -v nvidia-smi >/dev/null && nvidia-smi -L >/dev/null 2>&1 && cuda_driver_ok; then flavor=cuda; else flavor=cpu; fi
 fi
 app_home=${SHARDWISE_HOME:-${KEINFER_DEMO_HOME:-$HOME/.local/share/shardwise}}
 app_bin=${SHARDWISE_BIN:-${KEINFER_BIN:-/opt/shardwise/bin}}

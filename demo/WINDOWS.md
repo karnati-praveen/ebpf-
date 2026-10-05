@@ -26,26 +26,30 @@ Then run:
 wsl --shutdown
 ```
 
-Reopen Ubuntu. Mirrored networking helps the host and friend reach services across the LAN. Enrollment uses TCP 8766, while controller/worker/helper ports are dynamically printed. Replace `8766,12345,12346` below with the actual ports for your role, and `192.168.1.42` with the friend's IP:
+Reopen Ubuntu. Mirrored networking gives Ubuntu the same network address as Windows, so the other laptop can reach it. Without it (WSL's default NAT mode, and always on Windows 10), the dashboard's **Connect another laptop** card shows a red warning instead of an address that cannot work.
+
+Pairing always uses the fixed TCP ports **8766–8769**. On **both** laptops, in an **administrator** PowerShell, allow them through the Windows firewall and through the Hyper-V firewall that sits in front of WSL:
 
 ```powershell
-New-NetFirewallRule -DisplayName "Shardwise Pair" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8766,12345,12346 -RemoteAddress 192.168.1.42 -Profile Private
+New-NetFirewallRule -DisplayName "Shardwise Pair" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8766,8767,8768,8769 -Profile Private
+New-NetFirewallHyperVRule -Name ShardwisePair -DisplayName "Shardwise Pair" -Direction Inbound -VMCreatorId '{40E0AC32-46A5-438A-A0B2-2B479E8F2E90}' -Protocol TCP -LocalPorts 8766,8767,8768,8769
 ```
 
-WSL's Hyper-V firewall can also filter mirrored traffic. If connections remain blocked, add equivalent narrowly scoped rules for the WSL VM through your Windows firewall settings. Use a private trusted hotspot/network. Windows 10 does not support mirrored mode; use native Ubuntu or configure WSL forwarding separately for Pair.
+Mark the Wi-Fi as a **Private** network in Windows settings (public networks block inbound connections). A phone hotspot is the most reliable choice at a venue; university and guest Wi-Fi often block laptop-to-laptop traffic.
 
-Remove your rule after the presentation if desired:
+Remove both rules after the presentation if you like:
 
 ```powershell
 Remove-NetFirewallRule -DisplayName "Shardwise Pair"
+Remove-NetFirewallHyperVRule -Name ShardwisePair
 ```
 
 ## NVIDIA GPU
 
-Install/update the normal **Windows NVIDIA driver supporting WSL CUDA**. The driver is exposed to Ubuntu; do not install a Linux NVIDIA display driver inside WSL. The app downloads its CUDA-enabled Python packages, probes the device, and selects CPU when CUDA cannot run. Check `nvidia-smi` inside Ubuntu. AMD/Intel GPU acceleration is not included in this version.
+Install/update the normal **Windows NVIDIA driver** (a driver that reports `CUDA Version: 13.0` or newer in `nvidia-smi`; with an older driver Shardwise uses the CPU instead of downloading a GPU runtime that cannot run). The driver is exposed to Ubuntu; do not install a Linux NVIDIA display driver inside WSL. The app downloads its CUDA-enabled Python packages, probes the device, and selects CPU when CUDA cannot run. Check `nvidia-smi` inside Ubuntu. AMD/Intel GPU acceleration is not included in this version.
 
 ## Limitations
 
-The browser UI is on localhost; use the printed URL in your Windows browser. Kernel eBPF and netem support varies between WSL kernels. This demo uses rootless worker pauses and an application transport-delay relay, so its Pair controls do not depend on those kernel features. Unsupported controls are hidden. Neither transport-delay nor worker-pause faults establish performance of privileged kernel fault injection.
+Shardwise opens the dashboard in your Windows browser automatically; if it does not, open the printed `http://127.0.0.1:…` URL in any Windows browser. Kernel eBPF and netem support varies between WSL kernels. This demo uses rootless worker pauses and an application transport-delay relay, so its Pair controls do not depend on those kernel features. Unsupported controls are hidden. Neither transport-delay nor worker-pause faults establish performance of privileged kernel fault injection.
 
 Official references: [WSL installation](https://learn.microsoft.com/windows/wsl/install), [WSL configuration](https://learn.microsoft.com/windows/wsl/wsl-config), [WSL networking/firewall](https://learn.microsoft.com/windows/wsl/networking), [NVIDIA CUDA on WSL](https://docs.nvidia.com/cuda/wsl-user-guide/index.html).

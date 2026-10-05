@@ -46,11 +46,26 @@ case "$DEVICE_REQUEST" in
   auto|cpu|cuda) ;;
   *) echo 'Device must be auto, cpu or cuda' >&2; exit 2 ;;
 esac
+cuda_driver_ok() {
+  # torch's cu130 wheels need a driver that supports CUDA >= 13. With an older
+  # driver, use the CPU runtime instead of downloading ~3 GB that cannot run.
+  local v
+  v=$(nvidia-smi 2>/dev/null | sed -n 's/.*CUDA Version: *\([0-9][0-9]*\)\..*/\1/p' | head -1)
+  [[ -n "$v" && "$v" -ge 13 ]]
+}
 GPU_PRESENT=0
 if command -v nvidia-smi >/dev/null && nvidia-smi -L >/dev/null 2>&1; then GPU_PRESENT=1; fi
 if [[ "$DEVICE_REQUEST" == cuda && "$GPU_PRESENT" == 0 ]]; then
   echo 'Forced GPU unavailable: NVIDIA GPU/driver not detected. Use --device cpu or auto.' >&2
   exit 1
+fi
+if [[ "$GPU_PRESENT" == 1 ]] && ! cuda_driver_ok; then
+  if [[ "$DEVICE_REQUEST" == cuda ]]; then
+    echo 'Forced GPU unavailable: the NVIDIA driver is too old for CUDA 13 (see nvidia-smi). Update the driver, or use --device cpu.' >&2
+    exit 1
+  fi
+  echo '[shardwise] NVIDIA GPU found, but its driver is too old for CUDA 13; using the CPU runtime.' >&2
+  GPU_PRESENT=0
 fi
 # CUDA wheels execute on both devices, allowing the dashboard to switch later.
 if [[ "$GPU_PRESENT" == 1 ]]; then RUNTIME_FLAVOR=cuda; else RUNTIME_FLAVOR=cpu; fi

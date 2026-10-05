@@ -396,6 +396,8 @@ function renderPairing(s){
     html=`<div class="invite"><div>${s.app_state==='failed'?`<span class="conn" style="color:var(--bad)">Could not join ${esc(p.host)}</span><div class="small">${esc(s.message)}</div>`:`<span class="conn ${s.app_state==='ready'?'ok':''}"><span class="led"></span>${s.app_state==='ready'?'Connected to':'Connecting to'} ${esc(p.host)}</span><div class="small">This laptop runs part of the model. Chat and controls are on the inviting laptop.</div>`}</div>
       <button class="btn danger" id="pair-leave" style="margin-left:auto">${s.app_state==='failed'?'Back to Solo':'Disconnect'}</button></div>`;
   }
+  if(p.warning&&p.mode!=='join')html=`<div class="banner" style="margin:0 0 12px">${esc(p.warning)}</div>`+html;
+  view+=':'+(p.warning||'');
   if(view===pairView)return;pairView=view;$('pair-body').innerHTML=html;
   const act=async(body)=>{$('pair-error').textContent='';try{await post('pair',body);pairView='';await pollStatus()}catch(e){$('pair-error').textContent=e.message}};
   $('pair-invite')&&($('pair-invite').onclick=()=>act({action:'invite'}));
