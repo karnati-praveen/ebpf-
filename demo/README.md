@@ -1,6 +1,6 @@
 # Shardwise laptop demo
 
-Run real Qwen3-0.6B inference on Ubuntu using a CPU or a compatible NVIDIA GPU. Watch 28 model layers move between workers, stop one worker, and observe recovery. Solo runs independently on each laptop. Pair connects two trusted laptops. Splitting on one device demonstrates placement and recovery; it does not promise faster inference.
+Run real Qwen3-0.6B inference on Ubuntu using a CPU or a compatible NVIDIA GPU. Watch 28 model layers move between workers, stop one worker, and observe recovery. Solo runs independently on each laptop. Pair connects any number of trusted laptops (one invites, the others join). Splitting on one device demonstrates placement and recovery; it does not promise faster inference.
 
 ## Install
 
@@ -39,19 +39,19 @@ Two CPU workers require at least 11 GB free RAM; CUDA requires approximately 3 G
 
 `shardwise status` reports the running application; `shardwise stop` stops its own processes and clears its active faults.
 
-## Pair quickstart (two laptops)
+## Multi-laptop quickstart (2, 3 or more laptops)
 
-Put both laptops on the same trusted Wi-Fi; a phone hotspot is the most reliable. Start Shardwise on both (`shardwise`), then in the dashboard's **Connect another laptop** card:
+Put all laptops on the same trusted Wi-Fi; a phone hotspot is the most reliable. Start Shardwise on each (`shardwise`), then use the dashboard's **Connect more laptops** card:
 
-1. On the laptop that will run the chat, click **Invite a laptop**. It shows this laptop's **address** (e.g. `192.168.1.20`) and a **pairing code** (e.g. `ab12-cd34`).
-2. On the other laptop, type both into **Join a laptop** and click **Join**.
-3. The inviting laptop shows *Connected*, and the layer strip splits the model across both laptops within a few seconds.
+1. On **one** laptop (the one that runs the chat), click **Invite laptops**. It shows this laptop's **address** (e.g. `192.168.1.20`) and an 8-digit **pairing code** (e.g. `4821-0937`).
+2. On **every other** laptop, type both into **Join a laptop** and click **Join**. Each one joins as the next worker (w2, w3, w4, …), up to 15 laptops, all with the same code.
+3. The inviting laptop lists every joined laptop. The layer strip splits the model across all of them within seconds, and each join is timed.
 
-**Stop sharing** (inviting laptop) or **Disconnect** (other laptop) returns to Solo. Turning the other laptop's Wi-Fi off is a real device loss: the inviting laptop heals to all 28 layers and shows the measured recovery time.
+**Stop sharing** (inviting laptop) disconnects everyone. **Disconnect** (a joined laptop) removes just that laptop. Turning a laptop's Wi-Fi off is a real device loss: the remaining laptops take over its layers, and the dashboard shows the measured recovery time from its last contact. A laptop that comes back with the same code gets its old slot back.
 
-The terminal still works too: `shardwise host` prints the code, and `shardwise join HOST_IP CODE` joins.
+The terminal works too: `shardwise host` prints the code, and `shardwise join HOST_IP CODE` joins.
 
-Pairing uses fixed TCP ports **8766–8769**; allow them if a firewall is active (`sudo ufw allow 8766:8769/tcp` on Ubuntu, or see [WINDOWS.md](WINDOWS.md)). A wrong code is rejected, and 20 wrong codes lock the invite until a new one is created. Do not expose these ports to the internet; the session is authenticated but not a public TLS service. Each laptop selects its own CPU/GPU; mixed CPU/GPU pairs have not yet been validated on physical NVIDIA hardware. Each laptop needs enough memory to hold all layers during a recovery.
+**Firewall: only the inviting laptop** needs incoming TCP ports **8766–8768** (`sudo ufw allow 8766:8768/tcp` on Ubuntu, or see [WINDOWS.md](WINDOWS.md)). Joined laptops make only outgoing connections, so they need no firewall change. This also works from Windows WSL in its default NAT mode. A wrong code is rejected immediately with a clear message, and 20 wrong codes lock the invite until a new one is created. Do not expose these ports to the internet: the session is authenticated, but it is not a public TLS service. Each laptop picks its own CPU/GPU. Mixed CPU/GPU setups have not yet been validated on physical NVIDIA hardware. Every laptop needs enough memory to load the model (about 3 GB free).
 
 ## Five-minute presentation
 
@@ -66,8 +66,8 @@ Pairing uses fixed TCP ports **8766–8769**; allow them if a firewall is active
 - **Setup interrupted:** rerun the launcher. Run `demo/runtime-setup.sh cpu` from a checkout to prepare CPU dependencies explicitly.
 - **No NVIDIA GPU or incompatible driver:** Auto uses CPU and shows a reason. Force GPU reports an error. Check `nvidia-smi`; install a suitable driver through Ubuntu's normal driver tooling if needed.
 - **One worker only:** close other memory-heavy programs; restart. Do not expect two workers on every 8 GB laptop.
-- **Port or duplicate instance:** the application selects free local ports. Use `shardwise status` and `shardwise stop` before relaunching. Pair enrollment on 8766 must be available.
-- **Pair cannot connect:** check the address and code, that both laptops are on the same network (try a phone hotspot; guest Wi-Fi often isolates devices), and that TCP 8766–8769 are allowed. On Windows, WSL must use mirrored networking; the card shows a red warning when it does not.
+- **Port or duplicate instance:** the application selects free local ports. Use `shardwise status` and `shardwise stop` before relaunching. The inviting laptop needs 8766–8768 free.
+- **Pair cannot connect:** the joining laptop says exactly what failed: a wrong code, "refused" (that laptop is not inviting, or the address is wrong), or "no answer" (different network, Wi-Fi client isolation, or the *inviting* laptop's firewall). Try a phone hotspot, and allow TCP 8766–8768 on the inviting laptop. A Windows laptop can only *invite* if WSL uses mirrored networking (the card warns otherwise); it can always *join*.
 - **Backend unreachable:** the UI keeps reconnecting. Inspect the terminal and logs under `~/.local/share/shardwise/logs`.
 - **Input too long:** shorten the conversation to fit the 512-token context, including the requested output budget. Start a fresh browser conversation if needed.
 

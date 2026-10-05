@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).parent))
 from hwdetect import select
-from helper import DelayedRelay, Helper
+from helper import Slowdown, TunnelHub, TunnelClient
 from app import Runtime, handler
 from http.server import ThreadingHTTPServer
 from urllib.error import HTTPError
@@ -37,33 +37,80 @@ class Tests(unittest.TestCase):
                     urlopen(Request(f'http://127.0.0.1:{server.server_port}/api/{endpoint}',data=b'{}'))
                 self.assertEqual(error.exception.code,403)
         finally: server.shutdown(); server.server_close()
-    def test_helper_host_guard(self):
+    def test_slowdown_rejects_nothing_and_closes(self):
         rt=type('Runtime',(),{'processes':{}})()
-        helper=Helper(rt,'10.0.0.1','secret')
-        try:
-            self.assertTrue(helper.authorize('10.0.0.1','secret'))
-            self.assertFalse(helper.authorize('10.0.0.2','secret'))
-            self.assertFalse(helper.authorize('10.0.0.1','wrong'))
-            with self.assertRaises(ValueError): helper.action('shell')
-        finally: helper.close()
-    def test_transport_delay_only_proxy(self):
+        slow=Slowdown(rt,'w2'); slow.set(True); self.assertTrue(slow.on.is_set()); slow.set(False); slow.close()
+    def test_reverse_tunnel_auth_and_delay(self):
+        # The "worker" on the joined laptop: echoes what it receives.
         listener=socket.socket(); listener.bind(('127.0.0.1',0)); listener.listen()
         def echo():
-            conn,_=listener.accept()
-            with conn: conn.sendall(conn.recv(64))
+            while True:
+                try: conn,_=listener.accept()
+                except OSError: return
+                with conn: conn.sendall(conn.recv(64))
         threading.Thread(target=echo,daemon=True).start()
-        relay=DelayedRelay(listener.getsockname()[1]); relay.delay=.1
+        hub=TunnelHub(0,lambda code,session: code=='12345678' and session=='s1')
+        local=hub.register('s1')
+        bad=TunnelClient('127.0.0.1',hub.port,'s1','00000000',listener.getsockname()[1],pool=1)
+        good=TunnelClient('127.0.0.1',hub.port,'s1','12345678',listener.getsockname()[1],pool=2)
         try:
-            with socket.create_connection(('127.0.0.1',relay.port)) as client:
-                start=time.monotonic(); client.sendall(b'hello'); self.assertEqual(client.recv(64),b'hello')
-                self.assertGreaterEqual(time.monotonic()-start,.09)
-        finally: relay.close(); listener.close()
+            deadline=time.monotonic()+5
+            while hub.idle_count('s1')<2 and time.monotonic()<deadline: time.sleep(.05)
+            self.assertEqual(hub.idle_count('s1'),2)  # the wrong code never enters the pool
+            for delay in (0,.1):
+                good.delay=delay
+                with socket.create_connection(('127.0.0.1',local)) as client:
+                    start=time.monotonic(); client.sendall(b'hello'); self.assertEqual(client.recv(64),b'hello')
+                    self.assertGreaterEqual(time.monotonic()-start,delay*.9)
+            hub.unregister('s1')
+            with self.assertRaises(ConnectionRefusedError): socket.create_connection(('127.0.0.1',local),timeout=1)
+        finally: bad.close(); good.close(); hub.close(); listener.close()
+    def test_pair_code_normalisation(self):
+        import app
+        code=app.pair_code(); self.assertRegex(code,r'^[0-9]{4}-[0-9]{4}$')
+        for typed in (code, code.replace('-',' '), code.replace('-',''), code.replace('-','\u2013'), ' '+code+' '):
+            self.assertEqual(app.norm_code(typed), code.replace('-',''))
+    def test_host_enrolls_many_laptops(self):
+        from types import SimpleNamespace
+        import app
+        rt=Runtime.__new__(Runtime)
+        rt.args=SimpleNamespace(command='host',pair_port=0); rt.pair_token='1234-5678'; rt.pair_failures=0
+        rt.friends={}; rt.workers={'w1':{'name':'w1','local':True,'status':'up','port':3}}; rt.events=[]; rt.lifecycle=threading.RLock()
+        rt.recovery_started=None; rt.unplaced=set(); rt.profile={'p':1}; rt.ports={'controller':8767}
+        rt.hub=SimpleNamespace(port=8768,register=lambda s: 40000+len(s)%7,unregister=lambda s:None)
+        server=ThreadingHTTPServer(('127.0.0.1',0),handler(rt,pair=True))
+        threading.Thread(target=server.serve_forever,daemon=True).start()
+        url=f'http://127.0.0.1:{server.server_port}'
+        def post(path,body,code='1234 5678'):
+            return json.load(urlopen(Request(url+path,data=json.dumps(body).encode(),headers={'X-Session-Token':code,'Content-Type':'application/json'})))
+        try:
+            names=[post('/enroll',{'node':f'laptop{i}'})['name'] for i in range(4)]
+            self.assertEqual(names,['w2','w3','w4','w5'])
+            again=post('/enroll',{'node':'laptop0','session':next(iter(rt.friends))})
+            self.assertEqual(again['name'],'w2'); self.assertEqual(len(rt.friends),4)
+            rt.workers['w2']['status']='down'  # laptop0 crashed and starts over without its session
+            self.assertEqual(post('/enroll',{'node':'laptop0'})['name'],'w2'); self.assertEqual(len(rt.friends),4)
+            with self.assertRaises(HTTPError) as e: post('/enroll',{'node':'x'},code='1234-0000')
+            self.assertEqual(e.exception.code,403)
+            with self.assertRaises(HTTPError) as e: post('/poll',{'session':'nope'})
+            self.assertEqual(e.exception.code,410)
+            session=next(s for s,f in rt.friends.items() if f['name']=='w3')
+            rt.friends[session]['commands'].append({'type':'worker','action':'stop'})
+            with patch.object(Runtime,'status',lambda self: {'app_state':'ready','workers':[],'pairing':{},'events':[]}):
+                reply=post('/poll',{'session':session,'running':True})
+            self.assertEqual(reply['commands'],[{'type':'worker','action':'stop'}]); self.assertEqual(rt.friends[session]['commands'],[])
+            post('/leave',{'session':session}); self.assertNotIn('w3',rt.workers); self.assertEqual(len(rt.friends),3)
+            self.assertEqual(post('/enroll',{'node':'late'})['name'],'w3')  # freed name is reused
+            rt.pair_failures=20
+            with self.assertRaises(HTTPError) as e: post('/check',{})
+            self.assertEqual(e.exception.code,429)
+        finally: server.shutdown(); server.server_close()
     def test_monitor_waits_for_all_workers_and_restore(self):
         from types import SimpleNamespace
         def check(stages, initial='loading', stopped=False, crashed=False):
             rt=Runtime.__new__(Runtime)
             rt.args=SimpleNamespace(command='solo',device='cpu')
-            rt.device={'selected':'cpu'}; rt.remote=None; rt.state=initial; rt.message=''; rt.events=[]; rt.generation=-1
+            rt.device={'selected':'cpu'}; rt.friends={}; rt.unplaced=set(); rt.state=initial; rt.message=''; rt.events=[]; rt.generation=-1
             rt.lifecycle=threading.RLock(); rt.ports={'router_http':1,'controller_http':2}
             rt.recovery_started=None; rt.recoveries=[]; rt.ctrl_state={}; rt.stage_stats=[]
             rt.workers={'w1':{'name':'w1','local':True,'status':'up','port':3}, 'w2':{'name':'w2','local':True,'status':'stopped' if stopped else 'up','port':4}}
@@ -107,6 +154,5 @@ class Tests(unittest.TestCase):
             self.assertIsNone(app.wsl())
         with patch('app.wsl',return_value='nat'), patch('app.subprocess.Popen',side_effect=FileNotFoundError):
             app.open_browser('http://127.0.0.1:1')  # must not raise
-        code=app.pair_code(); self.assertRegex(code,r'^[0-9a-f]{4}-[0-9a-f]{4}$')
 
 if __name__=='__main__': unittest.main()

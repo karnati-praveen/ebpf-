@@ -47,6 +47,11 @@ type agent struct {
 	// controller discovers workers without an API server.
 	workerAddr  string
 	workerReady bool
+	// probeAddr is where this agent itself checks the worker is serving
+	// (WORKER_PROBE_ADDR, default workerAddr). They differ when the
+	// coordinator reaches the worker through a tunnel whose advertised end
+	// exists only on the coordinator's machine.
+	probeAddr string
 }
 
 // newReader selects the GPU/thermal telemetry source. GPU_MODE=sim (default)
@@ -135,7 +140,7 @@ func (a *agent) watchWorker() {
 	for {
 		// Short backoff: a restarted worker must be re-detected within
 		// seconds, not after gRPC's default backoff of up to 120 s.
-		conn, err := peerconn.Dial(a.workerAddr)
+		conn, err := peerconn.Dial(a.probeAddr)
 		if err != nil {
 			a.setWorkerReady(false)
 			time.Sleep(time.Second)
@@ -217,6 +222,7 @@ func main() {
 	reader, sim, measured := newReader()
 	a := &agent{node: nodeName, reader: reader, sim: sim, measured: measured,
 		workerAddr: os.Getenv("WORKER_ADDR")}
+	a.probeAddr = env("WORKER_PROBE_ADDR", a.workerAddr)
 	if a.workerAddr != "" {
 		go a.watchWorker()
 		log.Printf("advertising worker %s while it is serving gRPC", a.workerAddr)

@@ -18,19 +18,23 @@ import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from hwdetect import hardware, select
-from helper import Helper, DelayedRelay
+from helper import Slowdown, TunnelHub, TunnelClient
 
 ROOT = Path(__file__).resolve().parents[1]
 HOME = Path(os.environ.get('SHARDWISE_HOME', os.environ.get('KEINFER_DEMO_HOME', '~/.local/share/shardwise'))).expanduser()
 MODEL = 'Qwen/Qwen3-0.6B'
 MODEL_REVISION = 'c1899de289a04d12100db370d81485cdf75e47ca'
+LAYERS = 28
+MAX_FRIENDS = 15
 
 
 def port(preferred=0, host='127.0.0.1'):
-    """A free port; `preferred` first, so Pair ports stay fixed (8766-8769)
+    """A free port; `preferred` first, so Pair ports stay fixed (8766-8768 on the inviting laptop)
     and can be allowed through a firewall once."""
     for candidate in ((preferred, 0) if preferred else (0,)):
         with socket.socket() as s:
+            # Like Go's listeners: a port in TIME_WAIT after a restart is free.
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             try: s.bind((host, candidate))
             except OSError: continue
             return s.getsockname()[1]
@@ -72,10 +76,16 @@ def open_browser(url):
 
 
 def pair_code():
-    # Short enough to read aloud and type on the other laptop; the pair
-    # servers lock out after repeated wrong codes.
-    raw = secrets.token_hex(4)
+    # Eight digits: easy to read aloud and type, nothing to confuse (O/0,
+    # l/1). The pair server locks out after repeated wrong codes.
+    raw = ''.join(secrets.choice('0123456789') for _ in range(8))
     return raw[:4] + '-' + raw[4:]
+
+
+def norm_code(code):
+    """Digits only, so '4821-0937', '4821 0937', '48210937' and a pasted
+    en-dash all match."""
+    return ''.join(c for c in str(code or '') if c in '0123456789')
 
 
 def now_iso():
@@ -109,6 +119,7 @@ class Runtime:
         self.user_waiting = threading.Event()
         self.history, self.recoveries = [], []
         self.recovery_started = None
+        self.unplaced = set()
         self.ctrl_state, self.stage_stats = {}, []
         self.lifecycle = threading.RLock()
         self.closed = threading.Event()
@@ -116,11 +127,17 @@ class Runtime:
         self.device = {'requested': args.device, 'selected': 'cpu', 'reason': 'Detecting hardware', 'gpu_name': None}
         self.ports = {k: port() for k in ('app', 'controller_http', 'router', 'router_http')}
         self.ports['controller'] = port(args.pair_port + 1, '0.0.0.0')
-        self.ports['helper'] = port(args.pair_port + 2, '0.0.0.0')
         self.generation = -1
         self.load_on = False
-        self.remote = None
-        self.helper = None
+        # Host: joined laptops by session. Join: our name and the host's view.
+        self.friends = {}
+        self.hub = None
+        self.tunnel = None
+        self.slowdown = None
+        self.my_name = None
+        self.session = None
+        self.host_view = None
+        self.host_contact = None
         self.bin = Path(os.environ.get('SHARDWISE_BIN',os.environ.get('KEINFER_BIN', '/opt/shardwise/bin')))
         if not self.bin.exists(): self.bin = ROOT / 'bin'
         self.env = dict(os.environ, HF_HOME=str(HOME/'hf'), MODEL_REVISION=MODEL_REVISION, KV_CACHE='1', MODEL=MODEL, PYTHONUNBUFFERED='1')
@@ -156,17 +173,24 @@ class Runtime:
         pipeline down and start it again in the new role."""
         if command not in ('solo', 'host', 'join'): raise ValueError('Unknown pairing mode')
         if command == 'join':
-            try: socket.inet_aton(host or '')
-            except OSError: raise ValueError('Enter the other laptop’s IPv4 address, e.g. 192.168.1.20')
-            if not isinstance(code, str) or not 4 <= len(code.strip()) <= 64: raise ValueError('Enter the pairing code shown on the other laptop')
-            if host == lan_ip(): raise ValueError('That is this laptop’s own address')
+            host = (host or '').strip() if isinstance(host, str) else ''
+            try: socket.inet_aton(host); valid = host.count('.') == 3
+            except OSError: valid = False
+            if not valid: raise ValueError('Enter the inviting laptop’s address exactly as it shows it, e.g. 192.168.1.20')
+            code = norm_code(code)
+            if len(code) != 8: raise ValueError('The pairing code has 8 digits, e.g. 4821-0937')
+            if host == lan_ip() or host.startswith('127.'): raise ValueError('That is this laptop’s own address — enter the address shown on the other laptop')
         def restart():
+            if self.args.command == 'join' and self.session:
+                try: request(f'http://{self.args.host}:{self.args.pair_port}/leave', {'session': self.session}, self.args.token, timeout=2)
+                except Exception: pass
             with self.lifecycle:
                 self.cleanup_pipeline()
                 if getattr(self, 'pair_server', None):
                     self.pair_server.shutdown(); self.pair_server.server_close(); del self.pair_server
-                self.workers.clear(); self.remote = None; self.generation = -1; self.recovery_started = None
-                self.args.command, self.args.host, self.args.token = command, host, (code.strip().lower() if code else None)
+                self.workers.clear(); self.friends.clear(); self.generation = -1; self.recovery_started = None
+                self.session = self.my_name = self.host_view = None
+                self.args.command, self.args.host, self.args.token = command, host, code
                 if command == 'host': self.pair_token, self.pair_failures = pair_code(), 0
                 self.state, self.message = 'loading', {'solo': 'Returning to Solo mode', 'host': 'Opening this laptop for pairing', 'join': f'Connecting to {host}'}[command]
                 self.event('moved', self.message)
@@ -174,16 +198,22 @@ class Runtime:
         threading.Thread(target=restart, daemon=True).start()
 
     def pairing(self):
+        host = self.args.command == 'host'
+        friends = [{'name': f['name'], 'node': f['node'], 'ip': f['ip'], 'status': self.workers.get(f['name'], {}).get('status', 'down')}
+                   for f in self.friends.values()] if host else []
         return {'mode': self.args.command, 'lan_ip': lan_ip(), 'pair_port': self.args.pair_port,
-                'code': self.pair_token if self.args.command == 'host' else None,
-                'friend': self.remote['ip'] if self.remote and self.args.command == 'host' else None,
+                'code': self.pair_token if host else None,
+                'friends': friends, 'max_friends': MAX_FRIENDS,
+                'friend': ', '.join(f['node'] for f in friends if f['status'] == 'up') or None,
                 'host': self.args.host if self.args.command == 'join' else None,
-                'ports': sorted({self.args.pair_port, self.ports['controller'], self.ports['helper'], self.args.pair_port + 3}),
-                'warning': 'This Windows WSL setup uses NAT networking, so other laptops cannot reach it. Turn on mirrored networking (see WINDOWS.md), then restart Shardwise.' if wsl() == 'nat' else None}
+                'name': self.my_name,
+                'ports': sorted({self.args.pair_port, self.ports['controller'], self.hub.port if self.hub else self.args.pair_port + 2}),
+                'warning': 'This Windows WSL setup uses NAT networking: it can join other laptops, but other laptops cannot reach it to join. To invite from this laptop, turn on mirrored networking (see WINDOWS.md) and restart Shardwise.' if wsl() == 'nat' else None}
 
     def cleanup_pipeline(self):
-        if self.helper: self.helper.close(); self.helper = None
-        if getattr(self, 'relay', None): self.relay.close(); self.relay = None
+        if self.slowdown: self.slowdown.close(); self.slowdown = None
+        if self.tunnel: self.tunnel.close(); self.tunnel = None
+        if self.hub: self.hub.close(); self.hub = None
         for name in list(self.processes): self.kill(name)
 
     def prepare(self):
@@ -210,7 +240,7 @@ class Runtime:
         self.profile = json.loads(profile.read_text())
         return count
 
-    def worker(self, name, address='127.0.0.1', controller='127.0.0.1', controller_port=None):
+    def worker(self, name, advertise=None, controller=None):
         entry = self.workers.get(name)
         if not entry:
             entry = {'name': name, 'node': socket.gethostname(), 'local': True, 'status': 'up', 'layers': None, 'speed': None, 'port': port(), 'agent': port()}
@@ -218,45 +248,37 @@ class Runtime:
         entry['status'] = 'up'
         profile = ','.join(f"{r['context_len']}:{r['ms']}" for r in self.reference['per_layer_by_ctx'])
         self.spawn(name, [sys.executable, str(ROOT/'worker/server.py')], {'PORT': str(entry['port']), 'WORKER_NAME': name, 'NODE_AGENT_ADDR': f"127.0.0.1:{entry['agent']}", 'PER_LAYER_PROFILE': profile, 'HF_HUB_OFFLINE': '1', 'GRPC_HOST': '127.0.0.1'})
-        if self.args.command == 'join' and not getattr(self, 'relay', None):
-            self.relay = DelayedRelay(entry['port'], self.args.pair_port + 3)
-        self.spawn(name+'-agent', [str(self.bin/'nodeagent')], {'NODE_NAME': name, 'HTTP_ADDR': f"127.0.0.1:{entry['agent']}", 'CONTROLLER_ADDR': f"{controller}:{controller_port or self.ports['controller']}", 'WORKER_ADDR': f"{address}:{self.relay.port if self.args.command == 'join' else entry['port']}", 'GPU_MODE': 'measured', 'EBPF': 'off'})
+        # A joined laptop advertises the host-side end of its tunnel: the
+        # controller and router dial that, on the host's own loopback.
+        self.spawn(name+'-agent', [str(self.bin/'nodeagent')], {'NODE_NAME': name, 'HTTP_ADDR': f"127.0.0.1:{entry['agent']}", 'CONTROLLER_ADDR': controller or f"127.0.0.1:{self.ports['controller']}", 'WORKER_ADDR': advertise or f"127.0.0.1:{entry['port']}", 'WORKER_PROBE_ADDR': f"127.0.0.1:{entry['port']}", 'GPU_MODE': 'measured', 'EBPF': 'off'})
+        return entry
 
     def initialize(self):
         try:
             with self.lifecycle:
+                if self.args.command == 'join':
+                    self.state, self.message = 'loading', f'Checking {self.args.host} and the pairing code'
+                    self.check_invite()
                 count = self.prepare()
                 if self.closed.is_set(): return
                 self.state, self.message = 'loading', 'Loading workers and pipeline'
                 if self.args.command == 'join':
-                    try:
-                        data = request(f'http://{self.args.host}:{self.args.pair_port}/enroll', {'helper_port': self.ports['helper'], 'node':socket.gethostname()}, self.args.token)
-                    except urllib.error.HTTPError as e:
-                        raise RuntimeError('The other laptop rejected the pairing code' if e.code == 403 else f'Pairing refused ({e.code})') from e
-                    except OSError as e:
-                        raise RuntimeError(f'Cannot reach {self.args.host}:{self.args.pair_port}. Same Wi-Fi? Is it in Invite mode? Firewall?') from e
-                    self.join_ip, self.join_controller = data['join_ip'], data['controller_port']
-                    self.reference = data['profile']
-                    self.remote = {'ip': self.args.host, 'port': self.args.pair_port, 'token': self.args.token}
-                    self.helper = Helper(self, self.args.host, self.args.token)
-                    self.pair_server = ThreadingHTTPServer(('0.0.0.0', self.ports['helper']), handler(self, pair=True))
-                    threading.Thread(target=self.pair_server.serve_forever, daemon=True).start()
-                    self.worker('w2', data['join_ip'], self.args.host, data['controller_port'])
-                    self.state, self.message = 'loading', 'Friend worker connected; chat is on the host laptop'
-                    self.monitor_started = True
-                    threading.Thread(target=self.monitor,daemon=True).start()
+                    self.join_host()
+                    if not hasattr(self, 'monitor_started'):
+                        self.monitor_started = True
+                        threading.Thread(target=self.monitor, daemon=True).start()
                     return
                 self.reference = self.profile
                 config = HOME/'state/controller.json'
-                config.write_text(json.dumps({'model': MODEL, 'backend': 'qwen3', 'totalLayers': 28, 'workers': 2 if self.args.command == 'host' else count, 'routerAddr': f"127.0.0.1:{self.ports['router']}", 'contextLen': 512, 'perLayerMs': self.profile['per_layer_by_ctx'][0]['ms'], 'embedMs': self.profile['embed_ms'], 'headMs': self.profile['head_ms'], 'perLayerByCtx': [{'contextLen': r['context_len'], 'perLayerMs': r['ms']} for r in self.profile['per_layer_by_ctx']]}))
+                config.write_text(json.dumps({'model': MODEL, 'backend': 'qwen3', 'totalLayers': LAYERS, 'workers': 1 if self.args.command == 'host' else count, 'routerAddr': f"127.0.0.1:{self.ports['router']}", 'contextLen': 512, 'perLayerMs': self.profile['per_layer_by_ctx'][0]['ms'], 'embedMs': self.profile['embed_ms'], 'headMs': self.profile['head_ms'], 'perLayerByCtx': [{'contextLen': r['context_len'], 'perLayerMs': r['ms']} for r in self.profile['per_layer_by_ctx']]}))
                 bind = '0.0.0.0' if self.args.command == 'host' else '127.0.0.1'
                 self.spawn('controller', [str(self.bin/'controller'), '-mode=standalone', f'-config={config}', f"-grpc-addr={bind}:{self.ports['controller']}", f"-http-addr=127.0.0.1:{self.ports['controller_http']}", '-policy=hysteresis', '-objective=throughput', '-link-source=app'], {'COOLDOWN_S': '10'})
                 self.spawn('router', [sys.executable, str(ROOT/'worker/router.py')], {'GRPC_PORT': str(self.ports['router']), 'HTTP_PORT': str(self.ports['router_http']), 'HTTP_HOST': '127.0.0.1', 'GRPC_HOST': '127.0.0.1', 'CONTROLLER_ADDR': f"127.0.0.1:{self.ports['controller']}"})
                 if self.args.command == 'host':
+                    self.hub = TunnelHub(self.args.pair_port + 2, lambda code, session: hmac.compare_digest(norm_code(code), norm_code(self.pair_token)) and session in self.friends)
                     self.pair_server = ThreadingHTTPServer(('0.0.0.0', self.args.pair_port), handler(self, pair=True))
                     threading.Thread(target=self.pair_server.serve_forever, daemon=True).start()
-                    self.workers['w2'] = {'name': 'w2', 'node': 'friend', 'local': False, 'status': 'down', 'layers': None, 'speed': None}
-                    print(f'Pair join command: shardwise join <this-laptop-ip> {self.pair_token}', flush=True)
+                    print(f'Invite open. On other laptops: shardwise join {lan_ip()} {self.pair_token}', flush=True)
                 self.worker('w1')
                 if self.args.command == 'solo' and count == 2: self.worker('w2')
                 if not hasattr(self, 'monitor_started'):
@@ -270,17 +292,142 @@ class Runtime:
                 self.initialize()
             else: self.state, self.message = 'failed', str(e)
 
+    def reach(self, port, what):
+        """Fail with a message that says what to fix, not just 'cannot connect'."""
+        host = self.args.host
+        try: socket.create_connection((host, port), timeout=4).close()
+        except ConnectionRefusedError:
+            raise RuntimeError(f'{host} answered but refused port {port} ({what}). Is that laptop showing an invite ("Invite laptops")? Is {host} the address it shows?') from None
+        except OSError:
+            raise RuntimeError(f'No answer from {host} on port {port} ({what}). Check: (1) both laptops on the same Wi-Fi — campus/guest Wi-Fi often blocks laptop-to-laptop traffic, a phone hotspot works; '
+                               f'(2) the inviting laptop allows TCP ports {self.args.pair_port}-{self.args.pair_port + 2} through its firewall (Windows: see WINDOWS.md).') from None
+
+    def check_invite(self):
+        """Seconds, not minutes: verify address and code before downloading."""
+        self.reach(self.args.pair_port, 'pairing')
+        try: request(f'http://{self.args.host}:{self.args.pair_port}/check', {}, self.args.token)
+        except urllib.error.HTTPError as e: raise self.pair_error(e) from None
+
+    @staticmethod
+    def pair_error(e):
+        try: detail = json.load(e).get('error', '')
+        except Exception: detail = ''
+        return RuntimeError({403: 'Wrong pairing code. Type the 8 digits shown on the inviting laptop (pressing Invite again makes a new code).',
+                             410: 'That laptop is not inviting right now. Press "Invite laptops" on it first.',
+                             429: 'The inviting laptop received too many wrong codes. Press Stop sharing and Invite again there for a new code.'}.get(e.code, f'Pairing refused: {detail or e.code}'))
+
+    def join_host(self):
+        """Join mode: enroll with the host, then run one worker that the host
+        reaches through an outbound tunnel (no inbound port on this laptop)."""
+        host, code, pp = self.args.host, self.args.token, self.args.pair_port
+        self.reach(pp, 'pairing')
+        try:
+            data = request(f'http://{host}:{pp}/enroll', {'node': socket.gethostname(), 'session': self.session}, code)
+        except urllib.error.HTTPError as e:
+            raise self.pair_error(e) from None
+        self.reach(data['controller_port'], 'controller')
+        self.reach(data['tunnel_port'], 'worker tunnel')
+        self.session, self.my_name, self.reference = data['session'], data['name'], data['profile']
+        self.host_contact = time.monotonic()
+        entry = self.worker(self.my_name, advertise=f"127.0.0.1:{data['worker_port']}", controller=f"{host}:{data['controller_port']}")
+        self.join_info = data
+        self.tunnel = TunnelClient(host, data['tunnel_port'], self.session, code, entry['port'])
+        self.slowdown = Slowdown(self, self.my_name)
+        self.state, self.message = 'loading', f'Joined {host} as {self.my_name}; waiting for layers'
+        self.event('restored', f'Joined {host} as {self.my_name}')
+
+    def run_command(self, cmd):
+        """Join mode: a control the host's dashboard queued for this laptop."""
+        name, action = self.my_name, cmd.get('action')
+        if cmd.get('type') == 'worker':
+            if action == 'stop': self.kill(name+'-agent'); self.kill(name)
+            elif action == 'restore' and not (self.processes.get(name) and self.processes[name].poll() is None):
+                d = self.join_info
+                self.worker(name, advertise=f"127.0.0.1:{d['worker_port']}", controller=f"{self.args.host}:{d['controller_port']}")
+            self.workers[name]['status'] = 'stopped' if action == 'stop' else 'up'
+        elif action == 'slow': self.slowdown.set(True)
+        elif action == 'net': self.tunnel.delay = .1
+        elif action == 'clear': self.slowdown.set(False); self.tunnel.delay = 0
+        self.event('fault' if action in ('stop', 'slow', 'net') else 'restored', f'Host: {action} {name}')
+
+    def enroll(self, body, ip):
+        """Host mode: admit one more laptop (or re-admit a known session)."""
+        session = body.get('session')
+        node = body.get('node', 'laptop')
+        if not isinstance(node, str) or not 1 <= len(node) <= 64: raise ValueError('Invalid node name')
+        friend = self.friends.get(session) if isinstance(session, str) else None
+        if not friend:
+            # The same laptop coming back (crash, sleep, restart) keeps its slot.
+            friend = next((f for f in self.friends.values() if f['node'] == node and f.get('ip') == ip
+                           and self.workers.get(f['name'], {}).get('status') != 'up'), None)
+            if friend:
+                session = friend['session']; friend['commands'] = []
+                self.event('restored', f"{node} ({ip}) came back as {friend['name']}")
+        if not friend:
+            if len(self.friends) >= MAX_FRIENDS: raise ValueError(f'This invite is full ({MAX_FRIENDS} laptops)')
+            k = 2
+            while f'w{k}' in self.workers: k += 1
+            session = secrets.token_hex(16)
+            friend = self.friends[session] = {'session': session, 'name': f'w{k}', 'node': node, 'commands': [], 'running': False}
+            self.workers[friend['name']] = {'name': friend['name'], 'node': node, 'local': False, 'status': 'down', 'layers': None, 'speed': None}
+            self.event('restored', f"{node} ({ip}) joined as {friend['name']}")
+        friend.update(ip=ip, last_seen=time.monotonic())
+        friend['worker_port'] = self.hub.register(session)
+        return {'session': session, 'name': friend['name'], 'profile': self.profile, 'controller_port': self.ports['controller'],
+                'tunnel_port': self.hub.port, 'worker_port': friend['worker_port']}
+
+    def drop_friend(self, session, why):
+        friend = self.friends.pop(session, None)
+        if not friend: return
+        if self.hub: self.hub.unregister(session)
+        was_up = self.workers.pop(friend['name'], {}).get('status') == 'up'
+        if was_up and self.recovery_started is None:
+            self.recovery_started = (f"{friend['name']} ({friend['node']}) loss recovery", time.monotonic())
+        self.event('fault', f"{friend['node']} ({friend['name']}) {why}")
+
+    def friend_named(self, name):
+        return next((f for f in self.friends.values() if name in (f['name'], f['node'])), None)
+
+    def poll_host(self):
+        """Join mode, every second: report this worker, fetch queued controls
+        and the host's pipeline view. Only outbound requests."""
+        proc = self.processes.get(self.my_name)
+        report = {'session': self.session, 'running': bool(proc and proc.poll() is None),
+                  'slow': bool(self.slowdown and self.slowdown.on.is_set()), 'net': bool(self.tunnel and self.tunnel.delay),
+                  'tunnel': self.tunnel.connected if self.tunnel else 0}
+        try:
+            reply = request(f'http://{self.args.host}:{self.args.pair_port}/poll', report, self.args.token, timeout=4)
+        except urllib.error.HTTPError as e:
+            if e.code == 410:  # host restarted or dropped us: enroll again
+                self.event('moved', 'The inviting laptop no longer knew this laptop; joining again')
+                self.session = None
+                def again():
+                    with self.lifecycle:
+                        self.cleanup_pipeline(); self.workers.clear(); self.host_view = None
+                    self.initialize()
+                threading.Thread(target=again, daemon=True).start()
+            else:
+                self.cleanup_pipeline()
+                self.state, self.message = 'failed', 'The inviting laptop stopped sharing or made a new code. Press Back to Solo, then Join with the new code.'
+            return
+        except OSError:
+            gone = time.monotonic() - (self.host_contact or 0)
+            self.state = 'recovering'
+            self.message = f'Lost contact with {self.args.host} for {gone:.0f} s — retrying' + ('. It may have stopped sharing or left the Wi-Fi.' if gone > 15 else '')
+            return
+        self.host_contact = time.monotonic()
+        for cmd in reply.pop('commands', []): self.run_command(cmd)
+        self.host_view = reply
+        self.generation = reply.get('generation', -1)
+        self.state = reply.get('app_state', 'loading')
+        self.message = f"Part of {self.args.host}'s pipeline as {self.my_name}. Chat runs on that laptop."
+
     def monitor(self):
         while not self.closed.wait(1):
             try:
                 if self.args.command == 'join':
-                    remote_status = request(f'http://{self.args.host}:{self.args.pair_port}/status', {}, self.args.token)
-                    for w in remote_status['workers']:
-                        if w['name'] == 'w2':
-                            self.workers['w2'].update(layers=w['layers'], speed=w['speed'])
-                    self.generation = remote_status['generation']
-                    self.state = remote_status['app_state']
-                    self.message = 'Friend worker connected; use host dashboard for chat'
+                    if not self.session or self.state == 'failed': continue
+                    self.poll_host()
                     continue
                 if self.state == 'failed': continue
                 if not self.lifecycle.acquire(False): continue
@@ -299,21 +446,25 @@ class Runtime:
                                 self.cleanup_pipeline(); self.workers.clear(); self.initialize()
                         threading.Thread(target=fallback,daemon=True).start()
                     continue
-                if self.remote:
-                    try:
-                        friend = request(f"http://{self.remote['ip']}:{self.remote['port']}/status", {}, self.pair_token)
-                        running = bool(friend['running'])
-                    except Exception:
-                        running = False
-                    w2 = self.workers['w2']
-                    if w2['status'] != 'stopped':
-                        new = 'up' if running else 'down'
-                        # A friend's laptop leaving or returning is timed like
-                        # the Stop/Restore buttons: until the pipeline is whole.
-                        if new != w2['status'] and self.recovery_started is None:
-                            self.recovery_started = (f"{w2['node']} {'rejoin' if new == 'up' else 'loss recovery'}", time.monotonic())
-                            self.event('restored' if new == 'up' else 'fault', f"{w2['node']} {'reconnected' if new == 'up' else 'disconnected'}")
-                        w2['status'] = new
+                now = time.monotonic()
+                for session, friend in list(self.friends.items()):
+                    w = self.workers.get(friend['name'])
+                    # A queued or just-delivered stop/restore decides, not a stale report.
+                    if not w or friend['commands'] or now < friend.get('grace_until', 0): continue
+                    fresh = now - friend['last_seen'] < 5
+                    if not fresh and now - friend['last_seen'] > 120:
+                        self.drop_friend(session, 'left (no contact for 2 minutes)'); continue
+                    if w['status'] != 'stopped':
+                        new = 'up' if fresh and friend['running'] else 'down'
+                        # A laptop joining or leaving is timed like the Stop
+                        # and Restore buttons: until the pipeline is whole.
+                        if new != w['status']:
+                            if self.recovery_started is None:
+                                # A lost laptop is timed from its last contact.
+                                self.recovery_started = (f"{w['name']} ({w['node']}) {'join' if new == 'up' else 'loss recovery'}", now if new == 'up' else friend['last_seen'], w['name'] if new == 'up' else None)
+                            self.event('restored' if new == 'up' else 'fault', f"{w['node']} ({w['name']}) {'connected' if new == 'up' else 'unreachable'}")
+                        w['status'] = new
+                state = request(f"http://127.0.0.1:{self.ports['controller_http']}/state")
                 pipeline = request(f"http://127.0.0.1:{self.ports['router_http']}/pipeline")
                 stages = pipeline.get('stages', [])
                 generation = pipeline.get('generation', -1)
@@ -321,24 +472,42 @@ class Runtime:
                     split = ' · '.join(f"{s['name']} L{s['layers'][0]}–{s['layers'][1]-1}" for s in stages) or 'no stages'
                     self.event('healed' if self.state == 'recovering' else 'moved', f'Generation {generation}: {split}')
                     self.generation = generation
-                for worker in self.workers.values():
+                for worker in list(self.workers.values()):
                     stage = next((s for s in stages if s['name'] == worker['name']), None)
                     worker['layers'] = [stage['layers'][0], stage['layers'][1]] if stage else None
-                state = request(f"http://127.0.0.1:{self.ports['controller_http']}/state")
                 self.ctrl_state = state
                 try: self.stage_stats = request(f"http://127.0.0.1:{self.ports['router_http']}/stats").get('stages', [])
                 except Exception: self.stage_stats = []
                 for assignment in state.get('assignments', []) or []:
                     if assignment['worker'] in self.workers: self.workers[assignment['worker']]['speed'] = assignment['speed']
-                complete = bool(stages) and stages[0]['layers'][0] == 0 and stages[-1]['layers'][1] == 28
-                live = all(self.workers[s['name']]['status'] == 'up' and (not self.workers[s['name']]['local'] or s['addr'].endswith(':'+str(self.workers[s['name']]['port']))) for s in stages)
-                live = live and all(self.processes.get(s['name']) and self.processes[s['name']].poll() is None for s in stages if self.workers[s['name']]['local'])
+                complete = bool(stages) and stages[0]['layers'][0] == 0 and stages[-1]['layers'][1] == LAYERS
+                def alive(stage):
+                    w = self.workers.get(stage['name'])
+                    if not w or w['status'] != 'up': return False
+                    if not w['local']: return True
+                    proc = self.processes.get(w['name'])
+                    return stage['addr'].endswith(':'+str(w['port'])) and proc is not None and proc.poll() is None
+                live = all(alive(st) for st in stages)
                 assigned = {s['name'] for s in stages}
-                expected = {w['name'] for w in self.workers.values() if w['status']=='up'}
+                # Only workers whose node agent reaches the controller can be
+                # placed; one that never does must not block everyone's chat.
+                heard = set(((state.get('telemetry') or {}).get('nodes') or {}).keys())
+                expected = {w['name'] for w in self.workers.values() if w['status']=='up' and (w['local'] or w['name'] in heard)}
                 contiguous = all(a['layers'][1]==b['layers'][0] for a,b in zip(stages,stages[1:]))
+                # A worker the controller does not place within 2 minutes (e.g.
+                # judged too slow to help) stops blocking readiness.
+                self.unplaced -= assigned
+                expected -= self.unplaced
+                # A join/rejoin is complete only once that worker holds layers.
+                want = {self.recovery_started[2]} - {None} if self.recovery_started and len(self.recovery_started) > 2 else set()
+                if self.recovery_started and time.monotonic() - self.recovery_started[1] > 120 and not (expected | want).issubset(assigned):
+                    self.unplaced |= (expected | want) - assigned
+                    self.event('rejected', f'{self.recovery_started[0]}: not placed within 120 s; the controller kept the current layout')
+                    self.recovery_started = None
+                    expected -= self.unplaced
                 if complete and live and contiguous and expected.issubset(assigned):
-                    if self.recovery_started is not None:
-                        kind, t0 = self.recovery_started
+                    if self.recovery_started is not None and want.issubset(assigned):
+                        kind, t0 = self.recovery_started[:2]
                         secs = round(time.monotonic() - t0, 1)
                         self.recoveries = (self.recoveries + [{'kind': kind, 'seconds': secs, 't': now_iso()}])[-10:]
                         self.event('healed', f'{kind} completed in {secs} s (measured)')
@@ -350,21 +519,21 @@ class Runtime:
                 if self.state == 'ready':
                     self.state,self.message='recovering','Coordinator temporarily unreachable'
 
-    def control_worker(self, name, action, remote_control=False):
+    def control_worker(self, name, action):
         if name not in self.workers or action not in ('stop', 'restore'): raise ValueError('Unknown worker or action')
         worker = self.workers[name]
         if action == 'restore' and worker['status'] == 'up': raise ValueError('Worker is already running')
         if action == 'stop' and worker['status'] != 'up': raise ValueError('Worker is not running')
-        if action == 'stop' and not remote_control and sum(w['status'] == 'up' for w in self.workers.values()) <= 1: raise ValueError('Cannot stop the last running worker')
+        if action == 'stop' and sum(w['status'] == 'up' for w in self.workers.values()) <= 1: raise ValueError('Cannot stop the last running worker')
         if not worker['local']:
-            if not self.remote: raise ValueError('Friend has not joined')
-            request(f"http://{self.remote['ip']}:{self.remote['port']}/worker", {'action': action}, self.pair_token)
+            friend = self.friend_named(name)
+            if not friend: raise ValueError('That laptop is not connected')
+            friend['commands'].append({'type': 'worker', 'action': action})
         elif action == 'stop': self.kill(name+'-agent'); self.kill(name)
-        elif self.args.command == 'join':
-            self.worker(name, self.join_ip, self.args.host, self.join_controller)
         else: self.worker(name)
         worker['status'] = 'stopped' if action == 'stop' else 'up'
-        self.recovery_started = (f'{name} {"loss recovery" if action == "stop" else "rejoin"}', time.monotonic())
+        self.unplaced.discard(name)
+        self.recovery_started = (f'{name} {"loss recovery" if action == "stop" else "rejoin"}', time.monotonic(), name if action == 'restore' else None)
         self.state, self.message = 'recovering', 'Waiting for layer reassignment'
         self.event('fault' if action == 'stop' else 'restored', f'{name}: {action}')
 
@@ -373,9 +542,16 @@ class Runtime:
         if self.args.command != 'join':
             try: metrics = request(f"http://127.0.0.1:{self.ports['router_http']}/metrics")
             except Exception: pass
-        available = len(self.workers) >= 2
-        return {'app_state': self.state, 'message': self.message, 'progress': self.progress, 'mode': self.args.command, 'device': self.device, 'workers': [{k:v for k,v in w.items() if k not in ('port','agent')} for w in self.workers.values()], 'generation': self.generation, 'policy': 'hysteresis', 'events': self.events, 'metrics': metrics, 'recovery_demo': {'available': available, 'reason': None if available else 'One worker: insufficient free memory for two, or join mode'}, 'faults_available': ['slow', 'net'] if self.args.command == 'host' and self.remote else [], 'load_on': self.load_on,
-                'telemetry': self.telemetry(), 'pairing': self.pairing()}
+        workers = [{k:v for k,v in w.items() if k not in ('port','agent')} for w in self.workers.values()]
+        telemetry = self.telemetry()
+        if self.args.command == 'join' and self.host_view:
+            # Show the whole pipeline as the host sees it; "local" = this laptop.
+            workers = [dict(w, local=w['name'] == self.my_name) for w in self.host_view.get('workers', [])]
+            metrics, telemetry = self.host_view.get('metrics') or {}, self.host_view.get('telemetry') or telemetry
+        available = len(self.workers) >= 2 and self.args.command != 'join'
+        reason = 'Controls are on the inviting laptop.' if self.args.command == 'join' else 'One worker: not enough free memory for two on this laptop. Invite another laptop to demonstrate recovery.'
+        return {'app_state': self.state, 'message': self.message, 'progress': self.progress, 'mode': self.args.command, 'device': self.device, 'workers': workers, 'generation': self.generation, 'policy': 'hysteresis', 'events': self.events, 'metrics': metrics, 'recovery_demo': {'available': available, 'reason': None if available else reason}, 'faults_available': ['slow', 'net'] if self.args.command == 'host' and self.friends else [], 'load_on': self.load_on,
+                'total_layers': LAYERS, 'model': MODEL, 'telemetry': telemetry, 'pairing': self.pairing()}
 
     def telemetry(self):
         """Measured values only: controller predictions from measured speeds,
@@ -386,13 +562,15 @@ class Runtime:
                       'improvement_pct': round(100 * (d.get('improvement_frac') or 0), 1), 'from': d.get('from_splits'), 'to': d.get('to_splits'),
                       'predicted_ms': round(d['optimal_objective_ms'], 1) if d.get('optimal_objective_ms') else None}
                      for d in (st.get('decisions') or [])[-8:]][::-1]
+        names = {w['port']: w['name'] for w in self.workers.values() if w.get('port')}
+        names.update({f['worker_port']: f['name'] for f in self.friends.values() if f.get('worker_port')})
         stages = [{'name': s.get('name'), 'busy_pct': round(100 * (1 - s['idle_fraction']), 1) if s.get('idle_fraction') is not None else None,
                    'forwards': s.get('forwards')} for s in self.stage_stats]
         return {'predicted_token_ms': round(st['pipeline_ms'], 1) if st.get('pipeline_ms') else None,
                 'predicted_bottleneck_ms': round(st['bottleneck_ms'], 1) if st.get('bottleneck_ms') else None,
                 'nodes': {k: {'speed': v.get('speed_factor'), 'age_s': round(v.get('age_s') or 0, 1),
                               'temp_c': v['temp_c'] if (v.get('temp_c') or -1) >= 0 else None} for k, v in (tel.get('nodes') or {}).items()},
-                'links': [{'dst': f"{f.get('dst')}:{f.get('port')}", 'rtt_ms': round(f['srtt_ms'], 2) if f.get('srtt_ms') else None} for f in tel.get('flows') or []],
+                'links': [{'dst': names.get(f.get('port')) or f"{f.get('dst')}:{f.get('port')}", 'rtt_ms': round(f['srtt_ms'], 2) if f.get('srtt_ms') else None} for f in tel.get('flows') or []],
                 'stages': stages, 'decisions': decisions, 'history': self.history, 'recoveries': self.recoveries,
                 'recovering_for_s': round(time.monotonic() - self.recovery_started[1], 1) if self.recovery_started else None}
 
@@ -433,8 +611,8 @@ class Runtime:
         finally: self.chat_lock.release()
 
     def close(self):
-        if self.args.command == 'host' and self.remote:
-            try: request(f"http://{self.remote['ip']}:{self.remote['port']}/fault", {'action': 'clear'}, self.pair_token, timeout=2)
+        if self.args.command == 'join' and self.session:
+            try: request(f'http://{self.args.host}:{self.args.pair_port}/leave', {'session': self.session}, self.args.token, timeout=2)
             except Exception: pass
         self.closed.set()
         self.state = 'stopped'
@@ -460,36 +638,38 @@ def handler(runtime, pair=False):
         def do_POST(self):
             token = self.headers.get('X-Session-Token','')
             if not token.isascii(): token = ''
-            expected = (runtime.args.token if runtime.args.command == 'join' else runtime.pair_token) if pair else runtime.token
-            if pair and runtime.pair_failures >= 20:
-                self.send(429,{'error':'too many wrong pairing codes; start a new invite'}); return
-            if not hmac.compare_digest(token.strip().lower() if pair else token, expected or '') or (pair and runtime.args.command == 'join' and self.client_address[0] != runtime.args.host):
+            if pair:
+                if runtime.args.command != 'host': self.send(410,{'error':'not inviting'}); return
+                if runtime.pair_failures >= 20:
+                    self.send(429,{'error':'too many wrong pairing codes; start a new invite'}); return
+                ok = hmac.compare_digest(norm_code(token), norm_code(runtime.pair_token))
+            else: ok = hmac.compare_digest(token, runtime.token)
+            if not ok:
                 if pair: runtime.pair_failures += 1
-                self.send(403,{'error':'forbidden'}); return
+                self.send(403,{'error':'wrong pairing code' if pair else 'forbidden'}); return
             try:
                 length = int(self.headers.get('Content-Length','0'))
                 if not 0 < length <= 65536: raise ValueError('Body must be 1..65536 bytes')
                 body = json.loads(self.rfile.read(length))
                 if not isinstance(body,dict): raise ValueError('Expected JSON object')
                 if pair:
-                    if self.path == '/status':
-                        if runtime.args.command == 'host': self.send(200,runtime.status())
-                        else: self.send(200,{'running': bool(runtime.processes.get('w2') and runtime.processes['w2'].poll() is None)})
-                        return
-                    if self.path == '/enroll' and runtime.args.command == 'host':
-                        if runtime.remote and runtime.remote['ip'] != self.client_address[0]: raise ValueError('Another friend is already enrolled')
-                        hp = body['helper_port']
-                        if not isinstance(hp,int) or not 1024 <= hp <= 65535: raise ValueError('Invalid helper port')
-                        node = body.get('node','friend')
-                        if not isinstance(node,str) or not 1 <= len(node) <= 255: raise ValueError('Invalid node name')
-                        runtime.workers['w2']['node'] = node
-                        runtime.remote = {'ip': self.client_address[0], 'port': hp}
-                        runtime.workers['w2']['status'] = 'up'
-                        self.send(200,{'profile':runtime.profile, 'controller_port':runtime.ports['controller'], 'join_ip':self.client_address[0]}); return
-                    if runtime.args.command != 'join': raise ValueError('Unknown pair endpoint')
-                    if self.path == '/fault': result = runtime.helper.action(body['action'])
-                    elif self.path == '/worker': runtime.control_worker('w2',body['action'], remote_control=True); result={'ok':True}
-                    else: raise ValueError('Unknown endpoint')
+                    ip = self.client_address[0]
+                    if self.path == '/check': result = {'ok': True}
+                    elif self.path == '/enroll':
+                        if not runtime.hub: self.send(503,{'error':'invite is still starting'}); return
+                        with runtime.lifecycle: result = runtime.enroll(body, ip)
+                    elif self.path in ('/poll', '/leave'):
+                        friend = runtime.friends.get(body.get('session'))
+                        if not friend: self.send(410,{'error':'unknown session'}); return
+                        if self.path == '/leave':
+                            runtime.drop_friend(friend['session'], 'left'); result = {'ok': True}
+                        else:
+                            friend.update(ip=ip, last_seen=time.monotonic(), running=bool(body.get('running')), slow=bool(body.get('slow')), net=bool(body.get('net')), tunnel=body.get('tunnel'))
+                            commands, friend['commands'] = friend['commands'], []
+                            if commands: friend['grace_until'] = time.monotonic() + 3
+                            view = runtime.status(); view.pop('pairing', None); view.pop('events', None)
+                            result = dict(view, commands=commands)
+                    else: self.send(404,{'error':'not found'}); return
                 elif self.path == '/api/pair':
                     action = body.get('action')
                     target = {'invite': 'host', 'join': 'join', 'leave': 'solo'}.get(action)
@@ -506,9 +686,12 @@ def handler(runtime, pair=False):
                     with runtime.lifecycle: runtime.control_worker(body['name'],body['action'])
                     result={'ok':True}
                 elif self.path == '/api/fault':
-                    if runtime.args.command != 'host' or not runtime.remote or body.get('node') not in ('friend','w2',runtime.workers.get('w2',{}).get('node')): raise ValueError('No enrolled friend')
-                    result=request(f"http://{runtime.remote['ip']}:{runtime.remote['port']}/fault", {'action':body['action']},runtime.pair_token)
-                    runtime.event('fault',body['action'])
+                    friend = runtime.friend_named(body.get('node')) if runtime.args.command == 'host' else None
+                    if not friend: raise ValueError('That laptop is not connected')
+                    if body.get('action') not in ('slow','net','clear'): raise ValueError('action must be slow, net or clear')
+                    friend['commands'].append({'type': 'fault', 'action': body['action']})
+                    runtime.event('fault' if body['action'] != 'clear' else 'restored', f"{body['action']} on {friend['name']} ({friend['node']})")
+                    result={'ok':True}
                 elif self.path == '/api/load':
                     if not isinstance(body.get('on'),bool): raise ValueError('on must be boolean')
                     runtime.load_on=body['on']
@@ -576,9 +759,11 @@ def main():
         except (OSError, ValueError): print('Demo is not running')
         return
     if args.command=='join':
-        if not args.host or not args.token: ap.error('join requires <host-ip> <token>')
+        if not args.host or not args.token: ap.error('join requires <host-ip> <pairing-code>')
         try: socket.inet_aton(args.host)
         except OSError: ap.error('host must be an IPv4 address')
+        args.token = norm_code(args.token)
+        if len(args.token) != 8: ap.error('the pairing code has 8 digits, e.g. 4821-0937')
     try: runtime=Runtime(args)
     except RuntimeError as e:
         print(str(e),file=sys.stderr); return 1

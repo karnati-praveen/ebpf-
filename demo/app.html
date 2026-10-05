@@ -9,7 +9,7 @@
   color-scheme:light;
   --bg:#f3f5f9;--panel:#ffffff;--panel-2:#f7f9fc;--ink:#0f1a2c;--muted:#5b6b82;--faint:#8a98ad;--line:#e1e7f0;
   --brand:#3b5bdb;--brand-ink:#ffffff;--good:#0c8a62;--good-bg:#e3f6ee;--warn:#a86400;--warn-bg:#fff3dc;--bad:#c43145;--bad-bg:#fde8eb;
-  --w1:#3b5bdb;--w2:#0ea5a0;--w3:#d97706;--empty:#e8edf5;
+  --w1:#3b5bdb;--w2:#0ea5a0;--w3:#d97706;--w4:#c2410c;--w5:#7c3aed;--w6:#be185d;--w7:#4d7c0f;--w8:#0369a1;--empty:#e8edf5;
   --shadow:0 1px 2px rgba(15,26,44,.05),0 6px 20px rgba(15,26,44,.05);
 }
 @media (prefers-color-scheme:dark){
@@ -17,14 +17,14 @@
     color-scheme:dark;
     --bg:#0b1220;--panel:#121b2d;--panel-2:#17223a;--ink:#e8eefb;--muted:#9fb0c9;--faint:#70819c;--line:#24324d;
     --brand:#7c95ff;--brand-ink:#0b1220;--good:#4fd1a5;--good-bg:#11372d;--warn:#ffc266;--warn-bg:#3a2a0d;--bad:#ff8696;--bad-bg:#3d1720;
-    --w1:#7c95ff;--w2:#2dd4bf;--w3:#fbbf24;--empty:#1d2a44;--shadow:none;
+    --w1:#7c95ff;--w2:#2dd4bf;--w3:#fbbf24;--w4:#fb923c;--w5:#a78bfa;--w6:#f472b6;--w7:#a3e635;--w8:#38bdf8;--empty:#1d2a44;--shadow:none;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#0b1220;--panel:#121b2d;--panel-2:#17223a;--ink:#e8eefb;--muted:#9fb0c9;--faint:#70819c;--line:#24324d;
   --brand:#7c95ff;--brand-ink:#0b1220;--good:#4fd1a5;--good-bg:#11372d;--warn:#ffc266;--warn-bg:#3a2a0d;--bad:#ff8696;--bad-bg:#3d1720;
-  --w1:#7c95ff;--w2:#2dd4bf;--w3:#fbbf24;--empty:#1d2a44;--shadow:none;
+  --w1:#7c95ff;--w2:#2dd4bf;--w3:#fbbf24;--w4:#fb923c;--w5:#a78bfa;--w6:#f472b6;--w7:#a3e635;--w8:#38bdf8;--empty:#1d2a44;--shadow:none;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
@@ -97,9 +97,9 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--brand) 50%,transparent)
 .form-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
 #chat-error,#control-error{color:var(--bad);font-size:14px;min-height:1.2em;margin-top:6px}
 
-.strip{display:grid;grid-template-columns:repeat(28,minmax(0,1fr));gap:3px;border-radius:6px}
+.strip{display:grid;grid-template-columns:repeat(var(--n,28),minmax(0,1fr));gap:3px;border-radius:6px}
 .strip .c{height:34px;border-radius:5px;background:var(--empty);transition:background .5s}
-.strip-axis{display:grid;grid-template-columns:repeat(28,minmax(0,1fr));gap:3px;margin-top:4px;font-size:11px;color:var(--faint);text-align:center}
+.strip-axis{display:grid;grid-template-columns:repeat(var(--n,28),minmax(0,1fr));gap:3px;margin-top:4px;font-size:11px;color:var(--faint);text-align:center}
 .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:14px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
@@ -113,7 +113,7 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--brand) 50%,transparent)
 .worker .name{font-weight:700}
 .badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
 .b-up{background:var(--good-bg);color:var(--good)}.b-stopped,.b-down{background:var(--bad-bg);color:var(--bad)}
-.mini{display:grid;grid-template-columns:repeat(28,minmax(0,1fr));gap:2px;margin:10px 0;cursor:pointer;border-radius:4px}
+.mini{display:grid;grid-template-columns:repeat(var(--n,28),minmax(0,1fr));gap:2px;margin:10px 0;cursor:pointer;border-radius:4px}
 .mini span{height:12px;border-radius:2px;background:var(--empty)}
 .mini span.assigned{background:var(--wc)}
 .mini:focus{outline:2px solid var(--brand);outline-offset:3px}
@@ -159,6 +159,11 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
 .conn{display:inline-flex;align-items:center;gap:8px;font-weight:700}
 .conn .led{width:10px;height:10px;border-radius:50%;background:var(--warn);animation:pulse 1s infinite}
 .conn.ok .led{background:var(--good);animation:none}
+.conn.bad{color:var(--bad)}.conn.bad .led{background:var(--bad);animation:none}
+.friends{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.friends li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;border-radius:10px;background:var(--panel-2);border:1px solid var(--line);font-size:14px}
+.friends .sw{width:10px;height:10px}
+.faults{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 @media (max-width:1400px){.tag{display:none}}
 @media (max-width:1180px){
   .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -206,7 +211,7 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
     <li>Ask the model a question</li>
     <li>Inspect which worker holds which layers</li>
     <li>Stop a worker</li>
-    <li>Watch the survivor take all 28 layers</li>
+    <li>Watch the others take over its layers</li>
     <li>Restore the worker</li>
   </ol>
 </section>
@@ -222,7 +227,7 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
   </section>
 
   <section class="card chat" aria-label="Chat">
-    <div class="card-h"><h2>Ask the model</h2><span class="small">Qwen3-0.6B · real inference</span></div>
+    <div class="card-h"><h2>Ask the model</h2><span class="small"><span id="model-name">Qwen3-0.6B</span> · real inference</span></div>
     <div id="messages">
       <div id="empty">
         <div style="font-size:18px;font-weight:700;color:var(--ink)">Every answer is computed by the workers on the right, layer by layer.</div>
@@ -243,7 +248,7 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
 
   <div class="stack">
     <section class="card" aria-label="Model placement">
-      <div class="card-h"><h2>Where the model lives</h2><span class="small">28 transformer layers · colour = worker holding it</span></div>
+      <div class="card-h"><h2>Where the model lives</h2><span class="small"><span id="layer-count">28</span> transformer layers · colour = worker holding it</span></div>
       <div class="strip" id="strip"></div>
       <div class="strip-axis" id="axis"></div>
       <div class="legend" id="legend"></div>
@@ -253,7 +258,7 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
     </section>
 
     <section class="card" aria-label="Connect another laptop" id="pairing">
-      <div class="card-h"><h2>Connect another laptop</h2><span class="small">same Wi-Fi or phone hotspot</span></div>
+      <div class="card-h"><h2>Connect more laptops</h2><span class="small">any number · same Wi-Fi or phone hotspot</span></div>
       <div id="pair-body"></div>
       <div id="pair-error" role="alert" style="color:var(--bad);font-size:14px;min-height:1.2em;margin-top:6px"></div>
     </section>
@@ -281,7 +286,8 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
       <div class="controls" style="margin-top:14px">
         <label class="switch"><input type="checkbox" id="load"> Background load</label>
         <label class="small">Execution <select id="execution"><option value="auto">Auto</option><option value="cpu">CPU</option><option value="cuda">NVIDIA GPU</option></select></label>
-        <span class="controls" id="fault-controls"></span>
+      </div>
+      <div class="faults" id="fault-controls" style="margin-top:10px">
       </div>
       <div id="control-error" role="alert"></div>
     </section>
@@ -292,7 +298,8 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
 'use strict';
 const token='__SESSION_TOKEN__',$=id=>document.getElementById(id);
 let status=null,busy=false,generation=null,history=[],checks=[false,false,false,false,false],hasStopped=false;
-const colors={},COLORS=['var(--w1)','var(--w2)','var(--w3)'];
+const colors={},COLORS=[1,2,3,4,5,6,7,8].map(i=>`var(--w${i})`);let N=28;
+const colorOf=name=>{const k=/^w(\d+)$/.exec(name);return colors[name]||(colors[name]=COLORS[((k?+k[1]:Object.keys(colors).length+1)-1)%COLORS.length])};
 const num=(v,d=0)=>v==null||Number.isNaN(Number(v))?'n/a':Number(v).toFixed(d);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clock=t=>{const d=new Date(t);return isNaN(d)?(t||''):d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})};
@@ -328,18 +335,19 @@ function render(s){
   $('k-req').textContent=s.metrics&&s.metrics.requests!=null?s.metrics.requests:'—';$('metrics').textContent=`${num(s.metrics?.requests)} requests · ${num(s.metrics?.tokens)} tokens`;
 
   const changed=generation!==null&&generation!==s.generation;generation=s.generation;
-  s.workers.forEach((w,i)=>{if(!colors[w.name])colors[w.name]=COLORS[i%COLORS.length]});
-  const owner=Array.from({length:28},(_,n)=>s.workers.find(w=>w.layers&&n>=w.layers[0]&&n<w.layers[1]));
-  $('strip').innerHTML=owner.map((w,n)=>`<span class="c" title="Layer ${n} · ${w?esc(w.name):'unassigned'}"${w?` style="background:${colors[w.name]}"`:''}></span>`).join('');
-  if(!$('axis').childElementCount)$('axis').innerHTML=Array.from({length:28},(_,n)=>`<span>${n}</span>`).join('');
+  if((s.total_layers||28)!==N||!$('axis').childElementCount){N=s.total_layers||28;document.documentElement.style.setProperty('--n',N);$('axis').innerHTML=Array.from({length:N},(_,n)=>`<span>${n}</span>`).join('');$('layer-count').textContent=N}
+  if(s.model)$('model-name').textContent=s.model.split('/').pop();
+  s.workers.forEach(w=>colorOf(w.name));
+  const owner=Array.from({length:N},(_,n)=>s.workers.find(w=>w.layers&&n>=w.layers[0]&&n<w.layers[1]));
+  $('strip').innerHTML=owner.map((w,n)=>`<span class="c" title="Layer ${n} · ${w?esc(w.name):'unassigned'}"${w?` style="background:${colorOf(w.name)}"`:''}></span>`).join('');
   if(changed){$('strip').classList.remove('flash');void $('strip').offsetWidth;$('strip').classList.add('flash')}
-  $('legend').innerHTML=s.workers.map(w=>`<span><i class="sw" style="background:${colors[w.name]}"></i><b>${esc(w.name)}</b> ${range(w.layers)}${w.layers?` (${w.layers[1]-w.layers[0]} layers)`:''}</span>`).join('');
+  $('legend').innerHTML=s.workers.map(w=>`<span><i class="sw" style="background:${colorOf(w.name)}"></i><b>${esc(w.name)}</b> ${range(w.layers)}${w.layers?` (${w.layers[1]-w.layers[0]} layers)`:''}</span>`).join('');
   const stageBy=Object.fromEntries((t.stages||[]).map(x=>[x.name,x]));
   $('workers').innerHTML=s.workers.map((w,i)=>{const st=stageBy[w.name]||{},node=(t.nodes||{})[w.name]||{},speed=w.speed??node.speed,on=w.status==='up';
-    return `<div class="worker w${i+1}${on?'':' off'}" style="--wc:${colors[w.name]}">
+    return `<div class="worker ${esc(w.name)}${on?'':' off'}" style="--wc:${colorOf(w.name)}">
       <div class="row"><span class="name">${esc(w.name)} <span class="small">· ${esc(w.node)}</span></span><span class="badge b-${esc(w.status)}">${esc(w.status)}</span></div>
-      <div class="small">${w.local?'Local process — shares this laptop’s CPU/GPU':'Worker on your friend’s laptop'}</div>
-      <div class="mini" tabindex="0" role="button" aria-label="Inspect ${esc(w.name)} layers">${Array.from({length:28},(_,n)=>`<span class="${w.layers&&n>=w.layers[0]&&n<w.layers[1]?'assigned':''}"></span>`).join('')}</div>
+      <div class="small">${w.local?'On this laptop':s.mode==='join'?'On another laptop in this pipeline':'On another laptop (joined)'}</div>
+      <div class="mini" tabindex="0" role="button" aria-label="Inspect ${esc(w.name)} layers">${Array.from({length:N},(_,n)=>`<span class="${w.layers&&n>=w.layers[0]&&n<w.layers[1]?'assigned':''}"></span>`).join('')}</div>
       <div class="stats">
         <div><i>Layers</i><b>${w.layers?w.layers[1]-w.layers[0]:0}</b></div>
         <div title="Measured decode speed relative to this laptop's calibration run (1.00× = as fast as calibrated)"><i>Speed</i><b>${on?num(speed,2)+'×':'—'}</b></div>
@@ -352,11 +360,12 @@ function render(s){
   $('worker-controls').replaceChildren();
   if(s.recovery_demo.available)s.workers.forEach(w=>{const b=document.createElement('button'),running=w.status==='up';b.className='btn '+(running?'danger':'primary');b.textContent=(running?'Stop ':'Restore ')+w.name;b.disabled=!['ready','recovering'].includes(s.app_state)||running&&s.workers.filter(x=>x.status==='up').length<=1;b.onclick=()=>control('worker',{name:w.name,action:running?'stop':'restore'});$('worker-controls').append(b)});
   if(s.workers.some(w=>w.status==='stopped')){hasStopped=true;tick(2)}
-  if(hasStopped&&s.app_state==='ready'&&s.workers.some(w=>w.layers&&w.layers[0]===0&&w.layers[1]===28))tick(3);
+  if(hasStopped&&s.app_state==='ready'&&s.workers.some(w=>w.status==='stopped'&&!w.layers))tick(3);
   if(checks[3]&&s.app_state==='ready'&&s.workers.filter(w=>w.status==='up'&&w.layers).length>1)tick(4);
 
   $('fault-controls').replaceChildren();
-  if(s.mode==='host'&&s.faults_available.length){const remote=s.workers.find(w=>!w.local);[...s.faults_available,'clear'].filter((v,i,a)=>a.indexOf(v)===i).forEach(action=>{const b=document.createElement('button');b.className='btn';b.textContent=({slow:'Slow down',net:'+100 ms transport delay',clear:'Clear faults'})[action]||action;b.disabled=!remote||s.app_state!=='ready';b.onclick=()=>control('fault',{node:remote.node,action});$('fault-controls').append(b)})}
+  if(s.mode==='host'&&s.faults_available.length)s.workers.filter(w=>!w.local).forEach(remote=>{const l=document.createElement('span');l.className='small';l.innerHTML=`<i class="sw" style="background:${colorOf(remote.name)}"></i> <b>${esc(remote.name)}</b>`;$('fault-controls').append(l);
+    [...s.faults_available,'clear'].filter((v,i,a)=>a.indexOf(v)===i).forEach(action=>{const b=document.createElement('button');b.className='btn sm';b.textContent=({slow:'Slow down',net:'+100 ms delay',clear:'Clear'})[action]||action;b.setAttribute('aria-label',`${action} ${remote.name}`);b.disabled=remote.status!=='up'||!['ready','recovering'].includes(s.app_state);b.onclick=()=>control('fault',{node:remote.name,action});$('fault-controls').append(b)})});
 
   const dec=t.decisions||[];
   $('decisions').innerHTML=dec.length?dec.map(d=>`<li>${d.executed?'<span class="dec-ok">Moved layers</span>':'<span class="dec-no">Kept layout</span>'} · ${esc(({'recovery-or-initial':'initial or recovery placement'})[d.reason]||d.reason||'')}
@@ -375,26 +384,29 @@ function renderPairing(s){
   if(p.mode==='solo'){
     view='solo';
     html=`<div class="pair">
-      <div><h3>Invite a laptop</h3><div class="small">Let another laptop run part of the model. You will get an address and a code to type on it.</div>
-        <button class="btn primary" id="pair-invite" style="margin-top:12px">Invite a laptop</button></div>
+      <div><h3>Invite laptops</h3><div class="small">Let other laptops run part of the model — as many as you like. You get an address and a code to type on each of them.</div>
+        <button class="btn primary" id="pair-invite" style="margin-top:12px">Invite laptops</button></div>
       <div><h3>Join a laptop</h3><div class="small">Another laptop shows an invite? Enter its address and code.</div>
         <label class="field">Address<input id="pair-host" inputmode="decimal" placeholder="192.168.1.20" autocomplete="off"></label>
-        <label class="field">Pairing code<input id="pair-code" placeholder="ab12-cd34" autocomplete="off"></label>
+        <label class="field">Pairing code<input id="pair-code" inputmode="numeric" placeholder="4821-0937" autocomplete="off"></label>
         <button class="btn" id="pair-join" style="margin-top:10px">Join</button></div></div>`;
   }else if(p.mode==='host'){
-    view='host:'+p.code+':'+p.friend+':'+p.lan_ip;
+    const fr=p.friends||[];
+    view='host:'+p.code+':'+p.lan_ip+':'+JSON.stringify(fr);
     html=`<div class="invite">
-      <div><div class="small">On the other laptop, open Shardwise → <b>Join a laptop</b> and enter</div>
+      <div><div class="small">On each other laptop, open Shardwise → <b>Join a laptop</b> and enter</div>
         <div style="display:flex;gap:28px;flex-wrap:wrap;margin-top:6px"><div><div class="small">Address</div><div class="big">${esc(p.lan_ip||'unknown')}</div></div>
         <div><div class="small">Pairing code</div><div class="big">${esc(p.code)}</div></div></div></div>
       <div style="margin-left:auto;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
-        ${p.friend?`<span class="conn ok"><span class="led"></span>Connected: ${esc(p.friend)}</span>`:`<span class="conn"><span class="led"></span>Waiting for a laptop to join…</span>`}
+        <span class="conn ${fr.some(f=>f.status==='up')?'ok':''}"><span class="led"></span>${fr.length?`${fr.filter(f=>f.status==='up').length} of ${fr.length} joined laptop${fr.length===1?'':'s'} connected`:'Waiting for laptops to join…'}</span>
         <button class="btn danger" id="pair-leave">Stop sharing</button></div></div>
-      <div class="note">If it does not connect: both laptops on the same Wi-Fi (a phone hotspot is most reliable), and allow TCP ports ${esc((p.ports||[]).join(', '))} through the firewall.</div>`;
+      ${fr.length?`<ul class="friends" aria-label="Joined laptops">${fr.map(f=>`<li><i class="sw" style="background:${colorOf(f.name)}"></i><b>${esc(f.name)}</b><span>${esc(f.node)}</span><span class="small">${esc(f.ip)}</span><span class="badge b-${esc(f.status)}" style="margin-left:auto">${esc(f.status)}</span></li>`).join('')}</ul>`:''}
+      <div class="note">More laptops can join with the same code at any time${p.max_friends?` (up to ${p.max_friends})`:''}. Joining laptops need no firewall change. If none can connect: same Wi-Fi (campus/guest Wi-Fi often blocks laptop-to-laptop traffic — a phone hotspot works), and allow TCP ports ${esc((p.ports||[]).join(', '))} into <b>this</b> laptop.</div>`;
   }else{
-    view='join:'+p.host+':'+s.app_state;
-    html=`<div class="invite"><div>${s.app_state==='failed'?`<span class="conn" style="color:var(--bad)">Could not join ${esc(p.host)}</span><div class="small">${esc(s.message)}</div>`:`<span class="conn ${s.app_state==='ready'?'ok':''}"><span class="led"></span>${s.app_state==='ready'?'Connected to':'Connecting to'} ${esc(p.host)}</span><div class="small">This laptop runs part of the model. Chat and controls are on the inviting laptop.</div>`}</div>
-      <button class="btn danger" id="pair-leave" style="margin-left:auto">${s.app_state==='failed'?'Back to Solo':'Disconnect'}</button></div>`;
+    view='join:'+p.host+':'+p.name+':'+s.app_state+':'+(s.app_state==='failed'?s.message:'');
+    const failed=s.app_state==='failed',ok=s.app_state==='ready';
+    html=`<div class="invite"><div>${failed?`<span class="conn bad"><span class="led"></span>Could not join ${esc(p.host)}</span><div class="small" style="max-width:640px">${esc(s.message)}</div>`:`<span class="conn ${ok?'ok':''}"><span class="led"></span>${ok?'Connected to':'Connecting to'} ${esc(p.host)}${p.name?` as <b>${esc(p.name)}</b>`:''}</span><div class="small">This laptop runs part of the model. Chat and controls are on the inviting laptop.</div>`}</div>
+      <button class="btn danger" id="pair-leave" style="margin-left:auto">${failed?'Back to Solo':'Disconnect'}</button></div>`;
   }
   if(p.warning&&p.mode!=='join')html=`<div class="banner" style="margin:0 0 12px">${esc(p.warning)}</div>`+html;
   view+=':'+(p.warning||'');
@@ -402,7 +414,7 @@ function renderPairing(s){
   const act=async(body)=>{$('pair-error').textContent='';try{await post('pair',body);pairView='';await pollStatus()}catch(e){$('pair-error').textContent=e.message}};
   $('pair-invite')&&($('pair-invite').onclick=()=>act({action:'invite'}));
   $('pair-join')&&($('pair-join').onclick=()=>act({action:'join',host:$('pair-host').value.trim(),code:$('pair-code').value.trim()}));
-  $('pair-leave')&&($('pair-leave').onclick=()=>{if(confirm('Disconnect the other laptop and return to Solo mode?'))act({action:'leave'})});
+  $('pair-leave')&&($('pair-leave').onclick=()=>{if(p.mode==='join'&&s.app_state==='failed'||confirm(p.mode==='host'?'Disconnect all joined laptops and return to Solo mode?':'Leave this pipeline and return to Solo mode?'))act({action:'leave'})});
 }
 function chart(h){
   const svg=$('chart'),W=700,H=170,L=34,R=8,T=10,B=22;

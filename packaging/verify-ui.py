@@ -75,8 +75,8 @@ async def verify(shots):
             await page.locator('#load').check()
             await page.wait_for_timeout(1100)
             assert await page.locator('#load').is_checked()
-            await page.get_by_role('button', name='Invite a laptop').click()
-            await page.wait_for_function("document.getElementById('pair-body').textContent.includes('ab12-cd34')")
+            await page.get_by_role('button', name='Invite laptops').click()
+            await page.wait_for_function("document.getElementById('pair-body').textContent.includes('4821-0937')")
             await page.screenshot(path=str(shots/'invite.png'), full_page=True)
             page.once('dialog', lambda dialog: dialog.accept())
             await page.get_by_role('button', name='Stop sharing').click()
@@ -84,12 +84,18 @@ async def verify(shots):
             await page.emulate_media(color_scheme='dark')
             await page.screenshot(path=str(shots/'dark.png'), full_page=True)
             await page.goto(urls['gpu-pair'])
-            await page.get_by_role('button', name='Slow down').click()
-            await page.wait_for_function("document.getElementById('events').textContent.includes('Mock fault slow')")
-            await page.get_by_role('button', name='+100 ms transport delay').click()
-            await page.wait_for_function("document.getElementById('events').textContent.includes('Mock fault net')")
-            await page.get_by_role('button', name='Clear faults').click()
-            await page.wait_for_function("document.getElementById('events').textContent.includes('Mock fault clear')")
+            await page.wait_for_function("document.getElementById('state').textContent==='ready'")
+            # Host with two joined laptops: three workers, a row per laptop, faults per laptop.
+            assert await page.locator('#workers .worker').count() == 3
+            assert await page.locator('.friends li').count() == 2
+            assert '2 of 2 joined laptops connected' in await page.locator('#pair-body').inner_text()
+            for action in ('slow', 'net', 'clear'):
+                await page.get_by_role('button', name=f'{action} w3', exact=True).click()
+                await page.wait_for_function("a => document.getElementById('events').textContent.includes('Mock fault '+a+' w3')", arg=action)
+            await page.get_by_role('button', name='Stop w2').click()
+            await page.wait_for_function("document.getElementById('state').textContent==='recovering'")
+            await page.wait_for_function("document.getElementById('state').textContent==='ready'")
+            assert await page.locator('.worker.w1 .assigned').count() + await page.locator('.worker.w3 .assigned').count() == 28
             await page.goto(urls['cpu'])
             page.on('dialog', lambda dialog: dialog.accept())
             await page.locator('#execution').select_option('cpu')

@@ -9,18 +9,23 @@ class Mock:
     def __init__(self, gpu=False, single=False, mode='solo'):
         self.token=secrets.token_urlsafe(32); self.started=time.monotonic(); self.lock=threading.RLock(); self.busy=False
         self.gpu=gpu; self.gpu_capable=gpu; self.requested="auto"; self.single=single or mode=="join"; self.mode=mode; self.recover_until=0; self.generation=1; self.events=[]; self.requests=0; self.tokens=0; self.load=False; self.stopped=False; self.chat_lock=threading.Lock(); self.history=[]
-        self.workers=[dict(name='w1',node='this-laptop',local=True,status='up',layers=[0,28] if single else [0,14],speed=1.0)]
-        if mode=='join':self.workers=[dict(name='w2',node='this-laptop',local=True,status='up',layers=[14,28],speed=0.95)]
-        elif not single:self.workers.append(dict(name='w2',node='friend' if mode=='host' else 'this-laptop',local=mode!='host',status='up',layers=[14,28],speed=0.95))
+        self.workers=[dict(name='w1',node='this-laptop',local=True,status='up',layers=None,speed=1.0)]
+        if mode=='join':self.workers=[dict(name='w1',node='host-laptop',local=False,status='up',layers=None,speed=1.0),dict(name='w2',node='this-laptop',local=True,status='up',layers=None,speed=0.95)]
+        elif mode=='host':self.workers+=[dict(name=f'w{k}',node=f'friend-{k}',local=False,status='up',layers=None,speed=0.95) for k in (2,3)]
+        elif not single:self.workers.append(dict(name='w2',node='this-laptop',local=True,status='up',layers=None,speed=0.95))
+        self.split()
+    def split(self):
+        live=[w for w in self.workers if w['status']=='up'];n=len(live)
+        for w in self.workers:w['layers']=None
+        for i,w in enumerate(live):w['layers']=[28*i//n,28*(i+1)//n]
     def event(self,kind,text):self.events.append(dict(t=datetime.now(timezone.utc).isoformat(),kind=kind,text=text))
     def status(self):
         elapsed=time.monotonic()-self.started
         state='stopped' if self.stopped else 'recovering' if time.monotonic()<self.recover_until else 'downloading' if elapsed<2 else 'calibrating' if elapsed<4 else 'loading' if elapsed<6 else 'ready'
         if self.recover_until and state=='ready':
-            self.recover_until=0; live=[w for w in self.workers if w['status']=='up']
-            for w in self.workers:w['layers']=([0,28] if len(live)==1 else [0,14] if w['name']=='w1' else [14,28]) if w['status']=='up' else None
+            self.recover_until=0; self.split(); live=[w for w in self.workers if w['status']=='up']
             self.generation+=1; self.event('healed' if len(live)==1 else 'restored','Layer assignments recovered.')
-        return dict(app_state=state,message='Shardwise development mock — simulated inference and hardware',progress=min(elapsed/6,1) if state in ('downloading','calibrating','loading') else None,mode=self.mode,device=dict(requested=self.requested,selected='cuda' if self.gpu else 'cpu',reason='Mock device for UI testing',gpu_name='RTX 4060' if self.gpu else None),workers=self.workers,generation=self.generation,policy='hysteresis',events=self.events,metrics=dict(requests=self.requests,tokens=self.tokens,avg_ttft_ms=420,avg_duration_ms=2000,repartition_replays=0),recovery_demo=dict(available=not self.single,reason='Use the host dashboard to control Pair recovery.' if self.mode=='join' else 'Only one worker fits in available memory.' if self.single else None),faults_available=['slow','net'] if self.mode=='host' else [],load_on=self.load,telemetry=dict(predicted_token_ms=176.7,predicted_bottleneck_ms=93.1,nodes={w['name']:dict(speed=w['speed'],age_s=0.6,temp_c=None) for w in self.workers},links=[],stages=[dict(name=w['name'],busy_pct=48.0,forwards=120) for w in self.workers if w['status']=='up'],decisions=[dict(t=datetime.now(timezone.utc).isoformat(),reason='recovery-or-initial',executed=True,gate_accepts=True,improvement_pct=0,to=[w['layers'] for w in self.workers if w['layers']],predicted_ms=80.0)],history=self.history,recoveries=[],recovering_for_s=None),pairing=dict(mode=self.mode,lan_ip='192.168.1.20',pair_port=8766,code='ab12-cd34' if self.mode=='host' else None,friend=None,host='192.168.1.10' if self.mode=='join' else None,ports=[8766,8767,8768,8769]))
+        return dict(app_state=state,message='Shardwise development mock — simulated inference and hardware',progress=min(elapsed/6,1) if state in ('downloading','calibrating','loading') else None,mode=self.mode,device=dict(requested=self.requested,selected='cuda' if self.gpu else 'cpu',reason='Mock device for UI testing',gpu_name='RTX 4060' if self.gpu else None),workers=self.workers,generation=self.generation,policy='hysteresis',events=self.events,metrics=dict(requests=self.requests,tokens=self.tokens,avg_ttft_ms=420,avg_duration_ms=2000,repartition_replays=0),recovery_demo=dict(available=not self.single,reason='Use the host dashboard to control Pair recovery.' if self.mode=='join' else 'Only one worker fits in available memory.' if self.single else None),faults_available=['slow','net'] if self.mode=='host' else [],load_on=self.load,telemetry=dict(predicted_token_ms=176.7,predicted_bottleneck_ms=93.1,nodes={w['name']:dict(speed=w['speed'],age_s=0.6,temp_c=None) for w in self.workers},links=[],stages=[dict(name=w['name'],busy_pct=48.0,forwards=120) for w in self.workers if w['status']=='up'],decisions=[dict(t=datetime.now(timezone.utc).isoformat(),reason='recovery-or-initial',executed=True,gate_accepts=True,improvement_pct=0,to=[w['layers'] for w in self.workers if w['layers']],predicted_ms=80.0)],history=self.history,recoveries=[],recovering_for_s=None),total_layers=28,model='Qwen/Qwen3-0.6B',pairing=dict(mode=self.mode,lan_ip='192.168.1.20',pair_port=8766,code='4821-0937' if self.mode=='host' else None,friends=[dict(name=w['name'],node=w['node'],ip=f"192.168.1.{30+i}",status=w['status']) for i,w in enumerate(self.workers) if not w['local']] if self.mode=='host' else [],max_friends=15,host='192.168.1.10' if self.mode=='join' else None,name='w2' if self.mode=='join' else None,ports=[8766,8767,8768]))
     def hw(self):return dict(cpu=dict(model='Mock Intel CPU',cores=8,util_pct=37.5),ram=dict(total_mb=16000,used_mb=9100),gpu=dict(name='RTX 4060',util_pct=62,temp_c=58,vram_used_mb=3200,vram_total_mb=8192) if self.gpu else None)
 
 class Handler(BaseHTTPRequestHandler):
@@ -62,8 +67,8 @@ class Handler(BaseHTTPRequestHandler):
                     if d['action']=='stop' and sum(x['status']=='up' for x in m.workers)<=1:raise ValueError('cannot stop last worker')
                     w['status']='stopped' if d['action']=='stop' else 'up';m.recover_until=time.monotonic()+6;m.event('fault' if d['action']=='stop' else 'restored',f"{w['name']} {d['action']}")
                 elif self.path=='/api/fault':
-                    if m.mode!='host' or d.get('action') not in ('slow','net','clear'):raise ValueError('fault unavailable')
-                    m.event('fault','Mock fault '+d['action'])
+                    if m.mode!='host' or d.get('action') not in ('slow','net','clear') or not any(w['name']==d.get('node') and not w['local'] for w in m.workers):raise ValueError('fault unavailable')
+                    m.event('fault',f"Mock fault {d['action']} {d['node']}")
                 elif self.path=='/api/mode':
                     if d.get('device') not in ('auto','cpu','cuda'):raise ValueError('invalid device')
                     m.requested=d['device'];m.gpu=d['device']=='cuda' or d['device']=='auto' and m.gpu_capable;m.started=time.monotonic()
