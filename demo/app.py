@@ -20,7 +20,7 @@ from hwdetect import hardware, select
 from helper import Helper, DelayedRelay
 
 ROOT = Path(__file__).resolve().parents[1]
-HOME = Path(os.environ.get('KEINFER_DEMO_HOME', '~/.local/share/keinfer-demo')).expanduser()
+HOME = Path(os.environ.get('SHARDWISE_HOME', os.environ.get('KEINFER_DEMO_HOME', '~/.local/share/shardwise'))).expanduser()
 MODEL = 'Qwen/Qwen3-0.6B'
 MODEL_REVISION = 'c1899de289a04d12100db370d81485cdf75e47ca'
 
@@ -45,7 +45,7 @@ class Runtime:
         for d in ('logs', 'profiles', 'state', 'hf'): (HOME / d).mkdir(parents=True, exist_ok=True)
         self.lock = open(HOME / 'state/lock', 'a')
         try: fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError: raise RuntimeError('Demo already running; use keinfer-demo status or stop')
+        except BlockingIOError: raise RuntimeError('Demo already running; use shardwise status or stop')
         self.token = secrets.token_urlsafe(32)
         self.pair_token = secrets.token_urlsafe(32)
         self.processes = {}
@@ -61,7 +61,7 @@ class Runtime:
         self.load_on = False
         self.remote = None
         self.helper = None
-        self.bin = Path(os.environ.get('KEINFER_BIN', '/opt/keinfer-demo/bin'))
+        self.bin = Path(os.environ.get('SHARDWISE_BIN',os.environ.get('KEINFER_BIN', '/opt/shardwise/bin')))
         if not self.bin.exists(): self.bin = ROOT / 'bin'
         self.env = dict(os.environ, HF_HOME=str(HOME/'hf'), MODEL_REVISION=MODEL_REVISION, KV_CACHE='1', MODEL=MODEL, PYTHONUNBUFFERED='1')
         self.env['TORCH_THREADS'] = str(max(1, (os.cpu_count() or 2)//2))
@@ -161,7 +161,7 @@ class Runtime:
                     self.pair_server = ThreadingHTTPServer(('0.0.0.0', self.args.pair_port), handler(self, pair=True))
                     threading.Thread(target=self.pair_server.serve_forever, daemon=True).start()
                     self.workers['w2'] = {'name': 'w2', 'node': 'friend', 'local': False, 'status': 'down', 'layers': None, 'speed': None}
-                    print(f'Pair join command: keinfer-demo join <this-laptop-ip> {self.pair_token}', flush=True)
+                    print(f'Pair join command: shardwise join <this-laptop-ip> {self.pair_token}', flush=True)
                 self.worker('w1')
                 if self.args.command == 'solo' and count == 2: self.worker('w2')
                 if not hasattr(self, 'monitor_started'):
@@ -365,7 +365,7 @@ def handler(runtime, pair=False):
                     if body['device'] != 'cpu':
                         import torch
                         if torch.version.cuda is None and (body['device'] == 'cuda' or hardware()['gpu']):
-                            raise ValueError('This runtime has CPU-only PyTorch. Exit and launch keinfer-demo again to install the detected GPU runtime; then switch devices.')
+                            raise ValueError('This runtime has CPU-only PyTorch. Exit and launch shardwise again to install the detected GPU runtime; then switch devices.')
                     if not runtime.chat_lock.acquire(False):
                         self.send(409,{'error':'busy'}); return
                     try:

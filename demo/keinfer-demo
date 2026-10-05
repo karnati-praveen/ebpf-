@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 APP_ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
-export KEINFER_DEMO_HOME="${KEINFER_DEMO_HOME:-$HOME/.local/share/keinfer-demo}"
+export SHARDWISE_HOME="${SHARDWISE_HOME:-${KEINFER_DEMO_HOME:-$HOME/.local/share/shardwise}}"
+export KEINFER_DEMO_HOME="$SHARDWISE_HOME"
 RUNTIME_PY="$KEINFER_DEMO_HOME/runtime/bin/python"
 case "${1:-solo}" in
   stop|status) [[ -x "$RUNTIME_PY" ]] || RUNTIME_PY="$(command -v python3)"; exec "$RUNTIME_PY" "$APP_ROOT/demo/app.py" "$@" ;;
@@ -10,18 +11,19 @@ mkdir -p "$KEINFER_DEMO_HOME/state"
 # Serialize setup as well as execution, before altering the runtime environment.
 exec 9>"$KEINFER_DEMO_HOME/state/launcher.lock"
 if ! flock -n 9; then
-  echo 'Demo already running or setting up; use keinfer-demo status or stop' >&2
+  echo 'Demo already running or setting up; use shardwise status or stop' >&2
   exit 1
 fi
 # A directly launched app does not own launcher.lock; inspect its runtime lock too.
 exec 8>"$KEINFER_DEMO_HOME/state/lock"
 if ! flock -n 8; then
-  echo 'Demo already running; use keinfer-demo status or stop' >&2
+  echo 'Demo already running; use shardwise status or stop' >&2
   exit 1
 fi
 flock -u 8
 exec 8>&-
-export KEINFER_BIN="${KEINFER_BIN:-/opt/keinfer-demo/bin}"
+export SHARDWISE_BIN="${SHARDWISE_BIN:-${KEINFER_BIN:-/opt/shardwise/bin}}"
+export KEINFER_BIN="$SHARDWISE_BIN"
 DEVICE_REQUEST=auto
 EXPECT_DEVICE_ARG=0
 for arg in "$@"; do
@@ -49,6 +51,7 @@ if [[ "$SETUP_REQUIRED" == 0 ]] && ! "$RUNTIME_PY" -c 'import torch, transformer
 if [[ "$SETUP_REQUIRED" == 1 ]]; then "$APP_ROOT/demo/runtime-setup.sh" "$RUNTIME_FLAVOR"; fi
 if [[ ! -d "$KEINFER_BIN" ]]; then
   export KEINFER_BIN="$APP_ROOT/bin"
+  export SHARDWISE_BIN="$KEINFER_BIN"
 fi
 if [[ ! -x "$KEINFER_BIN/controller" || ! -x "$KEINFER_BIN/nodeagent" ]]; then
   mkdir -p "$KEINFER_BIN"
