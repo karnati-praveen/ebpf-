@@ -230,8 +230,11 @@ class Runtime:
                 contiguous = all(a['layers'][1]==b['layers'][0] for a,b in zip(stages,stages[1:]))
                 if complete and live and contiguous and expected.issubset(assigned):
                     self.state, self.message = 'ready', 'Ready for real inference'
+                elif self.state == 'ready':
+                    self.state,self.message='recovering','Waiting for a complete live pipeline'
             except Exception:
-                pass
+                if self.state == 'ready':
+                    self.state,self.message='recovering','Coordinator temporarily unreachable'
 
     def control_worker(self, name, action, remote_control=False):
         if name not in self.workers or action not in ('stop', 'restore'): raise ValueError('Unknown worker or action')
