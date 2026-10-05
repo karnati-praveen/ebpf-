@@ -15,7 +15,8 @@ class Helper:
         self.runtime, self.host_ip, self.token = runtime, host_ip, token
         self.slow = threading.Event()
         self.closed = threading.Event()
-        threading.Thread(target=self._loop, daemon=True).start()
+        self.thread = threading.Thread(target=self._loop, daemon=True)
+        self.thread.start()
 
     def authorize(self, ip, token):
         return ip == self.host_ip and hmac.compare_digest(token or '', self.token)
@@ -49,6 +50,7 @@ class Helper:
         self.slow.clear()
         self.closed.set()
         self._signal(signal.SIGCONT)
+        self.thread.join(timeout=1)
 
 class DelayedRelay:
     """App-owned worker TCP proxy; delays only worker-to-router traffic."""
@@ -96,4 +98,7 @@ class DelayedRelay:
     def close(self):
         self.closed.set(); self.socket.close()
         with self.lock:
-            for conn in list(self.connections): conn.close()
+            for conn in list(self.connections):
+                try: conn.shutdown(2)
+                except OSError: pass
+                conn.close()
