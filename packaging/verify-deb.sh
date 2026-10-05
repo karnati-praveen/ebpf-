@@ -12,4 +12,10 @@ if printf '%s\n' "$listing" | awk '$NF ~ /\/(mock_api\.py|__pycache__|test[^/]*)
 fi
 printf '%s\n' "$listing" | awk '$6=="./usr/bin/shardwise" && $7=="->" && $8=="/opt/shardwise/app/demo/keinfer-demo" {found=1} END {exit !found}'
 [[ $(dpkg-deb --field "$package" Package) == shardwise ]]
-echo 'PASS: Shardwise package identity, launcher, executable binary modes, and exclusion of mocks/tests.'
+checksum="$package.sha256"
+[[ -f "$checksum" ]] || { echo 'Missing distributable checksum' >&2; exit 1; }
+expected_name=$(basename -- "$package")
+checksum_name=$(awk 'NR==1 {print $2}' "$checksum")
+[[ "$checksum_name" == "$expected_name" ]] || { echo 'Checksum must contain the portable package basename' >&2; exit 1; }
+(cd -- "$(dirname -- "$package")" && sha256sum --check --status "$expected_name.sha256")
+echo 'PASS: Shardwise identity, launcher, safe binary modes, development exclusions, and portable checksum.' 
