@@ -192,7 +192,7 @@ class Runtime:
                 try: processes = list(self.processes.items())
                 finally: self.lifecycle.release()
                 crashed = next(((name,proc) for name,proc in processes if proc.poll() is not None),None)
-                if crashed:
+                if crashed and self.processes.get(crashed[0]) is crashed[1]:
                     name,proc=crashed
                     if name in self.workers: self.workers[name]['status']='down'
                     self.state,self.message='failed',f'{name} exited; inspect logs/{name}.log'
@@ -262,6 +262,7 @@ class Runtime:
         if self.state != 'ready' or self.args.command == 'join': return 503, {'error': 'not ready'}
         if not self.chat_lock.acquire(False): return 409, {'error': 'busy'}
         try:
+            if self.state != 'ready': return 503, {'error':'not ready'}
             messages = body['messages']
             if not isinstance(messages, list) or not messages or len(messages)>64: raise ValueError('messages must be a nonempty list')
             if any(not isinstance(m, dict) or m.get('role') not in ('user','assistant','system') or not isinstance(m.get('content'), str) for m in messages): raise ValueError('Invalid chat messages')
@@ -358,7 +359,11 @@ def handler(runtime, pair=False):
                         self.send(409,{'error':'busy'}); return
                     if runtime.args.command != 'solo': raise ValueError('Restart host/join explicitly to switch device')
                     if body.get('device') not in ('auto','cpu','cuda'): raise ValueError('Invalid device')
-                    runtime.args.device=body['device']; runtime.state='loading'
+                    if not runtime.chat_lock.acquire(False):
+                        self.send(409,{'error':'busy'}); return
+                    try:
+                        runtime.args.device=body['device']; runtime.state='loading'
+                    finally: runtime.chat_lock.release()
                     def restart():
                         with runtime.lifecycle:
                             runtime.cleanup_pipeline(); runtime.workers.clear(); runtime.initialize()
