@@ -127,7 +127,7 @@ class Runtime:
             self.workers[name] = entry
         entry['status'] = 'up'
         profile = ','.join(f"{r['context_len']}:{r['ms']}" for r in self.reference['per_layer_by_ctx'])
-        self.spawn(name, [sys.executable, str(ROOT/'worker/server.py')], {'PORT': str(entry['port']), 'WORKER_NAME': name, 'NODE_AGENT_ADDR': f"127.0.0.1:{entry['agent']}", 'PER_LAYER_PROFILE': profile, 'HF_HUB_OFFLINE': '1'})
+        self.spawn(name, [sys.executable, str(ROOT/'worker/server.py')], {'PORT': str(entry['port']), 'WORKER_NAME': name, 'NODE_AGENT_ADDR': f"127.0.0.1:{entry['agent']}", 'PER_LAYER_PROFILE': profile, 'HF_HUB_OFFLINE': '1', 'GRPC_HOST': '127.0.0.1'})
         if self.args.command == 'join' and not getattr(self, 'relay', None):
             self.relay = DelayedRelay(entry['port'])
         self.spawn(name+'-agent', [str(self.bin/'nodeagent')], {'NODE_NAME': name, 'HTTP_ADDR': f"127.0.0.1:{entry['agent']}", 'CONTROLLER_ADDR': f"{controller}:{controller_port or self.ports['controller']}", 'WORKER_ADDR': f"{address}:{self.relay.port if self.args.command == 'join' else entry['port']}", 'GPU_MODE': 'measured', 'EBPF': 'off'})
@@ -139,7 +139,7 @@ class Runtime:
                 if self.closed.is_set(): return
                 self.state, self.message = 'loading', 'Loading workers and pipeline'
                 if self.args.command == 'join':
-                    data = request(f'http://{self.args.host}:{self.args.pair_port}/enroll', {'helper_port': self.ports['helper']}, self.args.token)
+                    data = request(f'http://{self.args.host}:{self.args.pair_port}/enroll', {'helper_port': self.ports['helper'], 'node':socket.gethostname()}, self.args.token)
                     self.join_ip, self.join_controller = data['join_ip'], data['controller_port']
                     self.reference = data['profile']
                     self.remote = {'ip': self.args.host, 'port': self.args.pair_port, 'token': self.args.token}
@@ -313,6 +313,9 @@ def handler(runtime, pair=False):
                         if runtime.remote and runtime.remote['ip'] != self.client_address[0]: raise ValueError('Another friend is already enrolled')
                         hp = body['helper_port']
                         if not isinstance(hp,int) or not 1024 <= hp <= 65535: raise ValueError('Invalid helper port')
+                        node = body.get('node','friend')
+                        if not isinstance(node,str) or not 1 <= len(node) <= 255: raise ValueError('Invalid node name')
+                        runtime.workers['w2']['node'] = node
                         runtime.remote = {'ip': self.client_address[0], 'port': hp}
                         runtime.workers['w2']['status'] = 'up'
                         self.send(200,{'profile':runtime.profile, 'controller_port':runtime.ports['controller'], 'join_ip':self.client_address[0]}); return
@@ -324,7 +327,7 @@ def handler(runtime, pair=False):
                     code,result=runtime.chat(body); self.send(code,result); return
                 elif self.path == '/api/worker': runtime.control_worker(body['name'],body['action']); result={'ok':True}
                 elif self.path == '/api/fault':
-                    if runtime.args.command != 'host' or not runtime.remote or body.get('node') not in ('friend','w2'): raise ValueError('No enrolled friend')
+                    if runtime.args.command != 'host' or not runtime.remote or body.get('node') not in ('friend','w2',runtime.workers.get('w2',{}).get('node')): raise ValueError('No enrolled friend')
                     result=request(f"http://{runtime.remote['ip']}:{runtime.remote['port']}/fault", {'action':body['action']},runtime.pair_token)
                     runtime.event('fault',body['action'])
                 elif self.path == '/api/load':
@@ -360,6 +363,7 @@ def main():
     ap.add_argument('command',choices=['solo','host','join','stop','status'],nargs='?',default='solo')
     ap.add_argument('host',nargs='?'); ap.add_argument('token',nargs='?')
     ap.add_argument('--device',choices=['auto','cpu','cuda'],default='auto')
+    ap.add_argument('--no-browser',action='store_true')
     ap.add_argument('--pair-port',type=int,default=8766)
     args=ap.parse_args()
     if args.command in ('stop','status'):
@@ -388,7 +392,13 @@ def main():
         print(str(e),file=sys.stderr); return 1
     def stop(*_): threading.Thread(target=runtime.close,daemon=True).start()
     signal.signal(signal.SIGTERM,stop); signal.signal(signal.SIGINT,stop)
-    print(f"Dashboard: http://127.0.0.1:{runtime.ports['app']}",flush=True)
+    url = f"http://127.0.0.1:{runtime.ports['app']}"
+    print(f'Dashboard: {url}',flush=True)
+    if not args.no_browser:
+        def browser():
+            import webbrowser
+            webbrowser.open(url)
+        threading.Thread(target=browser,daemon=True).start()
     threading.Thread(target=runtime.initialize,daemon=True).start()
     try: runtime.server.serve_forever()
     finally:
