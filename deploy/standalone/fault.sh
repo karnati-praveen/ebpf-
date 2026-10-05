@@ -16,7 +16,7 @@
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
 
-CG=/sys/fs/cgroup/keinfer-fault
+CG=/sys/fs/cgroup/shardwise-fault
 IFACE="${FAULT_IFACE:-$(primary_iface)}"  # FAULT_IFACE: local testing only
 stamp() { echo "FAULT_EVENT $(date -u +%s.%N) $*"; }
 

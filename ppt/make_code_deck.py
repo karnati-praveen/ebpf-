@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the KubeEdgeInfer code + live-demo deck (section 11).
+"""Build the Shardwise code + live-demo deck (section 11).
 
     python3 ppt/make_code_deck.py
 
@@ -16,7 +16,7 @@ from deckkit import _emit
 from pptx.enum.text import PP_ALIGN
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "ppt", "KubeEdgeInfer_Code_Demo.pptx")
+OUT = os.path.join(ROOT, "ppt", "Shardwise_Code_Demo.pptx")
 
 prs = new_deck()
 
@@ -27,7 +27,7 @@ title_slide(
     "Repository walkthrough, full Docker / VM / cluster configuration, and the "
     "exact commands run during the demonstration",
     [
-        "KubeEdgeInfer  ·  Karnati Praveen",
+        "Shardwise  ·  Karnati Praveen",
         "github.com/karnati-praveen/ebpf-",
         "Companion to the main presentation",
     ],
@@ -227,7 +227,7 @@ bullets(s, MARGIN + 7.75, y - 0.05, 4.95, [
 code_box(s, MARGIN + 7.75, y + 3.35, 4.95, 1.0, """docker build \\
   --build-arg WITH_GPT2=1 \\
   --build-arg WITH_CUDA=1 \\
-  -t kubeedgeinfer/worker:dev \\
+  -t shardwise/worker:dev \\
   -f deploy/docker/worker.Dockerfile .""", size=9.5)
 
 # ---------------------------------------------------------------------------
@@ -276,42 +276,42 @@ bullets(s, MARGIN + 6.55, y - 0.05, 6.15, [
 ], size=12, gap=9)
 code_box(s, MARGIN + 6.55, y + 3.5, 6.15, 0.95, """# GPU node: real NVML telemetry
 docker build --build-arg GO_BUILD_TAGS=gpu \\
-  -t kubeedgeinfer/nodeagent:dev \\
+  -t shardwise/nodeagent:dev \\
   -f deploy/docker/nodeagent.Dockerfile .""", size=9.5)
 
 # ------------------------------------------------------------- cluster -----
 s, y = slide(prs, "Cluster configuration", kicker="Configuration")
 code_box(s, MARGIN, y, 5.9, 2.35, """kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-name: kubeedgeinfer
+name: shardwise
 nodes:
   - role: control-plane
   - role: worker
     labels:
-      kubeedgeinfer.io/worker: "true"
-      kubeedgeinfer.io/node-id: "w1"
+      shardwise.io/worker: "true"
+      shardwise.io/node-id: "w1"
   - role: worker
     labels:
-      kubeedgeinfer.io/worker: "true"
-      kubeedgeinfer.io/node-id: "w2"
+      shardwise.io/worker: "true"
+      shardwise.io/node-id: "w2"
   - role: worker
-    labels: { kubeedgeinfer.io/worker: "true",
-              kubeedgeinfer.io/node-id: "w3" }""", size=10,
+    labels: { shardwise.io/worker: "true",
+              shardwise.io/node-id: "w3" }""", size=10,
          caption="deploy/kind-config.yaml")
 code_box(s, MARGIN, y + 2.6, 5.9, 1.85, """$ kubectl get nodes
 NAME                          STATUS   ROLES
-kubeedgeinfer-control-plane   Ready    control-plane
-kubeedgeinfer-worker          Ready    <none>
-kubeedgeinfer-worker2         Ready    <none>
-kubeedgeinfer-worker3         Ready    <none>""", size=10)
+shardwise-control-plane   Ready    control-plane
+shardwise-worker          Ready    <none>
+shardwise-worker2         Ready    <none>
+shardwise-worker3         Ready    <none>""", size=10)
 code_box(s, MARGIN + 6.35, y, 6.35, 4.45, """spec:
   nodeSelector:
-    kubeedgeinfer.io/worker: "true"
+    shardwise.io/worker: "true"
   hostNetwork: true                # kernel-global tracepoints
   dnsPolicy: ClusterFirstWithHostNet
   containers:
     - name: nodeagent
-      image: kubeedgeinfer/nodeagent:dev
+      image: shardwise/nodeagent:dev
       securityContext:
         privileged: true           # required to load BPF
       env:
@@ -527,7 +527,7 @@ bullets(s, MARGIN + 6.95, y - 0.05, 5.75, [
     (0, "**The CRD is the observable output.** Assignments, predicted "
         "bottleneck and generation are written to .status every reconcile.", INK),
 ], size=12, gap=9)
-code_box(s, MARGIN + 6.95, y + 3.55, 5.75, 0.9, """$ kubectl -n kubeedgeinfer get ipl demo
+code_box(s, MARGIN + 6.95, y + 3.55, 5.75, 0.9, """$ kubectl -n shardwise get ipl demo
 NAME   PHASE     BOTTLENECK   GENERATION
 demo   Serving   121.4        7""", size=10)
 
@@ -542,7 +542,7 @@ s, y = slide(prs, "Demo 1 — bring up the pipeline and watch the loop",
 demo1 = [
     ("Start everything", "./run-demo.sh", "Builds if needed, creates the kind "
      "cluster, deploys, opens the dashboard on :8000."),
-    ("Show the declared intent", "kubectl -n kubeedgeinfer get ipl demo -o yaml",
+    ("Show the declared intent", "kubectl -n shardwise get ipl demo -o yaml",
      "spec is what the user asked for; status is what the controller decided."),
     ("Show the live split", "curl -s localhost:18080/pipeline | jq",
      "Three stages, contiguous layer ranges, current generation."),
@@ -571,7 +571,7 @@ s, y = slide(prs, "Demo 2 — inject a thermal fault, watch it heal",
 code_box(s, MARGIN, y, 6.35, 2.0, """# find the node agent on worker2
 W2=$(docker inspect -f \\
   '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' \\
-  kubeedgeinfer-worker2)
+  shardwise-worker2)
 
 # inject: force the simulated GPU to 92 C
 curl -X POST http://$W2:9101/gpu/override -d '{"temp_c": 92}'""",
@@ -614,12 +614,12 @@ for tstamp, what, col in watch:
 s, y = slide(prs, "Demo 3 — kill a node, and prove correctness",
              kicker="Live Demo")
 code_box(s, MARGIN, y, 6.3, 1.5, """# stop the node holding the last pipeline stage
-docker stop kubeedgeinfer-worker3
+docker stop shardwise-worker3
 
 # ... 3 s heartbeat timeout -> forced repartition
 # ... requests keep completing on the two survivors
 
-docker start kubeedgeinfer-worker3   # it rejoins and is used again""",
+docker start shardwise-worker3   # it rejoins and is used again""",
          size=10, caption="node failure")
 bullets(s, MARGIN, y + 1.75, 6.3, [
     (0, "The static baseline cannot do this: with STATIC_MODE=1 the same "
@@ -632,7 +632,7 @@ distributed : [11, 314, 716, 257, 1263, 4336]
 single-proc : [11, 314, 716, 257, 1263, 4336]
 MATCH""", size=10.5, caption="token-identical to single-process HF GPT-2")
 code_box(s, MARGIN + 6.75, y + 1.9, 5.95, 1.5, """$ make test
-ok  kubeedgeinfer/internal/partition
+ok  shardwise/internal/partition
     TestOptimalMatchesBruteForce  (200 random cases)
     TestDeciderHysteresis""", size=10.5, caption="optimiser vs brute force")
 callout(s, MARGIN + 6.75, y + 3.55, 5.95, 0.9,
@@ -727,7 +727,7 @@ s, y = slide(prs, "Path B — one GPU machine, with or without K8s",
 code_box(s, MARGIN, y, 6.3, 1.9, """# with k3s: 3 shards share the one L4
 ./scripts/join-node.sh server
 WITH_GPT2=1 ./scripts/deploy-real-hardware.sh
-kubectl -n kubeedgeinfer delete ds keinfer-worker
+kubectl -n shardwise delete ds shardwise-worker
 kubectl apply -f deploy/manifests/workers-singlenode.yaml""",
          size=10, caption="Kubernetes path")
 code_box(s, MARGIN, y + 2.15, 6.3, 1.55, """# no Kubernetes at all -- for unprivileged containers
@@ -811,6 +811,6 @@ para(tf, "cd ebpf- && ./run-demo.sh", size=16, color=WHITE, font=MONO, after=10)
 para(tf, "→  http://localhost:8000", size=16,
      color=RGBColor(0x8F, 0xBC, 0xEE), font=MONO, after=0)
 
-paginate(prs, "KubeEdgeInfer  ·  code & live demo")
+paginate(prs, "Shardwise  ·  code & live demo")
 prs.save(OUT)
 print(f"wrote {OUT}")

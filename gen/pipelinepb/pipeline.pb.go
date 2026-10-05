@@ -849,7 +849,7 @@ var File_pipeline_proto protoreflect.FileDescriptor
 
 const file_pipeline_proto_rawDesc = "" +
 	"\n" +
-	"\x0epipeline.proto\x12\x10kubeedgeinfer.v1\"\xc6\x01\n" +
+	"\x0epipeline.proto\x12\fshardwise.v1\"\xc6\x01\n" +
 	"\x13AssignLayersRequest\x12\x1f\n" +
 	"\vstart_layer\x18\x01 \x01(\x05R\n" +
 	"startLayer\x12\x1b\n" +
@@ -899,9 +899,9 @@ const file_pipeline_proto_rawDesc = "" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x12\x1f\n" +
 	"\vstart_layer\x18\x03 \x01(\x05R\n" +
 	"startLayer\x12\x1b\n" +
-	"\tend_layer\x18\x04 \x01(\x05R\bendLayer\"h\n" +
-	"\x12SetPipelineRequest\x122\n" +
-	"\x06stages\x18\x01 \x03(\v2\x1a.kubeedgeinfer.v1.StageRefR\x06stages\x12\x1e\n" +
+	"\tend_layer\x18\x04 \x01(\x05R\bendLayer\"d\n" +
+	"\x12SetPipelineRequest\x12.\n" +
+	"\x06stages\x18\x01 \x03(\v2\x16.shardwise.v1.StageRefR\x06stages\x12\x1e\n" +
 	"\n" +
 	"generation\x18\x02 \x01(\x03R\n" +
 	"generation\"+\n" +
@@ -920,22 +920,22 @@ const file_pipeline_proto_rawDesc = "" +
 	"\fvram_free_mb\x18\x02 \x01(\x01R\n" +
 	"vramFreeMb\x12\x1c\n" +
 	"\tthrottled\x18\x03 \x01(\bR\tthrottled\x12!\n" +
-	"\fspeed_factor\x18\x04 \x01(\x01R\vspeedFactor\"\xc6\x01\n" +
+	"\fspeed_factor\x18\x04 \x01(\x01R\vspeedFactor\"\xbe\x01\n" +
 	"\rNodeTelemetry\x12\x12\n" +
 	"\x04node\x18\x01 \x01(\tR\x04node\x12\x1f\n" +
 	"\vworker_addr\x18\x02 \x01(\tR\n" +
 	"workerAddr\x12!\n" +
-	"\ftimestamp_ms\x18\x03 \x01(\x03R\vtimestampMs\x12+\n" +
-	"\x03gpu\x18\x04 \x01(\v2\x19.kubeedgeinfer.v1.GpuStatR\x03gpu\x120\n" +
-	"\x05links\x18\x05 \x03(\v2\x1a.kubeedgeinfer.v1.LinkStatR\x05links2\xf8\x01\n" +
-	"\x06Worker\x12Z\n" +
-	"\fAssignLayers\x12%.kubeedgeinfer.v1.AssignLayersRequest\x1a#.kubeedgeinfer.v1.AssignLayersReply\x12K\n" +
-	"\aForward\x12 .kubeedgeinfer.v1.ForwardRequest\x1a\x1e.kubeedgeinfer.v1.ForwardReply\x12E\n" +
-	"\x05Stats\x12\x1e.kubeedgeinfer.v1.StatsRequest\x1a\x1c.kubeedgeinfer.v1.StatsReply2T\n" +
-	"\x06Router\x12J\n" +
-	"\vSetPipeline\x12$.kubeedgeinfer.v1.SetPipelineRequest\x1a\x15.kubeedgeinfer.v1.Ack2M\n" +
-	"\tTelemetry\x12@\n" +
-	"\x06Report\x12\x1f.kubeedgeinfer.v1.NodeTelemetry\x1a\x15.kubeedgeinfer.v1.AckB)Z'kubeedgeinfer/gen/pipelinepb;pipelinepbb\x06proto3"
+	"\ftimestamp_ms\x18\x03 \x01(\x03R\vtimestampMs\x12'\n" +
+	"\x03gpu\x18\x04 \x01(\v2\x15.shardwise.v1.GpuStatR\x03gpu\x12,\n" +
+	"\x05links\x18\x05 \x03(\v2\x16.shardwise.v1.LinkStatR\x05links2\xe0\x01\n" +
+	"\x06Worker\x12R\n" +
+	"\fAssignLayers\x12!.shardwise.v1.AssignLayersRequest\x1a\x1f.shardwise.v1.AssignLayersReply\x12C\n" +
+	"\aForward\x12\x1c.shardwise.v1.ForwardRequest\x1a\x1a.shardwise.v1.ForwardReply\x12=\n" +
+	"\x05Stats\x12\x1a.shardwise.v1.StatsRequest\x1a\x18.shardwise.v1.StatsReply2L\n" +
+	"\x06Router\x12B\n" +
+	"\vSetPipeline\x12 .shardwise.v1.SetPipelineRequest\x1a\x11.shardwise.v1.Ack2E\n" +
+	"\tTelemetry\x128\n" +
+	"\x06Report\x12\x1b.shardwise.v1.NodeTelemetry\x1a\x11.shardwise.v1.AckB%Z#shardwise/gen/pipelinepb;pipelinepbb\x06proto3"
 
 var (
 	file_pipeline_proto_rawDescOnce sync.Once
@@ -951,33 +951,33 @@ func file_pipeline_proto_rawDescGZIP() []byte {
 
 var file_pipeline_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_pipeline_proto_goTypes = []any{
-	(*AssignLayersRequest)(nil), // 0: kubeedgeinfer.v1.AssignLayersRequest
-	(*AssignLayersReply)(nil),   // 1: kubeedgeinfer.v1.AssignLayersReply
-	(*ForwardRequest)(nil),      // 2: kubeedgeinfer.v1.ForwardRequest
-	(*ForwardReply)(nil),        // 3: kubeedgeinfer.v1.ForwardReply
-	(*StatsRequest)(nil),        // 4: kubeedgeinfer.v1.StatsRequest
-	(*StatsReply)(nil),          // 5: kubeedgeinfer.v1.StatsReply
-	(*StageRef)(nil),            // 6: kubeedgeinfer.v1.StageRef
-	(*SetPipelineRequest)(nil),  // 7: kubeedgeinfer.v1.SetPipelineRequest
-	(*Ack)(nil),                 // 8: kubeedgeinfer.v1.Ack
-	(*LinkStat)(nil),            // 9: kubeedgeinfer.v1.LinkStat
-	(*GpuStat)(nil),             // 10: kubeedgeinfer.v1.GpuStat
-	(*NodeTelemetry)(nil),       // 11: kubeedgeinfer.v1.NodeTelemetry
+	(*AssignLayersRequest)(nil), // 0: shardwise.v1.AssignLayersRequest
+	(*AssignLayersReply)(nil),   // 1: shardwise.v1.AssignLayersReply
+	(*ForwardRequest)(nil),      // 2: shardwise.v1.ForwardRequest
+	(*ForwardReply)(nil),        // 3: shardwise.v1.ForwardReply
+	(*StatsRequest)(nil),        // 4: shardwise.v1.StatsRequest
+	(*StatsReply)(nil),          // 5: shardwise.v1.StatsReply
+	(*StageRef)(nil),            // 6: shardwise.v1.StageRef
+	(*SetPipelineRequest)(nil),  // 7: shardwise.v1.SetPipelineRequest
+	(*Ack)(nil),                 // 8: shardwise.v1.Ack
+	(*LinkStat)(nil),            // 9: shardwise.v1.LinkStat
+	(*GpuStat)(nil),             // 10: shardwise.v1.GpuStat
+	(*NodeTelemetry)(nil),       // 11: shardwise.v1.NodeTelemetry
 }
 var file_pipeline_proto_depIdxs = []int32{
-	6,  // 0: kubeedgeinfer.v1.SetPipelineRequest.stages:type_name -> kubeedgeinfer.v1.StageRef
-	10, // 1: kubeedgeinfer.v1.NodeTelemetry.gpu:type_name -> kubeedgeinfer.v1.GpuStat
-	9,  // 2: kubeedgeinfer.v1.NodeTelemetry.links:type_name -> kubeedgeinfer.v1.LinkStat
-	0,  // 3: kubeedgeinfer.v1.Worker.AssignLayers:input_type -> kubeedgeinfer.v1.AssignLayersRequest
-	2,  // 4: kubeedgeinfer.v1.Worker.Forward:input_type -> kubeedgeinfer.v1.ForwardRequest
-	4,  // 5: kubeedgeinfer.v1.Worker.Stats:input_type -> kubeedgeinfer.v1.StatsRequest
-	7,  // 6: kubeedgeinfer.v1.Router.SetPipeline:input_type -> kubeedgeinfer.v1.SetPipelineRequest
-	11, // 7: kubeedgeinfer.v1.Telemetry.Report:input_type -> kubeedgeinfer.v1.NodeTelemetry
-	1,  // 8: kubeedgeinfer.v1.Worker.AssignLayers:output_type -> kubeedgeinfer.v1.AssignLayersReply
-	3,  // 9: kubeedgeinfer.v1.Worker.Forward:output_type -> kubeedgeinfer.v1.ForwardReply
-	5,  // 10: kubeedgeinfer.v1.Worker.Stats:output_type -> kubeedgeinfer.v1.StatsReply
-	8,  // 11: kubeedgeinfer.v1.Router.SetPipeline:output_type -> kubeedgeinfer.v1.Ack
-	8,  // 12: kubeedgeinfer.v1.Telemetry.Report:output_type -> kubeedgeinfer.v1.Ack
+	6,  // 0: shardwise.v1.SetPipelineRequest.stages:type_name -> shardwise.v1.StageRef
+	10, // 1: shardwise.v1.NodeTelemetry.gpu:type_name -> shardwise.v1.GpuStat
+	9,  // 2: shardwise.v1.NodeTelemetry.links:type_name -> shardwise.v1.LinkStat
+	0,  // 3: shardwise.v1.Worker.AssignLayers:input_type -> shardwise.v1.AssignLayersRequest
+	2,  // 4: shardwise.v1.Worker.Forward:input_type -> shardwise.v1.ForwardRequest
+	4,  // 5: shardwise.v1.Worker.Stats:input_type -> shardwise.v1.StatsRequest
+	7,  // 6: shardwise.v1.Router.SetPipeline:input_type -> shardwise.v1.SetPipelineRequest
+	11, // 7: shardwise.v1.Telemetry.Report:input_type -> shardwise.v1.NodeTelemetry
+	1,  // 8: shardwise.v1.Worker.AssignLayers:output_type -> shardwise.v1.AssignLayersReply
+	3,  // 9: shardwise.v1.Worker.Forward:output_type -> shardwise.v1.ForwardReply
+	5,  // 10: shardwise.v1.Worker.Stats:output_type -> shardwise.v1.StatsReply
+	8,  // 11: shardwise.v1.Router.SetPipeline:output_type -> shardwise.v1.Ack
+	8,  // 12: shardwise.v1.Telemetry.Report:output_type -> shardwise.v1.Ack
 	8,  // [8:13] is the sub-list for method output_type
 	3,  // [3:8] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name

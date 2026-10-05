@@ -1,6 +1,8 @@
 # Shardwise
 
-The research core and historical experiment artifacts use the KubeEdgeInfer name.
+> Formerly **KubeEdgeInfer** (renamed 2026-10-05). Recorded data under `results/` and `docs/data/` keeps the old names because it records what actually ran.
+
+**Want to show it live?** The installable laptop app (chat plus a live layer view, CPU or NVIDIA) is in [demo/README.md](demo/README.md).
 
 Experiment data and reports are organized in [results/](results/README.md).
 
@@ -11,7 +13,7 @@ inference on consumer edge devices. It runs standalone on plain Linux machines
 Large models are split across machines by pipeline parallelism. Existing
 frameworks decide that split **once** and never revisit it — but edge hardware
 is not static: GPUs thermally throttle, WiFi latency wanders, nodes die.
-KubeEdgeInfer turns the one-time split into a **continuous, self-correcting
+Shardwise turns the one-time split into a **continuous, self-correcting
 decision** driven by kernel-level measurements:
 
 ```
@@ -77,8 +79,8 @@ make images         # build worker / nodeagent / controller images
 make cluster-up     # kind cluster: 1 control-plane + 3 workers
 make deploy         # CRD, RBAC, workers, node agents, controller, pipeline CR
 
-kubectl -n kubeedgeinfer get ipl demo        # watch assignments in the CRD
-kubectl -n kubeedgeinfer port-forward svc/router 8080:8080 &
+kubectl -n shardwise get ipl demo        # watch assignments in the CRD
+kubectl -n shardwise port-forward svc/router 8080:8080 &
 curl -X POST localhost:8080/generate -d '{"prompt_len":16,"max_new_tokens":8}'
 ```
 
@@ -86,7 +88,7 @@ Watch the loop react (thermal example — layers migrate off the hot node
 within ~35 s and return after it cools):
 
 ```bash
-W2=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' kubeedgeinfer-worker2)
+W2=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' shardwise-worker2)
 curl -X POST http://$W2:9101/gpu/override -d '{"temp_c": 92}'   # inject
 curl -X POST http://$W2:9101/gpu/override -d '{"clear": true}'  # recover
 ```
@@ -106,7 +108,7 @@ claim). The static baseline is the same controller with `STATIC_MODE=1`: one
 equal split, no repartitioning, no healing. A third mode, `profileonly`
 (`--mode profileonly`), repartitions like dynamic but freezes its telemetry
 inputs at the first reading — an ablation approximating an offline-profiling
-system (à la EdgeShard/PipeEdge/Galaxy) built from KubeEdgeInfer's own
+system (à la EdgeShard/PipeEdge/Galaxy) built from Shardwise's own
 DP/apply machinery, isolating the value of *continuous* telemetry
 specifically.
 

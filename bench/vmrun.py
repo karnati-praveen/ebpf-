@@ -138,7 +138,7 @@ class Run:
 
     # -- setup ----------------------------------------------------------------
     # Prints the worker's PID if it is running, else "dead".
-    WORKER_PID = ('f=${KEINFER_STATE:-$HOME/keinfer}/pids/worker.child; '
+    WORKER_PID = ('f=${SHARDWISE_STATE:-$HOME/shardwise}/pids/worker.child; '
                   '[ -f "$f" ] && p=$(cat "$f") && kill -0 "$p" 2>/dev/null && echo "$p" || echo dead')
 
     def worker_pids(self):

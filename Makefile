@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-CLUSTER := kubeedgeinfer
+CLUSTER := shardwise
 KIND := kind
 GOBIN := $(shell go env GOPATH)/bin
 
@@ -14,8 +14,8 @@ proto: gen/pipelinepb/pipeline.pb.go worker/gen/pipeline_pb2.py
 gen/pipelinepb/pipeline.pb.go: proto/pipeline.proto
 	mkdir -p gen
 	PATH=$(GOBIN):$$PATH protoc -I proto \
-		--go_out=gen --go_opt=module=kubeedgeinfer/gen \
-		--go-grpc_out=gen --go-grpc_opt=module=kubeedgeinfer/gen \
+		--go_out=gen --go_opt=module=shardwise/gen \
+		--go-grpc_out=gen --go-grpc_opt=module=shardwise/gen \
 		proto/pipeline.proto
 
 worker/gen/pipeline_pb2.py: proto/pipeline.proto
@@ -42,9 +42,9 @@ test: proto
 	go test ./...
 
 images: proto
-	docker build -t kubeedgeinfer/worker:dev -f deploy/docker/worker.Dockerfile .
-	docker build -t kubeedgeinfer/nodeagent:dev -f deploy/docker/nodeagent.Dockerfile .
-	docker build -t kubeedgeinfer/controller:dev -f deploy/docker/controller.Dockerfile .
+	docker build -t shardwise/worker:dev -f deploy/docker/worker.Dockerfile .
+	docker build -t shardwise/nodeagent:dev -f deploy/docker/nodeagent.Dockerfile .
+	docker build -t shardwise/controller:dev -f deploy/docker/controller.Dockerfile .
 
 # ---- Cluster lifecycle ----------------------------------------------------
 
@@ -67,7 +67,7 @@ cluster-down:
 
 load-images:
 	$(KIND) load docker-image --name $(CLUSTER) \
-		kubeedgeinfer/worker:dev kubeedgeinfer/nodeagent:dev kubeedgeinfer/controller:dev
+		shardwise/worker:dev shardwise/nodeagent:dev shardwise/controller:dev
 
 deploy: load-images
 	kubectl apply -f deploy/manifests/namespace.yaml

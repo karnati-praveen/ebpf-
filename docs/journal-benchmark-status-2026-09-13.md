@@ -2,7 +2,7 @@
 
 Date: 2026-09-13 UTC
 
-We are testing KubeEdgeInfer in a 4-CPU GitHub Codespace. The Kubernetes
+We are testing Shardwise in a 4-CPU GitHub Codespace. The Kubernetes
 cluster has four kind nodes, but all nodes are Docker containers on the same
 Codespace VM and share one Linux kernel.
 

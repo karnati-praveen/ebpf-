@@ -165,7 +165,7 @@ image was built with `WITH_GPT2=1`, and this command was run:
 
 ```text
 docker run --rm --shm-size=2g -v /workspaces/ebpf-:/repo -w /repo \
-  --entrypoint python3 kubeedgeinfer/worker:gpt2-cpu \
+  --entrypoint python3 shardwise/worker:gpt2-cpu \
   bench/verify_gpt2.py --tokens 2
 ```
 

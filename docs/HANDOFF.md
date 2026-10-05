@@ -24,7 +24,7 @@ Branch: `research/phase0-1-measurement`.
 | 7 — write-up | Blocked on 6 | — |
 
 Not done and not needed for the VM study: proto field for several workers per
-machine (plan 2.4 — one worker per VM suffices), the `keinfer` Go launcher
+machine (plan 2.4 — one worker per VM suffices), the `shardwise` Go launcher
 (replaced by `deploy/standalone/*.sh`).
 
 ## What was verified, and how

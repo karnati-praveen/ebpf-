@@ -1,4 +1,4 @@
-// KubeEdgeInfer controller: receives node-agent telemetry over gRPC, runs
+// Shardwise controller: receives node-agent telemetry over gRPC, runs
 // the partitioning decider, and applies splits to workers and router.
 // --static turns it into the never-repartitioning ablation baseline.
 package main
@@ -20,9 +20,9 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 
-	"kubeedgeinfer/gen/pipelinepb"
-	"kubeedgeinfer/internal/controller"
-	"kubeedgeinfer/internal/partition"
+	"shardwise/gen/pipelinepb"
+	"shardwise/internal/controller"
+	"shardwise/internal/partition"
 )
 
 func kubeConfig() (*rest.Config, error) {
@@ -34,8 +34,8 @@ func kubeConfig() (*rest.Config, error) {
 
 func main() {
 	var (
-		namespace     = flag.String("namespace", envOr("NAMESPACE", "kubeedgeinfer"), "namespace to operate in")
-		selector      = flag.String("worker-selector", "app=keinfer-worker", "label selector for shard workers")
+		namespace     = flag.String("namespace", envOr("NAMESPACE", "shardwise"), "namespace to operate in")
+		selector      = flag.String("worker-selector", "app=shardwise-worker", "label selector for shard workers")
 		workerPort    = flag.Int("worker-port", 50051, "worker gRPC port")
 		static        = flag.Bool("static", os.Getenv("STATIC_MODE") == "1", "apply one equal split and never repartition (baseline)")
 		grpcAddr      = flag.String("grpc-addr", ":50053", "telemetry gRPC listen address")
@@ -46,8 +46,8 @@ func main() {
 		heartbeat     = flag.Duration("heartbeat-timeout", 3*time.Second, "node agent staleness before a node is dead")
 		reassert      = flag.Duration("reassert-interval", 10*time.Second, "how often to re-push the current layout so a restarted worker/router recovers (0 disables)")
 		defLink       = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
-		mode          = flag.String("mode", envOr("KEINFER_MODE", "standalone"), "substrate: standalone | k8s")
-		configPath    = flag.String("config", envOr("KEINFER_CONFIG", "keinfer.json"), "standalone: pipeline config file")
+		mode          = flag.String("mode", envOr("SHARDWISE_MODE", "standalone"), "substrate: standalone | k8s")
+		configPath    = flag.String("config", envOr("SHARDWISE_CONFIG", "shardwise.json"), "standalone: pipeline config file")
 		policy        = flag.String("policy", envOr("DECISION_POLICY", "hysteresis"), "voluntary-move policy: none | hysteresis | gate | gate-force")
 		objective     = flag.String("objective", envOr("PLACEMENT_OBJECTIVE", "throughput"), "placement and transition objective: throughput | latency | auto")
 		workloadURL   = flag.String("workload-url", envOr("WORKLOAD_URL", ""), "router /workload URL; required for auto or remaining-work-aware")

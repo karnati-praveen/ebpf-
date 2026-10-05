@@ -2,22 +2,22 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: keinfer-worker
-  namespace: kubeedgeinfer
+  name: shardwise-worker
+  namespace: shardwise
 spec:
   selector:
     matchLabels:
-      app: keinfer-worker
+      app: shardwise-worker
   template:
     metadata:
       labels:
-        app: keinfer-worker
+        app: shardwise-worker
     spec:
       nodeSelector:
-        kubeedgeinfer.io/worker: "true"
+        shardwise.io/worker: "true"
       containers:
         - name: worker
-          image: kubeedgeinfer/worker:dev
+          image: shardwise/worker:dev
           imagePullPolicy: IfNotPresent
           command: ["python3", "server.py"]
           ports:
@@ -47,16 +47,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: router
-  namespace: kubeedgeinfer
+  namespace: shardwise
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: keinfer-router
+      app: shardwise-router
   template:
     metadata:
       labels:
-        app: keinfer-router
+        app: shardwise-router
     spec:
       # Keep the router off the worker nodes: injected faults (netem, node
       # kill) must degrade pipeline stages, not the orchestration path.
@@ -77,7 +77,7 @@ spec:
           effect: NoSchedule
       containers:
         - name: router
-          image: kubeedgeinfer/worker:dev
+          image: shardwise/worker:dev
           imagePullPolicy: IfNotPresent
           command: ["python3", "router.py"]
           ports:
@@ -99,10 +99,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: router
-  namespace: kubeedgeinfer
+  namespace: shardwise
 spec:
   selector:
-    app: keinfer-router
+    app: shardwise-router
   ports:
     - name: http
       port: 8080

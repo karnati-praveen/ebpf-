@@ -1,4 +1,4 @@
-# A practical direction for KubeEdgeInfer
+# A practical direction for Shardwise
 
 Research date: 4 October 2026. Audience: people like the project owner who want
 to use their own computers easily, without installing Kubernetes or another

@@ -29,7 +29,7 @@ CONTEXT_LEN="${CONTEXT_LEN:-512}"
 # Pipeline config: the measured Azure cost model. headMs is lm_head plus the
 # final-norm excess (docs/phase4-prelim-findings.md); per-layer costs are the
 # decode table the workers' speed probes are normalised against.
-CFG="$STATE_DIR/keinfer.json"
+CFG="$STATE_DIR/shardwise.json"
 COST_MODEL="${COST_MODEL:-full}"
 [[ "$COST_MODEL" == full || "$COST_MODEL" == layer-proportional ]] || die "COST_MODEL must be full or layer-proportional"
 python3 - "$CFG" "$WORKERS" "$CONTEXT_LEN" "$PER_LAYER_PROFILE" "$ROUTER_GRPC_PORT" "$MODEL" "$COST_MODEL" "${EMBED_MS:-0.09}" "${HEAD_MS:-43.8}" <<'PY'

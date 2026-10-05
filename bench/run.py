@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""KubeEdgeInfer ablation harness.
+"""Shardwise ablation harness.
 
 Runs four scenarios (baseline, netem, thermal, failure) against the dynamic
 controller and the static baseline, driving sustained load through the router
@@ -31,8 +31,8 @@ import threading
 import time
 import urllib.request
 
-NS = "kubeedgeinfer"
-CLUSTER = "kubeedgeinfer"
+NS = "shardwise"
+CLUSTER = "shardwise"
 NODE_MID = f"{CLUSTER}-worker2"   # netem / thermal target (middle stage)
 NODE_LAST = f"{CLUSTER}-worker3"  # failure target (last stage)
 RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
@@ -290,7 +290,7 @@ SCENARIOS = {
 # "profileonly" (repartitions like dynamic, but its telemetry inputs are
 # frozen at the first reading -- an offline-profiling ablation that
 # approximates EdgeShard/PipeEdge/Galaxy's "decide once from a profile"
-# design using KubeEdgeInfer's own DP/apply/heal machinery, isolating the
+# design using Shardwise's own DP/apply/heal machinery, isolating the
 # value of *continuous* eBPF telemetry specifically).
 MODES = ["dynamic", "static", "profileonly"]
 
@@ -306,8 +306,8 @@ def set_mode(mode, improvement=None, cooldown=None):
     }
     print(f"  switching controller to {mode} mode ({env}) and restarting pipeline pods")
     kubectl("set", "env", "deploy/controller", *[f"{k}={v}" for k, v in env.items()])
-    kubectl("rollout", "restart", "deploy/controller", "deploy/router", "ds/keinfer-worker")
-    for target in ["deploy/controller", "deploy/router", "ds/keinfer-worker"]:
+    kubectl("rollout", "restart", "deploy/controller", "deploy/router", "ds/shardwise-worker")
+    for target in ["deploy/controller", "deploy/router", "ds/shardwise-worker"]:
         kubectl("rollout", "status", target, "--timeout=180s", timeout=200)
 
 
@@ -419,7 +419,7 @@ def run_one(scenario, mode, improvement=None, cooldown=None, tag=None):
     evidence["qdisc_after_cleanup"] = qdisc_snapshot()
     evidence["host_after"] = system_snapshot()
     evidence["nodeagent_logs"] = kubectl(
-        "logs", "ds/keinfer-nodeagent", "--all-pods=true", "--prefix=true",
+        "logs", "ds/shardwise-nodeagent", "--all-pods=true", "--prefix=true",
         "--tail=300", check=False).stdout
     write_csv(f"{prefix}_requests.csv", requests,
               ["t", "ok", "ttft_ms", "duration_ms", "tokens_per_sec",

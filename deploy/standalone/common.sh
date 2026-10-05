@@ -1,7 +1,7 @@
 # Shared settings for the standalone deploy scripts. Sourced, not executed.
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-STATE_DIR="${KEINFER_STATE:-$HOME/keinfer}"
+STATE_DIR="${SHARDWISE_STATE:-$HOME/shardwise}"
 LOG_DIR="$STATE_DIR/logs"
 PID_DIR="$STATE_DIR/pids"
 VENV="$STATE_DIR/venv"
@@ -24,8 +24,8 @@ ROUTER_HTTP_PORT="${ROUTER_HTTP_PORT:-8080}"
 # report measured speed; the controller partitions with the same table.
 PER_LAYER_PROFILE="${PER_LAYER_PROFILE:-128:5.55,512:6.25,1024:7.18,2048:9.49}"
 
-log() { echo "[keinfer] $*"; }
-die() { echo "[keinfer] ERROR: $*" >&2; exit 1; }
+log() { echo "[shardwise] $*"; }
+die() { echo "[shardwise] ERROR: $*" >&2; exit 1; }
 
 # One reference cost profile is shared by the coordinator and all workers.
 # Workers compare their own decode timing with this table to report relative

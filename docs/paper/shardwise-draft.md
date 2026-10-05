@@ -1,4 +1,4 @@
-# KubeEdgeInfer: Measurement and Ablation of Transition-Aware Local LLM Inference
+# Shardwise: Measurement and Ablation of Transition-Aware Local LLM Inference
 
 Working research draft, 4 October 2026. Author names, affiliations, venue and
 submission format remain to be supplied. The present evidence supports a
@@ -12,7 +12,7 @@ crossover. Detailed new results and provenance are in the
 <!-- ABSTRACT_START -->
 Local large language model services face changing compute availability and
 communication conditions, but redistributing model layers can incur weight
-loading and key-value cache reconstruction costs. We present KubeEdgeInfer, a
+loading and key-value cache reconstruction costs. We present Shardwise, a
 standalone prototype that combines contiguous-layer partitioning, live telemetry,
 hysteresis and an explicit transition gate. The controller compares useful-token
 capacity over a planning horizon rather than accepting every improved
@@ -50,7 +50,7 @@ control operations and lost cache state. An adaptive controller therefore needs
 accurate service and transition costs, a workload objective, and a reason to
 leave a working placement unchanged.
 
-KubeEdgeInfer implements this control path without requiring Kubernetes. Its
+Shardwise implements this control path without requiring Kubernetes. Its
 standalone source discovers workers from telemetry; a Go controller evaluates
 contiguous layer assignments and pushes versioned layouts to Python workers and
 a router. Kubernetes remains an optional substrate. The research question is
@@ -413,7 +413,7 @@ physical devices rather than CPU VMs.
 
 ## 8. Conclusion
 
-KubeEdgeInfer makes placement, transition estimates and policy decisions
+Shardwise makes placement, transition estimates and policy decisions
 inspectable in a standalone prototype. The present ablations separate cost
 components and expose a queueing confound in a communication proxy. They support
 careful calibration and stronger baselines before making an adaptive-performance

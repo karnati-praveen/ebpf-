@@ -49,7 +49,7 @@ def summarize_run(prefix):
             continue
         speeds = dict(item.rsplit(":", 1) for item in row["speeds"].split("|") if item)
         if (normalize_layout(row["layout"]) == clean_layout and
-                speeds.get("kubeedgeinfer-worker2") == "1.00"):
+                speeds.get("shardwise-worker2") == "1.00"):
             recovery_time = float(row["t"]) - phases["recover"]
             break
 

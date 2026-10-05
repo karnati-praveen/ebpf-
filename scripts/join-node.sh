@@ -169,15 +169,15 @@ if [[ "$ROLE" == "agent" ]]; then
   # from here, so print the exact commands to run on the server.
   log "node will register as '${NODE_NAME}'. On the SERVER machine, run:"
   echo
-  echo "  kubectl label node ${NODE_NAME} kubeedgeinfer.io/worker=true"
+  echo "  kubectl label node ${NODE_NAME} shardwise.io/worker=true"
   if [[ "$has_gpu" == "1" ]]; then
-    echo "  kubectl label node ${NODE_NAME} kubeedgeinfer.io/gpu=true"
+    echo "  kubectl label node ${NODE_NAME} shardwise.io/gpu=true"
   fi
   echo
 else
-  kubectl label node "$NODE_NAME" kubeedgeinfer.io/worker=true --overwrite
+  kubectl label node "$NODE_NAME" shardwise.io/worker=true --overwrite
   if [[ "$has_gpu" == "1" ]]; then
-    kubectl label node "$NODE_NAME" kubeedgeinfer.io/gpu=true --overwrite
+    kubectl label node "$NODE_NAME" shardwise.io/gpu=true --overwrite
   fi
   log "labeled ${NODE_NAME}"
 fi

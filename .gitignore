@@ -13,3 +13,6 @@ ppt/*.nav
 ppt/*.out
 ppt/*.snm
 ppt/*.toc
+
+# Built installers (packaging/build-deb.sh)
+dist/

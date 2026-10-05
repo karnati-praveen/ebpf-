@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package kubeedgeinfer.v1;
+package shardwise.v1;
 
-option go_package = "kubeedgeinfer/gen/pipelinepb;pipelinepb";
+option go_package = "shardwise/gen/pipelinepb;pipelinepb";
 
 // ---------------------------------------------------------------------------
 // Worker: implemented by the Python shard workers.

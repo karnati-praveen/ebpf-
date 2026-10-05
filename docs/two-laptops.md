@@ -1,4 +1,4 @@
-# Running KubeEdgeInfer on two laptops
+# Running Shardwise on two laptops
 
 > **Kubernetes-era guide** (k3s). For the current no-Kubernetes deployment use
 > [`deploy/standalone/README.md`](../deploy/standalone/README.md).
@@ -57,7 +57,7 @@ with the firewall commands to run if it can't. When it finishes it prints a
 
 ```bash
 # on A
-kubectl label node <B-hostname> kubeedgeinfer.io/worker=true
+kubectl label node <B-hostname> shardwise.io/worker=true
 kubectl get nodes        # both should be Ready
 ```
 
@@ -78,8 +78,8 @@ It pauses once to have you run three lines on B so k3s trusts A's registry.
 ## 4. Watch it (on A)
 
 ```bash
-kubectl -n kubeedgeinfer port-forward svc/router 18080:8080 &
-kubectl -n kubeedgeinfer port-forward svc/controller 18081:8081 &
+kubectl -n shardwise port-forward svc/router 18080:8080 &
+kubectl -n shardwise port-forward svc/controller 18081:8081 &
 python3 demo/serve.py     # open http://localhost:8000
 ```
 
@@ -105,7 +105,7 @@ tune if the defaults (throttle 85 °C, recover 78 °C) don't match:
 
 ```bash
 watch -n1 'cat /sys/class/thermal/thermal_zone*/temp'   # millidegrees C
-kubectl -n kubeedgeinfer set env ds/keinfer-nodeagent \
+kubectl -n shardwise set env ds/shardwise-nodeagent \
   CPU_THROTTLE_C=85 CPU_UNTHROTTLE_C=78
 ```
 
@@ -139,7 +139,7 @@ VMs). Real thermal data needs bare metal.
 
 **Everything Ready but `/generate` returns "no pipeline configured".** Give
 the controller ~10 s; it re-pushes the layout on a timer. If it persists,
-check `kubectl -n kubeedgeinfer logs deploy/controller`.
+check `kubectl -n shardwise logs deploy/controller`.
 
 **A laptop went to sleep.** k3s recovers, but give it a minute; the node
 rejoins and the controller repartitions across whatever is alive.

@@ -1,4 +1,4 @@
-"""KubeEdgeInfer router.
+"""Shardwise router.
 
 Front door of the pipeline: accepts generation requests over HTTP, drives the
 stage chain over gRPC, and streams telemetry-friendly timing back. The
@@ -407,7 +407,7 @@ def main():
     grpc_port = int(os.environ.get("GRPC_PORT", "50052"))
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
     rpc.add_RouterServicer_to_server(RouterServicer(), server)
-    server.add_insecure_port(f"{os.environ.get("GRPC_HOST", "[::]")}:{grpc_port}")
+    server.add_insecure_port(f"{os.environ.get('GRPC_HOST', '[::]')}:{grpc_port}")
     server.start()
 
     if CONTROLLER_ADDR:

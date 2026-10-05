@@ -7,7 +7,7 @@ root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 [[ $(uname -m) == x86_64 ]] || { echo 'Build on Linux x86_64' >&2; exit 1; }
 for tool in go curl sha256sum tar dpkg-deb; do command -v "$tool" >/dev/null || { echo "Missing build tool: $tool" >&2; exit 1; }; done
 # Fail before producing an incomplete package while backend work is in progress.
-for file in demo/keinfer-demo demo/app.py demo/hwdetect.py demo/helper.py demo/app.html demo/runtime-setup.sh; do [[ -f "$root/$file" ]] || { echo "Missing $file; integrate backend branch before packaging." >&2; exit 1; }; done
+for file in demo/shardwise demo/app.py demo/hwdetect.py demo/helper.py demo/app.html demo/runtime-setup.sh; do [[ -f "$root/$file" ]] || { echo "Missing $file; integrate backend branch before packaging." >&2; exit 1; }; done
 stage=$(mktemp -d);trap 'rm -rf "$stage"' EXIT
 pkg="$stage/package";dest="$pkg/opt/shardwise"
 mkdir -p "$dest/bin" "$dest/app" "$pkg/DEBIAN" "$pkg/usr/bin" "$pkg/usr/share/applications" "$pkg/usr/share/icons/hicolor/scalable/apps" "$root/dist"
@@ -26,8 +26,8 @@ chmod 755 "$dest/bin/controller" "$dest/bin/nodeagent" "$dest/bin/uv"
 tar -cf - --exclude='__pycache__' --exclude='*.pyc' --exclude='mock_api.py' --exclude='test*' --exclude='*.log' demo worker deploy/standalone bench/profile_qwen3.py | tar -xf - -C "$dest/app"
 find "$dest/app" -type f -perm /111 -exec chmod 755 {} +
 find "$dest/app" -type f ! -perm /111 -exec chmod 644 {} +
-chmod 755 "$dest/app/demo/keinfer-demo" "$dest/app/demo/runtime-setup.sh"
-ln -s /opt/shardwise/app/demo/keinfer-demo "$pkg/usr/bin/shardwise"
+chmod 755 "$dest/app/demo/shardwise" "$dest/app/demo/runtime-setup.sh"
+ln -s /opt/shardwise/app/demo/shardwise "$pkg/usr/bin/shardwise"
 ln -s shardwise "$pkg/usr/bin/keinfer-demo"
 install -m644 packaging/shardwise.desktop "$pkg/usr/share/applications/shardwise.desktop"
 install -m644 packaging/shardwise.svg "$pkg/usr/share/icons/hicolor/scalable/apps/shardwise.svg"
@@ -53,7 +53,7 @@ EOF
 cat > "$pkg/DEBIAN/prerm" <<'EOF'
 #!/bin/sh
 # Package scripts run as root; never target another user's state.
-/opt/shardwise/app/demo/keinfer-demo stop || true
+/opt/shardwise/app/demo/shardwise stop || true
 EOF
 chmod 755 "$pkg/DEBIAN/postinst" "$pkg/DEBIAN/prerm"
 find "$pkg" -type d -exec chmod 755 {} +

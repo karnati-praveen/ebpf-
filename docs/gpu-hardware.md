@@ -78,7 +78,7 @@ if missing, joins the cluster.
 
 **Back on your machine, label the two GPU nodes** (the agent script prints
 the exact command to run — it's just `kubectl label node <name>
-kubeedgeinfer.io/worker=true kubeedgeinfer.io/gpu=true`), then:
+shardwise.io/worker=true shardwise.io/gpu=true`), then:
 ```bash
 ./scripts/deploy-real-hardware.sh
 ```
@@ -98,11 +98,11 @@ node, GPU or not, for there to be "surviving nodes" to redistribute onto).
 ## Verifying it actually used the GPU
 
 ```bash
-kubectl -n kubeedgeinfer logs -l app=keinfer-worker | grep "loading gpt2"
+kubectl -n shardwise logs -l app=shardwise-worker | grep "loading gpt2"
 # should show: loading gpt2 blocks [...] on device=cuda
 ```
 If it says `device=cpu` on a GPU-labeled node, `WORKER_DEVICE=cuda` wasn't
-picked up (check `kubectl -n kubeedgeinfer set env ds/keinfer-worker
+picked up (check `kubectl -n shardwise set env ds/shardwise-worker
 WORKER_DEVICE=cuda` actually applied) or the CUDA torch wheel didn't
 install (check the worker image was built with `WITH_CUDA=1`).
 

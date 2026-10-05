@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: controller
-  namespace: kubeedgeinfer
+  namespace: shardwise
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: keinfer-controller
+      app: shardwise-controller
   template:
     metadata:
       labels:
-        app: keinfer-controller
+        app: shardwise-controller
     spec:
-      serviceAccountName: keinfer-controller
+      serviceAccountName: shardwise-controller
       # Exists, not a nodeSelector: kind uses an empty label value, k3s uses
       # "true" (see workers.yaml for the full note).
       affinity:
@@ -29,14 +29,14 @@ spec:
           effect: NoSchedule
       containers:
         - name: controller
-          image: kubeedgeinfer/controller:dev
+          image: shardwise/controller:dev
           imagePullPolicy: IfNotPresent
           # The binary defaults to -mode=standalone, so the Kubernetes
           # deployment must ask for the k8s substrate explicitly.
           args: ["-mode=k8s"]
           env:
             - name: NAMESPACE
-              value: kubeedgeinfer
+              value: shardwise
             - name: STATIC_MODE
               value: "0"
           ports:
@@ -53,10 +53,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: controller
-  namespace: kubeedgeinfer
+  namespace: shardwise
 spec:
   selector:
-    app: keinfer-controller
+    app: shardwise-controller
   ports:
     - name: telemetry
       port: 50053

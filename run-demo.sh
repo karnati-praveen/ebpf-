@@ -4,7 +4,7 @@
 #   ./run-demo.sh
 #
 # Checks prerequisites, builds the images (first run only; REBUILD=1 forces),
-# brings up the 4-node kind cluster, deploys KubeEdgeInfer, port-forwards the
+# brings up the 4-node kind cluster, deploys Shardwise, port-forwards the
 # router and controller, and serves a live dashboard at http://localhost:8000
 # with a built-in load generator and thermal fault-injection buttons — so the
 # WATCH→DECIDE→ACT→HEAL loop is visible end to end.
@@ -18,7 +18,7 @@ cd "$(dirname "$0")"
 ROUTER_PORT="${ROUTER_PORT:-18080}"
 CTRL_PORT="${CTRL_PORT:-18081}"
 DASH_PORT="${DASH_PORT:-8000}"
-NS=kubeedgeinfer
+NS=shardwise
 
 log() { echo "[demo] $*"; }
 die() { echo "[demo] ERROR: $*" >&2; exit 1; }
@@ -34,7 +34,7 @@ docker info >/dev/null 2>&1 || die "docker daemon not running (or no permission 
 
 # ---- images (skip if already built) ---------------------------------------
 have_images() {
-  for img in kubeedgeinfer/worker:dev kubeedgeinfer/nodeagent:dev kubeedgeinfer/controller:dev; do
+  for img in shardwise/worker:dev shardwise/nodeagent:dev shardwise/controller:dev; do
     docker image inspect "$img" >/dev/null 2>&1 || return 1
   done
 }

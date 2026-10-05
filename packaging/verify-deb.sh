@@ -10,7 +10,7 @@ done
 if printf '%s\n' "$listing" | awk '$NF ~ /\/(mock_api\.py|__pycache__|test[^/]*)(\/|$)/ {found=1} END {exit !found}'; then
   echo 'Package unexpectedly includes development mocks/tests/bytecode' >&2; exit 1
 fi
-printf '%s\n' "$listing" | awk '$6=="./usr/bin/shardwise" && $7=="->" && $8=="/opt/shardwise/app/demo/keinfer-demo" {found=1} END {exit !found}'
+printf '%s\n' "$listing" | awk '$6=="./usr/bin/shardwise" && $7=="->" && $8=="/opt/shardwise/app/demo/shardwise" {found=1} END {exit !found}'
 [[ $(dpkg-deb --field "$package" Package) == shardwise ]]
 checksum="$package.sha256"
 [[ -f "$checksum" ]] || { echo 'Missing distributable checksum' >&2; exit 1; }

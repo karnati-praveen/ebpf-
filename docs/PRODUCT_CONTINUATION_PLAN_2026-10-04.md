@@ -1,4 +1,4 @@
-# Continue KubeEdgeInfer toward a usable personal AI service
+# Continue Shardwise toward a usable personal AI service
 
 Prepared 4 October 2026 from the [direction research](PRODUCT_DIRECTION_2026-10-04.md).
 This is a proposed work sequence, not an implemented product or a commitment to

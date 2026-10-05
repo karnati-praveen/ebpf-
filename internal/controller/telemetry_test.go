@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"kubeedgeinfer/gen/pipelinepb"
+	"shardwise/gen/pipelinepb"
 )
 
 // The H3 comparison is only valid if kernel and application measurements of

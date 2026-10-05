@@ -1,4 +1,4 @@
-# Running KubeEdgeInfer across real laptops
+# Running Shardwise across real laptops
 
 > **Kubernetes-era guide** (k3s). For the current no-Kubernetes deployment use
 > [`deploy/standalone/README.md`](../deploy/standalone/README.md).
@@ -50,7 +50,7 @@ Label the workers exactly as `deploy/kind-config.yaml` does for kind, so the
 existing manifests' `nodeSelector` keeps working unchanged:
 
 ```bash
-kubectl label node <worker-hostname> kubeedgeinfer.io/worker=true
+kubectl label node <worker-hostname> shardwise.io/worker=true
 ```
 
 Pull the kubeconfig to your workstation:
@@ -86,13 +86,13 @@ the control-plane laptop):
 
 ```bash
 docker buildx build --platform linux/amd64,linux/arm64 \
-  -t <control-plane-ip>:5000/kubeedgeinfer/worker:dev \
+  -t <control-plane-ip>:5000/shardwise/worker:dev \
   -f deploy/docker/worker.Dockerfile --push .
 # repeat for nodeagent.Dockerfile and controller.Dockerfile
 ```
 
 Update the `image:` fields in `deploy/manifests/*.yaml` to point at that
-registry instead of the bare `kubeedgeinfer/*:dev` tags kind resolves
+registry instead of the bare `shardwise/*:dev` tags kind resolves
 locally via `kind load docker-image`.
 
 ### 4. Turn on real telemetry
@@ -111,7 +111,7 @@ speed on real CPU package throttling (Intel/AMD laptop CPUs throttle under
 sustained load exactly like a GPU does — same physics, same control problem):
 
 ```bash
-kubectl -n kubeedgeinfer set env ds/keinfer-nodeagent GPU_MODE=cputherm
+kubectl -n shardwise set env ds/shardwise-nodeagent GPU_MODE=cputherm
 ```
 
 Tune the throttle thresholds to your actual chassis if the defaults
@@ -120,7 +120,7 @@ your laptop actually does under load first:
 
 ```bash
 watch -n1 'cat /sys/class/thermal/thermal_zone*/temp'  # while running a CPU stress test
-kubectl -n kubeedgeinfer set env ds/keinfer-nodeagent \
+kubectl -n shardwise set env ds/shardwise-nodeagent \
   CPU_THROTTLE_C=<observed throttle temp> \
   CPU_UNTHROTTLE_C=<observed recovery temp>
 ```

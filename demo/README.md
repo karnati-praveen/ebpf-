@@ -22,7 +22,7 @@ From a source checkout, install Go and [uv](https://docs.astral.sh/uv/getting-st
 mkdir -p bin
 go build -o bin/controller ./cmd/controller
 go build -o bin/nodeagent ./cmd/nodeagent
-SHARDWISE_BIN="$PWD/bin" demo/keinfer-demo solo
+SHARDWISE_BIN="$PWD/bin" demo/shardwise solo
 ```
 
 Build the installer with `packaging/build-deb.sh 0.1.0` after installing Go, curl, and dpkg build tools. The installer bundles uv, Go executables, and source files; Python is downloaded at first launch. No system Python or Go is needed on the receiving laptop.
