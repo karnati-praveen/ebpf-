@@ -63,7 +63,7 @@ class Runtime:
         self.helper = None
         self.bin = Path(os.environ.get('KEINFER_BIN', '/opt/keinfer-demo/bin'))
         if not self.bin.exists(): self.bin = ROOT / 'bin'
-        self.env = dict(os.environ, HF_HOME=str(HOME/'hf'), KV_CACHE='1', MODEL=MODEL, PYTHONUNBUFFERED='1')
+        self.env = dict(os.environ, HF_HOME=str(HOME/'hf'), MODEL_REVISION=MODEL_REVISION, KV_CACHE='1', MODEL=MODEL, PYTHONUNBUFFERED='1')
         self.env['TORCH_THREADS'] = str(max(1, (os.cpu_count() or 2)//2))
         self.server = ThreadingHTTPServer(('127.0.0.1', self.ports['app']), handler(self))
         info = {'pid': os.getpid(), 'port': self.ports['app'], 'token': self.token}
@@ -208,12 +208,14 @@ class Runtime:
                     if assignment['worker'] in self.workers: self.workers[assignment['worker']]['speed'] = assignment['speed']
                 complete = bool(stages) and stages[0]['layers'][0] == 0 and stages[-1]['layers'][1] == 28
                 live = all(self.workers[s['name']]['status'] == 'up' and (not self.workers[s['name']]['local'] or s['addr'].endswith(':'+str(self.workers[s['name']]['port']))) for s in stages)
+                live = live and all(self.processes.get(s['name']) and self.processes[s['name']].poll() is None for s in stages if self.workers[s['name']]['local'])
                 if complete and live:
                     self.state, self.message = 'ready', 'Ready for real inference'
             except Exception:
                 pass
             for name, proc in list(self.processes.items()):
                 if proc.poll() is not None and self.state not in ('stopped', 'failed'):
+                    if name in self.workers: self.workers[name]['status'] = 'down'
                     self.state, self.message = 'failed', f'{name} exited; inspect logs/{name}.log'
                     if self.device['selected'] == 'cuda' and self.args.device == 'auto':
                         self.event('rejected', 'GPU runtime failed; restarting on CPU')
@@ -364,14 +366,26 @@ def main():
         try:
             info=json.loads((HOME/'state/app.json').read_text())
             url=f"http://127.0.0.1:{info['port']}"
-            print(json.dumps(request(url+('/api/exit' if args.command=='stop' else '/api/status'), {} if args.command=='stop' else None, info['token'])))
+            response = request(url+('/api/exit' if args.command=='stop' else '/api/status'), {} if args.command=='stop' else None, info['token'])
+            if args.command == 'stop':
+                deadline = time.monotonic()+30
+                while time.monotonic() < deadline:
+                    try:
+                        with open(HOME/'state/lock','a') as lock:
+                            fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                        break
+                    except BlockingIOError: time.sleep(.1)
+                else: raise RuntimeError('Demo shutdown still pending; inspect logs before restarting')
+            print(json.dumps(response))
         except (OSError, ValueError): print('Demo is not running')
         return
     if args.command=='join':
         if not args.host or not args.token: ap.error('join requires <host-ip> <token>')
         try: socket.inet_aton(args.host)
         except OSError: ap.error('host must be an IPv4 address')
-    runtime=Runtime(args)
+    try: runtime=Runtime(args)
+    except RuntimeError as e:
+        print(str(e),file=sys.stderr); return 1
     def stop(*_): threading.Thread(target=runtime.close,daemon=True).start()
     signal.signal(signal.SIGTERM,stop); signal.signal(signal.SIGINT,stop)
     print(f"Dashboard: http://127.0.0.1:{runtime.ports['app']}",flush=True)
@@ -381,4 +395,4 @@ def main():
         runtime.cleanup_pipeline()
         runtime.server.server_close()
 
-if __name__=='__main__': main()
+if __name__=='__main__': sys.exit(main())

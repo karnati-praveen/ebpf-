@@ -6,12 +6,29 @@ RUNTIME_PY="$KEINFER_DEMO_HOME/runtime/bin/python"
 case "${1:-solo}" in
   stop|status) [[ -x "$RUNTIME_PY" ]] || RUNTIME_PY="$(command -v python3)"; exec "$RUNTIME_PY" "$APP_ROOT/demo/app.py" "$@" ;;
 esac
-if [[ ! -x "$RUNTIME_PY" ]]; then
-  "$APP_ROOT/demo/runtime-setup.sh" auto
-fi
 export KEINFER_BIN="${KEINFER_BIN:-/opt/keinfer-demo/bin}"
+DEVICE_REQUEST=auto
+EXPECT_DEVICE_ARG=0
+for arg in "$@"; do
+  if [[ "$EXPECT_DEVICE_ARG" == 1 ]]; then DEVICE_REQUEST="$arg"; EXPECT_DEVICE_ARG=0
+  elif [[ "$arg" == --device ]]; then EXPECT_DEVICE_ARG=1
+  elif [[ "$arg" == --device=* ]]; then DEVICE_REQUEST="${arg#--device=}"
+  fi
+done
+case "$DEVICE_REQUEST" in
+  auto) if command -v nvidia-smi >/dev/null && nvidia-smi -L >/dev/null 2>&1; then RUNTIME_FLAVOR=cuda; else RUNTIME_FLAVOR=cpu; fi ;;
+  cpu|cuda) RUNTIME_FLAVOR="$DEVICE_REQUEST" ;;
+  *) echo 'Device must be auto, cpu or cuda' >&2; exit 2 ;;
+esac
+SETUP_REQUIRED=0
+[[ -x "$RUNTIME_PY" ]] || SETUP_REQUIRED=1
+[[ -f "$KEINFER_DEMO_HOME/runtime/.flavor" && "$(cat "$KEINFER_DEMO_HOME/runtime/.flavor")" == "$RUNTIME_FLAVOR" ]] || SETUP_REQUIRED=1
+if [[ "$SETUP_REQUIRED" == 0 ]] && ! "$RUNTIME_PY" -c 'import torch, transformers, grpc, numpy, safetensors, huggingface_hub, tokenizers' >/dev/null 2>&1; then SETUP_REQUIRED=1; fi
+if [[ "$SETUP_REQUIRED" == 1 ]]; then "$APP_ROOT/demo/runtime-setup.sh" "$RUNTIME_FLAVOR"; fi
 if [[ ! -d "$KEINFER_BIN" ]]; then
   export KEINFER_BIN="$APP_ROOT/bin"
+fi
+if [[ ! -x "$KEINFER_BIN/controller" || ! -x "$KEINFER_BIN/nodeagent" ]]; then
   mkdir -p "$KEINFER_BIN"
   (cd "$APP_ROOT"; CGO_ENABLED=0 go build -o "$KEINFER_BIN/controller" ./cmd/controller; CGO_ENABLED=0 go build -o "$KEINFER_BIN/nodeagent" ./cmd/nodeagent)
 fi

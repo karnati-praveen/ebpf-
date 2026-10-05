@@ -47,6 +47,7 @@ class Helper:
         return {'ok': True, 'slow': self.slow.is_set(), 'net': bool(getattr(self.runtime, 'relay', None) and self.runtime.relay.delay)}
 
     def close(self):
+        if getattr(self.runtime, 'relay', None): self.runtime.relay.delay = 0
         self.slow.clear()
         self.closed.set()
         self._signal(signal.SIGCONT)
