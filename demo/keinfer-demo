@@ -6,6 +6,21 @@ RUNTIME_PY="$KEINFER_DEMO_HOME/runtime/bin/python"
 case "${1:-solo}" in
   stop|status) [[ -x "$RUNTIME_PY" ]] || RUNTIME_PY="$(command -v python3)"; exec "$RUNTIME_PY" "$APP_ROOT/demo/app.py" "$@" ;;
 esac
+mkdir -p "$KEINFER_DEMO_HOME/state"
+# Serialize setup as well as execution, before altering the runtime environment.
+exec 9>"$KEINFER_DEMO_HOME/state/launcher.lock"
+if ! flock -n 9; then
+  echo 'Demo already running or setting up; use keinfer-demo status or stop' >&2
+  exit 1
+fi
+# A directly launched app does not own launcher.lock; inspect its runtime lock too.
+exec 8>"$KEINFER_DEMO_HOME/state/lock"
+if ! flock -n 8; then
+  echo 'Demo already running; use keinfer-demo status or stop' >&2
+  exit 1
+fi
+flock -u 8
+exec 8>&-
 export KEINFER_BIN="${KEINFER_BIN:-/opt/keinfer-demo/bin}"
 DEVICE_REQUEST=auto
 EXPECT_DEVICE_ARG=0
@@ -16,10 +31,17 @@ for arg in "$@"; do
   fi
 done
 case "$DEVICE_REQUEST" in
-  auto) if command -v nvidia-smi >/dev/null && nvidia-smi -L >/dev/null 2>&1; then RUNTIME_FLAVOR=cuda; else RUNTIME_FLAVOR=cpu; fi ;;
-  cpu|cuda) RUNTIME_FLAVOR="$DEVICE_REQUEST" ;;
+  auto|cpu|cuda) ;;
   *) echo 'Device must be auto, cpu or cuda' >&2; exit 2 ;;
 esac
+GPU_PRESENT=0
+if command -v nvidia-smi >/dev/null && nvidia-smi -L >/dev/null 2>&1; then GPU_PRESENT=1; fi
+if [[ "$DEVICE_REQUEST" == cuda && "$GPU_PRESENT" == 0 ]]; then
+  echo 'Forced GPU unavailable: NVIDIA GPU/driver not detected. Use --device cpu or auto.' >&2
+  exit 1
+fi
+# CUDA wheels execute on both devices, allowing the dashboard to switch later.
+if [[ "$GPU_PRESENT" == 1 ]]; then RUNTIME_FLAVOR=cuda; else RUNTIME_FLAVOR=cpu; fi
 SETUP_REQUIRED=0
 [[ -x "$RUNTIME_PY" ]] || SETUP_REQUIRED=1
 [[ -f "$KEINFER_DEMO_HOME/runtime/.flavor" && "$(cat "$KEINFER_DEMO_HOME/runtime/.flavor")" == "$RUNTIME_FLAVOR" ]] || SETUP_REQUIRED=1

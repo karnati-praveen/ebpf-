@@ -362,6 +362,10 @@ def handler(runtime, pair=False):
                         self.send(409,{'error':'busy'}); return
                     if runtime.args.command != 'solo': raise ValueError('Restart host/join explicitly to switch device')
                     if body.get('device') not in ('auto','cpu','cuda'): raise ValueError('Invalid device')
+                    if body['device'] != 'cpu':
+                        import torch
+                        if torch.version.cuda is None and (body['device'] == 'cuda' or hardware()['gpu']):
+                            raise ValueError('This runtime has CPU-only PyTorch. Exit and launch keinfer-demo again to install the detected GPU runtime; then switch devices.')
                     if not runtime.chat_lock.acquire(False):
                         self.send(409,{'error':'busy'}); return
                     try:
