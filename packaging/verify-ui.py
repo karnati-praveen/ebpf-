@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Browser contract smoke test; requires Playwright + Chromium, never shipped in the app.
-Run: python packaging/verify-ui.py --shots /tmp/keinfer-ui-shots
+Run: python packaging/verify-ui.py --shots /tmp/shardwise-ui-shots
 """
 import argparse
 import asyncio
@@ -27,6 +27,8 @@ async def verify(shots):
                 url = proc.stdout.readline().strip().removeprefix('MOCK: ')
                 urls[name] = url
                 await page.goto(url)
+                assert await page.title() == 'Shardwise · Demo'
+                assert await page.locator('h1').inner_text() == 'Shardwise'
                 if name == 'cpu':
                     token = await page.evaluate('token')
                     response = await page.request.post(url+'/api/chat', data={'messages': [{'role': 'user', 'content': 'hello'}]}, headers={'X-Session-Token': token})
@@ -106,5 +108,5 @@ async def verify(shots):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--shots', type=Path, default=Path(tempfile.gettempdir())/'keinfer-ui-shots')
+    parser.add_argument('--shots', type=Path, default=Path(tempfile.gettempdir())/'shardwise-ui-shots')
     asyncio.run(verify(parser.parse_args().shots))

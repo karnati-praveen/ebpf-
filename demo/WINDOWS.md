@@ -29,7 +29,7 @@ wsl --shutdown
 Reopen Ubuntu. Mirrored networking helps the host and friend reach services across the LAN. Enrollment uses TCP 8766, while controller/worker/helper ports are dynamically printed. Replace `8766,12345,12346` below with the actual ports for your role, and `192.168.1.42` with the friend's IP:
 
 ```powershell
-New-NetFirewallRule -DisplayName "KubeEdgeInfer Pair" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8766,12345,12346 -RemoteAddress 192.168.1.42 -Profile Private
+New-NetFirewallRule -DisplayName "Shardwise Pair" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8766,12345,12346 -RemoteAddress 192.168.1.42 -Profile Private
 ```
 
 WSL's Hyper-V firewall can also filter mirrored traffic. If connections remain blocked, add equivalent narrowly scoped rules for the WSL VM through your Windows firewall settings. Use a private trusted hotspot/network. Windows 10 does not support mirrored mode; use native Ubuntu or configure WSL forwarding separately for Pair.
@@ -37,7 +37,7 @@ WSL's Hyper-V firewall can also filter mirrored traffic. If connections remain b
 Remove your rule after the presentation if desired:
 
 ```powershell
-Remove-NetFirewallRule -DisplayName "KubeEdgeInfer Pair"
+Remove-NetFirewallRule -DisplayName "Shardwise Pair"
 ```
 
 ## NVIDIA GPU
