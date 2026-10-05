@@ -200,17 +200,17 @@ def _forward_chain(stages, generation, request_id, step, first_stage_ids):
     return reply
 
 
-def generate(input_ids, max_new_tokens):
+def generate(input_ids, max_new_tokens, stop_ids=None):
     # A stable tracking key survives cache replay's changes to request_id.
     key = object()
     WORKLOAD.begin(key, max_new_tokens)
     try:
-        return _generate(input_ids, max_new_tokens, key)
+        return _generate(input_ids, max_new_tokens, key, stop_ids)
     finally:
         WORKLOAD.finish(key)
 
 
-def _generate(input_ids, max_new_tokens, workload_key):
+def _generate(input_ids, max_new_tokens, workload_key, stop_ids=None):
     request_id = random.getrandbits(63)
     t_start = time.monotonic()
     ttft_ms = None
@@ -267,6 +267,8 @@ def _generate(input_ids, max_new_tokens, workload_key):
         if ttft_ms is None:
             ttft_ms = (time.monotonic() - t_start) * 1000.0
         step += 1
+        if stop_ids and reply.next_token in stop_ids:
+            break
 
     duration_ms = (time.monotonic() - t_start) * 1000.0
     with METRICS_LOCK:
@@ -370,7 +372,7 @@ class Handler(BaseHTTPRequestHandler):
                 prompt_len = int(body.get("prompt_len", 16))
                 input_ids = [random.randint(1, 1000) for _ in range(prompt_len)]
             max_new_tokens = int(body.get("max_new_tokens", 16))
-            self._send(200, generate(input_ids, max_new_tokens))
+            self._send(200, generate(input_ids, max_new_tokens, body.get("stop_ids")))
         except Exception as e:
             log.exception("generate failed")
             with METRICS_LOCK:
@@ -405,7 +407,7 @@ def main():
     grpc_port = int(os.environ.get("GRPC_PORT", "50052"))
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
     rpc.add_RouterServicer_to_server(RouterServicer(), server)
-    server.add_insecure_port(f"[::]:{grpc_port}")
+    server.add_insecure_port(f"{os.environ.get("GRPC_HOST", "[::]")}:{grpc_port}")
     server.start()
 
     if CONTROLLER_ADDR:
@@ -413,7 +415,7 @@ def main():
         log.info("app-level link telemetry -> %s", CONTROLLER_ADDR)
 
     http_port = int(os.environ.get("HTTP_PORT", "8080"))
-    httpd = ThreadingHTTPServer(("", http_port), Handler)
+    httpd = ThreadingHTTPServer((os.environ.get("HTTP_HOST", ""), http_port), Handler)
     log.info("router: http :%d grpc :%d kv_cache=%s", http_port, grpc_port, KV_CACHE)
     httpd.serve_forever()
 

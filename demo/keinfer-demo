@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+APP_ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+export KEINFER_DEMO_HOME="${KEINFER_DEMO_HOME:-$HOME/.local/share/keinfer-demo}"
+RUNTIME_PY="$KEINFER_DEMO_HOME/runtime/bin/python"
+case "${1:-solo}" in
+  stop|status) [[ -x "$RUNTIME_PY" ]] || RUNTIME_PY="$(command -v python3)"; exec "$RUNTIME_PY" "$APP_ROOT/demo/app.py" "$@" ;;
+esac
+if [[ ! -x "$RUNTIME_PY" ]]; then
+  "$APP_ROOT/demo/runtime-setup.sh" auto
+fi
+export KEINFER_BIN="${KEINFER_BIN:-/opt/keinfer-demo/bin}"
+if [[ ! -d "$KEINFER_BIN" ]]; then
+  export KEINFER_BIN="$APP_ROOT/bin"
+  mkdir -p "$KEINFER_BIN"
+  (cd "$APP_ROOT"; CGO_ENABLED=0 go build -o "$KEINFER_BIN/controller" ./cmd/controller; CGO_ENABLED=0 go build -o "$KEINFER_BIN/nodeagent" ./cmd/nodeagent)
+fi
+exec "$RUNTIME_PY" "$APP_ROOT/demo/app.py" "$@"
