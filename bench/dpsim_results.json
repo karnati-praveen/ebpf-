@@ -1,0 +1,178 @@
+[
+  {
+    "dynamic_bottleneck_ms": 42,
+    "dynamic_splits": [
+      [
+        0,
+        4
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        12
+      ]
+    ],
+    "gain_vs_profileonly_pct": 0,
+    "gain_vs_static_pct": 0,
+    "profileonly_bottleneck_ms": 42,
+    "scenario": "baseline",
+    "static_bottleneck_ms": 42,
+    "static_splits": [
+      [
+        0,
+        4
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        12
+      ]
+    ]
+  },
+  {
+    "dynamic_bottleneck_ms": 52,
+    "dynamic_splits": [
+      [
+        0,
+        5
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        7,
+        12
+      ]
+    ],
+    "gain_vs_profileonly_pct": 49,
+    "gain_vs_static_pct": 49,
+    "profileonly_bottleneck_ms": 102,
+    "scenario": "thermal",
+    "static_bottleneck_ms": 102,
+    "static_splits": [
+      [
+        0,
+        4
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        12
+      ]
+    ]
+  },
+  {
+    "dynamic_bottleneck_ms": 62,
+    "dynamic_splits": [
+      [
+        0,
+        6
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        6,
+        12
+      ]
+    ],
+    "gain_vs_profileonly_pct": 49.2,
+    "gain_vs_static_pct": 49.2,
+    "profileonly_bottleneck_ms": 122,
+    "scenario": "netem",
+    "static_bottleneck_ms": 122,
+    "static_splits": [
+      [
+        0,
+        4
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        12
+      ]
+    ]
+  },
+  {
+    "dynamic_bottleneck_ms": 62,
+    "dynamic_splits": [
+      [
+        0,
+        6
+      ],
+      [
+        6,
+        12
+      ]
+    ],
+    "gain_vs_profileonly_pct": 0,
+    "gain_vs_static_pct": null,
+    "profileonly_bottleneck_ms": 62,
+    "scenario": "failure",
+    "static_bottleneck_ms": null,
+    "static_splits": [
+      [
+        0,
+        4
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        12
+      ]
+    ]
+  },
+  {
+    "dynamic_bottleneck_ms": 62,
+    "dynamic_splits": [
+      [
+        0,
+        6
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        6,
+        12
+      ]
+    ],
+    "gain_vs_profileonly_pct": 65.9,
+    "gain_vs_static_pct": 65.9,
+    "profileonly_bottleneck_ms": 182,
+    "scenario": "combo",
+    "static_bottleneck_ms": 182,
+    "static_splits": [
+      [
+        0,
+        4
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        12
+      ]
+    ]
+  }
+]

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Measure a Qwen3 reference cost profile for standalone placement.
 
-Run on one representative worker before starting a CUDA cluster. This profiles
-exactly the backend's full-chain cached prefill and one-token decode path. The
-result feeds COST_PROFILE in the standalone launchers; other workers report
-speed relative to the same reference profile. It is a component profile, not
+Run on one representative worker VM. This profiles exactly the backend's
+full-chain cached prefill and one-token decode path, plus the time to reload a
+half-model shard (the fixed part of a relayout). With --env it also writes the
+values as shell assignments for ~/keinfer/profile.env, which every standalone
+script sources: controller cost model, gate parameters, and the reference the
+workers' measured speed is normalised against. It is a component profile, not
 an end-to-end transition measurement.
 """
 
@@ -116,6 +118,16 @@ def profile(args):
         for hook in hooks:
             hook.remove()
 
+    # Fixed relayout cost: reload a half-model shard, alternating halves so
+    # every load is a real change, as on a repartition.
+    half = total // 2
+    reload_ms = []
+    for i in range(3):
+        lo, hi = (0, half) if i % 2 == 0 else (half, total)
+        t0 = time.perf_counter()
+        backend.load(lo, hi, total)
+        reload_ms.append((time.perf_counter() - t0) * 1000)
+
     result = {
         "model": args.model,
         "device": args.device,
@@ -134,6 +146,8 @@ def profile(args):
         # context measurements as well so its approximation error is visible.
         "prefill_ms_per_token_layer": statistics.median(
             r["prefill_ms_per_token_layer"] for r in rows),
+        "reload_half_model_ms": statistics.median(reload_ms),
+        "reload_samples_ms": reload_ms,
         "measurements": rows,
     }
     if args.device == "cuda":
@@ -143,16 +157,28 @@ def profile(args):
         json.dump(result, f, indent=2)
         f.write("\n")
     print(f"wrote {args.out}")
+    if args.env:
+        table = ",".join(f"{r['context_len']}:{r['decode_ms_per_layer']:.3f}" for r in rows)
+        with args.env.open("w") as f:
+            f.write(f"# measured by bench/profile_qwen3.py on {result['device_name']}\n"
+                    f"PER_LAYER_PROFILE={table}\n"
+                    f"HEAD_MS={result['head_ms']:.2f}\n"
+                    f"EMBED_MS={result['embed_ms']:.3f}\n"
+                    f"GATE_PREFILL_MS_PER_TOKEN_LAYER={result['prefill_ms_per_token_layer']:.4f}\n"
+                    f"GATE_TRANSITION_FIXED_MS={result['reload_half_model_ms']:.0f}\n")
+        print(f"wrote {args.env}")
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model", default=os.environ.get("MODEL", "Qwen/Qwen3-0.6B"))
-    ap.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
+    ap.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     ap.add_argument("--contexts", default="128,512,1024,2048")
     ap.add_argument("--warmup", type=int, default=2)
     ap.add_argument("--samples", type=int, default=5)
     ap.add_argument("--token-id", type=int, default=1)
+    ap.add_argument("--env", type=Path, default=None,
+                    help="also write shell assignments for ~/keinfer/profile.env")
     ap.add_argument("--out", type=Path, required=True,
                     help="new JSON profile path; existing files are never overwritten")
     profile(ap.parse_args())

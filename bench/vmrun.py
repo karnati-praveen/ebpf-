@@ -279,7 +279,7 @@ class Run:
         if s == "stable":
             cmd = None
         elif action == "on":
-            cmd = {"compute": f"{f} compute {m}", "contention": f"{f} contention {int(m)}",
+            cmd = {"compute": f"{f} compute {m}", "contention": f"{f} contention {int(float(m))}",
                    "network": f"{f} network {m}", "loss": f"{f} loss"}[s]
         else:
             cmd = f"{self.remote_worker_env}{f} restore {private_ip()}" if s == "loss" else f"{f} clear"
@@ -307,6 +307,7 @@ class Run:
         threads = [threading.Thread(target=self.sampler, daemon=True)]
         threads += [threading.Thread(target=self.load_worker, daemon=True)
                     for _ in range(self.a.concurrency)]
+        self.threads = threads
         t0 = time.time()
         for th in threads:
             th.start()
@@ -460,13 +461,23 @@ def main():
 
     os.makedirs(args.out, exist_ok=True)
     for s, m, p, r in schedule:
+        run = None
         try:
-            Run(args, s, m, p, r).execute()
+            run = Run(args, s, m, p, r)
+            run.execute()
         except Exception as e:
             # A failed run is recorded, never silently skipped.
             print(f"    RUN FAILED: {e}")
             with open(os.path.join(args.out, "failed_runs.log"), "a") as fh:
                 fh.write(f"{time.time()} {s}:{m} {p} r{r} {e}\n")
+            # Its load threads must not keep running into the next run (they
+            # would silently double its concurrency), nor may its fault persist.
+            if run is not None:
+                run.stop.set()
+                for th in getattr(run, "threads", [])[1:]:
+                    th.join(timeout=args.drain_s)
+            if args.target:
+                ssh(args.target, f"{args.remote_repo}/deploy/standalone/fault.sh clear", check=False)
     return 0
 
 
