@@ -1,0 +1,391 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{huang2019gpipe}
+Y.~Huang, Y.~Cheng, A.~Bapna, O.~Firat, D.~Chen, M.~X. Chen, H.~Lee, J.~Ngiam,
+  Q.~V. Le, Y.~Wu, Z.~Chen, {GPipe}: Efficient training of giant neural
+  networks using pipeline parallelism, in: Advances in Neural Information
+  Processing Systems 32 (NeurIPS), 2019, pp. 103--112.
+
+\bibitem{narayanan2019pipedream}
+D.~Narayanan, A.~Harlap, A.~Phanishayee, V.~Seshadri, N.~R. Devanur, G.~R.
+  Ganger, P.~B. Gibbons, M.~Zaharia, {PipeDream}: Generalized pipeline
+  parallelism for {DNN} training, in: Proceedings of the 27th ACM Symposium on
+  Operating Systems Principles (SOSP), 2019, pp. 1--15.
+\newblock \href {https://doi.org/10.1145/3341301.3359646}
+  {\path{doi:10.1145/3341301.3359646}}.
+
+\bibitem{borzunov2023petals}
+A.~Borzunov, M.~Ryabinin, A.~Chumachenko, D.~Baranchuk, T.~Dettmers,
+  Y.~Belkada, P.~Samygin, C.~Raffel,
+  \href{https://arxiv.org/abs/2312.08361}{Distributed inference and fine-tuning
+  of large language models over the internet} (2023).
+\newblock \href {http://arxiv.org/abs/2312.08361} {\path{arXiv:2312.08361}},
+  \href {https://doi.org/10.48550/arXiv.2312.08361}
+  {\path{doi:10.48550/arXiv.2312.08361}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2312.08361}
+
+\bibitem{edgeshard2025}
+M.~Zhang, X.~Shen, J.~Cao, Z.~Cui, S.~Jiang,
+  \href{https://doi.org/10.1109/JIOT.2024.3524255}{Edgeshard: Efficient llm
+  inference via collaborative edge computing}, IEEE Internet of Things Journal
+  12~(10) (2025) 13119--13131.
+\newblock \href {https://doi.org/10.1109/JIOT.2024.3524255}
+  {\path{doi:10.1109/JIOT.2024.3524255}}.
+\newline\urlprefix\url{https://doi.org/10.1109/JIOT.2024.3524255}
+
+\bibitem{galaxy2024}
+S.~Ye, J.~Du, L.~Zeng, W.~Ou, X.~Chu, Y.~Lu, X.~Chen,
+  \href{https://doi.org/10.1109/INFOCOM52122.2024.10621342}{Galaxy: A
+  resource-efficient collaborative edge ai system for in-situ transformer
+  inference}, in: IEEE INFOCOM 2024 - IEEE Conference on Computer
+  Communications, 2024, pp. 1001--1010.
+\newblock \href {https://doi.org/10.1109/INFOCOM52122.2024.10621342}
+  {\path{doi:10.1109/INFOCOM52122.2024.10621342}}.
+\newline\urlprefix\url{https://doi.org/10.1109/INFOCOM52122.2024.10621342}
+
+\bibitem{tpi2025}
+Z.~Li, W.~Feng, M.~Guizani, H.~Yu,
+  \href{https://doi.org/10.1109/TSC.2025.3596892}{Tpi-llm: Serving 70b-scale
+  llms efficiently on low-resource mobile devices}, IEEE Transactions on
+  Services Computing 18~(5) (2025) 3321--3333.
+\newblock \href {https://doi.org/10.1109/TSC.2025.3596892}
+  {\path{doi:10.1109/TSC.2025.3596892}}.
+\newline\urlprefix\url{https://doi.org/10.1109/TSC.2025.3596892}
+
+\bibitem{prima2026}
+Z.~Li, T.~Li, W.~Feng, R.~Xiao, J.~She, H.~Huang, M.~Guizani, H.~Yu, Q.~Ho,
+  W.~Xiang, X.~Liu, \href{https://arxiv.org/abs/2504.08791}{Prima.cpp: Fast
+  30-70b llm inference on heterogeneous and low-resource home clusters},
+  iCLR2026; arXiv v3 inspected; DOI UNVERIFIED (2026).
+\newblock \href {http://arxiv.org/abs/2504.08791} {\path{arXiv:2504.08791}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2504.08791}
+
+\bibitem{yu2022orca}
+G.-I. Yu, J.~S. Jeong, G.-W. Kim, S.~Kim, B.-G. Chun, Orca: A distributed
+  serving system for transformer-based generative models, in: 16th USENIX
+  Symposium on Operating Systems Design and Implementation (OSDI), 2022, pp.
+  521--538.
+
+\bibitem{sun2024llumnix}
+B.~Sun, Z.~Huang, H.~Zhao, W.~Xiao, X.~Zhang, Y.~Li, W.~Lin,
+  \href{https://arxiv.org/abs/2406.03243}{{Llumnix}: Dynamic scheduling for
+  large language model serving}, oSDI 2024 paper; cited arXiv version (2024).
+\newblock \href {http://arxiv.org/abs/2406.03243} {\path{arXiv:2406.03243}},
+  \href {https://doi.org/10.48550/arXiv.2406.03243}
+  {\path{doi:10.48550/arXiv.2406.03243}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2406.03243}
+
+\bibitem{fu2024serverlessllm}
+Y.~Fu, L.~Xue, Y.~Huang, A.-O. Brabete, D.~Ustiugov, Y.~Patel, L.~Mai,
+  \href{https://arxiv.org/abs/2401.14351}{{ServerlessLLM}: Low-latency
+  serverless inference for large language models}, oSDI 2024 paper; cited arXiv
+  version (2024).
+\newblock \href {http://arxiv.org/abs/2401.14351} {\path{arXiv:2401.14351}},
+  \href {https://doi.org/10.48550/arXiv.2401.14351}
+  {\path{doi:10.48550/arXiv.2401.14351}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2401.14351}
+
+\bibitem{miao2023spotserve}
+X.~Miao, C.~Shi, J.~Duan, X.~Xi, D.~Lin, B.~Cui, Z.~Jia,
+  \href{https://arxiv.org/abs/2311.15566}{{SpotServe}: Serving generative large
+  language models on preemptible instances}, aSPLOS 2024 paper; cited arXiv
+  version (2023).
+\newblock \href {http://arxiv.org/abs/2311.15566} {\path{arXiv:2311.15566}},
+  \href {https://doi.org/10.48550/arXiv.2311.15566}
+  {\path{doi:10.48550/arXiv.2311.15566}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2311.15566}
+
+\bibitem{lin2026dynopipe}
+Y.~Lin, B.~Chen, X.~Zhang, C.~Xu, K.~Ye,
+  \href{https://doi.org/10.1109/isca66397.2026.00077}{Dynopipe: Heterogeneous
+  edge-cloud llm serving with dynamically orchestrated pipeline boundaries},
+  in: 2026 ACM/IEEE 53rd Annual International Symposium on Computer
+  Architecture (ISCA), 2026, pp. 969--984, metadata verified Crossref; primary
+  full text inspected.
+\newblock \href {https://doi.org/10.1109/isca66397.2026.00077}
+  {\path{doi:10.1109/isca66397.2026.00077}}.
+\newline\urlprefix\url{https://doi.org/10.1109/isca66397.2026.00077}
+
+\bibitem{sun-etal-2025-disco}
+T.~Sun, P.~Wang, F.~Lai,
+  \href{https://aclanthology.org/2025.findings-acl.734/}{{D}i{SC}o:
+  Device-server collaborative {LLM}-based text streaming services}, in: W.~Che,
+  J.~Nabende, E.~Shutova, M.~T. Pilehvar (Eds.), Findings of the Association
+  for Computational Linguistics: ACL 2025, Association for Computational
+  Linguistics, Vienna, Austria, 2025, pp. 14259--14277.
+\newblock \href {https://doi.org/10.18653/v1/2025.findings-acl.734}
+  {\path{doi:10.18653/v1/2025.findings-acl.734}}.
+\newline\urlprefix\url{https://aclanthology.org/2025.findings-acl.734/}
+
+\bibitem{star2026}
+Z.~Wang, Z.~Hong, X.~Li, Z.~Wang, S.~Li, Q.~Meng, Q.~Wang, C.~Huan, R.~Gu,
+  S.~Zhong, C.~Tian, \href{https://arxiv.org/abs/2510.13668}{Star: Decode-phase
+  rescheduling for llm inference}, in: Proceedings of the 35th International
+  Symposium on High-Performance Parallel and Distributed Computing, 2026,
+  verified against final HPDC metadata printed in arXiv v2 PDF, page1; title
+  changed from ARES in v1.
+\newblock \href {http://arxiv.org/abs/2510.13668} {\path{arXiv:2510.13668}},
+  \href {https://doi.org/10.1145/3806645.3807813}
+  {\path{doi:10.1145/3806645.3807813}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2510.13668}
+
+\bibitem{chen2026shadowllmhotstandby}
+Z.~Chen, P.~Ding, Y.~Zhu, H.~Zhang, J.~Lv, Y.~Huang, X.~Qiao,
+  \href{https://doi.org/10.1109/2575-8411.2026.00051}{Shadowllm:
+  Resource-efficient hot standby for heterogeneous edge llm serving}, in: 2026
+  IEEE 46th International Conference on Distributed Computing Systems (ICDCS),
+  2026, pp. 469--479, verified Crossref and IEEE abstract; full text
+  UNVERIFIED.
+\newblock \href {https://doi.org/10.1109/2575-8411.2026.00051}
+  {\path{doi:10.1109/2575-8411.2026.00051}}.
+\newline\urlprefix\url{https://doi.org/10.1109/2575-8411.2026.00051}
+
+\bibitem{easter2024}
+X.~Guo, Q.~Jiang, Y.~Shen, A.~D. Pimentel, T.~Stefanov,
+  \href{https://doi.org/10.1109/TCAD.2024.3438995}{Easter: Learning to split
+  transformers at the edge robustly}, IEEE Transactions on Computer-Aided
+  Design of Integrated Circuits and Systems 43~(11) (2024) 3626--3637.
+\newblock \href {https://doi.org/10.1109/TCAD.2024.3438995}
+  {\path{doi:10.1109/TCAD.2024.3438995}}.
+\newline\urlprefix\url{https://doi.org/10.1109/TCAD.2024.3438995}
+
+\bibitem{kafetzis2025partitioning}
+D.~Kafetzis, R.~Khalili, I.~Koutsopoulos,
+  \href{https://arxiv.org/abs/2505.02533}{Large language model partitioning for
+  low-latency inference at the edge} (2025).
+\newblock \href {http://arxiv.org/abs/2505.02533} {\path{arXiv:2505.02533}},
+  \href {https://doi.org/10.48550/arXiv.2505.02533}
+  {\path{doi:10.48550/arXiv.2505.02533}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2505.02533}
+
+\bibitem{petalsacl2023}
+A.~Borzunov, D.~Baranchuk, T.~Dettmers, M.~Riabinin, Y.~Belkada,
+  A.~Chumachenko, P.~Samygin, C.~Raffel,
+  \href{https://doi.org/10.18653/v1/2023.acl-demo.54}{Petals: Collaborative
+  inference and fine-tuning of large models}, in: Proceedings of the 61st
+  Annual Meeting of the Association for Computational Linguistics (Volume 3:
+  System Demonstrations), 2023, pp. 558--568.
+\newblock \href {https://doi.org/10.18653/v1/2023.acl-demo.54}
+  {\path{doi:10.18653/v1/2023.acl-demo.54}}.
+\newline\urlprefix\url{https://doi.org/10.18653/v1/2023.acl-demo.54}
+
+\bibitem{bokhari1988partitioning}
+S.~H. Bokhari, Partitioning problems in parallel, pipelined, and distributed
+  computing, IEEE Transactions on Computers 37~(1) (1988) 48--57.
+\newblock \href {https://doi.org/10.1109/12.75137}
+  {\path{doi:10.1109/12.75137}}.
+
+\bibitem{pinar2004partitioning}
+A.~P{\i}nar, C.~Aykanat, Fast optimal load balancing algorithms for {1D}
+  partitioning, Journal of Parallel and Distributed Computing 64~(8) (2004)
+  974--996.
+\newblock \href {https://doi.org/10.1016/j.jpdc.2004.05.003}
+  {\path{doi:10.1016/j.jpdc.2004.05.003}}.
+
+\bibitem{little1961proof}
+J.~D.~C. Little, A proof for the queuing formula: {$L = \lambda W$}, Operations
+  Research 9~(3) (1961) 383--387.
+\newblock \href {https://doi.org/10.1287/opre.9.3.383}
+  {\path{doi:10.1287/opre.9.3.383}}.
+
+\bibitem{kwon2023vllm}
+W.~Kwon, Z.~Li, S.~Zhuang, Y.~Sheng, L.~Zheng, C.~H. Yu, J.~E. Gonzalez,
+  H.~Zhang, I.~Stoica, Efficient memory management for large language model
+  serving with {PagedAttention}, in: Proceedings of the 29th ACM Symposium on
+  Operating Systems Principles (SOSP), 2023.
+\newblock \href {https://doi.org/10.1145/3600006.3613165}
+  {\path{doi:10.1145/3600006.3613165}}.
+
+\bibitem{pipeinfer2024}
+B.~Butler, S.~Yu, A.~Mazaheri, A.~Jannesari,
+  \href{https://doi.org/10.1109/sc41406.2024.00046}{Pipeinfer: Accelerating llm
+  inference using asynchronous pipelined speculation}, in: SC24: International
+  Conference for High Performance Computing, Networking, Storage and Analysis,
+  2024, pp. 1--19, metadata verified against Crossref on 2026-10-06.
+\newblock \href {https://doi.org/10.1109/sc41406.2024.00046}
+  {\path{doi:10.1109/sc41406.2024.00046}}.
+\newline\urlprefix\url{https://doi.org/10.1109/sc41406.2024.00046}
+
+\bibitem{flowspec2025}
+X.~Liu, L.~Luo, M.~Tang, C.~Huang, X.~Chen,
+  \href{https://arxiv.org/abs/2507.02620}{Flowspec: Continuous pipelined
+  speculative decoding for efficient distributed llm inference}, author list
+  verified against arXiv metadata; publication status and identifier in
+  related-work-table.csv. arXiv year is first posting. (2025).
+\newblock \href {http://arxiv.org/abs/2507.02620} {\path{arXiv:2507.02620}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2507.02620}
+
+\bibitem{kang2017neurosurgeon}
+Y.~Kang, J.~Hauswald, C.~Gao, A.~Rovinski, T.~Mudge, J.~Mars, L.~Tang,
+  Neurosurgeon: Collaborative intelligence between the cloud and mobile edge,
+  in: Proceedings of the 22nd International Conference on Architectural Support
+  for Programming Languages and Operating Systems (ASPLOS), 2017, pp. 615--629.
+\newblock \href {https://doi.org/10.1145/3037697.3037698}
+  {\path{doi:10.1145/3037697.3037698}}.
+
+\bibitem{li2020edgeai}
+E.~Li, L.~Zeng, Z.~Zhou, X.~Chen, Edge {AI}: On-demand accelerating deep neural
+  network inference via edge computing, IEEE Transactions on Wireless
+  Communications 19~(1) (2020) 447--457.
+\newblock \href {https://doi.org/10.1109/TWC.2019.2946140}
+  {\path{doi:10.1109/TWC.2019.2946140}}.
+
+\bibitem{mdi2025}
+D.~Macario, H.~Seferoglu, E.~Koyuncu,
+  \href{https://doi.org/10.1109/LANMAN66415.2025.11154542}{Model-distributed
+  inference for large language models at the edge}, in: 2025 IEEE 31st
+  International Symposium on Local and Metropolitan Area Networks (LANMAN),
+  2025, pp. 1--6.
+\newblock \href {https://doi.org/10.1109/LANMAN66415.2025.11154542}
+  {\path{doi:10.1109/LANMAN66415.2025.11154542}}.
+\newline\urlprefix\url{https://doi.org/10.1109/LANMAN66415.2025.11154542}
+
+\bibitem{tong2025parallax}
+C.~Tong, Y.~Jiang, G.~Chen, T.~Zhao, S.~Lu, W.~Qu, E.~Yang, L.~Ai, B.~Yuan,
+  \href{https://arxiv.org/abs/2509.26182}{{Parallax}: Efficient {LLM} inference
+  service over decentralized environment} (2025).
+\newblock \href {http://arxiv.org/abs/2509.26182} {\path{arXiv:2509.26182}},
+  \href {https://doi.org/10.48550/arXiv.2509.26182}
+  {\path{doi:10.48550/arXiv.2509.26182}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2509.26182}
+
+\bibitem{wang2026edgeatp}
+W.~Wang, B.~Jing, S.~He, Z.~Song, W.~Fang,
+  \href{https://doi.org/10.1016/j.sysarc.2026.103861}{Edgeatp: An adaptive
+  tensor parallelism framework for scalable and efficient transformer inference
+  on edge clusters}, Journal of Systems Architecture 177 (2026) 103861.
+\newblock \href {https://doi.org/10.1016/j.sysarc.2026.103861}
+  {\path{doi:10.1016/j.sysarc.2026.103861}}.
+\newline\urlprefix\url{https://doi.org/10.1016/j.sysarc.2026.103861}
+
+\bibitem{liu2026atsinfer}
+Y.~Liu, H.~Ye, M.~Li, W.-j. Li,
+  \href{https://arxiv.org/abs/2607.10183}{Automated tensor scheduling for
+  hybrid {CPU-GPU LLM} inference on consumer devices}, preprint; version 2
+  consulted (2026).
+\newblock \href {http://arxiv.org/abs/2607.10183} {\path{arXiv:2607.10183}},
+  \href {https://doi.org/10.48550/arXiv.2607.10183}
+  {\path{doi:10.48550/arXiv.2607.10183}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2607.10183}
+
+\bibitem{patel2024splitwise}
+P.~Patel, E.~Choukse, C.~Zhang, A.~Shah, {\'I}.~Goiri, S.~Maleki, R.~Bianchini,
+  Splitwise: Efficient generative {LLM} inference using phase splitting, in:
+  Proceedings of the 51st ACM/IEEE Annual International Symposium on Computer
+  Architecture (ISCA), 2024, pp. 118--132.
+\newblock \href {https://doi.org/10.1109/ISCA59077.2024.00019}
+  {\path{doi:10.1109/ISCA59077.2024.00019}}.
+
+\bibitem{zhong2024distserve}
+Y.~Zhong, S.~Liu, J.~Chen, J.~Hu, Y.~Zhu, X.~Liu, X.~Jin, H.~Zhang,
+  {DistServe}: Disaggregating prefill and decoding for goodput-optimized large
+  language model serving, in: 18th USENIX Symposium on Operating Systems Design
+  and Implementation (OSDI), 2024.
+
+\bibitem{bai2026pipelive}
+X.~Bai, M.~T. Islam, C.~Wang, A.~N. Toosi,
+  \href{https://arxiv.org/abs/2604.12171}{Pipelive: Efficient live in-place
+  pipeline parallelism reconfiguration for dynamic llm serving}, preprint; v2
+  dated 23 September 2026 inspected (2026).
+\newblock \href {http://arxiv.org/abs/2604.12171} {\path{arXiv:2604.12171}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2604.12171}
+
+\bibitem{yuan2026remp}
+H.~Yuan, K.~Zheng, Y.~Bai, Y.~Zhang, Y.~Zhang, B.~Wu, X.~Gao, D.~Cheng,
+  \href{https://arxiv.org/abs/2606.18741}{Remp: Low-downtime runtime
+  model-parallelism reconfiguration for llm serving}, preprint; v2 dated 17
+  August 2026 inspected (2026).
+\newblock \href {http://arxiv.org/abs/2606.18741} {\path{arXiv:2606.18741}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2606.18741}
+
+\bibitem{cachegen2024}
+Y.~Liu, H.~Li, Y.~Cheng, S.~Ray, Y.~Huang, Q.~Zhang, K.~Du, J.~Yao, S.~Lu,
+  G.~Ananthanarayanan, M.~Maire, H.~Hoffmann, A.~Holtzman, J.~Jiang,
+  \href{https://arxiv.org/abs/2310.07240}{Cachegen: Kv cache compression and
+  streaming for fast large language model serving}, author list verified
+  against arXiv metadata; publication status and identifier in
+  related-work-table.csv. arXiv year is first posting. (2023).
+\newblock \href {http://arxiv.org/abs/2310.07240} {\path{arXiv:2310.07240}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2310.07240}
+
+\bibitem{jain1991art}
+R.~Jain, The Art of Computer Systems Performance Analysis: Techniques for
+  Experimental Design, Measurement, Simulation, and Modeling, Wiley, 1991.
+
+\bibitem{hoefler2015benchmarking}
+T.~Hoefler, R.~Belli, Scientific benchmarking of parallel computing systems:
+  Twelve ways to tell the masses when reporting performance results, in:
+  Proceedings of the International Conference for High Performance Computing,
+  Networking, Storage and Analysis (SC), 2015, pp. 73:1--73:12.
+\newblock \href {https://doi.org/10.1145/2807591.2807644}
+  {\path{doi:10.1145/2807591.2807644}}.
+
+\bibitem{aipcfleet2026}
+T.~Berenbaum, M.~Venkatachalam,
+  \href{https://arxiv.org/abs/2608.19147}{Pre-compiled pipeline shards for
+  distributed llm inference on intel ai pc fleets}, author list verified
+  against arXiv metadata; publication status and identifier in
+  related-work-table.csv. arXiv year is first posting. (2026).
+\newblock \href {http://arxiv.org/abs/2608.19147} {\path{arXiv:2608.19147}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2608.19147}
+
+\bibitem{lu2026etcinfer}
+R.~Lu, R.~Ge, H.~Liang, X.~Zhou, D.~Wang,
+  \href{https://arxiv.org/abs/2609.15230}{{ETCInfer}: An energy-efficient
+  thermal-aware cooling-joint scheduler for {LLM} inference in {AI}
+  datacenters}, preprint (2026).
+\newblock \href {http://arxiv.org/abs/2609.15230} {\path{arXiv:2609.15230}},
+  \href {https://doi.org/10.48550/arXiv.2609.15230}
+  {\path{doi:10.48550/arXiv.2609.15230}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2609.15230}
+
+\bibitem{reiser1980mva}
+M.~Reiser, S.~S. Lavenberg, Mean-value analysis of closed multichain queuing
+  networks, Journal of the ACM 27~(2) (1980) 313--322.
+\newblock \href {https://doi.org/10.1145/322186.322195}
+  {\path{doi:10.1145/322186.322195}}.
+
+\bibitem{yang2025qwen3}
+{Qwen Team}, \href{https://arxiv.org/abs/2505.09388}{{Qwen3} technical report}
+  (2025).
+\newblock \href {http://arxiv.org/abs/2505.09388} {\path{arXiv:2505.09388}},
+  \href {https://doi.org/10.48550/arXiv.2505.09388}
+  {\path{doi:10.48550/arXiv.2505.09388}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2505.09388}
+
+\bibitem{paszke2019pytorch}
+A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen,
+  Z.~Lin, N.~Gimelshein, L.~Antiga, A.~Desmaison, A.~K{\"o}pf, E.~Yang,
+  Z.~DeVito, M.~Raison, A.~Tejani, S.~Chilamkurthy, B.~Steiner, L.~Fang,
+  J.~Bai, S.~Chintala, {PyTorch}: An imperative style, high-performance deep
+  learning library, in: Advances in Neural Information Processing Systems 32
+  (NeurIPS), 2019, pp. 8024--8035.
+
+\bibitem{wolf2020transformers}
+T.~Wolf, L.~Debut, V.~Sanh, J.~Chaumond, C.~Delangue, A.~Moi, P.~Cistac,
+  T.~Rault, R.~Louf, M.~Funtowicz, J.~Davison, S.~Shleifer, P.~von Platen,
+  C.~Ma, Y.~Jernite, J.~Plu, C.~Xu, T.~Le~Scao, S.~Gugger, M.~Drame, Q.~Lhoest,
+  A.~M. Rush, Transformers: State-of-the-art natural language processing, in:
+  Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+  Processing: System Demonstrations, 2020, pp. 38--45.
+\newblock \href {https://doi.org/10.18653/v1/2020.emnlp-demos.6}
+  {\path{doi:10.18653/v1/2020.emnlp-demos.6}}.
+
+\bibitem{qwen2025qwen25}
+{Qwen Team}, \href{https://arxiv.org/abs/2412.15115}{{Qwen2.5} technical
+  report} (2024).
+\newblock \href {http://arxiv.org/abs/2412.15115} {\path{arXiv:2412.15115}},
+  \href {https://doi.org/10.48550/arXiv.2412.15115}
+  {\path{doi:10.48550/arXiv.2412.15115}}.
+\newline\urlprefix\url{https://arxiv.org/abs/2412.15115}
+
+\bibitem{gerganov2023llamacpp}
+G.~Gerganov, {contributors}, llama.cpp: {LLM} inference in {C/C++},
+  \url{https://github.com/ggml-org/llama.cpp}, software repository (2023).
+
+\end{thebibliography}

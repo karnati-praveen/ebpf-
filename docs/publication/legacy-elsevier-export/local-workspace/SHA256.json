@@ -1,0 +1,22 @@
+{
+  "README.md": "a27e7401a2de81f1fa0f81690441026cfd1e520f5729f08e6dbaaef1a5910741",
+  "adaptation-comparison.pdf": "5aaea71e74a176ab865ac6c0360c9e38192e407293eba42c8741a14618f79c86",
+  "adaptation-table.tex": "af7fe431f5e55adeaa17617d95d2dfe6773a6ff81933fcf542e0e96e6e0ebd8e",
+  "architecture.pdf": "4ba6b1249c917280aecbc183378fb2421259f86a977162b591fd7d7b3d7061ae",
+  "cost-and-gate-sensitivity.pdf": "a94d71fc67e950b1090eff3913bd10de9ec394487a4f1ee2de3e305116dfce81",
+  "demand-timeline.pdf": "f0cf979c7280147a3216eb2fea817cc134433249c8f3f851f628ab858f32ae95",
+  "elsarticle-num.bst": "aaf9bce5453a0c191aa5ff4d200dc3a9b4170a6067ca723ec4f1edcd7ca14edf",
+  "elsarticle.cls": "23a341acd0e35c20148c836fc6e9251549aa45b059fc1750356ca2f3f11f3cb0",
+  "fault-traces.pdf": "a70ef9cbe9def2465ca1ead62ea92bb984eeeeee31ee16623a1277fe7b5c461a",
+  "main.bbl": "149887097d6bf38489aad74f32cb02fb6c0246029f46084b0d8247aa18d97ea2",
+  "main.tex": "785228910ae97652e675083c6dcae7ffa0fcc02d4b5bd298160c6d398bc089bd",
+  "objective-frontier.pdf": "93c31b141c46dd147f66e8c93e462255f4a342951f02c92a71b5d540910b4156",
+  "objective-table.tex": "01f80442098d5a7aa643391c062aaadbcb1111fb2d01c6d51efc3fbbb696d1e4",
+  "paper-preview.pdf": "ad67a702b832f63b6cd0f6d79b6e95f47a4a13080ce9beba90ef61db718194b3",
+  "prior-work-table.tex": "a9d0d1cd068b1a94e0be09ad8fcc72fe926573d515f9497c05f476d9655896e5",
+  "queue-decomposition.pdf": "19cc89fc614e44a31661ec13dce8c8594378fc4a88638fe02d6d1fd1d4ac0c24",
+  "references.bib": "0cb80f2438f71e2a0674f828be4a865afa28242ccfbd82b0fd7eb7dc4a8a2215",
+  "routing-sensitivity.pdf": "88c5fc207e4b89a858b886a21279df12850e378803985d5d35885466499d2209",
+  "service-envelope.pdf": "7ad949152b07dcfe6d090f5c3c27c22d74a4ed973e6b234c18986f901cc04114",
+  "transition-forecast.pdf": "589d63343b55dffad4565d558e1470b3d85c8f102c9bb60caaa0a0d9d696adf3"
+}

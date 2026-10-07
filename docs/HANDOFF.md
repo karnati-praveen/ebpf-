@@ -34,7 +34,7 @@ gate superiority or broad pipeline novelty.
 | 4 — cost model | **Measured and wired in** (endpoint + context terms) | `docs/phase4-*`, `docs/data/azure-d4-2026-09/` |
 | 5 — decision gate | **Done**: `none` / `hysteresis` / `gate` / `gate-force` | `internal/partition/decider_test.go` |
 | 6 — experiments | **Exploratory results available**: 65 real-model runs; controlled ablations remain | `results/objective-aware-2026-10-04/`, `docs/data/azure-vm-2026-10-04/` |
-| 7 — write-up | **General Elsevier working draft available**; author review and stronger evaluation pending | `docs/paper/elsevier/README.md` |
+| 7 — write-up | **Stopped IEEE working draft saved**; evaluation incomplete | `docs/publication/READINESS.md` |
 
 Not done and not needed for the VM study: proto field for several workers per
 machine (plan 2.4 — one worker per VM suffices), the `keinfer` Go launcher
