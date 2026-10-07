@@ -1,0 +1,7 @@
+{
+  "seed": 20261004,
+  "random_inputs": 10000,
+  "inequality_checks": 20000,
+  "mismatches": 0,
+  "scope": "numerical verification of derived equations; not a live controller or performance trial"
+}

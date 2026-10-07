@@ -1,0 +1,15 @@
+{
+  "layers_range": [
+    1,
+    8
+  ],
+  "maximum_absolute_difference_ms": 1.8189894035458565e-12,
+  "objective_checks": 2000,
+  "random_inputs": 1000,
+  "scope": "independent exhaustive cost evaluation; no runtime performance claim",
+  "seed": 20261004,
+  "workers_range": [
+    1,
+    4
+  ]
+}

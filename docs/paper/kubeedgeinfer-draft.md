@@ -1,5 +1,10 @@
 # KubeEdgeInfer: Measurement and Ablation of Transition-Aware Local LLM Inference
 
+Historical pilot draft. The later real-model evidence and general Elsevier
+manuscript are in [elsevier/README.md](elsevier/README.md). This file retains the
+pilot's original evidence boundary; its lack of distributed results does not
+describe the current repository.
+
 Working research draft, 4 October 2026. Author names, affiliations, venue and
 submission format remain to be supplied. The present evidence supports a
 prototype and pilot study. It does not establish distributed real-model

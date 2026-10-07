@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 bench/results/
 .venv/
+.publication-tools/
 *.o
 !internal/ebpf/tcpmon_bpfel.o
 
@@ -13,3 +14,19 @@ ppt/*.nav
 ppt/*.out
 ppt/*.snm
 ppt/*.toc
+
+# Local paper drafts and Overleaf export
+/docs/paper/elsevier/
+/overleaf-paper/
+/overleaf-paper.zip
+
+# Disposable publication bundle staging
+/dist/*bundle*/
+# Regenerable IEEE compiler intermediates
+/docs/publication/*.aux
+/docs/publication/*.log
+/docs/publication/*.blg
+/docs/publication/*.fdb_latexmk
+/docs/publication/*.fls
+/docs/publication/*.out
+/.lan-test-state/

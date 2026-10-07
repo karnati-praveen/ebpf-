@@ -55,6 +55,11 @@ type Input struct {
 	// range. When PerLayerByCtx is empty, PerLayerMs is used unchanged.
 	ContextLen    int
 	PerLayerByCtx []CtxCost
+
+	// Concurrency is the active non-speculative request count used by the
+	// capacity objective max(B, P/Q). Zero means an unknown/idle workload and
+	// uses Q=1; it never implies saturated throughput.
+	Concurrency int
 }
 
 // perLayerCost resolves the effective per-layer cost for this input, linearly
@@ -159,6 +164,7 @@ type Objective string
 const (
 	ObjectiveThroughput Objective = "throughput"
 	ObjectiveLatency    Objective = "latency"
+	ObjectiveCapacity   Objective = "capacity"
 )
 
 func (o Objective) normalized() Objective {
@@ -169,6 +175,9 @@ func (o Objective) normalized() Objective {
 }
 
 func ObjectiveCost(in Input, splits [][2]int, objective Objective) float64 {
+	if objective.normalized() == ObjectiveCapacity {
+		return math.Max(Evaluate(in, splits), EvaluatePipeline(in, splits)/float64(max(1, in.Concurrency)))
+	}
 	if objective.normalized() == ObjectiveLatency {
 		return EvaluatePipeline(in, splits)
 	}
@@ -186,6 +195,9 @@ func Optimal(in Input) (*Result, error) {
 // Zero-layer stages allow the latency planner to choose whole-model execution.
 func OptimalForObjective(in Input, objective Objective) (*Result, error) {
 	objective = objective.normalized()
+	if objective == ObjectiveCapacity {
+		return optimalCapacity(in)
+	}
 	if objective != ObjectiveLatency && objective != ObjectiveThroughput {
 		return nil, fmt.Errorf("unknown objective %q", objective)
 	}
@@ -198,6 +210,24 @@ func OptimalForObjective(in Input, objective Objective) (*Result, error) {
 	}
 	if len(in.LinkMs) != k-1 {
 		return nil, fmt.Errorf("need %d link costs, got %d", k-1, len(in.LinkMs))
+	}
+	if !finiteNonnegative(in.PerLayerMs) || !finiteNonnegative(in.EmbedMs) || !finiteNonnegative(in.HeadMs) || in.Concurrency < 0 {
+		return nil, fmt.Errorf("invalid compute costs or concurrency")
+	}
+	for _, c := range in.PerLayerByCtx {
+		if c.ContextLen < 0 || !finiteNonnegative(c.PerLayerMs) {
+			return nil, fmt.Errorf("invalid context cost")
+		}
+	}
+	for _, w := range in.Workers {
+		if !finiteNonnegative(w.Speed) {
+			return nil, fmt.Errorf("invalid worker speed")
+		}
+	}
+	for _, link := range in.LinkMs {
+		if !finiteNonnegative(link) {
+			return nil, fmt.Errorf("invalid link cost")
+		}
 	}
 
 	// f[j][w] = minimal bottleneck assigning the first j layers to the
@@ -326,6 +356,9 @@ const (
 // request from step 0 through the WHOLE chain, so every layer re-prefills the
 // context, not only the layers that moved.
 type GateParams struct {
+	// Optional sum of prompt+generated tokens over all active requests.
+	// This models serial whole-chain replay work, not overlapped makespan.
+	ReplayContextTokens    *float64
 	RemainingTokens        *float64
 	HorizonS               float64
 	TransitionFixedMs      float64
@@ -336,32 +369,38 @@ type GateParams struct {
 
 // TransitionMs is the predicted downtime of one relayout.
 func (g GateParams) TransitionMs(totalLayers int) float64 {
-	return g.TransitionFixedMs + float64(g.ContextLen)*g.PrefillMsPerTokenLayer*float64(totalLayers)
+	context := float64(g.ContextLen)
+	if g.ReplayContextTokens != nil {
+		context = *g.ReplayContextTokens
+	}
+	return g.TransitionFixedMs + context*g.PrefillMsPerTokenLayer*float64(totalLayers)
 }
 
 // Decision records one evaluated candidate move, accepted or not, with every
 // quantity the verdict used. Rejected moves are recorded too, because
 // evaluating whether a rejection was justified needs them.
 type Decision struct {
-	RemainingTokens    *float64  `json:"remaining_tokens,omitempty"`
-	Objective          Objective `json:"objective"`
-	CurrentObjectiveMs float64   `json:"current_objective_ms"`
-	OptimalObjectiveMs float64   `json:"optimal_objective_ms"`
-	Time               time.Time `json:"time"`
-	Policy             Policy    `json:"policy"`
-	Reason             string    `json:"reason"`
-	CurrentMs          float64   `json:"current_bottleneck_ms"`
-	OptimalMs          float64   `json:"optimal_bottleneck_ms"`
-	Improvement        float64   `json:"improvement_frac"`
-	TransitionMs       float64   `json:"transition_ms,omitempty"`
-	HorizonS           float64   `json:"horizon_s,omitempty"`
-	TokensStay         float64   `json:"tokens_stay,omitempty"`
-	TokensAdapt        float64   `json:"tokens_adapt,omitempty"`
-	BreakEvenS         float64   `json:"break_even_s,omitempty"`
-	GateAccepts        bool      `json:"gate_accepts"`
-	Executed           bool      `json:"executed"`
-	FromSplits         [][2]int  `json:"from_splits,omitempty"`
-	ToSplits           [][2]int  `json:"to_splits"`
+	Concurrency         int       `json:"concurrency,omitempty"`
+	ReplayContextTokens *float64  `json:"replay_context_tokens,omitempty"`
+	RemainingTokens     *float64  `json:"remaining_tokens,omitempty"`
+	Objective           Objective `json:"objective"`
+	CurrentObjectiveMs  float64   `json:"current_objective_ms"`
+	OptimalObjectiveMs  float64   `json:"optimal_objective_ms"`
+	Time                time.Time `json:"time"`
+	Policy              Policy    `json:"policy"`
+	Reason              string    `json:"reason"`
+	CurrentMs           float64   `json:"current_bottleneck_ms"`
+	OptimalMs           float64   `json:"optimal_bottleneck_ms"`
+	Improvement         float64   `json:"improvement_frac"`
+	TransitionMs        float64   `json:"transition_ms,omitempty"`
+	HorizonS            float64   `json:"horizon_s,omitempty"`
+	TokensStay          float64   `json:"tokens_stay,omitempty"`
+	TokensAdapt         float64   `json:"tokens_adapt,omitempty"`
+	BreakEvenS          float64   `json:"break_even_s,omitempty"`
+	GateAccepts         bool      `json:"gate_accepts"`
+	Executed            bool      `json:"executed"`
+	FromSplits          [][2]int  `json:"from_splits,omitempty"`
+	ToSplits            [][2]int  `json:"to_splits"`
 }
 
 // Decider decides when to adopt a new split. Recovery -- a changed worker set
@@ -401,6 +440,7 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 			from = d.current.Splits()
 		}
 		d.last = &Decision{Time: now, Policy: d.policy(), Objective: d.Objective.normalized(), Reason: "recovery-or-initial",
+			Concurrency: in.Concurrency, ReplayContextTokens: d.Gate.ReplayContextTokens,
 			OptimalObjectiveMs: ObjectiveCost(in, opt.Splits(), d.Objective),
 			OptimalMs:          opt.BottleneckMs, GateAccepts: true, Executed: true,
 			FromSplits: from, ToSplits: opt.Splits()}
@@ -414,7 +454,11 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 	currentScore := ObjectiveCost(in, curSplits, d.Objective)
 	optimalScore := ObjectiveCost(in, opt.Splits(), d.Objective)
 	keep := func() (*Result, bool, error) {
-		kept := &Result{Assignments: d.current.Assignments, BottleneckMs: currentCost,
+		assignments := append([]Assignment(nil), d.current.Assignments...)
+		for i := range assignments {
+			assignments[i].Worker = in.Workers[i]
+		}
+		kept := &Result{Assignments: assignments, BottleneckMs: currentCost,
 			PipelineMs: EvaluatePipeline(in, curSplits)}
 		d.current = kept
 		return kept, false, nil
@@ -424,6 +468,7 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 	}
 
 	dec := &Decision{Time: now, Policy: d.policy(), CurrentMs: currentCost,
+		Concurrency: in.Concurrency, ReplayContextTokens: d.Gate.ReplayContextTokens,
 		Objective: d.Objective.normalized(), CurrentObjectiveMs: currentScore, OptimalObjectiveMs: optimalScore,
 		OptimalMs: opt.BottleneckMs, Improvement: (currentScore - optimalScore) / currentScore,
 		FromSplits: curSplits, ToSplits: opt.Splits()}

@@ -1,0 +1,7 @@
+usage: local_publication.py [-h] --out OUT [--model MODEL]
+                            [--repetitions REPETITIONS]
+                            [--concurrency CONCURRENCY] [--contexts CONTEXTS]
+                            [--tokens TOKENS] [--requests REQUESTS]
+                            [--seed SEED] [--base-port BASE_PORT]
+                            [--modes MODES] [--resume]
+local_publication.py: error: resume environment differs from the recorded package/CPU configuration

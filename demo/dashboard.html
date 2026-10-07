@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KubeEdgeInfer — live</title>
+<title>Shardwise — live pipeline</title>
 <style>
   :root {
     color-scheme: light;
@@ -106,7 +106,7 @@
 <body>
   <div class="topbar">
     <span id="conn" class="dot"></span>
-    <h1>KubeEdgeInfer — live pipeline</h1>
+    <h1>Shardwise — live pipeline</h1>
     <span id="updated" style="font-size:11px;color:var(--muted)"></span>
     <span id="err"></span>
     <span class="spacer"></span>
@@ -115,7 +115,10 @@
     <select id="faultNode" title="node to overheat"></select>
     <button id="inject" title="Pins the node's simulated temperature at 92°C until cleared">Inject heat (92°C)</button>
     <button id="clearFault" title="Removes the pin; temperature then cools over ~20s and layers rebalance after the cooldown">Clear fault</button>
+    <button id="stopWorker" hidden>Stop selected worker</button>
+    <button id="restoreWorker" hidden>Restore selected worker</button>
   </div>
+  <div id="demoMode" class="panel" hidden></div>
 
   <div class="cards">
     <div class="card"><div class="label">Generation</div><div class="value" id="gen">–</div><div class="sub">repartitions applied</div></div>
@@ -123,6 +126,7 @@
     <div class="card"><div class="label">Tokens / sec</div><div class="value" id="tps">–</div><div class="sub">last 12s · <span id="tpsAvg">–</span> avg</div></div>
     <div class="card"><div class="label">TTFT</div><div class="value" id="ttft">–</div><div class="sub">ms, last 12s · <span id="ttftAvg">–</span> avg</div></div>
     <div class="card"><div class="label">Requests</div><div class="value" id="reqs">–</div><div class="sub"><span id="replays">0</span> replays · <span id="errs">0</span> errors</div></div>
+    <div class="card"><div class="label">Active requests</div><div class="value" id="activeRequests">–</div><div class="sub"><span id="remainingTokens">–</span> output tokens remaining</div></div>
   </div>
 
   <div class="panel">
@@ -145,13 +149,23 @@
 
   <div class="grid2">
     <div class="panel">
-      <h2>eBPF flows (sRTT into worker ports)</h2>
+      <h2>Network telemetry (source → destination)</h2>
       <table><thead><tr><th>src → dst</th><th>port</th><th>sRTT</th><th>throughput</th></tr></thead>
       <tbody id="flows"></tbody></table>
     </div>
     <div class="panel">
       <h2>Events</h2>
       <div id="log"></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h2>Placement decisions</h2>
+      <table><thead><tr><th>Verdict</th><th>Objective</th><th>Forecast disruption</th><th>Move</th></tr></thead><tbody id="decisions"></tbody></table>
+    </div>
+    <div class="panel">
+      <h2>Recovered requests</h2>
+      <table><thead><tr><th>Generation</th><th>After token</th><th>Measured disruption</th><th>Replay compute</th></tr></thead><tbody id="transitions"></tbody></table>
     </div>
   </div>
 
@@ -168,6 +182,20 @@ function workerColor(name) {
 }
 
 let lastGen = null, lastPhase = null, throttledPrev = {};
+let demoToken = null;
+async function initDemo() {
+  try {
+    const demo = await j("/api/demo");
+    if (!demo.desktop) return;
+    demoToken = demo.token;
+    $("demoMode").hidden = false;
+    $("demoMode").textContent = "Local simulation · real controller and gRPC · simulated compute and temperature · eBPF off";
+    $("stopWorker").hidden = $("restoreWorker").hidden = false;
+    $("faultNode").replaceChildren(...demo.workers.map(worker => {
+      const option = document.createElement("option"); option.textContent = worker.name; return option;
+    }));
+  } catch (error) { logEvent("Demo metadata unavailable: " + error.message); }
+}
 function logEvent(msg) {
   const row = document.createElement("div");
   const t = new Date().toTimeString().slice(0, 8);
@@ -287,9 +315,10 @@ function renderFlows(state) {
 
 async function tick() {
   // allSettled: one slow/failing endpoint must not freeze the other panels.
-  const [pipeline, stats, metrics, state] = await Promise.allSettled([
+  const [pipeline, stats, metrics, state, workload, transitions] = await Promise.allSettled([
     j("/api/router/pipeline"), j("/api/router/stats"),
     j("/api/router/metrics"), j("/api/ctrl/state"),
+    j("/api/router/workload"), j("/api/router/transitions"),
   ]).then(rs => rs.map(r => r.status === "fulfilled" ? r.value : null));
 
   const failed = [pipeline, stats, metrics, state].filter(v => v === null).length;
@@ -310,7 +339,24 @@ async function tick() {
       ? (1000 * (metrics.tokens / metrics.requests) / metrics.avg_duration_ms).toFixed(2) : "–";
     $("ttftAvg").textContent = metrics.avg_ttft_ms ? metrics.avg_ttft_ms.toFixed(0) : "–";
   }
+  if (workload) {
+    $("activeRequests").textContent = workload.active_requests;
+    $("remainingTokens").textContent = workload.remaining_tokens;
+  }
+  function rows(target, values) {
+    $(target).replaceChildren(...values.map(cells => {
+      const row = document.createElement("tr");
+      for (const value of cells) { const cell = document.createElement("td"); cell.textContent = value; row.appendChild(cell); }
+      return row;
+    }));
+  }
+  if (transitions) rows("transitions", transitions.events.slice(-5).reverse().map(event => [
+    event.generation, event.after_tokens, event.disruption_ms.toFixed(0) + " ms", event.reconstruct_ms.toFixed(0) + " ms"]));
   if (state) {
+    rows("decisions", (state.decisions || []).slice(-5).reverse().map(decision => [
+      decision.reason, decision.objective,
+      decision.transition_ms === undefined ? "—" : decision.transition_ms.toFixed(0) + " ms",
+      decision.executed ? "applied" : "held"]));
     $("gen").textContent = state.generation ?? "–";
     $("bneck").textContent = state.bottleneck_ms ? state.bottleneck_ms.toFixed(0) : "–";
     if (state.last_error && state.last_error !== lastPhase) logEvent(`✗ controller: ${state.last_error}`);
@@ -329,7 +375,14 @@ async function tick() {
 }
 
 $("loadToggle").onchange = e =>
-  fetch("/api/load", { method: "POST", body: JSON.stringify({ on: e.target.checked }) });
+  j2("/api/load", { on: e.target.checked });
+async function workerAction(on) {
+  const node = $("faultNode").value;
+  const result = await j2("/api/worker", { node, on });
+  logEvent(result.error ? result.error : `${node} ${on ? "restored" : "stopped"}`);
+}
+$("stopWorker").onclick = () => workerAction(false);
+$("restoreWorker").onclick = () => workerAction(true);
 $("inject").onclick = async () => {
   const node = $("faultNode").value;
   const r = await j2("/api/fault", { node, temp_c: 92 });
@@ -344,13 +397,15 @@ $("clearFault").onclick = async () => {
 };
 async function j2(url, body) {
   try {
-    const r = await fetch(url, { method: "POST", body: JSON.stringify(body) });
+    const headers = { "Content-Type": "application/json" };
+    if (demoToken) headers["X-Demo-Token"] = demoToken;
+    const r = await fetch(url, { method: "POST", headers, body: JSON.stringify(body) });
     return await r.json();
   } catch (e) { return { error: e.message }; }
 }
 
 logEvent("dashboard started");
-tick();
+initDemo().then(tick);
 setInterval(tick, 2000);
 </script>
 </body>

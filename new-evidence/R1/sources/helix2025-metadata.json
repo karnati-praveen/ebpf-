@@ -1,0 +1,763 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        29
+      ]
+    ],
+    "date-time": "2026-09-29T16:50:32Z",
+    "timestamp": 1790700632764,
+    "version": "4.1.0"
+  },
+  "publisher-location": "New York, NY, USA",
+  "reference-count": 65,
+  "publisher": "ACM",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2025,
+            3,
+            30
+          ]
+        ],
+        "date-time": "2025-03-30T00:00:00Z",
+        "timestamp": 1743292800000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "funder": [
+    {
+      "DOI": "10.13039/501100006374",
+      "name": "National Science Foundation",
+      "doi-asserted-by": "publisher",
+      "award": [
+        "CNS-2147909,CNS-2211882,CNS-2239351"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "CNS-2147909,CNS-2211882,CNS-2239351"
+          ]
+        }
+      ],
+      "id": [
+        {
+          "id": "10.13039/501100006374",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    },
+    {
+      "name": "Amazon"
+    },
+    {
+      "name": "Google Cloud Innovator Program"
+    },
+    {
+      "name": "Sloan Foundation Fellowship"
+    },
+    {
+      "name": "VMware Systems Research Award"
+    },
+    {
+      "DOI": "10.13039/501100006374",
+      "name": "Meta",
+      "doi-asserted-by": "publisher",
+      "id": [
+        {
+          "id": "10.13039/501100006374",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "dl.acm.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2025,
+        3,
+        30
+      ]
+    ]
+  },
+  "DOI": "10.1145/3669940.3707215",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2025,
+        2,
+        6
+      ]
+    ],
+    "date-time": "2025-02-06T12:28:01Z",
+    "timestamp": 1738844881000
+  },
+  "page": "586-602",
+  "update-policy": "https://doi.org/10.1145/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 37,
+  "title": [
+    "Helix: Serving Large Language Models over Heterogeneous GPUs and Network via Max-Flow"
+  ],
+  "prefix": "10.1145",
+  "author": [
+    {
+      "ORCID": "https://orcid.org/0009-0003-5781-9164",
+      "authenticated-orcid": false,
+      "given": "Yixuan",
+      "family": "Mei",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Carnegie Mellon University, Pittsburgh, PA, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0001-8969-7478",
+      "authenticated-orcid": false,
+      "given": "Yonghao",
+      "family": "Zhuang",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Carnegie Mellon University, Pittsburgh, PA, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-9371-8358",
+      "authenticated-orcid": false,
+      "given": "Xupeng",
+      "family": "Miao",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Carnegie Mellon University, Pittsburgh, PA, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-0412-1139",
+      "authenticated-orcid": false,
+      "given": "Juncheng",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Carnegie Mellon University, Pittsburgh, PA, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-1270-5185",
+      "authenticated-orcid": false,
+      "given": "Zhihao",
+      "family": "Jia",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Carnegie Mellon University, Pittsburgh, PA, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-2227-7460",
+      "authenticated-orcid": false,
+      "given": "Rashmi",
+      "family": "Vinayak",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Carnegie Mellon University, Pittsburgh, PA, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "320",
+  "published-online": {
+    "date-parts": [
+      [
+        2025,
+        3,
+        30
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "e_1_3_2_1_1_1",
+      "volume-title": "Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anadkat, et al. Gpt-4 technical report. arXiv preprint arXiv:2303.08774",
+      "author": "Achiam Josh",
+      "year": "2023",
+      "unstructured": "Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Florencia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anadkat, et al. Gpt-4 technical report. arXiv preprint arXiv:2303.08774, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_2_1",
+      "volume-title": "Sarathi: Efficient llm inference by piggybacking decodes with chunked prefills. arXiv preprint arXiv:2308.16369",
+      "author": "Agrawal Amey",
+      "year": "2023",
+      "unstructured": "Amey Agrawal, Ashish Panwar, Jayashree Mohan, Nipun Kwatra, Bhargav S Gulavani, and Ramachandran Ramjee. Sarathi: Efficient llm inference by piggybacking decodes with chunked prefills. arXiv preprint arXiv:2308.16369, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_3_1",
+      "volume-title": "Gqa: Training generalized multiquery transformer models from multi-head checkpoints. arXiv preprint arXiv:2305.13245",
+      "author": "Ainslie Joshua",
+      "year": "2023",
+      "unstructured": "Joshua Ainslie, James Lee-Thorp, Michiel de Jong, Yury Zemlyanskiy, Federico Lebr\u00f3n, and Sumit Sanghai. Gqa: Training generalized multiquery transformer models from multi-head checkpoints. arXiv preprint arXiv:2305.13245, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_4_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TPDS.2004.1264795"
+    },
+    {
+      "key": "e_1_3_2_1_5_1",
+      "volume-title": "Petals: Collaborative inference and fine-tuning of large models. arXiv preprint arXiv:2209.01188",
+      "author": "Borzunov Alexander",
+      "year": "2022",
+      "unstructured": "Alexander Borzunov, Dmitry Baranchuk, Tim Dettmers, Max Ryabinin, Younes Belkada, Artem Chumachenko, Pavel Samygin, and Colin Raffel. Petals: Collaborative inference and fine-tuning of large models. arXiv preprint arXiv:2209.01188, 2022."
+    },
+    {
+      "key": "e_1_3_2_1_6_1",
+      "first-page": "36",
+      "article-title": "Distributed inference and fine-tuning of large language models over the internet",
+      "author": "Borzunov Alexander",
+      "year": "2024",
+      "unstructured": "Alexander Borzunov, Max Ryabinin, Artem Chumachenko, Dmitry Baranchuk, Tim Dettmers, Younes Belkada, Pavel Samygin, and Colin A Raffel. Distributed inference and fine-tuning of large language models over the internet. Advances in Neural Information Processing Systems, 36, 2024.",
+      "journal-title": "Advances in Neural Information Processing Systems"
+    },
+    {
+      "key": "e_1_3_2_1_7_1",
+      "volume-title": "Language models are few-shot learners. Advances in neural information processing systems, 33:1877--1901",
+      "author": "Brown Tom",
+      "year": "2020",
+      "unstructured": "Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Language models are few-shot learners. Advances in neural information processing systems, 33:1877--1901, 2020."
+    },
+    {
+      "key": "e_1_3_2_1_8_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1137/0218072"
+    },
+    {
+      "key": "e_1_3_2_1_9_1",
+      "first-page": "7879",
+      "article-title": "Distributed deep learning in open collaborations",
+      "volume": "34",
+      "author": "Diskin Michael",
+      "year": "2021",
+      "unstructured": "Michael Diskin, Alexey Bukhtiyarov, Max Ryabinin, Lucile Saulnier, Anton Sinitsin, Dmitry Popov, Dmitry V Pyrkin, Maxim Kashirin, Alexander Borzunov, Albert Villanova del Moral, et al. Distributed deep learning in open collaborations. Advances in Neural Information Processing Systems, 34:7879--7897, 2021.",
+      "journal-title": "Advances in Neural Information Processing Systems"
+    },
+    {
+      "key": "e_1_3_2_1_10_1",
+      "volume-title": "The llama 3 herd of models. arXiv preprint arXiv:2407.21783",
+      "author": "Dubey Abhimanyu",
+      "year": "2024",
+      "unstructured": "Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Amy Yang, Angela Fan, et al. The llama 3 herd of models. arXiv preprint arXiv:2407.21783, 2024."
+    },
+    {
+      "key": "e_1_3_2_1_11_1",
+      "volume-title": "Google cloud compute products. https://cloud.google.com/products/compute",
+      "author": "Cloud Google",
+      "year": "2024",
+      "unstructured": "Google Cloud. Google cloud compute products. https://cloud.google.com/products/compute, 2024. Accessed: 2024-03--13."
+    },
+    {
+      "key": "e_1_3_2_1_12_1",
+      "volume-title": "Cost efficient large language model serving by exploiting gpu heterogeneity. arXiv preprint arXiv:2404.14527",
+      "author": "Griggs Tyler",
+      "year": "2024",
+      "unstructured": "Tyler Griggs, Xiaoxuan Liu, Jiaxiang Yu, Doyoung Kim, Wei-Lin Chiang, Alvin Cheung, and Ion Stoica. M\\'elange: Cost efficient large language model serving by exploiting gpu heterogeneity. arXiv preprint arXiv:2404.14527, 2024."
+    },
+    {
+      "key": "e_1_3_2_1_13_1",
+      "first-page": "443",
+      "volume-title": "14th USENIX Symposium on Operating Systems Design and Implementation (OSDI 20)",
+      "author": "Gujarati Arpan",
+      "year": "2020",
+      "unstructured": "Arpan Gujarati, Reza Karimi, Safya Alzayat, Wei Hao, Antoine Kaufmann, Ymir Vigfusson, and Jonathan Mace. Serving {DNNs} like clockwork: Performance predictability from the bottom up. In 14th USENIX Symposium on Operating Systems Design and Implementation (OSDI 20), pages 443--462, 2020."
+    },
+    {
+      "key": "e_1_3_2_1_14_1",
+      "volume-title": "Gurobi Optimizer Reference Manual",
+      "author": "Optimization Gurobi",
+      "year": "2023",
+      "unstructured": "Gurobi Optimization, LLC. Gurobi Optimizer Reference Manual, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_15_1",
+      "volume-title": "Zijuan Lin, Liyang Zhou, et al. Metagpt: Meta programming for multi-agent collaborative framework. arXiv preprint arXiv:2308.00352",
+      "author": "Hong Sirui",
+      "year": "2023",
+      "unstructured": "Sirui Hong, Xiawu Zheng, Jonathan Chen, Yuheng Cheng, JinlinWang, Ceyao Zhang, Zili Wang, Steven Ka Shing Yau, Zijuan Lin, Liyang Zhou, et al. Metagpt: Meta programming for multi-agent collaborative framework. arXiv preprint arXiv:2308.00352, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_16_1",
+      "first-page": "629",
+      "volume-title": "14th USENIX Symposium on Networked Systems Design and Implementation (NSDI 17)",
+      "author": "Hsieh Kevin",
+      "year": "2017",
+      "unstructured": "Kevin Hsieh, Aaron Harlap, Nandita Vijaykumar, Dimitris Konomis, Gregory R Ganger, Phillip B Gibbons, and Onur Mutlu. Gaia:{Geo-Distributed} machine learning approaching {LAN} speeds. In 14th USENIX Symposium on Networked Systems Design and Implementation (NSDI 17), pages 629--647, 2017."
+    },
+    {
+      "key": "e_1_3_2_1_17_1",
+      "volume-title": "et al. Gpipe: Efficient training of giant neural networks using pipeline parallelism. Advances in neural information processing systems, 32",
+      "author": "Huang Yanping",
+      "year": "2019",
+      "unstructured": "Yanping Huang, Youlong Cheng, Ankur Bapna, Orhan Firat, Dehao Chen, Mia Chen, HyoukJoong Lee, Jiquan Ngiam, Quoc V Le, Yonghui Wu, et al. Gpipe: Efficient training of giant neural networks using pipeline parallelism. Advances in neural information processing systems, 32, 2019."
+    },
+    {
+      "key": "e_1_3_2_1_18_1",
+      "first-page": "673",
+      "volume-title": "2022 USENIX Annual Technical Conference (USENIX ATC 22)",
+      "author": "Jia Xianyan",
+      "year": "2022",
+      "unstructured": "Xianyan Jia, Le Jiang, Ang Wang, Wencong Xiao, Ziji Shi, Jie Zhang, Xinyuan Li, Langshi Chen, Yong Li, Zhen Zheng, et al. Whale: Efficient giant model training over heterogeneous {GPUs}. In 2022 USENIX Annual Technical Conference (USENIX ATC 22), pages 673--688, 2022."
+    },
+    {
+      "key": "e_1_3_2_1_19_1",
+      "volume-title": "Forty-first International Conference on Machine Learning",
+      "author": "Jiang Youhe",
+      "year": "2024",
+      "unstructured": "Youhe Jiang, Ran Yan, Xiaozhe Yao, Yang Zhou, Beidi Chen, and Binhang Yuan. Hexgen: Generative inference of large language model over heterogeneous environment. In Forty-first International Conference on Machine Learning, 2024."
+    },
+    {
+      "key": "e_1_3_2_1_20_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3341301.3359654"
+    },
+    {
+      "key": "e_1_3_2_1_21_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JSAIT.2020.2983165"
+    },
+    {
+      "key": "e_1_3_2_1_22_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3600006.3613165"
+    },
+    {
+      "key": "e_1_3_2_1_23_1",
+      "first-page": "19274",
+      "volume-title": "International Conference on Machine Learning",
+      "author": "Leviathan Yaniv",
+      "year": "2023",
+      "unstructured": "Yaniv Leviathan, Matan Kalman, and Yossi Matias. Fast inference from transformers via speculative decoding. In International Conference on Machine Learning, pages 19274--19286. PMLR, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_24_1",
+      "first-page": "663",
+      "volume-title": "17th USENIX Symposium on Operating Systems Design and Implementation (OSDI 23)",
+      "author": "Li Zhuohan",
+      "year": "2023",
+      "unstructured": "Zhuohan Li, Lianmin Zheng, Yinmin Zhong, Vincent Liu, Ying Sheng, Xin Jin, Yanping Huang, Zhifeng Chen, Hao Zhang, Joseph E Gonzalez, et al. {AlpaServe}: Statistical multiplexing with model parallelism for deep learning serving. In 17th USENIX Symposium on Operating Systems Design and Implementation (OSDI 23), pages 663--679, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_25_1",
+      "volume-title": "Energy aware scheduling. https://docs.kernel.org/scheduler/sched-energy.html",
+      "author": "Documentation Linux Kernel",
+      "year": "2024",
+      "unstructured": "Linux Kernel Documentation. Energy aware scheduling. https://docs.kernel.org/scheduler/sched-energy.html, 2024. Linux Kernel Documentation."
+    },
+    {
+      "key": "e_1_3_2_1_26_1",
+      "volume-title": "Wizardcoder: Empowering code large language models with evol-instruct. arXiv preprint arXiv:2306.08568",
+      "author": "Luo Ziyang",
+      "year": "2023",
+      "unstructured": "Ziyang Luo, Can Xu, Pu Zhao, Qingfeng Sun, Xiubo Geng, Wenxiang Hu, Chongyang Tao, Jing Ma, Qingwei Lin, and Daxin Jiang. Wizardcoder: Empowering code large language models with evol-instruct. arXiv preprint arXiv:2306.08568, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_27_1",
+      "volume-title": "Realhf: Optimized rlhf training for large language models through parameter reallocation",
+      "author": "Mei Zhiyu",
+      "year": "2024",
+      "unstructured": "Zhiyu Mei, Wei Fu, Kaiwei Li, Guangju Wang, Huanchen Zhang, and Yi Wu. Realhf: Optimized rlhf training for large language models through parameter reallocation, 2024."
+    },
+    {
+      "key": "e_1_3_2_1_28_1",
+      "unstructured": "Meta. Introducing Meta Llama 3: The most capable openly available LLM to date - ai.meta.com. https://ai.meta.com/blog/meta-llama-3/. [Accessed 07-05--2024]."
+    },
+    {
+      "key": "e_1_3_2_1_29_1",
+      "volume-title": "Towards efficient generative large language model serving: A survey from algorithms to systems. arXiv preprint arXiv:2312.15234",
+      "author": "Miao Xupeng",
+      "year": "2023",
+      "unstructured": "Xupeng Miao, Gabriele Oliaro, Zhihao Zhang, Xinhao Cheng, Hongyi Jin, Tianqi Chen, and Zhihao Jia. Towards efficient generative large language model serving: A survey from algorithms to systems. arXiv preprint arXiv:2312.15234, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_30_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3620666.3651335"
+    },
+    {
+      "key": "e_1_3_2_1_31_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ICDCS47774.2020.00024"
+    },
+    {
+      "key": "e_1_3_2_1_32_1",
+      "unstructured": "NVIDIA. NVIDIA A100 Tensor Core GPU. https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-us-nvidia-1758950-r4-web.pdf. Accessed: 2024--10--28."
+    },
+    {
+      "key": "e_1_3_2_1_33_1",
+      "unstructured": "NVIDIA. NVIDIA H100 Tensor Core GPU. https://resources.nvidia. com/en-us-tensor-core/nvidia-tensor-core-gpu-datasheet. Accessed: 2024--10--28."
+    },
+    {
+      "key": "e_1_3_2_1_34_1",
+      "unstructured": "NVIDIA. NVIDIA L4 Tensor Core GPU. https://resources.nvidia.com/en-us-data-center-overview/l4-gpu-datasheet. Accessed: 2024--10--28."
+    },
+    {
+      "key": "e_1_3_2_1_35_1",
+      "unstructured": "NVIDIA. NVIDIA T4 Tensor Core GPU. https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-t4/t4-tensor-coredatasheet- 951643.pdf. Accessed: 2024--10--28."
+    },
+    {
+      "key": "e_1_3_2_1_36_1",
+      "unstructured": "NVIDIA. Triton Inference Server."
+    },
+    {
+      "key": "e_1_3_2_1_37_1",
+      "volume-title": "Flexible, high-performance ml serving. arXiv preprint arXiv:1712.06139",
+      "author": "Olston Christopher",
+      "year": "2017",
+      "unstructured": "Christopher Olston, Noah Fiedel, Kiril Gorovoy, Jeremiah Harmsen, Li Lao, Fangwei Li, Vinu Rajashekhar, Sukriti Ramesh, and Jordan Soyke. Tensorflow-serving: Flexible, high-performance ml serving. arXiv preprint arXiv:1712.06139, 2017."
+    },
+    {
+      "key": "e_1_3_2_1_38_1",
+      "unstructured": "OpenAI. ChatGPT 2023."
+    },
+    {
+      "key": "e_1_3_2_1_39_1",
+      "first-page": "307",
+      "volume-title": "2020 USENIX Annual Technical Conference (USENIX ATC 20)",
+      "author": "Park Jay H",
+      "year": "2020",
+      "unstructured": "Jay H Park, Gyeongchan Yun, M Yi Chang, Nguyen T Nguyen, Seungmin Lee, Jaesik Choi, Sam H Noh, and Young-ri Choi. {HetPipe}: Enabling large {DNN} training on (whimpy) heterogeneous {GPU} clusters through integration of pipelined model parallelism and data parallelism. In 2020 USENIX Annual Technical Conference (USENIX ATC 20), pages 307--321, 2020."
+    },
+    {
+      "key": "e_1_3_2_1_40_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ISCA59077.2024.00019"
+    },
+    {
+      "key": "e_1_3_2_1_41_1",
+      "first-page": "5",
+      "article-title": "Efficiently scaling transformer inference",
+      "author": "Pope Reiner",
+      "year": "2023",
+      "unstructured": "Reiner Pope, Sholto Douglas, Aakanksha Chowdhery, Jacob Devlin, James Bradbury, Jonathan Heek, Kefan Xiao, Shivani Agrawal, and Jeff Dean. Efficiently scaling transformer inference. Proceedings of Machine Learning and Systems, 5, 2023.",
+      "journal-title": "Proceedings of Machine Learning and Systems"
+    },
+    {
+      "issue": "8",
+      "key": "e_1_3_2_1_42_1",
+      "first-page": "9",
+      "article-title": "Language models are unsupervised multitask learners",
+      "volume": "1",
+      "author": "Radford Alec",
+      "year": "2019",
+      "unstructured": "Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever, et al. Language models are unsupervised multitask learners. OpenAI blog, 1(8):9, 2019.",
+      "journal-title": "OpenAI blog"
+    },
+    {
+      "key": "e_1_3_2_1_43_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.5555/795691.797927"
+    },
+    {
+      "key": "e_1_3_2_1_44_1",
+      "volume-title": "Yossi Adi, Jingyu Liu, Tal Remez, J\u00e9r\u00e9my Rapin, et al. Code llama: Open foundation models for code. arXiv preprint arXiv:2308.12950",
+      "author": "Roziere Baptiste",
+      "year": "2023",
+      "unstructured": "Baptiste Roziere, Jonas Gehring, Fabian Gloeckle, Sten Sootla, Itai Gat, Xiaoqing Ellen Tan, Yossi Adi, Jingyu Liu, Tal Remez, J\u00e9r\u00e9my Rapin, et al. Code llama: Open foundation models for code. arXiv preprint arXiv:2308.12950, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_45_1",
+      "first-page": "29416",
+      "volume-title": "International Conference on Machine Learning",
+      "author": "Ryabinin Max",
+      "year": "2023",
+      "unstructured": "Max Ryabinin, Tim Dettmers, Michael Diskin, and Alexander Borzunov. Swarm parallelism: Training large models can be surprisingly communication-efficient. In International Conference on Machine Learning, pages 29416--29440. PMLR, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_46_1",
+      "first-page": "3659",
+      "article-title": "Towards crowdsourced training of large neural networks using decentralized mixture-of-experts",
+      "volume": "33",
+      "author": "Ryabinin Max",
+      "year": "2020",
+      "unstructured": "Max Ryabinin and Anton Gusev. Towards crowdsourced training of large neural networks using decentralized mixture-of-experts. Advances in Neural Information Processing Systems, 33:3659--3672, 2020.",
+      "journal-title": "Advances in Neural Information Processing Systems"
+    },
+    {
+      "key": "e_1_3_2_1_47_1",
+      "volume-title": "Fast transformer decoding: One write-head is all you need. arXiv preprint arXiv:1911.02150",
+      "author": "Shazeer Noam",
+      "year": "2019",
+      "unstructured": "Noam Shazeer. Fast transformer decoding: One write-head is all you need. arXiv preprint arXiv:1911.02150, 2019."
+    },
+    {
+      "key": "e_1_3_2_1_48_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3341301.3359658"
+    },
+    {
+      "key": "e_1_3_2_1_49_1",
+      "volume-title": "Megatron-lm: Training multibillion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053",
+      "author": "Shoeybi Mohammad",
+      "year": "2019",
+      "unstructured": "Mohammad Shoeybi, Mostofa Patwary, Raul Puri, Patrick LeGresley, Jared Casper, and Bryan Catanzaro. Megatron-lm: Training multibillion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053, 2019."
+    },
+    {
+      "key": "e_1_3_2_1_50_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3642970.3655843"
+    },
+    {
+      "key": "e_1_3_2_1_51_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1587/transcom.2021ITI0001"
+    },
+    {
+      "key": "e_1_3_2_1_52_1",
+      "volume-title": "ZeroMQ An open-source universal messaging library",
+      "author": "The",
+      "year": "2024",
+      "unstructured": "The ZeroMQ authors. ZeroMQ An open-source universal messaging library, 2024."
+    },
+    {
+      "key": "e_1_3_2_1_53_1",
+      "first-page": "497",
+      "volume-title": "20th USENIX Symposium on Networked Systems Design and Implementation (NSDI 23)",
+      "author": "Thorpe John",
+      "year": "2023",
+      "unstructured": "John Thorpe, Pengzhan Zhao, Jonathan Eyolfson, Yifan Qiao, Zhihao Jia, Minjia Zhang, Ravi Netravali, and Guoqing Harry Xu. Bamboo: Making preemptible instances resilient for affordable training of large DNNs. In 20th USENIX Symposium on Networked Systems Design and Implementation (NSDI 23), pages 497--513, Boston, MA, April 2023. USENIX Association."
+    },
+    {
+      "key": "e_1_3_2_1_54_1",
+      "volume-title": "Performanceeffective and low-complexity task scheduling for heterogeneous computing",
+      "author": "Topcuoglu Haluk",
+      "year": "2002",
+      "unstructured": "Haluk Topcuoglu, Salim Hariri, and Min-You Wu. Performanceeffective and low-complexity task scheduling for heterogeneous computing. IEEE transactions on parallel and distributed systems, 13(3):260--274, 2002."
+    },
+    {
+      "key": "e_1_3_2_1_55_1",
+      "volume-title": "et al. Llama: Open and efficient foundation language models. arXiv preprint arXiv:2302.13971",
+      "author": "Touvron Hugo",
+      "year": "2023",
+      "unstructured": "Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timoth\u00e9e Lacroix, Baptiste Rozi\u00e8re, Naman Goyal, Eric Hambro, Faisal Azhar, et al. Llama: Open and efficient foundation language models. arXiv preprint arXiv:2302.13971, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_56_1",
+      "volume-title": "Llama 2: Open foundation and finetuned chat models. arXiv preprint arXiv:2307.09288",
+      "author": "Touvron Hugo",
+      "year": "2023",
+      "unstructured": "Hugo Touvron, Louis Martin, Kevin Stone, Peter Albert, Amjad Almahairi, Yasmine Babaei, Nikolay Bashlykov, Soumya Batra, Prajjwal Bhargava, Shruti Bhosale, et al. Llama 2: Open foundation and finetuned chat models. arXiv preprint arXiv:2307.09288, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_57_1",
+      "first-page": "36058",
+      "volume-title": "International Conference on Machine Learning",
+      "author": "Wang Jue",
+      "year": "2023",
+      "unstructured": "Jue Wang, Yucheng Lu, Binhang Yuan, Beidi Chen, Percy Liang, Christopher De Sa, Christopher Re, and Ce Zhang. Cocktailsgd: Finetuning foundation models over 500mbps networks. In International Conference on Machine Learning, pages 36058--36076. PMLR, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_58_1",
+      "first-page": "69",
+      "volume-title": "20th USENIX Symposium on Networked Systems Design and Implementation (NSDI 23)",
+      "author": "Zhang Zili",
+      "year": "2023",
+      "unstructured": "BingyangWu, Zili Zhang, Zhihao Bai, Xuanzhe Liu, and Xin Jin. Transparent {GPU} sharing in container clouds for deep learning workloads. In 20th USENIX Symposium on Networked Systems Design and Implementation (NSDI 23), pages 69--85, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_59_1",
+      "unstructured": "x.ai. Annocing grok."
+    },
+    {
+      "key": "e_1_3_2_1_60_1",
+      "first-page": "437",
+      "volume-title": "20th USENIX Symposium on Networked Systems Design and Implementation (NSDI 23)",
+      "author": "Yang Zongheng",
+      "year": "2023",
+      "unstructured": "Zongheng Yang, Zhanghao Wu, Michael Luo, Wei-Lin Chiang, Romil Bhardwaj, Woosuk Kwon, Siyuan Zhuang, Frank Sifei Luan, Gautam Mittal, Scott Shenker, et al. {SkyPilot}: An intercloud broker for sky computing. In 20th USENIX Symposium on Networked Systems Design and Implementation (NSDI 23), pages 437--455, 2023."
+    },
+    {
+      "key": "e_1_3_2_1_61_1",
+      "first-page": "521",
+      "volume-title": "16th USENIX Symposium on Operating Systems Design and Implementation (OSDI 22)",
+      "author": "Yu Gyeong-In",
+      "year": "2022",
+      "unstructured": "Gyeong-In Yu, Joo Seong Jeong, Geon-Woo Kim, Soojeong Kim, and Byung-Gon Chun. Orca: A distributed serving system for {Transformer-Based} generative models. In 16th USENIX Symposium on Operating Systems Design and Implementation (OSDI 22), pages 521--538, 2022."
+    },
+    {
+      "key": "e_1_3_2_1_62_1",
+      "first-page": "25464",
+      "article-title": "Decentralized training of foundation models in heterogeneous environments",
+      "volume": "35",
+      "author": "Yuan Binhang",
+      "year": "2022",
+      "unstructured": "Binhang Yuan, Yongjun He, Jared Davis, Tianyi Zhang, Tri Dao, Beidi Chen, Percy S Liang, Christopher Re, and Ce Zhang. Decentralized training of foundation models in heterogeneous environments. Advances in Neural Information Processing Systems, 35:25464--25477, 2022.",
+      "journal-title": "Advances in Neural Information Processing Systems"
+    },
+    {
+      "key": "e_1_3_2_1_63_1",
+      "first-page": "1049",
+      "volume-title": "2019 USENIX Annual Technical Conference (USENIX ATC 19)",
+      "author": "Zhang Chengliang",
+      "year": "2019",
+      "unstructured": "Chengliang Zhang, Minchen Yu, Wei Wang, and Feng Yan. {MArk}: Exploiting cloud services for {Cost-Effective},{SLO-Aware} machine learning inference serving. In 2019 USENIX Annual Technical Conference (USENIX ATC 19), pages 1049--1062, 2019."
+    },
+    {
+      "key": "e_1_3_2_1_64_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3627703.3629580"
+    },
+    {
+      "key": "e_1_3_2_1_65_1",
+      "first-page": "193",
+      "volume-title": "18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)",
+      "author": "Zhong Yinmin",
+      "year": "2024",
+      "unstructured": "Yinmin Zhong, Shengyu Liu, Junda Chen, Jianbo Hu, Yibo Zhu, Xuanzhe Liu, Xin Jin, and Hao Zhang. {DistServe}: Disaggregating prefill and decoding for goodput-optimized large language model serving. In 18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24), pages 193--210, 2024."
+    }
+  ],
+  "event": {
+    "name": "ASPLOS '25: 30th ACM International Conference on Architectural Support for Programming Languages and Operating Systems",
+    "location": "Rotterdam Netherlands",
+    "acronym": "ASPLOS '25",
+    "sponsor": [
+      "SIGPLAN ACM Special Interest Group on Programming Languages",
+      "SIGOPS ACM Special Interest Group on Operating Systems",
+      "SIGARCH ACM Special Interest Group on Computer Architecture"
+    ]
+  },
+  "container-title": [
+    "Proceedings of the 30th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 1"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://dl.acm.org/doi/10.1145/3669940.3707215",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3669940.3707215",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        8,
+        21
+      ]
+    ],
+    "date-time": "2025-08-21T14:52:44Z",
+    "timestamp": 1755787964000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://dl.acm.org/doi/10.1145/3669940.3707215"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2025,
+        3,
+        30
+      ]
+    ]
+  },
+  "references-count": 65,
+  "alternative-id": [
+    "10.1145/3669940.3707215",
+    "10.1145/3669940"
+  ],
+  "URL": "https://doi.org/10.1145/3669940.3707215",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2025,
+        3,
+        30
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "2025-03-30",
+      "order": 3,
+      "name": "published",
+      "label": "Published",
+      "group": {
+        "name": "publication_history",
+        "label": "Publication History"
+      }
+    }
+  ]
+}

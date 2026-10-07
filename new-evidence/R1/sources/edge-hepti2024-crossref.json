@@ -1,0 +1,516 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        22
+      ]
+    ],
+    "date-time": "2026-09-22T16:44:48Z",
+    "timestamp": 1790095488682,
+    "version": "4.0.1"
+  },
+  "publisher-location": "New York, NY, USA",
+  "reference-count": 42,
+  "publisher": "ACM",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            5,
+            30
+          ]
+        ],
+        "date-time": "2024-05-30T00:00:00Z",
+        "timestamp": 1717027200000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://www.acm.org/publications/policies/copyright_policy#Background"
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "dl.acm.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2024,
+        5,
+        30
+      ]
+    ]
+  },
+  "DOI": "10.1145/3650200.3656628",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2024,
+        6,
+        3
+      ]
+    ],
+    "date-time": "2024-06-03T14:11:54Z",
+    "timestamp": 1717423914000
+  },
+  "page": "50-61",
+  "update-policy": "https://doi.org/10.1145/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 9,
+  "title": [
+    "An Autonomous Parallelization of Transformer Model Inference on Heterogeneous Edge Devices"
+  ],
+  "prefix": "10.1145",
+  "author": [
+    {
+      "ORCID": "https://orcid.org/0009-0008-2042-1159",
+      "authenticated-orcid": false,
+      "given": "Juhyeon",
+      "family": "Lee",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Sogang University, Korea, South (Republic of Korea)"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0001-0177-4636",
+      "authenticated-orcid": false,
+      "given": "Insung",
+      "family": "Bahk",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Hallym University, Korea, South (Republic of Korea)"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0005-1454-3617",
+      "authenticated-orcid": false,
+      "given": "Hoseung",
+      "family": "Kim",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Sungkyunkwan University, Republic of Korea"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-6016-1696",
+      "authenticated-orcid": false,
+      "given": "Sinjin",
+      "family": "Jeong",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Pusan University, Republic of Korea"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-5526-6127",
+      "authenticated-orcid": false,
+      "given": "Suyeon",
+      "family": "Lee",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Georgia Institute of Technology, United States of America"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-6043-9264",
+      "authenticated-orcid": false,
+      "given": "Donghyun",
+      "family": "Min",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Sogang University, Korea, South (Republic of Korea)"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "320",
+  "published-online": {
+    "date-parts": [
+      [
+        2024,
+        6,
+        3
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "e_1_3_2_1_1_1",
+      "unstructured": "2016. User’s Manual for CPLEX. https://www.ibm.com/docs/en/icos/12.9.0?topic=cplex-users-manual."
+    },
+    {
+      "key": "e_1_3_2_1_2_1",
+      "unstructured": "2019. Raspberry Pi 4 Tech Specs. https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/."
+    },
+    {
+      "key": "e_1_3_2_1_3_1",
+      "unstructured": "2023. Edge AI and Vision Alliance.www.edge-ai-vision.com/."
+    },
+    {
+      "key": "e_1_3_2_1_4_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JPROC.2019.2921977"
+    },
+    {
+      "key": "e_1_3_2_1_5_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2836127.2836130"
+    },
+    {
+      "key": "e_1_3_2_1_6_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ICASSP.2013.6639344"
+    },
+    {
+      "key": "e_1_3_2_1_7_1",
+      "volume-title": "Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805",
+      "author": "Devlin Jacob",
+      "year": "2018",
+      "unstructured": "Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2018. Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805 (2018)."
+    },
+    {
+      "key": "e_1_3_2_1_8_1",
+      "volume-title": "Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929",
+      "author": "Dosovitskiy A",
+      "year": "2020",
+      "unstructured": "A Dosovitskiy, L Beyer, A Kolesnikov, D Weissenborn, X Zhai, and T Unterthiner. 2020. Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929 (2020)."
+    },
+    {
+      "key": "e_1_3_2_1_9_1",
+      "volume-title": "An image is worth 16x16 words: Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929",
+      "author": "Dosovitskiy Alexey",
+      "year": "2020",
+      "unstructured": "Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, 2020. An image is worth 16x16 words: Transformers for image recognition at scale. arXiv preprint arXiv:2010.11929 (2020)."
+    },
+    {
+      "key": "e_1_3_2_1_10_1",
+      "volume-title": "And Segment Forecasts, 2023",
+      "author": "Research Grand View",
+      "year": "2022",
+      "unstructured": "Grand View Research. 2022. Edge AI Market Size, Share and Trends Analysis Report By Component (Hardware, Software, Edge Cloud Infrastructure, Services), By End-use Industry, By Region, And Segment Forecasts, 2023 - 2030."
+    },
+    {
+      "key": "e_1_3_2_1_11_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/s41095-021-0229-5"
+    },
+    {
+      "key": "e_1_3_2_1_12_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JIOT.2020.2972000"
+    },
+    {
+      "key": "e_1_3_2_1_13_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3485447.3511990"
+    },
+    {
+      "key": "e_1_3_2_1_14_1",
+      "volume-title": "Gaussian error linear units (gelus). arXiv preprint arXiv:1606.08415",
+      "author": "Hendrycks Dan",
+      "year": "2016",
+      "unstructured": "Dan Hendrycks and Kevin Gimpel. 2016. Gaussian error linear units (gelus). arXiv preprint arXiv:1606.08415 (2016)."
+    },
+    {
+      "key": "e_1_3_2_1_15_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IPDPS53621.2022.00110"
+    },
+    {
+      "key": "e_1_3_2_1_16_1",
+      "volume-title": "Mobilenets: Efficient convolutional neural networks for mobile vision applications. arXiv preprint arXiv:1704.04861",
+      "author": "Howard G",
+      "year": "2017",
+      "unstructured": "Andrew G Howard, Menglong Zhu, Bo Chen, Dmitry Kalenichenko, Weijun Wang, Tobias Weyand, Marco Andreetto, and Hartwig Adam. 2017. Mobilenets: Efficient convolutional neural networks for mobile vision applications. arXiv preprint arXiv:1704.04861 (2017)."
+    },
+    {
+      "key": "e_1_3_2_1_17_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/INFOCOM48880.2022.9796896"
+    },
+    {
+      "key": "e_1_3_2_1_18_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/DSD57027.2022.00048"
+    },
+    {
+      "key": "e_1_3_2_1_19_1",
+      "unstructured": "[19] International Data Corporation (IDC). [n.d.]. https://www.idc.com/getdoc.jsp?containerId=prAP50688623."
+    },
+    {
+      "key": "e_1_3_2_1_20_1",
+      "volume-title": "International Conference on Machine Learning. PMLR, 5583–5594",
+      "author": "Kim Wonjae",
+      "year": "2021",
+      "unstructured": "Wonjae Kim, Bokyung Son, and Ildoo Kim. 2021. Vilt: Vision-and-language transformer without convolution or region supervision. In International Conference on Machine Learning. PMLR, 5583–5594."
+    },
+    {
+      "key": "e_1_3_2_1_21_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TWC.2019.2946140"
+    },
+    {
+      "key": "e_1_3_2_1_22_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ICCV48922.2021.00986"
+    },
+    {
+      "key": "e_1_3_2_1_23_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.23919/DATE.2017.7927211"
+    },
+    {
+      "key": "e_1_3_2_1_24_1",
+      "volume-title": "Edge AI Software Market: Global Forecast to",
+      "author": "Markets Markets",
+      "year": "2028",
+      "unstructured": "Markets and Markets. 2023. Edge AI Software Market: Global Forecast to 2028. https://www.marketsandmarkets.com/Market-Reports/edge-ai-software-market-70030817.html."
+    },
+    {
+      "key": "e_1_3_2_1_25_1",
+      "volume-title": "Mobilevit: light-weight, general-purpose, and mobile-friendly vision transformer. arXiv preprint arXiv:2110.02178",
+      "author": "Mehta Sachin",
+      "year": "2021",
+      "unstructured": "Sachin Mehta and Mohammad Rastegari. 2021. Mobilevit: light-weight, general-purpose, and mobile-friendly vision transformer. arXiv preprint arXiv:2110.02178 (2021)."
+    },
+    {
+      "key": "e_1_3_2_1_26_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.3390/s20092533"
+    },
+    {
+      "key": "e_1_3_2_1_27_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3458817.3476209"
+    },
+    {
+      "key": "e_1_3_2_1_28_1",
+      "volume-title": "Pytorch: An imperative style, high-performance deep learning library. Advances in neural information processing systems 32",
+      "author": "Paszke Adam",
+      "year": "2019",
+      "unstructured": "Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, 2019. Pytorch: An imperative style, high-performance deep learning library. Advances in neural information processing systems 32 (2019)."
+    },
+    {
+      "key": "e_1_3_2_1_29_1",
+      "volume-title": "Proceedings of Machine Learning and Systems 5",
+      "author": "Pope Reiner",
+      "year": "2023",
+      "unstructured": "Reiner Pope, Sholto Douglas, Aakanksha Chowdhery, Jacob Devlin, James Bradbury, Jonathan Heek, Kefan Xiao, Shivani Agrawal, and Jeff Dean. 2023. Efficiently scaling transformer inference. Proceedings of Machine Learning and Systems 5 (2023)."
+    },
+    {
+      "key": "e_1_3_2_1_30_1",
+      "volume-title": "International Conference on Machine Learning. PMLR, 28492–28518",
+      "author": "Radford Alec",
+      "year": "2023",
+      "unstructured": "Alec Radford, Jong Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, and Ilya Sutskever. 2023. Robust speech recognition via large-scale weak supervision. In International Conference on Machine Learning. PMLR, 28492–28518."
+    },
+    {
+      "key": "e_1_3_2_1_31_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3394486.3406703"
+    },
+    {
+      "key": "e_1_3_2_1_32_1",
+      "volume-title": "Megatron-lm: Training multi-billion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053",
+      "author": "Shoeybi Mohammad",
+      "year": "2019",
+      "unstructured": "Mohammad Shoeybi, Mostofa Patwary, Raul Puri, Patrick LeGresley, Jared Casper, and Bryan Catanzaro. 2019. Megatron-lm: Training multi-billion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053 (2019)."
+    },
+    {
+      "key": "e_1_3_2_1_33_1",
+      "volume-title": "Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556",
+      "author": "Simonyan Karen",
+      "year": "2014",
+      "unstructured": "Karen Simonyan and Andrew Zisserman. 2014. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556 (2014)."
+    },
+    {
+      "key": "e_1_3_2_1_34_1",
+      "volume-title": "Sequence to sequence learning with neural networks. Advances in neural information processing systems 27",
+      "author": "Sutskever Ilya",
+      "year": "2014",
+      "unstructured": "Ilya Sutskever, Oriol Vinyals, and Quoc V Le. 2014. Sequence to sequence learning with neural networks. Advances in neural information processing systems 27 (2014)."
+    },
+    {
+      "key": "e_1_3_2_1_35_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JPROC.2017.2761740"
+    },
+    {
+      "key": "e_1_3_2_1_36_1",
+      "volume-title": "Natural language processing with transformers. \" O’Reilly Media",
+      "author": "Tunstall Lewis",
+      "unstructured": "Lewis Tunstall, Leandro Von Werra, and Thomas Wolf. 2022. Natural language processing with transformers. \" O’Reilly Media, Inc.\"."
+    },
+    {
+      "key": "e_1_3_2_1_37_1",
+      "volume-title": "Attention is all you need. Advances in neural information processing systems 30",
+      "author": "Vaswani Ashish",
+      "year": "2017",
+      "unstructured": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. 2017. Attention is all you need. Advances in neural information processing systems 30 (2017)."
+    },
+    {
+      "key": "e_1_3_2_1_38_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TNET.2020.3042320"
+    },
+    {
+      "key": "e_1_3_2_1_39_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IPDPS49936.2021.00024"
+    },
+    {
+      "key": "e_1_3_2_1_40_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TCAD.2018.2858384"
+    },
+    {
+      "key": "e_1_3_2_1_41_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3318216.3363312"
+    },
+    {
+      "key": "e_1_3_2_1_42_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JPROC.2019.2918951"
+    }
+  ],
+  "event": {
+    "name": "ICS '24: 2024 International Conference on Supercomputing",
+    "location": "Kyoto Japan",
+    "acronym": "ICS '24",
+    "sponsor": [
+      "SIGARCH ACM Special Interest Group on Computer Architecture"
+    ]
+  },
+  "container-title": [
+    "Proceedings of the 38th ACM International Conference on Supercomputing"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://dl.acm.org/doi/10.1145/3650200.3656628",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3650200.3656628",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        8,
+        22
+      ]
+    ],
+    "date-time": "2025-08-22T15:23:20Z",
+    "timestamp": 1755876200000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://dl.acm.org/doi/10.1145/3650200.3656628"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2024,
+        5,
+        30
+      ]
+    ]
+  },
+  "references-count": 42,
+  "alternative-id": [
+    "10.1145/3650200.3656628",
+    "10.1145/3650200"
+  ],
+  "URL": "https://doi.org/10.1145/3650200.3656628",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2024,
+        5,
+        30
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "2024-06-03",
+      "order": 3,
+      "name": "published",
+      "label": "Published",
+      "group": {
+        "name": "publication_history",
+        "label": "Publication History"
+      }
+    }
+  ]
+}

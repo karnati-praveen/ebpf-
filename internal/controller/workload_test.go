@@ -18,13 +18,13 @@ func TestWorkloadAutoObjectiveAndUnavailableHold(t *testing.T) {
 	defer server.Close()
 	c := New(Config{Objective: partition.Objective("auto"), WorkloadURL: server.URL, RemainingWorkAware: true}, nil, NewTelemetryStore())
 	c.observeWorkload(context.Background())
-	if c.decider.Objective != partition.ObjectiveLatency || c.decider.HoldVoluntary || *c.decider.Gate.RemainingTokens != 64 {
+	if c.decider.Objective != partition.ObjectiveCapacity || c.decider.HoldVoluntary || *c.decider.Gate.RemainingTokens != 64 {
 		t.Fatalf("single workload: %+v", c.decider)
 	}
 	active = 2
 	remaining = 128
 	c.observeWorkload(context.Background())
-	if c.decider.Objective != partition.ObjectiveThroughput || *c.decider.Gate.RemainingTokens != 128 {
+	if c.decider.Objective != partition.ObjectiveCapacity || *c.decider.Gate.RemainingTokens != 128 {
 		t.Fatalf("concurrent workload: %+v", c.decider)
 	}
 	active = 0
@@ -39,7 +39,7 @@ func TestWorkloadAutoObjectiveAndUnavailableHold(t *testing.T) {
 		t.Fatal("unknown demand permitted voluntary move")
 	}
 	reset := newDecider(c.cfg)
-	if reset.Objective != partition.ObjectiveLatency {
+	if reset.Objective != partition.ObjectiveCapacity {
 		t.Fatal("auto reset lost initial latency objective")
 	}
 }

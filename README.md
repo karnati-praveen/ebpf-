@@ -6,11 +6,12 @@ A closed-loop, eBPF-driven framework for heterogeneous distributed LLM
 inference on consumer edge devices. It runs standalone on plain Linux machines
 (`deploy/standalone/`) or on Kubernetes (kind/k3s).
 
-Large models are split across machines by pipeline parallelism. Existing
-frameworks decide that split **once** and never revisit it — but edge hardware
-is not static: GPUs thermally throttle, WiFi latency wanders, nodes die.
-KubeEdgeInfer turns the one-time split into a **continuous, self-correcting
-decision** driven by kernel-level measurements:
+Models are split across machines by pipeline parallelism. The runtime revisits
+placement when compute or link conditions change and rebuilds request state
+after worker loss. Adaptive placement, migration payback and replay recovery
+are established systems techniques; this repository studies their costs and
+failure modes in a small CPU deployment. A small model fitting on each machine
+may be served better by replicas. Distribution is not an automatic speedup.
 
 ```
    ┌─────────────┐    ┌──────────────┐    ┌──────────────┐    ┌─────────────┐
@@ -198,5 +199,26 @@ window) is what it takes to see real throttling on modern hardware.
   per-hop cost is the measured sRTT into each stage's pod.
 - **Consistency**: every assignment carries a generation. Workers reject
   stale-generation forwards; the router then refetches the layout and replays
-  the full accumulated context (workers are stateless, so replay is trivially
-  correct).
+  the full accumulated context. In cached mode this reconstructs per-request
+  KV state; exact greedy output requires verification through the disruption.
+
+## Publication revision and new experiments
+
+The October 2026 publication revision is documented in
+[docs/PUBLICATION_REVISION.md](docs/PUBLICATION_REVISION.md). Local measurements
+and recovery checks are kept separately in `results/publication-2026-10-07/`.
+The historical two-VM runs are preserved unchanged.
+
+- `auto` now minimizes the ideal finite-concurrency envelope `max(B, P/Q)`
+  rather than selecting bottleneck placement for every `Q > 1`. The envelope
+  is a model bound, not a promise of runtime performance.
+- `--live-replay-context` prices the sum of all active request histories from
+  the router's `/workload` endpoint. It is opt-in so old experiments remain
+  reproducible; absent or stale context telemetry holds voluntary moves.
+- Worker replies include compute-lock queue time. `APP_LINK_MODE=queue-corrected`
+  subtracts it from the application residual used for link telemetry. The
+  default `residual` mode preserves historical behavior. Neither residual is
+  pure network RTT.
+- Generation replies include internal token timestamps, per-stage decode
+  timing, and request disruption records. `/generate` returns a final JSON
+  response; these timestamps are not HTTP streaming delivery measurements.

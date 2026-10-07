@@ -1,0 +1,5 @@
+2026-10-07 07:30:46,468 qwen3 INFO loading Qwen/Qwen3-0.6B layers [0, 18) of 28 on device=cpu kv_cache=True threads=1
+2026-10-07 07:30:49,896 worker INFO bootstrapped from INITIAL_ASSIGNMENT=0:18:28:qwen3:Qwen/Qwen3-0.6B
+2026-10-07 07:30:49,903 worker INFO worker ? listening on :52000
+2026-10-07 07:30:53,920 qwen3 INFO loading Qwen/Qwen3-0.6B layers [0, 28) of 28 on device=cpu kv_cache=True threads=1
+2026-10-07 07:30:56,381 worker INFO assigned layers [0, 28) of 28 backend=qwen3 gen=1

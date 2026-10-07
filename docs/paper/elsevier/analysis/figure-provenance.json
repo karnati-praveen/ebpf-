@@ -1,0 +1,74 @@
+[
+  {
+    "figure": "architecture",
+    "evidence": "Implementation diagram; not a measured performance graph",
+    "sources": [
+      "worker/router.py",
+      "internal/controller/controller.go"
+    ]
+  },
+  {
+    "figure": "objective-frontier",
+    "evidence": "Real-model CPU runs; every run shown",
+    "sources": [
+      "analysis/per-run.csv"
+    ]
+  },
+  {
+    "figure": "service-envelope",
+    "evidence": "Real outcomes versus ideal stationary-model proxy; not a calibrated guarantee",
+    "sources": [
+      "raw/objective/*/meta.json",
+      "analysis/per-run.csv"
+    ]
+  },
+  {
+    "figure": "adaptation-comparison",
+    "evidence": "Real run-level repeat-matched contrasts; lines are not confidence intervals",
+    "sources": [
+      "analysis/per-run.csv"
+    ]
+  },
+  {
+    "figure": "demand-timeline",
+    "evidence": "Both actual repeat blocks; no inferred token-emission timestamps",
+    "sources": [
+      "raw/demand/*/{requests,series,decisions,meta}"
+    ]
+  },
+  {
+    "figure": "fault-traces",
+    "evidence": "Descriptive real traces; one deterministic representative per arm/scenario",
+    "sources": [
+      "raw/vm/*/{requests,faults,meta}"
+    ]
+  },
+  {
+    "figure": "cost-and-gate-sensitivity",
+    "evidence": "Analytical quantities, historical profile; not hardware speedup",
+    "sources": [
+      "docs/data/paper-ablations-2026-10-04/decision-results"
+    ]
+  },
+  {
+    "figure": "queue-decomposition",
+    "evidence": "Synthetic loopback measurements; window-level means",
+    "sources": [
+      "docs/data/paper-ablations-2026-10-04/queue-results/aggregate.csv"
+    ]
+  },
+  {
+    "figure": "routing-sensitivity",
+    "evidence": "Synthetic simulator; follow-ups were separate exploratory windows",
+    "sources": [
+      "docs/data/product-direction-2026-10-04"
+    ]
+  },
+  {
+    "figure": "transition-forecast",
+    "evidence": "Approximate event attribution, not independent trials or forecast confidence",
+    "sources": [
+      "docs/data/azure-vm-2026-10-04/replay/input.json"
+    ]
+  }
+]

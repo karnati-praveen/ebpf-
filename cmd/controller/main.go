@@ -52,6 +52,7 @@ func main() {
 		objective     = flag.String("objective", envOr("PLACEMENT_OBJECTIVE", "throughput"), "placement and transition objective: throughput | latency | auto")
 		workloadURL   = flag.String("workload-url", envOr("WORKLOAD_URL", ""), "router /workload URL; required for auto or remaining-work-aware")
 		remainingWork = flag.Bool("remaining-work-aware", os.Getenv("REMAINING_WORK_AWARE") == "1", "cap gate horizon by live remaining output budget")
+		liveReplay    = flag.Bool("live-replay-context", os.Getenv("LIVE_REPLAY_CONTEXT") == "1", "forecast serial replay work from all active request contexts; requires workload URL")
 		gateHorizon   = flag.Float64("gate-horizon-s", envFloatOr("GATE_HORIZON_S", 30), "transition gate planning horizon, seconds")
 		gateFixed     = flag.Float64("gate-transition-fixed-ms", envFloatOr("GATE_TRANSITION_FIXED_MS", 2000), "transition downtime independent of context (weight reload, orchestration)")
 		gatePrefill   = flag.Float64("gate-prefill-ms-per-token-layer", envFloatOr("GATE_PREFILL_MS_PER_TOKEN_LAYER", 0.21), "measured prefill cost per token per layer, for cache reconstruction")
@@ -71,8 +72,8 @@ func main() {
 	if *objective != "throughput" && *objective != "latency" && *objective != "auto" {
 		log.Fatalf("unknown -objective %q", *objective)
 	}
-	if (*objective == "auto" || *remainingWork) && (*workloadURL == "" || *static) {
-		log.Fatal("auto/remaining-work-aware requires -workload-url and nonstatic mode")
+	if (*objective == "auto" || *remainingWork || *liveReplay) && (*workloadURL == "" || *static) {
+		log.Fatal("auto/remaining-work-aware/live-replay-context requires -workload-url and nonstatic mode")
 	}
 	if *remainingWork && *policy != "gate" && *policy != "gate-force" {
 		log.Fatal("remaining-work-aware requires gate or gate-force")
@@ -126,7 +127,8 @@ func main() {
 		Policy:           partition.Policy(*policy),
 		Objective:        partition.Objective(*objective),
 		WorkloadURL:      *workloadURL, RemainingWorkAware: *remainingWork,
-		LinkSource: controller.LinkSource(*linkSource),
+		LiveReplayContext: *liveReplay,
+		LinkSource:        controller.LinkSource(*linkSource),
 		Gate: partition.GateParams{
 			HorizonS:               *gateHorizon,
 			TransitionFixedMs:      *gateFixed,

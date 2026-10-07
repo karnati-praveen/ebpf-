@@ -1,0 +1,226 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        22
+      ]
+    ],
+    "date-time": "2026-09-22T08:40:10Z",
+    "timestamp": 1790066410172,
+    "version": "4.0.1"
+  },
+  "reference-count": 0,
+  "publisher": "IEEE",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            11,
+            17
+          ]
+        ],
+        "date-time": "2024-11-17T00:00:00Z",
+        "timestamp": 1731801600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-029"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            11,
+            17
+          ]
+        ],
+        "date-time": "2024-11-17T00:00:00Z",
+        "timestamp": 1731801600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-037"
+    }
+  ],
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2024,
+        11,
+        17
+      ]
+    ]
+  },
+  "DOI": "10.1109/sc41406.2024.00046",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2024,
+        12,
+        24
+      ]
+    ],
+    "date-time": "2024-12-24T14:09:21Z",
+    "timestamp": 1735049361000
+  },
+  "page": "1-19",
+  "source": "Crossref",
+  "is-referenced-by-count": 12,
+  "title": [
+    "PipeInfer: Accelerating LLM Inference using Asynchronous Pipelined Speculation"
+  ],
+  "prefix": "10.1109",
+  "author": [
+    {
+      "given": "Branden",
+      "family": "Butler",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Iowa State University"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Sixing",
+      "family": "Yu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Iowa State University"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Arya",
+      "family": "Mazaheri",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Technical University of Darmstadt"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Ali",
+      "family": "Jannesari",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Iowa State University"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "263",
+  "event": {
+    "name": "SC24: International Conference for High Performance Computing, Networking, Storage and Analysis",
+    "location": "Atlanta, GA, USA",
+    "start": {
+      "date-parts": [
+        [
+          2024,
+          11,
+          17
+        ]
+      ]
+    },
+    "end": {
+      "date-parts": [
+        [
+          2024,
+          11,
+          22
+        ]
+      ]
+    }
+  },
+  "container-title": [
+    "SC24: International Conference for High Performance Computing, Networking, Storage and Analysis"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "http://xplorestaging.ieee.org/ielx8/10793057/10793058/10793190.pdf?arnumber=10793190",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2024,
+        12,
+        24
+      ]
+    ],
+    "date-time": "2024-12-24T14:09:25Z",
+    "timestamp": 1735049365000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://ieeexplore.ieee.org/document/10793190/"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2024,
+        11,
+        17
+      ]
+    ]
+  },
+  "references-count": 0,
+  "URL": "https://doi.org/10.1109/sc41406.2024.00046",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2024,
+        11,
+        17
+      ]
+    ]
+  }
+}

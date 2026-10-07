@@ -31,6 +31,7 @@ DASH_PORT = int(os.environ.get("DASH_PORT", "8000"))
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 LOAD_THREADS = 2
+NODE_AGENTS = {}  # Optional explicit addresses for a local desktop demo.
 load_on = threading.Event()
 load_on.set()  # traffic by default: an empty dashboard shows nothing
 
@@ -46,12 +47,17 @@ def _load_loop():
                 data=json.dumps({"prompt_len": 16, "max_new_tokens": 8}).encode(),
                 headers={"Content-Type": "application/json"},
             )
-            urllib.request.urlopen(req, timeout=120).read()
+            with urllib.request.urlopen(req, timeout=120) as response:
+                response.read()
         except Exception:
             time.sleep(2)  # router not up yet / mid-repartition
 
 
 def node_agent_addr(node):
+    if NODE_AGENTS:
+        if node not in NODE_AGENTS:
+            raise ValueError("unknown demo worker")
+        return NODE_AGENTS[node]
     ip = subprocess.run(
         ["docker", "inspect", "-f",
          "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}", node],
@@ -98,14 +104,20 @@ class Handler(BaseHTTPRequestHandler):
             self._proxy(CTRL, "/state")
         elif self.path == "/api/load":
             self._json(200, {"on": load_on.is_set()})
+        elif self.path == "/api/demo":
+            self._json(200, {"desktop": False})
         else:
             self._json(404, {"error": "not found"})
 
     def do_POST(self):
-        length = int(self.headers.get("Content-Length", "0"))
         try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 <= length <= 65536:
+                raise ValueError("request too large")
             body = json.loads(self.rfile.read(length) or b"{}")
-        except json.JSONDecodeError:
+            if not isinstance(body, dict):
+                raise ValueError("expected an object")
+        except (ValueError, json.JSONDecodeError):
             return self._json(400, {"error": "bad json"})
         if self.path == "/api/load":
             (load_on.set if body.get("on") else load_on.clear)()

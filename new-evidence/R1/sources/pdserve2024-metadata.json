@@ -1,0 +1,53 @@
+{
+  "arxiv": "2408.08147",
+  "citation_title": [
+    "P/D-Serve: Serving Disaggregated Large Language Model at Scale"
+  ],
+  "citation_author": [
+    "Jin, Yibo",
+    "Wang, Tao",
+    "Lin, Huimin",
+    "Song, Mingyang",
+    "Li, Peiyang",
+    "Ma, Yipeng",
+    "Shan, Yicheng",
+    "Yuan, Zhengfan",
+    "Li, Cailong",
+    "Sun, Yajing",
+    "Wu, Tiandeng",
+    "Chu, Xing",
+    "Huan, Ruizhi",
+    "Ma, Li",
+    "You, Xiao",
+    "Zhou, Wenting",
+    "Ye, Yunpeng",
+    "Liu, Wen",
+    "Xu, Xiangkun",
+    "Zhang, Yongsheng",
+    "Dong, Tiantian",
+    "Zhu, Jiawei",
+    "Wang, Zhe",
+    "Ju, Xijian",
+    "Song, Jianxun",
+    "Cheng, Haoliang",
+    "Li, Xiaojing",
+    "Ding, Jiandong",
+    "Guo, Hefei",
+    "Zhang, Zhengyong"
+  ],
+  "citation_date": [
+    "2024/08/15"
+  ],
+  "citation_online_date": [
+    "2024/08/15"
+  ],
+  "citation_pdf_url": [
+    "https://arxiv.org/pdf/2408.08147"
+  ],
+  "citation_arxiv_id": [
+    "2408.08147"
+  ],
+  "citation_abstract": [
+    "Serving disaggregated large language models (LLMs) over tens of thousands of xPU devices (GPUs or NPUs) with reliable performance faces multiple challenges. 1) Ignoring the diversity (various prefixes and tidal requests), treating all the prompts in a mixed pool is inadequate. To facilitate the similarity per scenario and minimize the inner mismatch on P/D (prefill and decoding) processing, fine-grained organization is required, dynamically adjusting P/D ratios for better performance. 2) Due to inaccurate estimation on workload (queue status or maintained connections), the global scheduler easily incurs unnecessary timeouts in prefill. 3) Block-fixed device-to-device (D2D) KVCache transfer over cluster-level RDMA (remote direct memory access) fails to achieve desired D2D utilization as expected. To overcome previous problems, this paper proposes an end-to-end system P/D-Serve, complying with the paradigm of MLOps (machine learning operations), which models end-to-end (E2E) P/D performance and enables: 1) fine-grained P/D organization, mapping the service with RoCE (RDMA over converged ethernet) as needed, to facilitate similar processing and dynamic adjustments on P/D ratios; 2) on-demand forwarding upon rejections for idle prefill, decoupling the scheduler from regular inaccurate reports and local queues, to avoid timeouts in prefill; and 3) efficient KVCache transfer via optimized D2D access. P/D-Serve is implemented upon Ascend and MindSpore, has been deployed over tens of thousands of NPUs for more than eight months in commercial use, and further achieves 60\\%, 42\\% and 46\\% improvements on E2E throughput, time-to-first-token (TTFT) SLO (service level objective) and D2D transfer time. As the E2E system with optimizations, P/D-Serve achieves 6.7x increase on throughput, compared with aggregated LLMs."
+  ]
+}

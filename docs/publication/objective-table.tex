@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering\small
+\caption{Whole-run objective and demand results. Q denotes closed-loop concurrency; N is requested output tokens. Medians use runs as units; drain is included.}
+\begin{tabular}{lllrrrr}
+\toprule
+Matrix & Condition & Arm & Q & N & Runs & Tokens/s \\
+\midrule
+demand & stable & auto-fixed & 1 & 64 & 2 & 4.207 \\
+demand & stable & auto-remaining & 1 & 64 & 2 & 4.107 \\
+demand & stable & throughput & 1 & 64 & 2 & 4.054 \\
+demand & stable & auto-fixed & 2 & 64 & 2 & 5.944 \\
+demand & stable & auto-remaining & 2 & 64 & 2 & 5.729 \\
+demand & stable & throughput & 2 & 64 & 2 & 7.830 \\
+objective & network & latency & 1 & 32 & 2 & 4.001 \\
+objective & network & throughput & 1 & 32 & 2 & 2.419 \\
+objective & network & latency & 2 & 32 & 2 & 4.040 \\
+objective & network & throughput & 2 & 32 & 2 & 4.778 \\
+objective & stable & latency & 1 & 32 & 3 & 4.029 \\
+objective & stable & throughput & 1 & 32 & 3 & 3.875 \\
+objective & stable & latency & 2 & 32 & 3 & 4.046 \\
+objective & stable & throughput & 2 & 32 & 3 & 7.303 \\
+\bottomrule
+\end{tabular}
+\end{table}

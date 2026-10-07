@@ -1,0 +1,22 @@
+{
+  "source": "Shardwise release 0.1.0+ci3, package SHA256 b7268ddeff783198b7971134bfbe5036027d763afcd8b68a9242bd1bb7002f4d",
+  "integration": "real demo entry renamed real_app.py; executes current repository worker/controller rather than release copies",
+  "files": {
+    "demo/real_app.py": {
+      "release_file": "app.py",
+      "release_sha256": "3f4aae7017544646fc088e79b22b3ea6ea4b4664a14ca7483422744bb24e6df5"
+    },
+    "demo/app.html": {
+      "release_file": "app.html",
+      "release_sha256": "6b2ec071bd88fdfb59462985b9636a941c98efc708c46e6cbd65264ffbb7aa34"
+    },
+    "demo/helper.py": {
+      "release_file": "helper.py",
+      "release_sha256": "793658990f12bf1df4e24a1a020d6487fb42592d2350b50fb13c70597918bc4a"
+    },
+    "demo/hwdetect.py": {
+      "release_file": "hwdetect.py",
+      "release_sha256": "03d9ce402fa007b03e4a817ecbcc2564e4eb26c244d99ad02da3ad629416af66"
+    }
+  }
+}

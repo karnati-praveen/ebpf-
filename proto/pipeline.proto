@@ -44,6 +44,9 @@ message ForwardReply {
   bool is_last = 4;       // true if this worker holds the final layers
   double compute_ms = 5;  // busy time spent on this call
   string error = 6;
+  // Time waiting for the worker compute lock, measured before execution.
+  // Optional for older workers; zero cannot prove an absence of queueing.
+  double queue_ms = 7;
 }
 
 message StatsRequest {}

@@ -1,0 +1,14 @@
+{
+  "rule": "closest to arm median whole-run throughput, ties by run name",
+  "runs": [
+    "compute-0.5_static_ebpf+app_c2_r1_20261004T095233",
+    "compute-0.5_hysteresis_ebpf+app_c2_r3_20261004T092304",
+    "compute-0.5_gate_ebpf+app_c2_r1_20261004T083226",
+    "network-120_static_ebpf+app_c2_r3_20261004T092716",
+    "network-120_hysteresis_ebpf+app_c2_r2_20261004T093544",
+    "network-120_gate_ebpf+app_c2_r1_20261004T093955",
+    "loss-0_static_ebpf+app_c2_r2_20261004T101748",
+    "loss-0_hysteresis_ebpf+app_c2_r1_20261004T103039",
+    "loss-0_gate_ebpf+app_c2_r1_20261004T102621"
+  ]
+}

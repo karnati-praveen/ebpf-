@@ -12,9 +12,10 @@ import (
 )
 
 type WorkloadSnapshot struct {
-	ActiveRequests  int     `json:"active_requests"`
-	RemainingTokens float64 `json:"remaining_tokens"`
-	ObservedAt      float64 `json:"observed_at"`
+	ActiveRequests      int      `json:"active_requests"`
+	RemainingTokens     float64  `json:"remaining_tokens"`
+	ObservedAt          float64  `json:"observed_at"`
+	ReplayContextTokens *float64 `json:"replay_context_tokens,omitempty"`
 }
 
 func readWorkload(ctx context.Context, url string) (WorkloadSnapshot, error) {
@@ -41,6 +42,9 @@ func readWorkload(ctx context.Context, url string) (WorkloadSnapshot, error) {
 		math.IsNaN(w.ObservedAt) || math.IsInf(w.ObservedAt, 0) || age > 5 || age < -2 || (w.ActiveRequests == 0 && w.RemainingTokens != 0) {
 		return w, fmt.Errorf("invalid or stale workload snapshot")
 	}
+	if w.ReplayContextTokens != nil && (*w.ReplayContextTokens < 0 || math.IsNaN(*w.ReplayContextTokens) || math.IsInf(*w.ReplayContextTokens, 0) || (w.ActiveRequests == 0 && *w.ReplayContextTokens != 0)) {
+		return w, fmt.Errorf("invalid replay context budget")
+	}
 	return w, nil
 }
 
@@ -60,9 +64,14 @@ func (c *Controller) observeWorkload(ctx context.Context) {
 	c.mu.Unlock()
 	c.decider.HoldVoluntary = err != nil || w.ActiveRequests == 0
 	if err == nil && c.cfg.Objective == partition.Objective("auto") {
-		c.decider.Objective = partition.ObjectiveLatency
-		if w.ActiveRequests > 1 {
-			c.decider.Objective = partition.ObjectiveThroughput
+		c.decider.Objective = partition.ObjectiveCapacity
+	}
+	if c.cfg.LiveReplayContext {
+		c.decider.Gate.ReplayContextTokens = nil
+		if err == nil && w.ReplayContextTokens != nil {
+			c.decider.Gate.ReplayContextTokens = w.ReplayContextTokens
+		} else {
+			c.decider.HoldVoluntary = true
 		}
 	}
 	if c.cfg.RemainingWorkAware {

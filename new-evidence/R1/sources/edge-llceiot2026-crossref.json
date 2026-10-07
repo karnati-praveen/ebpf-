@@ -1,0 +1,223 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        25
+      ]
+    ],
+    "date-time": "2026-09-25T20:00:19Z",
+    "timestamp": 1790366419937,
+    "version": "4.1.0"
+  },
+  "reference-count": 0,
+  "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2026,
+            1,
+            1
+          ]
+        ],
+        "date-time": "2026-01-01T00:00:00Z",
+        "timestamp": 1767225600000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://ieeexplore.ieee.org/Xplorehelp/downloads/license-information/IEEE.html"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2026,
+            1,
+            1
+          ]
+        ],
+        "date-time": "2026-01-01T00:00:00Z",
+        "timestamp": 1767225600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-029"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2026,
+            1,
+            1
+          ]
+        ],
+        "date-time": "2026-01-01T00:00:00Z",
+        "timestamp": 1767225600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-037"
+    }
+  ],
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [
+    "IEEE Trans. on Mobile Comput."
+  ],
+  "published-print": {
+    "date-parts": [
+      [
+        2026
+      ]
+    ]
+  },
+  "DOI": "10.1109/tmc.2026.3737299",
+  "type": "journal-article",
+  "created": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        24
+      ]
+    ],
+    "date-time": "2026-09-24T19:14:29Z",
+    "timestamp": 1790277269000
+  },
+  "page": "1-15",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+    "LL-CEIoT: Lightweight LLM-based Collaborative Cloud-Edge Computing for Internet of Things"
+  ],
+  "prefix": "10.1109",
+  "author": [
+    {
+      "given": "Md Monjurul",
+      "family": "Karim",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences",
+          "place": [
+            "Shenzhen, China"
+          ]
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Sangeen",
+      "family": "Khan",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences",
+          "place": [
+            "Shenzhen, China"
+          ]
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Qiang",
+      "family": "Qu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences",
+          "place": [
+            "Shenzhen, China"
+          ]
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "263",
+  "container-title": [
+    "IEEE Transactions on Mobile Computing"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "http://xplorestaging.ieee.org/ielx8/7755/4358975/11707753.pdf?arnumber=11707753",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        25
+      ]
+    ],
+    "date-time": "2026-09-25T19:11:05Z",
+    "timestamp": 1790363465000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://ieeexplore.ieee.org/document/11707753/"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2026
+      ]
+    ]
+  },
+  "references-count": 0,
+  "URL": "https://doi.org/10.1109/tmc.2026.3737299",
+  "relation": {},
+  "ISSN": [
+    "1558-0660",
+    "1536-1233"
+  ],
+  "issn-type": [
+    {
+      "value": "1558-0660",
+      "type": "electronic"
+    },
+    {
+      "value": "1536-1233",
+      "type": "print"
+    }
+  ],
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2026
+      ]
+    ]
+  }
+}

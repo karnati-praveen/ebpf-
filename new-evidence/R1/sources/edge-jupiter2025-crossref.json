@@ -1,0 +1,274 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        25
+      ]
+    ],
+    "date-time": "2026-09-25T00:23:38Z",
+    "timestamp": 1790295818241,
+    "version": "4.1.0"
+  },
+  "reference-count": 0,
+  "publisher": "IEEE",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2025,
+            5,
+            19
+          ]
+        ],
+        "date-time": "2025-05-19T00:00:00Z",
+        "timestamp": 1747612800000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-029"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2025,
+            5,
+            19
+          ]
+        ],
+        "date-time": "2025-05-19T00:00:00Z",
+        "timestamp": 1747612800000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-037"
+    }
+  ],
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2025,
+        5,
+        19
+      ]
+    ]
+  },
+  "DOI": "10.1109/infocom55648.2025.11044734",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2025,
+        9,
+        12
+      ]
+    ],
+    "date-time": "2025-09-12T17:27:36Z",
+    "timestamp": 1757698056000
+  },
+  "page": "1-10",
+  "source": "Crossref",
+  "is-referenced-by-count": 25,
+  "title": [
+    "Jupiter: Fast and Resource-Efficient Collaborative Inference of Generative LLMs on Edge Devices"
+  ],
+  "prefix": "10.1109",
+  "author": [
+    {
+      "given": "Shengyuan",
+      "family": "Ye",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University,Guangzhou,China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Bei",
+      "family": "Ouyang",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University,Guangzhou,China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Liekang",
+      "family": "Zeng",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "The Chinese University of Hong Kong,Hong Kong SAR,China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Tianyi",
+      "family": "Qian",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University,Guangzhou,China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Xiaowen",
+      "family": "Chu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Data Science and Analytics Thrust, HKUST (Guangzhou),Guangzhou,China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Jian",
+      "family": "Tang",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Midea Group,China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Xu",
+      "family": "Chen",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University,Guangzhou,China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "263",
+  "event": {
+    "name": "IEEE INFOCOM 2025 - IEEE Conference on Computer Communications",
+    "location": "London, United Kingdom",
+    "start": {
+      "date-parts": [
+        [
+          2025,
+          5,
+          19
+        ]
+      ]
+    },
+    "end": {
+      "date-parts": [
+        [
+          2025,
+          5,
+          22
+        ]
+      ]
+    }
+  },
+  "container-title": [
+    "IEEE INFOCOM 2025 - IEEE Conference on Computer Communications"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "http://xplorestaging.ieee.org/ielx8/11044418/11044439/11044734.pdf?arnumber=11044734",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        9,
+        12
+      ]
+    ],
+    "date-time": "2025-09-12T17:28:08Z",
+    "timestamp": 1757698088000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://ieeexplore.ieee.org/document/11044734/"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2025,
+        5,
+        19
+      ]
+    ]
+  },
+  "references-count": 0,
+  "URL": "https://doi.org/10.1109/infocom55648.2025.11044734",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2025,
+        5,
+        19
+      ]
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+context,concurrency,arm,baseline,paired_n,paired_mean_tps_change_pct,paired_mean_change_ci95,paired_failures,interpretation
+32,1,pipeline-2x1t,replicas-2x1t,4,1.9271605341332045,"[-3.6985785658750547, 7.552899634141464]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,1,pipeline-2x1t,unsplit-2t,4,28.031961849013538,"[18.84866323602371, 38.02417707284349]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,1,pipeline-2x1t,unsplit-1t,4,-0.6567980976379811,"[-6.909743891737263, 7.892814177793486]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,2,pipeline-2x1t,replicas-2x1t,4,-0.8936063285540251,"[-5.390816932730583, 6.464741308490704]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,2,pipeline-2x1t,unsplit-2t,4,54.38801180395479,"[49.00801722623526, 60.099405927581344]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,2,pipeline-2x1t,unsplit-1t,4,28.948171332023815,"[19.65005988644993, 42.506813400755306]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,4,pipeline-2x1t,replicas-2x1t,4,0.32248475124548315,"[-4.417727827879592, 5.097706878032543]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,4,pipeline-2x1t,unsplit-2t,4,63.836076947989795,"[53.373511690008925, 74.29864220597068]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,4,pipeline-2x1t,unsplit-1t,4,31.7277671307449,"[22.770313479748093, 46.495967843762884]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,8,pipeline-2x1t,replicas-2x1t,4,4.963295487735198,"[-3.2527148537727646, 14.819664444739347]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,8,pipeline-2x1t,unsplit-2t,4,58.50065801375096,"[51.46497197016355, 67.40949745205755]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+32,8,pipeline-2x1t,unsplit-1t,4,28.785117531613036,"[19.59856336645766, 40.76757230912179]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,1,pipeline-2x1t,replicas-2x1t,4,0.9110469009481177,"[-4.863866852579116, 9.56226822144139]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,1,pipeline-2x1t,unsplit-2t,4,16.94748863061419,"[14.111729830021702, 19.71504769560441]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,1,pipeline-2x1t,unsplit-1t,4,2.5927068026724847,"[-5.155663831349644, 12.635941337788651]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,2,pipeline-2x1t,replicas-2x1t,4,-2.654426461109258,"[-7.249889024652556, 2.6127448234963575]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,2,pipeline-2x1t,unsplit-2t,4,41.81105554197546,"[36.88751954058344, 48.049487436574786]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,2,pipeline-2x1t,unsplit-1t,4,24.83162038138621,"[18.829001364526363, 31.271149506510078]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,4,pipeline-2x1t,replicas-2x1t,4,-2.626867166716787,"[-9.257462840823008, 4.320698799123729]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,4,pipeline-2x1t,unsplit-2t,4,38.77710440687979,"[31.43571466396748, 49.050330077518204]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,4,pipeline-2x1t,unsplit-1t,4,22.295543439244184,"[12.46502451011674, 34.65346756770255]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,8,pipeline-2x1t,replicas-2x1t,4,2.7702275680504234,"[-2.2257151752465063, 7.766170311347354]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,8,pipeline-2x1t,unsplit-2t,4,38.78218663801064,"[35.0847698298939, 42.47960344612738]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+128,8,pipeline-2x1t,unsplit-1t,4,22.386095665244646,"[15.218676600222448, 32.320292224665636]",0,descriptive paired block bootstrap; local host only; no equivalence claim

@@ -1,0 +1,1219 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        8,
+        21
+      ]
+    ],
+    "date-time": "2026-08-21T13:44:43Z",
+    "timestamp": 1787319883949,
+    "version": "build-2736575974"
+  },
+  "publisher-location": "New York, NY, USA",
+  "reference-count": 152,
+  "publisher": "ACM",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            4,
+            27
+          ]
+        ],
+        "date-time": "2024-04-27T00:00:00Z",
+        "timestamp": 1714176000000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "dl.acm.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2024,
+        4,
+        27
+      ]
+    ]
+  },
+  "DOI": "10.1145/3620665.3640413",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2024,
+        4,
+        22
+      ]
+    ],
+    "date-time": "2024-04-22T10:18:06Z",
+    "timestamp": 1713781086000
+  },
+  "page": "530-548",
+  "update-policy": "https://doi.org/10.1145/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 7,
+  "title": [
+    "In-Storage Domain-Specific Acceleration for Serverless Computing"
+  ],
+  "prefix": "10.1145",
+  "author": [
+    {
+      "ORCID": "https://orcid.org/0000-0002-2887-9761",
+      "authenticated-orcid": false,
+      "given": "Rohan",
+      "family": "Mahapatra",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, United States of America"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0001-5514-8027",
+      "authenticated-orcid": false,
+      "given": "Soroush",
+      "family": "Ghodrati",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, United States of America"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0003-2648-8748",
+      "authenticated-orcid": false,
+      "given": "Byung Hoon",
+      "family": "Ahn",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-0955-585X",
+      "authenticated-orcid": false,
+      "given": "Sean",
+      "family": "Kinzer",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0000-4793-954X",
+      "authenticated-orcid": false,
+      "given": "Shu-Ting",
+      "family": "Wang",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, United States of America"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0000-0328-9610",
+      "authenticated-orcid": false,
+      "given": "Hanyang",
+      "family": "Xu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0003-5628-388X",
+      "authenticated-orcid": false,
+      "given": "Lavanya",
+      "family": "Karthikeyan",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0003-0028-013X",
+      "authenticated-orcid": false,
+      "given": "Hardik",
+      "family": "Sharma",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google, Mountain View, USA"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0001-8199-7671",
+      "authenticated-orcid": false,
+      "given": "Amir",
+      "family": "Yazdanbakhsh",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Google DeepMind, Mountain View, United States of America"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-4622-2181",
+      "authenticated-orcid": false,
+      "given": "Mohammad",
+      "family": "Alian",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of Kansas, Lawrence, United States of America"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-8548-1039",
+      "authenticated-orcid": false,
+      "given": "Hadi",
+      "family": "Esmaeilzadeh",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of California, San Diego, La Jolla, United States of America"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "320",
+  "published-online": {
+    "date-parts": [
+      [
+        2024,
+        4,
+        27
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "e_1_3_2_2_1_1",
+      "unstructured": "BMW uses AWS. https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/."
+    },
+    {
+      "key": "e_1_3_2_2_2_1",
+      "unstructured": "Lufthansa Technik: Keeping airlines flying optimally with ai-powered techops platform aviatar. https://cloud.google.com/customers/lufthansa/."
+    },
+    {
+      "key": "e_1_3_2_2_3_1",
+      "unstructured": "Netflix & AWS lambda case study. https://aws.amazon.com/solutions/case-studies/netflix-and-aws-lambda/."
+    },
+    {
+      "key": "e_1_3_2_2_4_1",
+      "unstructured": "Guardian news & media automates subscription fulfillment using aws step functions. https://aws.amazon.com/solutions/case-studies/the-guardian/."
+    },
+    {
+      "key": "e_1_3_2_2_5_1",
+      "unstructured": "Photovogue case study. https://aws.amazon.com/solutions/case-studies/photovogue/."
+    },
+    {
+      "key": "e_1_3_2_2_6_1",
+      "unstructured": "Coca cola uses AWS serverless. https://aws.amazon.com/solutions/case-studies/coca-cola-freestyle/."
+    },
+    {
+      "key": "e_1_3_2_2_7_1",
+      "unstructured": "Pwc helps make compliance easier automates regulatory obligation identification with microsoft azure cognitive search. https://customers.microsoft.com/en-us/story/811347-pwc-partner-professional-services-azure."
+    },
+    {
+      "key": "e_1_3_2_2_8_1",
+      "unstructured": "AWS lambda. https://aws.amazon.com/lambda/ ."
+    },
+    {
+      "key": "e_1_3_2_2_9_1",
+      "unstructured": "Google cloud functions. https://cloud.google.com/functions/docs/concepts/overview."
+    },
+    {
+      "key": "e_1_3_2_2_10_1",
+      "unstructured": "Azure serverless. https://azure.microsoft.com/en-us/solutions/serverless/#overview."
+    },
+    {
+      "key": "e_1_3_2_2_11_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2901318.2901337"
+    },
+    {
+      "key": "e_1_3_2_2_12_1",
+      "volume-title": "NSDI",
+      "author": "Nanavati Mihir",
+      "year": "2017",
+      "unstructured": "Mihir Nanavati, Jake Wires, and Andrew Warfield. Decibel: Isolation and sharing in disaggregated Rack-Scale storage. In NSDI, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_13_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3037697.3037732"
+    },
+    {
+      "key": "e_1_3_2_2_14_1",
+      "volume-title": "OSDI",
+      "author": "Shan Yizhou",
+      "year": "2018",
+      "unstructured": "Yizhou Shan, Yutong Huang, Yilun Chen, and Yiying Zhang. LegoOS: A disseminated, distributed OS for hardware resource disaggregation. In OSDI, 2018."
+    },
+    {
+      "key": "e_1_3_2_2_15_1",
+      "volume-title": "OSDI",
+      "author": "Klimovic Ana",
+      "year": "2018",
+      "unstructured": "Ana Klimovic, Yawen Wang, Patrick Stuedi, Animesh Trivedi, Jonas Pfefferle, and Christos Kozyrakis. Pocket: Elastic ephemeral storage for serverless analytics. In OSDI, 2018."
+    },
+    {
+      "key": "e_1_3_2_2_16_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3373376.3378531"
+    },
+    {
+      "key": "e_1_3_2_2_17_1",
+      "volume-title": "ATC",
+      "author": "Xue Shuai",
+      "year": "2020",
+      "unstructured": "Shuai Xue, Shang Zhao, Quan Chen, Gang Deng, Zheng Liu, Jie Zhang, Zhuo Song, Tao Ma, Yong Yang, Yanbo Zhou, Keqiang Niu, Sijie Sun, and Minyi Guo. Spool: Reliable virtualized NVMe storage pool in public cloud infrastructure. In ATC, 2020."
+    },
+    {
+      "key": "e_1_3_2_2_18_1",
+      "volume-title": "ISCA",
+      "author": "Jouppi Norman P",
+      "year": "2017",
+      "unstructured": "Norman P Jouppi, Cliff Young, Nishant Patil, David Patterson, Gaurav Agrawal, Raminder Bajwa, Sarah Bates, Suresh Bhatia, Nan Boden, Al Borchers, et al. In-datacenter performance analysis of a tensor processing unit. In ISCA, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_19_1",
+      "volume-title": "ISCA",
+      "author": "Fowers Jeremy",
+      "year": "2018",
+      "unstructured": "Jeremy Fowers, Kalin Ovtcharov, Michael Papamichael, Todd Massengill, Ming Liu, Daniel Lo, Shlomi Alkalay, Michael Haselman, Logan Adams, Mahdi Ghandi, Stephen Heil, Prerak Patel, Adam Sapek, Gabriel Weisz, Lisa Woods, Sitaram Lanka, Steven K. Reinhardt, Adrian M. Caulfield, Eric S. Chung, and Doug Burger. A configurable cloud-scale dnn processor for real-time ai. In ISCA, 2018."
+    },
+    {
+      "key": "e_1_3_2_2_20_1",
+      "unstructured": "AWS inferentia. https://aws.amazon.com/machine-learning/inferentia/ ."
+    },
+    {
+      "key": "e_1_3_2_2_21_1",
+      "volume-title": "First-generation inference accelerator deployment at facebook. arXiv",
+      "author": "Anderson Michael",
+      "year": "2021",
+      "unstructured": "Michael Anderson, Benny Chen, Stephen Chen, Summer Deng, Jordan Fix, Michael Gschwind, Aravind Kalaiah, Changkyu Kim, Jaewon Lee, Jason Liang, et al. First-generation inference accelerator deployment at facebook. arXiv, 2021."
+    },
+    {
+      "key": "e_1_3_2_2_22_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/2541940.2541967"
+    },
+    {
+      "key": "e_1_3_2_2_23_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.5555/3195638.3195662"
+    },
+    {
+      "key": "e_1_3_2_2_24_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.5555/3195638.3195659"
+    },
+    {
+      "key": "e_1_3_2_2_25_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3410463.3414634"
+    },
+    {
+      "key": "e_1_3_2_2_26_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/DAC18072.2020.9218656"
+    },
+    {
+      "key": "e_1_3_2_2_27_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/HPCA.2016.7446050"
+    },
+    {
+      "key": "e_1_3_2_2_28_1",
+      "volume-title": "ISCA",
+      "author": "Parashar Angshuman",
+      "year": "2017",
+      "unstructured": "Angshuman Parashar, Minsoo Rhu, Anurag Mukkara, Antonio Puglielli, Rangharajan Venkatesan, Brucek Khailany, Joel Emer, Stephen W Keckler, and William J Dally. SCNN: An Accelerator for Compressed-sparse Convolutional Neural Networks. In ISCA, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_29_1",
+      "volume-title": "ISCA",
+      "author": "Shen Yongming",
+      "year": "2017",
+      "unstructured": "Yongming Shen, Michael Ferdman, and Peter Milder. Maximizing cnn accelerator efficiency through resource partitioning. In ISCA, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_30_1",
+      "volume-title": "ASPLOS",
+      "author": "Kwon Hyoukjun",
+      "year": "2018",
+      "unstructured": "Hyoukjun Kwon, Ananda Samajdar, and Tushar Krishna. Maeri: Enabling flexible dataflow mapping over dnn accelerators via reconfigurable interconnects. In ASPLOS, 2018."
+    },
+    {
+      "key": "e_1_3_2_2_31_1",
+      "volume-title": "ISCA",
+      "author": "Chen Yu-Hsin",
+      "year": "2016",
+      "unstructured": "Yu-Hsin Chen, Joel Emer, and Vivienne Sze. Eyeriss: A spatial architecture for energy-efficient dataflow for convolutional neural networks. In ISCA, 2016."
+    },
+    {
+      "key": "e_1_3_2_2_32_1",
+      "volume-title": "MICRO",
+      "author": "Shao Yakun Sophia",
+      "year": "2019",
+      "unstructured": "Yakun Sophia Shao, Jason Clemons, Rangharajan Venkatesan, Brian Zimmer, Matthew Fojtik, Nan Jiang, Ben Keller, Alicia Klinefelter, Nathaniel Pinckney, Priyanka Raina, et al. Simba: Scaling deep-learning inference with multi-chip-module-based architecture. In MICRO, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_33_1",
+      "volume-title": "ASPLOS",
+      "author": "Gao Mingyu",
+      "year": "2019",
+      "unstructured": "Mingyu Gao, Xuan Yang, Jing Pu, Mark Horowitz, and Christos Kozyrakis. Tangram: Optimized coarse-grained dataflow for scalable nn accelerators. In ASPLOS, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_34_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MICRO50266.2020.00062"
+    },
+    {
+      "key": "e_1_3_2_2_35_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/HPCA47549.2020.00015"
+    },
+    {
+      "key": "e_1_3_2_2_36_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MICRO.2016.7783759"
+    },
+    {
+      "key": "e_1_3_2_2_37_1",
+      "volume-title": "VLDB Endowment",
+      "author": "Lee Jinho",
+      "year": "2017",
+      "unstructured": "Jinho Lee, Heesu Kim, Sungjoo Yoo, Kiyoung Choi, H. Peter Hofstee, Gi-Joon Nam, Mark R. Nutter, and Damir Jamsek. Extrav: Boosting graph processing near storage with a coherent accelerator. In VLDB Endowment, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_38_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/HPCA.2018.00052"
+    },
+    {
+      "key": "e_1_3_2_2_39_1",
+      "volume-title": "ISCA",
+      "author": "Boroumand Amirali",
+      "year": "2019",
+      "unstructured": "Amirali Boroumand, Saugata Ghose, Minesh Patel, Hasan Hassan, Brandon Lucia, Rachata Ausavarungnirun, Kevin Hsieh, Nastaran Hajinazar, Krishna T. Malladi, Hongzhong Zheng, and Onur Mutlu. Conda: Efficient cache coherence support for near-data accelerators. In ISCA, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_40_1",
+      "volume-title": "MICRO",
+      "author": "Mukkara Anurag",
+      "year": "2019",
+      "unstructured": "Anurag Mukkara, Nathan Beckmann, and Daniel Sanchez. Phi: Architectural support for synchronization- and bandwidth-efficient commutative scatter updates. In MICRO, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_41_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MICRO50266.2020.00078"
+    },
+    {
+      "key": "e_1_3_2_2_42_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/HPCA51647.2021.00039"
+    },
+    {
+      "key": "e_1_3_2_2_43_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3466752.3480126"
+    },
+    {
+      "key": "e_1_3_2_2_44_1",
+      "volume-title": "MICRO",
+      "author": "Nag Anirban",
+      "year": "2019",
+      "unstructured": "Anirban Nag, C. N. Ramachandra, Rajeev Balasubramonian, Ryan Stutsman, Edouard Giacomin, Hari Kambalasubramanyam, and Pierre-Emmanuel Gaillardon. Gencache: Leveraging in-cache operators for efficient sequence alignment. In MICRO, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_45_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MICRO50266.2020.00081"
+    },
+    {
+      "key": "e_1_3_2_2_46_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MICRO50266.2020.00080"
+    },
+    {
+      "key": "e_1_3_2_2_47_1",
+      "volume-title": "ASPLOS",
+      "author": "Ghiasi Nika Mansouri",
+      "year": "2022",
+      "unstructured": "Nika Mansouri Ghiasi, Jisung Park, Harun Mustafa, Jeremie Kim, Ataberk Olgun, Arvid Gollwitzer, Damla Senol Cali, Can Firtina, Haiyu Mao, Nour Almadhoun Alserr, Rachata Ausavarungnirun, Nandita Vijaykumar, Mohammed Alser, and Onur Mutlu. Genstore: A high-performance in-storage processing system for genome sequence analysis. In ASPLOS, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_48_1",
+      "volume-title": "ISCA",
+      "author": "Cali Damla Senol",
+      "year": "2022",
+      "unstructured": "Damla Senol Cali, Konstantinos Kanellopoulos, Jo\u00ebl Lindegger, Z\u00fclal Bing\u00f6l, Gurpreet S. Kalsi, Ziyi Zuo, Can Firtina, Meryem Banu Cavlak, Jeremie Kim, Nika Mansouri Ghiasi, Gagandeep Singh, Juan G\u00f3mez-Luna, Nour Almadhoun Alserr, Mohammed Alser, Sreenivas Subramoney, Can Alkan, Saugata Ghose, and Onur Mutlu. Segram: A universal hardware accelerator for genomic sequence-to-graph and sequence-to-sequence mapping. In ISCA, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_49_1",
+      "volume-title": "ASPLOS",
+      "author": "Ghodrati Soroush",
+      "year": "2024",
+      "unstructured": "Soroush Ghodrati, Sean Kinzer, Hanyang Xu, Rohan Mahapatra, Yoonsung Kim, Byung Hoon Ahn, Dong Kai Wang, Lavanya Karthikeyan, Amir Yazdanbakhsh, Jongse Park, Nam Sung Kim, and Hadi Esmaeilzadeh. Tandem processor: Grappling with emerging operators in neural networks. In ASPLOS, 2024."
+    },
+    {
+      "key": "e_1_3_2_2_50_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/HPCA57654.2024.00083"
+    },
+    {
+      "key": "e_1_3_2_2_51_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3387514.3405897"
+    },
+    {
+      "key": "e_1_3_2_2_52_1",
+      "volume-title": "FAST",
+      "author": "Lee Youngmoon",
+      "year": "2022",
+      "unstructured": "Youngmoon Lee, Hasan Al Maruf, Mosharaf Chowdhury, Asaf Cidon, and Kang G. Shin. Hydra : Resilient and highly available remote memory. In FAST, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_53_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JSSC.1974.1050511"
+    },
+    {
+      "key": "e_1_3_2_2_54_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MM.2011.77"
+    },
+    {
+      "key": "e_1_3_2_2_55_1",
+      "volume-title": "ISCA",
+      "author": "Esmaeilzadeh Hadi",
+      "year": "2011",
+      "unstructured": "Hadi Esmaeilzadeh, Emily Blem, Renee St. Amant, Karthikeyan Sankaralingam, and Doug Burger. Dark silicon and the end of multicore scaling. In ISCA, 2011."
+    },
+    {
+      "key": "e_1_3_2_2_56_1",
+      "volume-title": "ASPLOS",
+      "author": "Venkatesh Ganesh",
+      "year": "2010",
+      "unstructured": "Ganesh Venkatesh, Jack Sampson, Nathan Goulding, Saturnino Garcia, Vladyslav Bryksin, Jose Lugo-Martinez, Steven Swanson, and Michael Bedford Taylor. Conservation cores: Reducing the energy of mature computations. In ASPLOS, 2010."
+    },
+    {
+      "key": "e_1_3_2_2_57_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3282307"
+    },
+    {
+      "key": "e_1_3_2_2_58_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3466752.3480051"
+    },
+    {
+      "key": "e_1_3_2_2_59_1",
+      "volume-title": "ISCA",
+      "author": "Putnam Andrew",
+      "year": "2014",
+      "unstructured": "Andrew Putnam, Adrian Caulfield, Eric Chung, Derek Chiou, Kypros Constantinides, John Demme, Hadi Esmaeilzadeh, Jeremy Fowers, Gopi Prashanth, Jan Gray, Michael Haselman, Scott Hauck, Stephen Heil, Amir Hormati, Joo-Young Kim, Sitaram Lanka, James R. Larus, Eric Peterson, Aaron Smith, Jason Thong, Phillip Yi Xiao, and Doug Burger. A reconfigurable fabric for accelerating large-scale datacenter services. In ISCA, 2014."
+    },
+    {
+      "key": "e_1_3_2_2_60_1",
+      "volume-title": "HotChips",
+      "author": "Chung Eric",
+      "year": "2017",
+      "unstructured": "Eric Chung, Jeremy Fowers, Kalin Ovtcharov, Michael Papamichael, Adrian Caulfield, Todd Massengil, Ming Liu, Daniel Lo, Shlomi Alkalay, Michael Haselman, Christian Boehn, Oren Firestein, Alessandro Forin, Kang Su Gatlin, Mahdi Ghandi, Stephen Heil, Kyle Holohan, Tamas Juhasz, Ratna Kumar Kovvuri, Sitaram Lanka, Friedel van Megen, Dima Mukhortov, Prerak Patel, Steve Reinhardt, Adam Sapek, Raja Seera, Balaji Sridharan, Lisa Woods, Phillip Yi-Xiao, Ritchie Zhao, and Doug Burger. Accelerating persistent neural networks at datacenter scale. In HotChips, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_61_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3503222.3507732"
+    },
+    {
+      "key": "e_1_3_2_2_62_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3503222.3507750"
+    },
+    {
+      "key": "e_1_3_2_2_63_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IPDPS53621.2022.00077"
+    },
+    {
+      "key": "e_1_3_2_2_64_1",
+      "volume-title": "Hardless: A generalized server-less compute architecture for hardware processing accelerators",
+      "author": "Werner Sebastian",
+      "year": "2022",
+      "unstructured": "Sebastian Werner andTrever Schirmer. Hardless: A generalized server-less compute architecture for hardware processing accelerators, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_65_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IISWC53511.2021.00018"
+    },
+    {
+      "key": "e_1_3_2_2_66_1",
+      "volume-title": "SIGMETRICS",
+      "author": "Mahgoub Ashraf",
+      "year": "2022",
+      "unstructured": "Ashraf Mahgoub, Edgardo Barsallo Yi, Karthick Shankar, Eshaan Minocha, Sameh Elnikety, Saurabh Bagchi, and Somali Chaterji. Wisefuse: Workload characterization and dag transformation for serverless workflows. In SIGMETRICS, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_67_1",
+      "volume-title": "OSDI",
+      "author": "Mahgoub Ashraf",
+      "year": "2022",
+      "unstructured": "Ashraf Mahgoub, Edgardo Barsallo Yi, Karthick Shankar, Sameh Elnikety, Somali Chaterji, and Saurabh Bagchi. ORION and the three rights: Sizing, bundling, and prewarming for serverless DAGs. In OSDI, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_68_1",
+      "volume-title": "CIDR",
+      "author": "Barbalace Antonio",
+      "year": "2021",
+      "unstructured": "Antonio Barbalace and Jaeyoung Do. Computational storage: Where are we today? In CIDR, 2021."
+    },
+    {
+      "key": "e_1_3_2_2_69_1",
+      "unstructured": "Ngd system nvme computational storage. https://ngdsystems.com/nvme-computational-storage-a-compelling-solution-for-bringing-intelligence-to-the-edge/ ."
+    },
+    {
+      "key": "e_1_3_2_2_70_1",
+      "volume": "202",
+      "author": "Lee Joo Hwan",
+      "unstructured": "Joo Hwan Lee, Hui Zhang, Veronica Lagrange, Praveen Krishnamoorthy, Xiaodong Zhao, and Yang Seok Ki. Smartssd: Fpga accelerated near-storage data analytics on ssd. IEEE Computer Architecture Letters, 2020.",
+      "journal-title": "IEEE Computer Architecture Letters"
+    },
+    {
+      "key": "e_1_3_2_2_71_1",
+      "unstructured": "Xilinx SmartSSD Computational Storage Drive Product Brief. https://www.xilinx.com/content/dam/xilinx/publications/product-briefs/xilinx-smartssd-computational-storage-drive-product-brief.pdf."
+    },
+    {
+      "key": "e_1_3_2_2_72_1",
+      "unstructured": "Openfaas: Serverless functions made simple. https://www.openfaas.com ."
+    },
+    {
+      "key": "e_1_3_2_2_73_1",
+      "unstructured": "Kubernetes. Kubernetes. https://kubernetes.io."
+    },
+    {
+      "key": "e_1_3_2_2_74_1",
+      "unstructured": "IBM. https://www.ibm.com/docs/en/spss-statistics/saas?topic=regression-using-binary-logistic-assess-credit-risk."
+    },
+    {
+      "key": "e_1_3_2_2_75_1",
+      "unstructured": "Spot product defects using computer vision to automate quality inspection. https://aws.amazon.com/lookout-for-vision/."
+    },
+    {
+      "key": "e_1_3_2_2_76_1",
+      "unstructured": "PPE Detection using Amazon Rekognition. https://aws.amazon.com/blogs/machine-learning/automatically-detecting-personal-protective-equipment-on-persons-in-images-using-amazon-rekognition/ ."
+    },
+    {
+      "key": "e_1_3_2_2_77_1",
+      "unstructured": "Using dnn to classify acute myeloidlymphoblastic. https://www.intel.com/content/www/us/en/developer/articles/technical/inception-v3-deep-convolutional-architecture-for-classifying-acute-myeloidlymphoblastic.html."
+    },
+    {
+      "key": "e_1_3_2_2_78_1",
+      "unstructured": "AWS Content Moderation using Serverless. https://docs.aws.amazon.com/rekognition/latest/dg/moderation.html?pg=ln&sec=ft ."
+    },
+    {
+      "key": "e_1_3_2_2_79_1",
+      "unstructured": "AWS Serverless-bot-framework. https://aws.amazon.com/solutions/implementations/serverless-bot-framework/ ."
+    },
+    {
+      "key": "e_1_3_2_2_80_1",
+      "unstructured": "AWS Translate. https://aws.amazon.com/translate/ ."
+    },
+    {
+      "key": "e_1_3_2_2_81_1",
+      "unstructured": "Yakoub Bazi Laila Bashmal Mohamad M Al Rahhal Reham Al Dayil and Naif Al Ajlan. Vision transformers for remote sensing image classification. In Remote Sensing. MDPI."
+    },
+    {
+      "key": "e_1_3_2_2_82_1",
+      "volume-title": "Vladimir Castro Alves, and Pai H. Chou. In-storage processing of I/O intensive applications on computational storage drives. arXiv",
+      "author": "Gorji Ali Heydari",
+      "year": "2021",
+      "unstructured": "Ali Heydari Gorji, Mahdi Torabzadehkashi, Siavash Rezaei, Hossein Bobarshad, Vladimir Castro Alves, and Pai H. Chou. In-storage processing of I/O intensive applications on computational storage drives. arXiv, 2021."
+    },
+    {
+      "key": "e_1_3_2_2_83_1",
+      "volume-title": "https://www.aboutamazon.com/news/aws/how-machine-learning-and-drones-are-helping-prevent-wildfires",
+      "author": "How",
+      "year": "2022",
+      "unstructured": "How machine learning and drones are helping prevent wildfires. https://www.aboutamazon.com/news/aws/how-machine-learning-and-drones-are-helping-prevent-wildfires, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_84_1",
+      "volume-title": "ISCA",
+      "author": "Schall David",
+      "year": "2022",
+      "unstructured": "David Schall, Artemiy Margaritov, Dmitrii Ustiugov, Andreas Sandberg, and Boris Grot. Lukewarm serverless functions: Characterization and optimization. In ISCA, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_85_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3445814.3446696"
+    },
+    {
+      "key": "e_1_3_2_2_86_1",
+      "volume-title": "NSDI",
+      "author": "McClure Sarah",
+      "year": "2022",
+      "unstructured": "Sarah McClure, Amy Ousterhout, Scott Shenker, and Sylvia Ratnasamy. Efficient scheduling policies for Microsecond-Scale tasks. In NSDI, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_87_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IISWC53511.2021.00016"
+    },
+    {
+      "key": "e_1_3_2_2_88_1",
+      "volume-title": "Cristina L. Abad, Philipp Leitner, and Alexandru Iosup. Let's trace it: Fine-grained serverless benchmarking using synchronous and asynchronous orchestrated applications. arXiv",
+      "author": "Scheuner Joel",
+      "year": "2022",
+      "unstructured": "Joel Scheuner, Simon Eismann, Sacheendra Talluri, Erwin Van Eyk, Cristina L. Abad, Philipp Leitner, and Alexandru Iosup. Let's trace it: Fine-grained serverless benchmarking using synchronous and asynchronous orchestrated applications. arXiv, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_89_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3466752.3480055"
+    },
+    {
+      "key": "e_1_3_2_2_90_1",
+      "volume-title": "SoCC",
+      "author": "Hou Kaiyu",
+      "year": "2022",
+      "unstructured": "Kaiyu Hou, Sen Lin, Yan Chen, and Vinod Yegneswaran. Qfaas:Accelerating and securing serverless cloud networks with quic. In SoCC, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_91_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/1465482.1465560"
+    },
+    {
+      "key": "e_1_3_2_2_92_1",
+      "volume-title": "ACM Computing Surveys",
+      "author": "Shafiei Hossein",
+      "year": "2022",
+      "unstructured": "Hossein Shafiei, Ahmad Khonsari, and Payam Mousavi. Serverless computing: A survey of opportunities, challenges, and applications. ACM Computing Surveys, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_93_1",
+      "unstructured": "Serverless in the enterprise 2021:IBM Market Development and Insights. https://www.ibm.com/downloads/cas/ZJLWQOAQ."
+    },
+    {
+      "key": "e_1_3_2_2_94_1",
+      "unstructured": "NGD Systems Power limitation. https://www.snia.org/sites/default/files/SDCEMEA/2020/7%20-%20Eli%20Tiomkin%20NGD%20-%20Computational%20Storage.pdf ."
+    },
+    {
+      "key": "e_1_3_2_2_95_1",
+      "volume-title": "ISCA",
+      "author": "Jouppi Norman P",
+      "year": "2017",
+      "unstructured": "Norman P Jouppi, Cliff Young, Nishant Patil, David Patterson, Gaurav Agrawal, Raminder Bajwa, Sarah Bates, Suresh Bhatia, Nan Boden, Al Borchers, et al. In-datacenter performance analysis of a tensor processing unit. In ISCA, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_96_1",
+      "volume-title": "Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv",
+      "author": "Devlin Jacob",
+      "year": "2018",
+      "unstructured": "Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv, 2018."
+    },
+    {
+      "key": "e_1_3_2_2_97_1",
+      "volume-title": "SoCC",
+      "author": "Ao Lixiang",
+      "year": "2018",
+      "unstructured": "Lixiang Ao, Liz Izhikevich, Geoffrey M. Voelker, and George Porter. Sprocket: A serverless video processing framework. In SoCC, 2018."
+    },
+    {
+      "key": "e_1_3_2_2_98_1",
+      "unstructured": "Content Moderation in Social Media. https://www.mygreatlearning.com/blog/content-moderation-in-social-media-with-aws-services/ ."
+    },
+    {
+      "key": "e_1_3_2_2_99_1",
+      "volume-title": "ISCA",
+      "author": "Hameed Rehan",
+      "year": "2010",
+      "unstructured": "Rehan Hameed, Wajahat Qadeer, Megan Wachs, Omid Azizi, Alex Solomatnikov, Benjamin C Lee, Stephen Richardson, Christos Kozyrakis, and Mark Horowitz. Understanding sources of inefficiency in general-purpose chips. In ISCA, 2010."
+    },
+    {
+      "key": "e_1_3_2_2_100_1",
+      "volume-title": "ISCA",
+      "author": "Magaki Ikuo",
+      "year": "2016",
+      "unstructured": "Ikuo Magaki, Moein Khazraee, Luis Vega Gutierrez, and Michael Bedford Taylor. Asic clouds: Specializing the datacenter. In ISCA, 2016."
+    },
+    {
+      "key": "e_1_3_2_2_101_1",
+      "volume-title": "ATC",
+      "author": "Liu Ming",
+      "year": "2019",
+      "unstructured": "Ming Liu, Simon Peter, Arvind Krishnamurthy, and Phitchaya Mangpo Phothilimthana. E3: Energy-efficient microservices on smartnic-accelerated servers. In ATC, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_102_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MSE.2007.44"
+    },
+    {
+      "key": "e_1_3_2_2_103_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ISCAS51556.2021.9401196"
+    },
+    {
+      "key": "e_1_3_2_2_104_1",
+      "unstructured": "Prometheus: From Metrics to Insight. https://prometheus.io/."
+    },
+    {
+      "key": "e_1_3_2_2_105_1",
+      "unstructured": "Apache OpenWhisk. https://openwhisk.apache.org/ ."
+    },
+    {
+      "key": "e_1_3_2_2_106_1",
+      "volume-title": "Edwin Mascarenhas, Xiaolong Li, Janarbek Matai, Liang Zhang, and Hadi Esmaeilzadeh. Restoring the broken covenant between compilers and deep learning accelerators. arXiv",
+      "author": "Kinzer Sean",
+      "year": "2023",
+      "unstructured": "Sean Kinzer, Soroush Ghodrati, Rohan Mahapatra, Byung Hoon Ahn, Edwin Mascarenhas, Xiaolong Li, Janarbek Matai, Liang Zhang, and Hadi Esmaeilzadeh. Restoring the broken covenant between compilers and deep learning accelerators. arXiv, 2023."
+    },
+    {
+      "key": "e_1_3_2_2_107_1",
+      "unstructured": "Cloud Object Storage | Store & Retrieve Data Anywhere| Amazon Simple Storage Service (S3). https://aws.amazon.com/s3/storage-classes/."
+    },
+    {
+      "key": "e_1_3_2_2_108_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/945445.945450"
+    },
+    {
+      "key": "e_1_3_2_2_109_1",
+      "unstructured": "AWS Lambda Quotas. https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html ."
+    },
+    {
+      "key": "e_1_3_2_2_110_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/j.sysarc.2016.04.008"
+    },
+    {
+      "key": "e_1_3_2_2_111_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TVT.2017.2674302"
+    },
+    {
+      "key": "e_1_3_2_2_112_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TC.2017.2763133"
+    },
+    {
+      "key": "e_1_3_2_2_113_1",
+      "volume-title": "MLArchSys",
+      "author": "Mahapatra Rohan",
+      "year": "2022",
+      "unstructured": "Rohan Mahapatra, Byung Hoon Ahn, Shu-Ting Wang, Hanyang Xu, and Hadi Esmaeilzadeh. Exploring efficient ml-based scheduler for microservices in heterogenous clusters. In MLArchSys, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_114_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/PDSW49588.2019.00005"
+    },
+    {
+      "key": "e_1_3_2_2_115_1",
+      "volume-title": "Cluster Computing",
+      "author": "Tychalas Dimitrios",
+      "year": "2021",
+      "unstructured": "Dimitrios Tychalas and Helen Karatza. Samw: a probabilistic meta-heuristic algorithm for job scheduling in heterogeneous distributed systems powered by microservices. Cluster Computing, 2021."
+    },
+    {
+      "key": "e_1_3_2_2_116_1",
+      "unstructured": "Hugging Face. https://huggingface.co/models."
+    },
+    {
+      "key": "e_1_3_2_2_117_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/CVPR.2016.90"
+    },
+    {
+      "key": "e_1_3_2_2_118_1",
+      "unstructured": "Nvidia jetson tx2. https://developer.nvidia.com/embedded/jetson-tx2 ."
+    },
+    {
+      "key": "e_1_3_2_2_119_1",
+      "unstructured": "hey http Load Generator. https://github.com/rakyll/hey."
+    },
+    {
+      "key": "e_1_3_2_2_120_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.14778/3547305.3547313"
+    },
+    {
+      "key": "e_1_3_2_2_121_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MM.2012.12"
+    },
+    {
+      "key": "e_1_3_2_2_122_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ICCAD.2011.6105405"
+    },
+    {
+      "key": "e_1_3_2_2_123_1",
+      "volume-title": "IEEE ISSCC",
+      "author": "Beck Noah",
+      "year": "2018",
+      "unstructured": "Noah Beck, Sean White, Milam Paraschou, and Samuel Naffziger. Zeppelin: An soc for multichip architectures. In IEEE ISSCC, 2018."
+    },
+    {
+      "key": "e_1_3_2_2_124_1",
+      "unstructured": "Nvidia-turing-architecture-whitepaper. https://images.nvidia.com/aem-dam/en-zz/Solutions/design-visualization/technologies/turing-architecture/NVIDIA-Turing-Architecture-Whitepaper.pdf ."
+    },
+    {
+      "key": "e_1_3_2_2_125_1",
+      "unstructured": "Intel platanium xeon scalable processors. https://www.intel.com/content/www/us/en/products/details/processors/xeon/scalable/platinum/products.html."
+    },
+    {
+      "key": "e_1_3_2_2_126_1",
+      "unstructured": "Alveo u280 data center accelerator card. https://www.xilinx.com/products/boards-and-kits/alveo/u280.html."
+    },
+    {
+      "key": "e_1_3_2_2_127_1",
+      "unstructured": "Nvidia v100 overview. https://www.nvidia.com/en-us/data-center/v100/ ."
+    },
+    {
+      "key": "e_1_3_2_2_128_1",
+      "unstructured": "U.s. energy information administration (eia) average price of electricity. https://www.eia.gov/electricity/data/browser/#/topic/7."
+    },
+    {
+      "key": "e_1_3_2_2_129_1",
+      "volume-title": "EuroSys",
+      "author": "Kannan Ram Srivatsa",
+      "year": "2019",
+      "unstructured": "Ram Srivatsa Kannan, Lavanya Subramanian, Ashwin Raju, Jeongseob Ahn, Jason Mars, and Lingjia Tang. Grandslam: Guaranteeing slas for jobs in microservices execution frameworks. In EuroSys, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_130_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3472883.3486972"
+    },
+    {
+      "key": "e_1_3_2_2_131_1",
+      "volume-title": "NSDI",
+      "author": "Pu Qifan",
+      "year": "2019",
+      "unstructured": "Qifan Pu, Shivaram Venkataraman, and Ion Stoica. Shuffling, fast and slow: Scalable analytics on serverless infrastructure. In NSDI, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_132_1",
+      "volume-title": "ATC",
+      "author": "Mahgoub Ashraf",
+      "year": "2021",
+      "unstructured": "Ashraf Mahgoub, Karthick Shankar, Subrata Mitra, Ana Klimovic, Somali Chaterji, and Saurabh Bagchi. SONIC: Application-aware data passing for chained serverless applications. In ATC, 2021."
+    },
+    {
+      "key": "e_1_3_2_2_133_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3419111.3421287"
+    },
+    {
+      "key": "e_1_3_2_2_134_1",
+      "volume-title": "EuroSys",
+      "author": "Khandelwal Anurag",
+      "year": "2022",
+      "unstructured": "Anurag Khandelwal, Yupeng Tang, Rachit Agarwal, Aditya Akella, and Ion Stoica. Jiffy: Elastic far-memory for stateful serverless analytics. In EuroSys, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_135_1",
+      "volume-title": "IEEE ICDCS",
+      "author": "Choi Sean",
+      "year": "2020",
+      "unstructured": "Sean Choi, Muhammad Shahbaz, Balaji Prabhakar, and Mendel Rosenblum. \u03bb-nic: Interactive serverless compute on programmable smartnics. In IEEE ICDCS, 2020."
+    },
+    {
+      "key": "e_1_3_2_2_136_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3472883.3486982"
+    },
+    {
+      "key": "e_1_3_2_2_137_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3472958"
+    },
+    {
+      "key": "e_1_3_2_2_138_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3357223.3362723"
+    },
+    {
+      "key": "e_1_3_2_2_139_1",
+      "volume-title": "ISCA",
+      "author": "Patterson Liam",
+      "year": "2022",
+      "unstructured": "Liam Patterson, David Pigorovsky, Brian Dempsey, Nikita Lazarev, Aditya Shah, Clara Steinhoff, Ariana Bruno, Justin Hu, and Christina Delimitrou. Hivemind: A hardware-software system stack for serverless edge swarms. In ISCA, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_140_1",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3431920.3439298"
+    },
+    {
+      "key": "e_1_3_2_2_141_1",
+      "volume-title": "MICRO",
+      "author": "Kang Seongyoung",
+      "year": "2021",
+      "unstructured": "Seongyoung Kang, Jiyoung An, Jinpyo Kim, and Sang-Woo Jun. Mithrilog: Near-storage accelerator for high-performance log analytics. In MICRO, 2021."
+    },
+    {
+      "key": "e_1_3_2_2_142_1",
+      "volume-title": "MICRO",
+      "author": "Mailthody Vikram Sharma",
+      "year": "2019",
+      "unstructured": "Vikram Sharma Mailthody, Zaid Qureshi, Weixin Liang, Ziyan Feng, Simon Garcia de Gonzalo, Youjie Li, Hubertus Franke, Jinjun Xiong, Jian Huang, and Wen-mei Hwu. Deepstore: In-storage acceleration for intelligent queries. In MICRO, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_143_1",
+      "volume-title": "ICPE",
+      "author": "Soltaniyeh Mohammadreza",
+      "year": "2022",
+      "unstructured": "Mohammadreza Soltaniyeh, Veronica Lagrange Moutinho Dos Reis, Matt Bryson, Xuebin Yao, Richard P. Martin, and Santosh Nagarakatte. Near-storage processing for solid state drive based recommendation inference with smartssds\u00ae. In ICPE, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_144_1",
+      "volume-title": "FAST",
+      "author": "Kwon Miryeong",
+      "year": "2022",
+      "unstructured": "Miryeong Kwon, Donghyun Gouk, Sangwon Lee, and Myoungsoo Jung. Hardware/Software Co-Programmable framework for computational SSDs to accelerate deep learning service on Large-Scale graphs. In FAST, 2022."
+    },
+    {
+      "key": "e_1_3_2_2_145_1",
+      "volume-title": "SIGMOD",
+      "author": "Do Jaeyoung",
+      "year": "2013",
+      "unstructured": "Jaeyoung Do, Yang-Suk Kee, Jignesh M. Patel, Chanik Park, Kwanghyun Park, and David J. DeWitt. Query processing on smart ssds: Opportunities and challenges. In SIGMOD, 2013."
+    },
+    {
+      "key": "e_1_3_2_2_146_1",
+      "volume-title": "MICRO",
+      "author": "Koo Gunjae",
+      "year": "2017",
+      "unstructured": "Gunjae Koo, Kiran Kumar Matam, Te I, H. V. Krishna Giri Narra, Jing Li, Hung-Wei Tseng, Steven Swanson, and Murali Annavaram. Summarizer: Trading communication with computing near storage. In MICRO, 2017."
+    },
+    {
+      "key": "e_1_3_2_2_147_1",
+      "volume-title": "OSDI",
+      "author": "Seshadri Sudharsan",
+      "year": "2014",
+      "unstructured": "Sudharsan Seshadri, Mark Gahagan, Sundaram Bhaskaran, Trevor Bunker, Arup De, Yanqin Jin, Yang Liu, and Steven Swanson. Willow: A User-Programmable SSD. In OSDI, 2014."
+    },
+    {
+      "key": "e_1_3_2_2_148_1",
+      "volume-title": "FAST",
+      "author": "Tiwari Devesh",
+      "year": "2013",
+      "unstructured": "Devesh Tiwari, Simona Boboila, Sudharshan Vazhkudai, Youngjae Kim, Xiaosong Ma, Peter Desnoyers, and Yan Solihin. Active flash: Towards Energy-Efficient, In-Situ data analytics on Extreme-Scale machines. In FAST, 2013."
+    },
+    {
+      "key": "e_1_3_2_2_149_1",
+      "volume-title": "HotPower",
+      "author": "Tiwari Devesh",
+      "year": "2012",
+      "unstructured": "Devesh Tiwari, Sudharshan S. Vazhkudai, Youngjae Kim, Xiaosong Ma, Simona Boboila, and Peter J. Desnoyers. Reducing data movement costs using Energy-Efficient, active computation on SSD. In HotPower, 2012."
+    },
+    {
+      "key": "e_1_3_2_2_150_1",
+      "volume-title": "ISCA",
+      "author": "Gu Boncheol",
+      "year": "2016",
+      "unstructured": "Boncheol Gu, Andre S. Yoon, Duck-Ho Bae, Insoon Jo, Jinyoung Lee, Jonghyun Yoon, Jeong-Uk Kang, Moonsang Kwon, Chanho Yoon, Sangyeun Cho, Jaeheon Jeong, and Duckhyun Chang. Biscuit: A frame-work for near-data processing of big data workloads. In ISCA, 2016."
+    },
+    {
+      "key": "e_1_3_2_2_151_1",
+      "volume-title": "ATC",
+      "author": "Ruan Zhenyuan",
+      "year": "2019",
+      "unstructured": "Zhenyuan Ruan, Tong He, and Jason Cong. INSIDER: Designing In-Storage computing system for emerging High-Performance drive. In ATC, 2019."
+    },
+    {
+      "key": "e_1_3_2_2_152_1",
+      "unstructured": "Eideticom NoLoad SmartSSD. https://www.eideticom.com/media/attachments/2020/11/09/noload_smartssd_product_brief1.pdf."
+    }
+  ],
+  "event": {
+    "name": "ASPLOS '24: 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 2",
+    "location": "La Jolla CA USA",
+    "acronym": "ASPLOS '24",
+    "sponsor": [
+      "SIGARCH ACM Special Interest Group on Computer Architecture",
+      "SIGOPS ACM Special Interest Group on Operating Systems",
+      "SIGPLAN ACM Special Interest Group on Programming Languages",
+      "SIGBED ACM Special Interest Group on Embedded Systems"
+    ]
+  },
+  "container-title": [
+    "Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 2"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://dl.acm.org/doi/10.1145/3620665.3640413",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+    },
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3620665.3640413",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        6,
+        18
+      ]
+    ],
+    "date-time": "2025-06-18T20:03:42Z",
+    "timestamp": 1750277022000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://dl.acm.org/doi/10.1145/3620665.3640413"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2024,
+        4,
+        27
+      ]
+    ]
+  },
+  "references-count": 152,
+  "alternative-id": [
+    "10.1145/3620665.3640413",
+    "10.1145/3620665"
+  ],
+  "URL": "https://doi.org/10.1145/3620665.3640413",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2024,
+        4,
+        27
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "2024-04-27",
+      "order": 2,
+      "name": "published",
+      "label": "Published",
+      "group": {
+        "name": "publication_history",
+        "label": "Publication History"
+      }
+    }
+  ]
+}

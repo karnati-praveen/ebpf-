@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shardwise · Demo</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f3f5f9;--panel:#ffffff;--panel-2:#f7f9fc;--ink:#0f1a2c;--muted:#5b6b82;--faint:#8a98ad;--line:#e1e7f0;
+  --brand:#3b5bdb;--brand-ink:#ffffff;--good:#0c8a62;--good-bg:#e3f6ee;--warn:#a86400;--warn-bg:#fff3dc;--bad:#c43145;--bad-bg:#fde8eb;
+  --w1:#3b5bdb;--w2:#0ea5a0;--w3:#d97706;--w4:#c2410c;--w5:#7c3aed;--w6:#be185d;--w7:#4d7c0f;--w8:#0369a1;--empty:#e8edf5;
+  --shadow:0 1px 2px rgba(15,26,44,.05),0 6px 20px rgba(15,26,44,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0b1220;--panel:#121b2d;--panel-2:#17223a;--ink:#e8eefb;--muted:#9fb0c9;--faint:#70819c;--line:#24324d;
+    --brand:#7c95ff;--brand-ink:#0b1220;--good:#4fd1a5;--good-bg:#11372d;--warn:#ffc266;--warn-bg:#3a2a0d;--bad:#ff8696;--bad-bg:#3d1720;
+    --w1:#7c95ff;--w2:#2dd4bf;--w3:#fbbf24;--w4:#fb923c;--w5:#a78bfa;--w6:#f472b6;--w7:#a3e635;--w8:#38bdf8;--empty:#1d2a44;--shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0b1220;--panel:#121b2d;--panel-2:#17223a;--ink:#e8eefb;--muted:#9fb0c9;--faint:#70819c;--line:#24324d;
+  --brand:#7c95ff;--brand-ink:#0b1220;--good:#4fd1a5;--good-bg:#11372d;--warn:#ffc266;--warn-bg:#3a2a0d;--bad:#ff8696;--bad-bg:#3d1720;
+  --w1:#7c95ff;--w2:#2dd4bf;--w3:#fbbf24;--w4:#fb923c;--w5:#a78bfa;--w6:#f472b6;--w7:#a3e635;--w8:#38bdf8;--empty:#1d2a44;--shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:16px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,select,textarea,input{font:inherit;color:inherit}
+h1{font-size:22px;margin:0;letter-spacing:-.4px}
+h2{font-size:15px;margin:0;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:650}
+.small{font-size:13px;color:var(--muted)}
+.mono{font-variant-numeric:tabular-nums}
+[hidden]{display:none!important}
+
+.top{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+.top-in{max-width:1480px;margin:auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.logo svg{width:30px;height:30px;flex:none}
+.tag{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);font-size:14px;font-weight:600;white-space:nowrap}
+.pill .led{width:9px;height:9px;border-radius:50%;background:var(--faint)}
+.st-ready .led{background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 25%,transparent)}
+.st-recovering .led,.st-loading .led,.st-calibrating .led,.st-downloading .led{background:var(--warn);animation:pulse 1s infinite}
+.st-failed .led,.st-stopped .led{background:var(--bad)}
+@keyframes pulse{50%{opacity:.35}}
+.statusbox{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
+#message{font-size:13px;color:var(--muted);max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+progress{width:160px;height:6px;accent-color:var(--brand)}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.08);color:var(--brand-ink)}
+.btn.danger:hover:not(:disabled){border-color:var(--bad);color:var(--bad)}
+.btn.sm{padding:6px 10px;font-size:14px;border-radius:8px}
+.banner{max-width:1480px;margin:12px auto 0;padding:10px 16px;border-radius:10px;background:var(--bad-bg);color:var(--bad);font-weight:600}
+
+.steps{max-width:1480px;margin:16px auto 0;padding:0 24px}
+#walk{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;counter-reset:s}
+#walk li{counter-increment:s;padding:10px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:14px;color:var(--muted);display:flex;gap:8px;align-items:center}
+#walk li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--panel-2);border:1px solid var(--line)}
+#walk li.done{color:var(--ink);border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+#walk li.done::before{content:"✓";background:var(--good);border-color:var(--good);color:#fff}
+
+main{max-width:1480px;margin:auto;padding:16px 24px 32px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:16px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px;min-width:0}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+.kpis{grid-column:1/-1;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);min-width:0}
+.kpi .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:650}
+.kpi .v{font-size:28px;font-weight:750;letter-spacing:-.5px;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi .v small{font-size:14px;font-weight:600;color:var(--muted);margin-left:3px}
+.kpi .s{font-size:12px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.chat{display:flex;flex-direction:column;height:calc(100vh - 250px);min-height:560px;position:sticky;top:84px}
+#messages{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px 12px}
+#empty{margin:auto;text-align:center;color:var(--muted);max-width:380px}
+#empty .ex{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+#empty .ex button{text-align:left}
+.message{max-width:88%;padding:11px 14px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word}
+.message.user{align-self:flex-end;background:var(--brand);color:var(--brand-ink);border-bottom-right-radius:4px}
+.message.assistant{align-self:flex-start;background:var(--panel-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.message.pending{align-self:flex-start;background:var(--panel-2);border:1px dashed var(--line);color:var(--muted);font-style:italic}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-style:normal;white-space:normal}
+.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-variant-numeric:tabular-nums}
+.chip.hl{background:var(--warn-bg);color:var(--warn);border-color:transparent;font-weight:600}
+form{border-top:1px solid var(--line);padding-top:12px}
+textarea{width:100%;min-height:76px;max-height:200px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel-2)}
+textarea:focus{outline:2px solid color-mix(in srgb,var(--brand) 50%,transparent);border-color:var(--brand)}
+.form-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
+#chat-error,#control-error{color:var(--bad);font-size:14px;min-height:1.2em;margin-top:6px}
+
+.strip{display:grid;grid-template-columns:repeat(var(--n,28),minmax(0,1fr));gap:3px;border-radius:6px}
+.strip .c{height:34px;border-radius:5px;background:var(--empty);transition:background .5s}
+.strip-axis{display:grid;grid-template-columns:repeat(var(--n,28),minmax(0,1fr));gap:3px;margin-top:4px;font-size:11px;color:var(--faint);text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.flash{animation:flash 1.4s}
+@keyframes flash{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 70%,transparent)}100%{box-shadow:0 0 0 14px transparent}}
+
+#workers{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:16px}
+.worker{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel-2);border-top:4px solid var(--wc)}
+.worker.off{opacity:.65}
+.worker .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.worker .name{font-weight:700}
+.badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.b-up{background:var(--good-bg);color:var(--good)}.b-stopped,.b-down{background:var(--bad-bg);color:var(--bad)}
+.mini{display:grid;grid-template-columns:repeat(var(--n,28),minmax(0,1fr));gap:2px;margin:10px 0;cursor:pointer;border-radius:4px}
+.mini span{height:12px;border-radius:2px;background:var(--empty)}
+.mini span.assigned{background:var(--wc)}
+.mini:focus{outline:2px solid var(--brand);outline-offset:3px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.stats div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-width:0}
+.stats b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.stats i{font-style:normal;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.meter{height:6px;border-radius:999px;background:var(--empty);overflow:hidden;margin-top:4px}
+.meter span{display:block;height:100%;background:var(--wc,var(--brand));border-radius:inherit;transition:width .6s}
+
+#chart{width:100%;height:170px;display:block}
+#chart .grid{stroke:var(--line);stroke-width:1}
+#chart .axis{fill:var(--faint);font-size:11px}
+#chart .line{fill:none;stroke:var(--brand);stroke-width:2.2;vector-effect:non-scaling-stroke}
+#chart .area{fill:color-mix(in srgb,var(--brand) 14%,transparent)}
+#chart .pt{fill:var(--brand)}#chart .pt.load{fill:var(--faint)}
+#chart .move{stroke:var(--warn);stroke-width:1.5;stroke-dasharray:4 3}
+#chart .movel{fill:var(--warn);font-size:11px;font-weight:700}
+
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto}
+.list li{padding:9px 11px;border-radius:10px;background:var(--panel-2);border:1px solid var(--line);font-size:14px}
+.kind{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-right:6px}
+.kind.moved{color:var(--brand)}.kind.healed,.kind.restored{color:var(--good)}.kind.fault,.kind.rejected{color:var(--bad)}
+.dec-ok{color:var(--good);font-weight:700}.dec-no{color:var(--warn);font-weight:700}
+
+.hw{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hw > div{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+.hw .big{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
+.switch input{width:18px;height:18px;accent-color:var(--brand)}
+select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--panel)}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair > div{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.pair h3{margin:0 0 4px;font-size:16px}
+.field{display:flex;flex-direction:column;gap:4px;margin-top:8px;font-size:13px;color:var(--muted)}
+.field input{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--panel);font-size:16px;color:var(--ink)}
+.invite{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end}
+.invite .big{font-size:30px;font-weight:800;letter-spacing:.02em;font-variant-numeric:tabular-nums;user-select:all}
+.conn{display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.conn .led{width:10px;height:10px;border-radius:50%;background:var(--warn);animation:pulse 1s infinite}
+.conn.ok .led{background:var(--good);animation:none}
+.conn.bad{color:var(--bad)}.conn.bad .led{background:var(--bad);animation:none}
+.friends{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.friends li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;border-radius:10px;background:var(--panel-2);border:1px solid var(--line);font-size:14px}
+.friends .sw{width:10px;height:10px}
+.faults{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+@media (max-width:1400px){.tag{display:none}}
+@media (max-width:1180px){
+  .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  main{grid-template-columns:1fr}
+  .chat{position:static;height:auto;min-height:480px}
+  #messages{max-height:520px}
+}
+@media (max-width:720px){
+  .top-in,.steps{padding-left:16px;padding-right:16px}
+  main{padding:12px 16px 24px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2,.hw,.pair{grid-template-columns:1fr}
+  #walk{grid-template-columns:1fr}
+  .tag,#message{display:none}
+  .strip .c{height:24px}
+  .strip{gap:2px}.strip-axis{gap:2px}
+  .strip-axis{font-size:9px}
+  .strip-axis span:nth-child(odd){visibility:hidden}
+  .kpi .v{font-size:22px}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="logo">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="4" width="12" height="24" rx="3" fill="var(--w1)"/><rect x="18" y="4" width="12" height="11" rx="3" fill="var(--w2)"/><rect x="18" y="17" width="12" height="11" rx="3" fill="var(--w2)" opacity=".55"/></svg>
+    <div><h1>Shardwise</h1><div class="tag">One AI model split across devices — re-split live when a device slows down or drops out</div></div>
+  </div>
+  <div class="statusbox">
+    <span class="pill" id="state-pill"><span class="led"></span><span id="state">connecting</span><span id="elapsed" class="small mono"></span></span>
+    <span id="message"></span>
+    <progress id="progress" max="1" hidden></progress>
+  </div>
+  <span class="pill" id="device" title="">…</span>
+  <span class="pill" id="mode">…</span>
+  <button class="btn danger" id="exit">Exit app</button>
+</div>
+<div id="reason" hidden></div>
+</header>
+<div class="banner" id="connection" hidden>Backend unreachable — retrying…</div>
+
+<section class="steps" aria-label="Demo walkthrough">
+  <ol id="walk">
+    <li>Ask the model a question</li>
+    <li>Inspect which worker holds which layers</li>
+    <li>Stop a worker</li>
+    <li>Watch the others take over its layers</li>
+    <li>Restore the worker</li>
+  </ol>
+</section>
+
+<main>
+  <section class="kpis" aria-label="Live measurements">
+    <div class="kpi"><div class="k">Answer speed</div><div class="v" id="k-tps">—</div><div class="s" id="k-tps-s">last request, measured</div></div>
+    <div class="kpi"><div class="k">First token</div><div class="v" id="k-ttft">—</div><div class="s">time to first token, measured</div></div>
+    <div class="kpi"><div class="k">Predicted per token</div><div class="v" id="k-pred">—</div><div class="s" id="k-pred-s">controller model, from measured speeds</div></div>
+    <div class="kpi"><div class="k">Last recovery</div><div class="v" id="k-rec">—</div><div class="s" id="k-rec-s">stop → complete pipeline, measured</div></div>
+    <div class="kpi"><div class="k">Layer moves</div><div class="v" id="generation">—</div><div class="s" id="policy">placement generation</div></div>
+    <div class="kpi"><div class="k">Served</div><div class="v" id="k-req">—</div><div class="s" id="metrics">requests · tokens</div></div>
+  </section>
+
+  <section class="card chat" aria-label="Chat">
+    <div class="card-h"><h2>Ask the model</h2><span class="small"><span id="model-name">Qwen2.5-0.5B-Instruct</span> · real inference</span></div>
+    <div id="messages">
+      <div id="empty">
+        <div style="font-size:18px;font-weight:700;color:var(--ink)">Every answer is computed by the workers on the right, layer by layer.</div>
+        <div class="ex">
+          <button class="btn sm" type="button" data-q="Explain pipeline parallelism in two sentences.">Explain pipeline parallelism in two sentences.</button>
+          <button class="btn sm" type="button" data-q="Give me three tips for studying for exams.">Give me three tips for studying for exams.</button>
+          <button class="btn sm" type="button" data-q="Write a haiku about laptops working together.">Write a haiku about laptops working together.</button>
+        </div>
+      </div>
+    </div>
+    <form id="chat-form">
+      <label for="prompt" class="small">Your message</label>
+      <textarea id="prompt" placeholder="Type a question… (Enter to send, Shift+Enter for a new line)"></textarea>
+      <div class="form-row"><span class="small">Up to 128 tokens per answer. Waits automatically during a recovery.</span><button class="btn primary" id="send" type="submit">Send</button></div>
+      <div id="chat-error" role="alert"></div>
+    </form>
+  </section>
+
+  <div class="stack">
+    <section class="card" aria-label="Model placement">
+      <div class="card-h"><h2>Where the model lives</h2><span class="small"><span id="layer-count">24</span> transformer layers · colour = worker holding it</span></div>
+      <div class="strip" id="strip"></div>
+      <div class="strip-axis" id="axis"></div>
+      <div class="legend" id="legend"></div>
+      <div id="workers"></div>
+      <div class="note" id="recovery-reason"></div>
+      <div class="controls" id="worker-controls" style="margin-top:10px"></div>
+    </section>
+
+    <section class="card" aria-label="Connect another laptop" id="pairing">
+      <div class="card-h"><h2>Connect more laptops</h2><span class="small">any number · same Wi-Fi or phone hotspot</span></div>
+      <div id="pair-body"></div>
+      <div id="pair-error" role="alert" style="color:var(--bad);font-size:14px;min-height:1.2em;margin-top:6px"></div>
+    </section>
+    <section class="card" aria-label="Speed over time">
+      <div class="card-h"><h2>Measured speed per request</h2><span class="small">tokens/s · dashed line = layers moved</span></div>
+      <svg id="chart" viewBox="0 0 700 170" preserveAspectRatio="none" role="img" aria-label="Tokens per second per request"></svg>
+      <div class="small" id="chart-note">Send a message or turn on background load to see measurements.</div>
+    </section>
+
+    <div class="grid2">
+      <section class="card" aria-label="Controller decisions">
+        <div class="card-h"><h2>Controller decisions</h2></div>
+        <ul class="list" id="decisions"><li class="small">No decisions yet</li></ul>
+      </section>
+      <section class="card" aria-label="Events">
+        <div class="card-h"><h2>Timeline</h2></div>
+        <ul class="list" id="events"><li class="small">No events yet</li></ul>
+      </section>
+    </div>
+
+    <section class="card" aria-label="Serving activity">
+      <div class="card-h"><h2>Serving activity</h2><span class="small">real router observations</span></div>
+      <div id="active-workload" class="note">Waiting for workload measurements…</div>
+      <ul class="list" id="replay-events"><li class="small">No completed replay events yet</li></ul>
+      <div class="note">Replay timing measures the pause inside the router. Answers arrive when generation completes.</div>
+    </section>
+
+    <section class="card" aria-label="Hardware and controls">
+      <div class="card-h"><h2>This laptop</h2><span class="small">live readings · n/a = not measurable here</span></div>
+      <div class="hw"><div id="cpu">CPU: loading…</div><div id="gpu">GPU: loading…</div></div>
+      <div class="note" id="links"></div>
+      <div class="controls" style="margin-top:14px">
+        <label class="switch"><input type="checkbox" id="load"> Background load</label>
+        <label class="small">Execution <select id="execution"><option value="auto">Auto</option><option value="cpu">CPU</option><option value="cuda">NVIDIA GPU</option></select></label>
+      </div>
+      <div class="faults" id="fault-controls" style="margin-top:10px">
+      </div>
+      <div id="control-error" role="alert"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+'use strict';
+const token='__SESSION_TOKEN__',$=id=>document.getElementById(id);
+let status=null,busy=false,generation=null,history=[],checks=[false,false,false,false,false],hasStopped=false;
+const colors={},COLORS=[1,2,3,4,5,6,7,8].map(i=>`var(--w${i})`);let N=28;
+const colorOf=name=>{const k=/^w(\d+)$/.exec(name);return colors[name]||(colors[name]=COLORS[((k?+k[1]:Object.keys(colors).length+1)-1)%COLORS.length])};
+const num=(v,d=0)=>v==null||Number.isNaN(Number(v))?'n/a':Number(v).toFixed(d);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clock=t=>{const d=new Date(t);return isNaN(d)?(t||''):d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})};
+const range=l=>l?`L${l[0]}–${l[1]-1}`:'0 layers';
+const spans=a=>(a||[]).map(r=>r[0]+'–'+(r[1]-1)).join(' | ');
+
+function tick(i){checks[i]=true;[...$('walk').children].forEach((e,n)=>e.classList.toggle('done',checks[n]))}
+async function post(path,body={}){const r=await fetch('/api/'+path,{method:'POST',headers:{'Content-Type':'application/json','X-Session-Token':token},body:JSON.stringify(body)});let d={};try{d=await r.json()}catch{}if(!r.ok)throw Error(d.error||('Request failed ('+r.status+')'));return d}
+async function control(path,body){$('control-error').textContent='';try{await post(path,body);await pollStatus()}catch(e){$('control-error').textContent=e.message}}
+function kpi(id,value,unit){$(id).innerHTML=value==null||value==='n/a'?'—':`${esc(value)}<small>${esc(unit)}</small>`}
+
+function render(s){
+  status=s;const t=s.telemetry||{};
+  $('state').textContent=s.app_state;$('state-pill').className='pill st-'+s.app_state;
+  $('message').textContent=s.message||'';
+  $('elapsed').textContent=t.recovering_for_s!=null?`${num(t.recovering_for_s,1)} s`:'';
+  $('progress').hidden=s.progress==null;if(s.progress!=null)$('progress').value=s.progress;
+  $('device').textContent=s.device.selected==='cuda'?'NVIDIA '+(s.device.gpu_name||'GPU'):'CPU';$('device').title=s.device.reason||'';$('reason').textContent=s.device.reason||'';
+  $('mode').textContent=s.mode==='solo'?'Solo · one laptop':s.mode==='host'?'Pair · host':'Pair · friend';
+  $('send').disabled=busy||s.mode==='join'||['stopped','failed'].includes(s.app_state);
+  $('load').checked=s.load_on;$('load').disabled=s.app_state!=='ready'||s.mode==='join';
+  $('execution').value=s.device.requested;$('execution').closest('label').hidden=s.mode!=='solo';
+  if(s.mode==='join')$('chat-error').textContent='Chat runs on the host laptop — this laptop contributes its worker.';
+
+  const last=(t.history||[]).at(-1);
+  kpi('k-tps',last?num(last.tokens_per_sec,1):null,' tok/s');
+  $('k-tps-s').textContent=last?`${last.source==='load'?'background':'your'} request · ${num(last.ms_per_token)} ms/token`:'last request, measured';
+  kpi('k-ttft',last?num(last.ttft_ms):null,' ms');
+  kpi('k-pred',t.predicted_token_ms!=null?num(t.predicted_token_ms):null,' ms');
+  $('k-pred-s').textContent=t.predicted_bottleneck_ms!=null?`slowest stage ${num(t.predicted_bottleneck_ms)} ms · from measured speeds`:'controller model, from measured speeds';
+  const rec=(t.recoveries||[]).at(-1);kpi('k-rec',rec?num(rec.seconds,1):null,' s');$('k-rec-s').textContent=rec?rec.kind+' · measured':'stop → complete pipeline, measured';
+  $('generation').textContent=s.generation>=0?s.generation:'—';$('policy').textContent='placement generation · '+s.policy;
+  $('k-req').textContent=s.metrics&&s.metrics.requests!=null?s.metrics.requests:'—';$('metrics').textContent=`${num(s.metrics?.requests)} requests · ${num(s.metrics?.tokens)} tokens`;
+
+  const changed=generation!==null&&generation!==s.generation;generation=s.generation;
+  if((s.total_layers||28)!==N||!$('axis').childElementCount){N=s.total_layers||28;document.documentElement.style.setProperty('--n',N);$('axis').innerHTML=Array.from({length:N},(_,n)=>`<span>${n}</span>`).join('');$('layer-count').textContent=N}
+  if(s.model)$('model-name').textContent=s.model.split('/').pop();
+  s.workers.forEach(w=>colorOf(w.name));
+  const owner=Array.from({length:N},(_,n)=>s.workers.find(w=>w.layers&&n>=w.layers[0]&&n<w.layers[1]));
+  $('strip').innerHTML=owner.map((w,n)=>`<span class="c" title="Layer ${n} · ${w?esc(w.name):'unassigned'}"${w?` style="background:${colorOf(w.name)}"`:''}></span>`).join('');
+  if(changed){$('strip').classList.remove('flash');void $('strip').offsetWidth;$('strip').classList.add('flash')}
+  $('legend').innerHTML=s.workers.map(w=>`<span><i class="sw" style="background:${colorOf(w.name)}"></i><b>${esc(w.name)}</b> ${range(w.layers)}${w.layers?` (${w.layers[1]-w.layers[0]} layers)`:''}</span>`).join('');
+  const stageBy=Object.fromEntries((t.stages||[]).map(x=>[x.name,x]));
+  $('workers').innerHTML=s.workers.map((w,i)=>{const st=stageBy[w.name]||{},node=(t.nodes||{})[w.name]||{},speed=w.speed??node.speed,on=w.status==='up';
+    return `<div class="worker ${esc(w.name)}${on?'':' off'}" style="--wc:${colorOf(w.name)}">
+      <div class="row"><span class="name">${esc(w.name)} <span class="small">· ${esc(w.node)}</span></span><span class="badge b-${esc(w.status)}">${esc(w.status)}</span></div>
+      <div class="small">${w.local?'On this laptop':s.mode==='join'?'On another laptop in this pipeline':'On another laptop (joined)'}</div>
+      <div class="mini" tabindex="0" role="button" aria-label="Inspect ${esc(w.name)} layers">${Array.from({length:N},(_,n)=>`<span class="${w.layers&&n>=w.layers[0]&&n<w.layers[1]?'assigned':''}"></span>`).join('')}</div>
+      <div class="stats">
+        <div><i>Layers</i><b>${w.layers?w.layers[1]-w.layers[0]:0}</b></div>
+        <div title="Measured decode speed relative to this laptop's calibration run (1.00× = as fast as calibrated)"><i>Speed</i><b>${on?num(speed,2)+'×':'—'}</b></div>
+        <div title="Share of time this stage spent computing, measured by the router"><i>Busy</i><b>${on&&st.busy_pct!=null?num(st.busy_pct)+'%':'—'}</b></div>
+      </div>
+      <div class="small">Measured speed vs calibration</div><div class="meter"><span style="width:${on&&speed!=null?Math.min(100,speed*100):0}%"></span></div>
+    </div>`}).join('');
+  document.querySelectorAll('.mini').forEach(e=>{e.onclick=()=>tick(1);e.onkeydown=k=>{if(k.key==='Enter'||k.key===' ')tick(1)}});
+  $('recovery-reason').textContent=s.recovery_demo.available?'Stop a worker to simulate a device leaving: the controller notices and moves its layers to the survivor.':(s.recovery_demo.reason||'Recovery demonstration unavailable.');
+  $('worker-controls').replaceChildren();
+  if(s.recovery_demo.available)s.workers.forEach(w=>{const b=document.createElement('button'),running=w.status==='up';b.className='btn '+(running?'danger':'primary');b.textContent=(running?'Stop ':'Restore ')+w.name;b.disabled=!['ready','recovering'].includes(s.app_state)||running&&s.workers.filter(x=>x.status==='up').length<=1;b.onclick=()=>control('worker',{name:w.name,action:running?'stop':'restore'});$('worker-controls').append(b)});
+  if(s.workers.some(w=>w.status==='stopped')){hasStopped=true;tick(2)}
+  if(hasStopped&&s.app_state==='ready'&&s.workers.some(w=>w.status==='stopped'&&!w.layers))tick(3);
+  if(checks[3]&&s.app_state==='ready'&&s.workers.filter(w=>w.status==='up'&&w.layers).length>1)tick(4);
+
+  $('fault-controls').replaceChildren();
+  if(s.mode==='host'&&s.faults_available.length)s.workers.filter(w=>!w.local).forEach(remote=>{const l=document.createElement('span');l.className='small';l.innerHTML=`<i class="sw" style="background:${colorOf(remote.name)}"></i> <b>${esc(remote.name)}</b>`;$('fault-controls').append(l);
+    [...s.faults_available,'clear'].filter((v,i,a)=>a.indexOf(v)===i).forEach(action=>{const b=document.createElement('button');b.className='btn sm';b.textContent=({slow:'Slow down',net:'+100 ms delay',clear:'Clear'})[action]||action;b.setAttribute('aria-label',`${action} ${remote.name}`);b.disabled=remote.status!=='up'||!['ready','recovering'].includes(s.app_state);b.onclick=()=>control('fault',{node:remote.name,action});$('fault-controls').append(b)})});
+
+  const dec=t.decisions||[];
+  $('decisions').innerHTML=dec.length?dec.map(d=>`<li>${d.executed?'<span class="dec-ok">Moved layers</span>':'<span class="dec-no">Kept layout</span>'} · ${esc(({'recovery-or-initial':'initial or recovery placement'})[d.reason]||d.reason||'')}
+    <div class="small">${d.from?esc(spans(d.from))+' → ':''}${esc(spans(d.to))}${d.improvement_pct?` · predicted gain ${num(d.improvement_pct,1)}%`:''}${d.predicted_ms!=null?` · predicted ${num(d.predicted_ms)} ms`:''}${d.transition_forecast_ms?` · replay forecast ${num(d.transition_forecast_ms)} ms`:''}</div>
+    <div class="small">${esc(clock(d.t))}</div></li>`).join(''):'<li class="small">No decisions yet</li>';
+  $('events').innerHTML=s.events.length?[...s.events].reverse().map(e=>`<li><span class="kind ${esc(e.kind)}">${esc(e.kind)}</span>${esc(e.text)}<div class="small">${esc(clock(e.t))}</div></li>`).join(''):'<li class="small">No events yet</li>';
+  $('links').textContent=(t.links||[]).length?'Application residual (includes worker wait): '+t.links.map(l=>`${l.dst} ${num(l.rtt_ms,2)} ms`).join(' · '):'';
+  const workload=s.workload;
+  $('active-workload').textContent=workload?`${workload.active_requests} active requests · ${num(workload.remaining_tokens)} remaining output tokens · ${num(workload.replay_context_tokens)} tokens in active histories`:'Workload measurements unavailable';
+  const replay=s.transitions||[];
+  $('replay-events').innerHTML=replay.length?[...replay].reverse().slice(0,6).map(e=>`<li>Generation ${esc(e.generation)} · resumed after ${esc(e.after_tokens)} tokens<div class="small">Pause ${num(e.disruption_ms)} ms · cache reconstruction ${num(e.reconstruct_ms)} ms · ${esc(e.scope)} record</div></li>`).join(''):'<li class="small">No completed replay events yet</li>';
+  chart(t.history||[]);
+  renderPairing(s);
+}
+
+let pairView='';
+function renderPairing(s){
+  const p=s.pairing;if(!p){$('pairing').hidden=true;return}
+  let html,view;
+  if(p.mode==='solo'){
+    view='solo';
+    html=`<div class="pair">
+      <div><h3>Invite laptops</h3><div class="small">Let other laptops run part of the model — as many as you like. You get an address and a code to type on each of them.</div>
+        <button class="btn primary" id="pair-invite" style="margin-top:12px">Invite laptops</button></div>
+      <div><h3>Join a laptop</h3><div class="small">Another laptop shows an invite? Enter its address and code.</div>
+        <label class="field">Address<input id="pair-host" inputmode="decimal" placeholder="192.168.1.20" autocomplete="off"></label>
+        <label class="field">Pairing code<input id="pair-code" inputmode="numeric" placeholder="4821-0937" autocomplete="off"></label>
+        <button class="btn" id="pair-join" style="margin-top:10px">Join</button></div></div>`;
+  }else if(p.mode==='host'){
+    const fr=p.friends||[];
+    view='host:'+p.code+':'+p.lan_ip+':'+JSON.stringify(fr);
+    html=`<div class="invite">
+      <div><div class="small">On each other laptop, open Shardwise → <b>Join a laptop</b> and enter</div>
+        <div style="display:flex;gap:28px;flex-wrap:wrap;margin-top:6px"><div><div class="small">Address</div><div class="big">${esc(p.lan_ip||'unknown')}</div></div>
+        <div><div class="small">Pairing code</div><div class="big">${esc(p.code)}</div></div></div></div>
+      <div style="margin-left:auto;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
+        <span class="conn ${fr.some(f=>f.status==='up')?'ok':''}"><span class="led"></span>${fr.length?`${fr.filter(f=>f.status==='up').length} of ${fr.length} joined laptop${fr.length===1?'':'s'} connected`:'Waiting for laptops to join…'}</span>
+        <button class="btn danger" id="pair-leave">Stop sharing</button></div></div>
+      ${fr.length?`<ul class="friends" aria-label="Joined laptops">${fr.map(f=>`<li><i class="sw" style="background:${colorOf(f.name)}"></i><b>${esc(f.name)}</b><span>${esc(f.node)}</span><span class="small">${esc(f.ip)}</span><span class="badge b-${esc(f.status)}" style="margin-left:auto">${esc(f.status)}</span></li>`).join('')}</ul>`:''}
+      <div class="note">More laptops can join with the same code at any time${p.max_friends?` (up to ${p.max_friends})`:''}. Joining laptops need no firewall change. If none can connect: same Wi-Fi (campus/guest Wi-Fi often blocks laptop-to-laptop traffic — a phone hotspot works), and allow TCP ports ${esc((p.ports||[]).join(', '))} into <b>this</b> laptop.</div>`;
+  }else{
+    view='join:'+p.host+':'+p.name+':'+s.app_state+':'+(s.app_state==='failed'?s.message:'');
+    const failed=s.app_state==='failed',ok=s.app_state==='ready';
+    html=`<div class="invite"><div>${failed?`<span class="conn bad"><span class="led"></span>Could not join ${esc(p.host)}</span><div class="small" style="max-width:640px">${esc(s.message)}</div>`:`<span class="conn ${ok?'ok':''}"><span class="led"></span>${ok?'Connected to':'Connecting to'} ${esc(p.host)}${p.name?` as <b>${esc(p.name)}</b>`:''}</span><div class="small">This laptop runs part of the model. Chat and controls are on the inviting laptop.</div>`}</div>
+      <button class="btn danger" id="pair-leave" style="margin-left:auto">${failed?'Back to Solo':'Disconnect'}</button></div>`;
+  }
+  if(p.warning&&p.mode!=='join')html=`<div class="banner" style="margin:0 0 12px">${esc(p.warning)}</div>`+html;
+  view+=':'+(p.warning||'');
+  if(view===pairView)return;pairView=view;$('pair-body').innerHTML=html;
+  const act=async(body)=>{$('pair-error').textContent='';try{await post('pair',body);pairView='';await pollStatus()}catch(e){$('pair-error').textContent=e.message}};
+  $('pair-invite')&&($('pair-invite').onclick=()=>act({action:'invite'}));
+  $('pair-join')&&($('pair-join').onclick=()=>act({action:'join',host:$('pair-host').value.trim(),code:$('pair-code').value.trim()}));
+  $('pair-leave')&&($('pair-leave').onclick=()=>{if(p.mode==='join'&&s.app_state==='failed'||confirm(p.mode==='host'?'Disconnect all joined laptops and return to Solo mode?':'Leave this pipeline and return to Solo mode?'))act({action:'leave'})});
+}
+function chart(h){
+  const svg=$('chart'),W=700,H=170,L=34,R=8,T=10,B=22;
+  if(!h.length){svg.innerHTML='';$('chart-note').hidden=false;return}
+  $('chart-note').hidden=true;
+  const max=Math.max(1,...h.map(p=>p.tokens_per_sec||0))*1.15,x=i=>L+(h.length===1?(W-L-R)/2:i*(W-L-R)/(h.length-1)),y=v=>T+(H-T-B)*(1-v/max);
+  let g='';for(let k=0;k<=3;k++){const v=max*k/3;g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${L-6}" y="${y(v)+4}" text-anchor="end">${v.toFixed(v<10?1:0)}</text>`}
+  for(let i=1;i<h.length;i++)if(h[i].generation!==h[i-1].generation){const xm=(x(i)+x(i-1))/2;g+=`<line class="move" x1="${xm}" x2="${xm}" y1="${T}" y2="${H-B}"/><text class="movel" x="${xm+4}" y="${T+10}">moved</text>`}
+  const pts=h.map((p,i)=>`${x(i)},${y(p.tokens_per_sec||0)}`).join(' ');
+  g+=`<polygon class="area" points="${x(0)},${H-B} ${pts} ${x(h.length-1)},${H-B}"/><polyline class="line" points="${pts}"/>`;
+  g+=h.map((p,i)=>`<circle class="pt${p.source==='load'?' load':''}" cx="${x(i)}" cy="${y(p.tokens_per_sec||0)}" r="${p.source==='load'?2.5:4}"><title>${num(p.tokens_per_sec,1)} tok/s · TTFT ${num(p.ttft_ms)} ms · ${p.source}${p.replays?' · '+p.replays+' replays':''}</title></circle>`).join('');
+  g+=`<text class="axis" x="${L}" y="${H-6}">older</text><text class="axis" x="${W-R}" y="${H-6}" text-anchor="end">latest</text>`;
+  svg.innerHTML=g;
+}
+
+async function pollStatus(){try{const r=await fetch('/api/status',{cache:'no-store'});if(!r.ok)throw Error();render(await r.json());$('connection').hidden=true}catch(e){$('connection').hidden=false;$('send').disabled=true}}
+const bar=(u,t,c)=>`<div class="meter" style="--wc:${c}"><span style="width:${t&&u!=null?Math.max(0,Math.min(100,100*u/t)):0}%"></span></div>`;
+async function pollHw(){try{const r=await fetch('/api/hw',{cache:'no-store'});if(!r.ok)throw Error();const h=await r.json();
+  $('cpu').innerHTML=`<div class="small">CPU · ${esc(h.cpu.model||'n/a')}</div><div class="big">${num(h.cpu.util_pct,0)}%<span class="small"> busy · ${num(h.cpu.cores)} cores</span></div>${bar(h.cpu.util_pct,100,'var(--brand)')}<div class="small" style="margin-top:8px">RAM ${h.ram.used_mb!=null?num(h.ram.used_mb/1024,1):'n/a'} / ${h.ram.total_mb!=null?num(h.ram.total_mb/1024,1):'n/a'} GB</div>${bar(h.ram.used_mb,h.ram.total_mb,'var(--w2)')}`;
+  $('gpu').innerHTML=h.gpu?`<div class="small">GPU · ${esc(h.gpu.name||'NVIDIA')}</div><div class="big">${num(h.gpu.util_pct,0)}%<span class="small"> busy · ${num(h.gpu.temp_c)} °C</span></div>${bar(h.gpu.util_pct,100,'var(--brand)')}<div class="small" style="margin-top:8px">VRAM ${h.gpu.vram_used_mb!=null?num(h.gpu.vram_used_mb/1024,1):'n/a'} / ${h.gpu.vram_total_mb!=null?num(h.gpu.vram_total_mb/1024,1):'n/a'} GB</div>${bar(h.gpu.vram_used_mb,h.gpu.vram_total_mb,'var(--w3)')}`:'<div class="small">GPU</div><div class="big">n/a</div><div class="small">No NVIDIA GPU detected — running on CPU</div>'}
+  catch(e){$('cpu').textContent='CPU / RAM: n/a — backend unreachable';$('gpu').textContent='GPU: n/a — backend unreachable'}}
+
+function message(role,text,meta){$('empty')?.remove();const e=document.createElement('div');e.className='message '+role;e.textContent=text;if(meta){const m=document.createElement('div');m.className='meta';m.innerHTML=meta;e.append(m)}$('messages').append(e);$('messages').scrollTop=$('messages').scrollHeight;return e}
+$('chat-form').onsubmit=async e=>{e.preventDefault();const text=$('prompt').value.trim();if(busy||!text)return;busy=true;$('send').disabled=true;$('send').textContent='Generating…';$('chat-error').textContent='';message('user',text);$('prompt').value='';tick(0);
+  const n=status?status.workers.filter(w=>w.layers).length:1,pending=message('pending',`Generating across ${n} worker${n===1?'':'s'}…`),t0=performance.now();
+  try{const d=await post('chat',{messages:[...history,{role:'user',content:text}],max_new_tokens:128});pending.remove();history.push({role:'user',content:text},{role:'assistant',content:d.text});
+    const chips=[`${d.tokens} tokens`,`${num(d.tokens_per_sec,1)} tok/s`,`TTFT ${num(d.ttft_ms)} ms`,`${num((performance.now()-t0)/1000,1)} s total`,d.device==='cuda'?'GPU':'CPU',...(d.generation!=null?[`generation ${d.generation}`]:[])].map(c=>`<span class="chip">${esc(c)}</span>`).join('');
+    message('assistant',d.text||'(empty answer)',chips+(d.replays>0?`<span class="chip hl">survived a re-split: ${d.replays} replay(s), ${num(d.transition_ms/1000,1)} s</span>`:''))}
+  catch(err){pending.remove();$('chat-error').textContent=err.message}
+  finally{busy=false;$('send').textContent='Send';$('send').disabled=!status||status.mode==='join'||['stopped','failed'].includes(status.app_state)}};
+document.querySelectorAll('#empty [data-q]').forEach(b=>b.onclick=()=>{$('prompt').value=b.dataset.q;$('prompt').focus()});
+$('prompt').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!$('send').disabled)$('chat-form').requestSubmit()}};
+$('load').onchange=e=>control('load',{on:e.target.checked});
+$('execution').onchange=e=>{if(confirm('Restart the inference pipeline using '+e.target.options[e.target.selectedIndex].text+'?'))control('mode',{device:e.target.value});else e.target.value=status.device.requested};
+$('exit').onclick=()=>{if(confirm('Stop the demo and its worker processes?'))control('exit')};
+pollStatus();pollHw();setInterval(pollStatus,1000);setInterval(pollHw,2000);
+</script>
+</body>
+</html>

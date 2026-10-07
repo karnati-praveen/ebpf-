@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math"
 	"sync"
 	"time"
 
@@ -20,6 +21,7 @@ import (
 type Config struct {
 	WorkloadURL        string
 	RemainingWorkAware bool
+	LiveReplayContext  bool
 	Namespace          string
 	WorkerSelector     string // label selector for shard worker pods
 	WorkerPort         int
@@ -70,6 +72,7 @@ type Controller struct {
 	generation     int64
 	staticApplied  bool
 	lastApplied    *partition.Result
+	lastEvaluated  *partition.Result
 	lastPush       time.Time
 	lastError      string
 	conns          map[string]*grpc.ClientConn
@@ -103,7 +106,7 @@ func newDecider(cfg Config) *partition.Decider {
 	d.Gate = cfg.Gate
 	d.Objective = cfg.Objective
 	if cfg.Objective == partition.Objective("auto") {
-		d.Objective = partition.ObjectiveLatency
+		d.Objective = partition.ObjectiveCapacity
 	}
 	return d
 }
@@ -153,6 +156,9 @@ func (c *Controller) reconcile(ctx context.Context) error {
 	c.observeWorkload(ctx)
 	c.mu.Lock()
 	c.decisionObjective = c.decider.Objective
+	if c.workload != nil {
+		input.Concurrency = c.workload.ActiveRequests
+	}
 	c.mu.Unlock()
 	res, changed, err := c.decider.Decide(time.Now(), input, false)
 	c.recordDecision()
@@ -372,6 +378,7 @@ func (c *Controller) conn(addr string) *grpc.ClientConn {
 // design: losing status must not stop the control loop.
 func (c *Controller) report(ctx context.Context, res *partition.Result, phase string) error {
 	c.mu.Lock()
+	c.lastEvaluated = res
 	st := Status{Phase: phase, Generation: c.generation, LastError: c.lastError, Result: res}
 	c.mu.Unlock()
 	return c.src.Report(ctx, st)
@@ -386,9 +393,13 @@ func (c *Controller) State() map[string]any {
 		"static":     c.cfg.Static,
 		"last_error": c.lastError,
 	}
-	if c.lastApplied != nil {
+	result := c.lastEvaluated
+	if result == nil {
+		result = c.lastApplied
+	}
+	if result != nil {
 		var stages []map[string]any
-		for _, a := range c.lastApplied.Assignments {
+		for _, a := range result.Assignments {
 			stages = append(stages, map[string]any{
 				"worker": a.Worker.Name, "node": a.Worker.Node,
 				"start": a.Start, "end": a.End, "speed": a.Worker.Speed,
@@ -399,8 +410,8 @@ func (c *Controller) State() map[string]any {
 		// governs per-request latency. Reporting only the first is what made
 		// the old fidelity check compare a throughput quantity against a
 		// latency observable.
-		out["bottleneck_ms"] = c.lastApplied.BottleneckMs
-		out["pipeline_ms"] = c.lastApplied.PipelineMs
+		out["bottleneck_ms"] = result.BottleneckMs
+		out["pipeline_ms"] = result.PipelineMs
 	}
 	// Read from immutable config, not c.decider: State runs on the HTTP
 	// goroutine and the reconcile loop may replace the Decider.
@@ -417,18 +428,25 @@ func (c *Controller) State() map[string]any {
 	out["workload"] = c.workload
 	out["workload_error"] = c.workloadError
 	out["remaining_work_aware"] = c.cfg.RemainingWorkAware
+	out["live_replay_context"] = c.cfg.LiveReplayContext
 	if objective == partition.Objective("auto") {
 		objective = c.decisionObjective
 		if objective == "" {
-			objective = partition.ObjectiveLatency
+			objective = partition.ObjectiveCapacity
 		}
 	}
 	out["active_objective"] = string(objective)
-	if c.lastApplied != nil {
+	if result != nil {
 		if objective == partition.ObjectiveLatency {
-			out["objective_ms"] = c.lastApplied.PipelineMs
+			out["objective_ms"] = result.PipelineMs
+		} else if objective == partition.ObjectiveCapacity {
+			q := 1
+			if c.workload != nil && c.workload.ActiveRequests > 0 {
+				q = c.workload.ActiveRequests
+			}
+			out["objective_ms"] = math.Max(result.BottleneckMs, result.PipelineMs/float64(q))
 		} else {
-			out["objective_ms"] = c.lastApplied.BottleneckMs
+			out["objective_ms"] = result.BottleneckMs
 		}
 	}
 	out["link_source"] = string(c.cfg.LinkSource)

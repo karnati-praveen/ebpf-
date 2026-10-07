@@ -1,0 +1,520 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        22
+      ]
+    ],
+    "date-time": "2026-09-22T22:54:22Z",
+    "timestamp": 1790117662546,
+    "version": "4.0.1"
+  },
+  "reference-count": 35,
+  "publisher": "IEEE",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            7,
+            7
+          ]
+        ],
+        "date-time": "2024-07-07T00:00:00Z",
+        "timestamp": 1720310400000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-029"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2024,
+            7,
+            7
+          ]
+        ],
+        "date-time": "2024-07-07T00:00:00Z",
+        "timestamp": 1720310400000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-037"
+    }
+  ],
+  "funder": [
+    {
+      "DOI": "10.13039/501100001809",
+      "name": "National Natural Science Foundation of China",
+      "doi-asserted-by": "publisher",
+      "id": [
+        {
+          "id": "10.13039/501100001809",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    },
+    {
+      "DOI": "10.13039/501100018601",
+      "name": "Guangdong Special Support Plan",
+      "doi-asserted-by": "publisher",
+      "id": [
+        {
+          "id": "10.13039/501100018601",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    }
+  ],
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2024,
+        7,
+        7
+      ]
+    ]
+  },
+  "DOI": "10.1109/icws62655.2024.00157",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2024,
+        10,
+        15
+      ]
+    ],
+    "date-time": "2024-10-15T17:19:18Z",
+    "timestamp": 1729012758000
+  },
+  "page": "1306-1313",
+  "source": "Crossref",
+  "is-referenced-by-count": 4,
+  "title": [
+    "Planck: Optimizing LLM Inference Performance in Pipeline Parallelism with Fine-Grained SLO Constraint"
+  ],
+  "prefix": "10.1109",
+  "author": [
+    {
+      "given": "Yanying",
+      "family": "Lin",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences,Shenzhen Institute of Advanced Technology"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Shijie",
+      "family": "Peng",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences,Shenzhen Institute of Advanced Technology"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Shuaipeng",
+      "family": "Wu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences,Shenzhen Institute of Advanced Technology"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Yanbo",
+      "family": "Li",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences,Shenzhen Institute of Advanced Technology"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Chengzhi",
+      "family": "Lu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences,Shenzhen Institute of Advanced Technology"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Chengzhong",
+      "family": "Xu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "University of Macau"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Kejiang",
+      "family": "Ye",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Chinese Academy of Sciences,Shenzhen Institute of Advanced Technology"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "263",
+  "reference": [
+    {
+      "key": "ref1",
+      "article-title": "Llama: Open and efficient foundation language models",
+      "author": "Touvron",
+      "year": "2023"
+    },
+    {
+      "key": "ref2",
+      "article-title": "Robust speech recognition via large-scale weak supervision",
+      "author": "Radford",
+      "year": "2022"
+    },
+    {
+      "key": "ref3",
+      "article-title": "Bert: Pre-training of deep bidirectional transformers for language understanding",
+      "author": "Devlin",
+      "year": "2019"
+    },
+    {
+      "key": "ref4",
+      "article-title": "Palm 2 technical report",
+      "author": "Anil",
+      "year": "2023"
+    },
+    {
+      "key": "ref5",
+      "article-title": "Llama 2: Open foundation and fine-tuned chat models",
+      "author": "Touvron",
+      "year": "2023"
+    },
+    {
+      "key": "ref6",
+      "article-title": "Mixture-of-experts meets instruction tuning:a winning combination for large language models",
+      "author": "Shen",
+      "year": "2023"
+    },
+    {
+      "key": "ref7",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/SC41404.2022.00051"
+    },
+    {
+      "key": "ref8",
+      "first-page": "663",
+      "article-title": "Alpaserve: Statistical multiplexing with model parallelism for deep learning serving",
+      "volume-title": "17th USENIX Symposium on Operating Systems Design and Implementation, OSDI 2023, Boston, MA, USA, July 10-12, 2023",
+      "author": "Li"
+    },
+    {
+      "key": "ref9",
+      "first-page": "787",
+      "article-title": "Shepherd: Serving dnns in the wild",
+      "volume-title": "20th USENIX Symposium on Networked Systems Design and Implementation, NSDI 2023, Boston, MA, April 17-19, 2023",
+      "author": "Zhang"
+    },
+    {
+      "key": "ref10",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3620665.3640411"
+    },
+    {
+      "key": "ref11",
+      "first-page": "539",
+      "article-title": "Microsecond-scale preemption for concurrent gpu-accelerated dnn inferences",
+      "volume-title": "16th USENIX Symposium on Operating Systems Design and Implementation, OSDI 2022, Carlsbad, CA, USA, July 11-13, 2022",
+      "author": "Han"
+    },
+    {
+      "key": "ref12",
+      "first-page": "613",
+      "article-title": "Clipper: A low-latency online prediction serving system",
+      "volume-title": "14th USENIX Symposium on Networked Systems Design and Implementation (NSDI 17)",
+      "author": "Crankshaw"
+    },
+    {
+      "key": "ref13",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3419111.3421285"
+    },
+    {
+      "key": "ref14",
+      "article-title": "Tensorflow-serving: Flexible, high-performance ml serving",
+      "author": "Olston",
+      "year": "2017"
+    },
+    {
+      "key": "ref15",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3341301.3359658"
+    },
+    {
+      "key": "ref16",
+      "first-page": "443",
+      "article-title": "Serving dnns like clockwork: Performance predictability from the bottom up",
+      "volume-title": "14th USENIX Symposium on Operating Systems Design and Implementation, OSDI 2020, Virtual Event, November 4-6, 2020",
+      "author": "Gujarati"
+    },
+    {
+      "key": "ref17",
+      "article-title": "Optimizing prediction serving on low-latency serverless dataflow",
+      "author": "Sreekanti",
+      "year": "2020"
+    },
+    {
+      "key": "ref18",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3503222.3507709"
+    },
+    {
+      "key": "ref19",
+      "first-page": "521",
+      "article-title": "Orca: A distributed serving system for transformer-based generative models",
+      "volume-title": "16th USENIX Symposium on Operating Systems Design and Implementation (OSDI 22)",
+      "author": "Yu"
+    },
+    {
+      "key": "ref20",
+      "article-title": "Language models are few-shot learners",
+      "author": "Brown",
+      "year": "2020"
+    },
+    {
+      "key": "ref21",
+      "first-page": "205",
+      "article-title": "Serverless in the wild: Characterizing and optimizing the serverless workload at a large cloud provider",
+      "volume-title": "2020 USENIX Annual Technical Conference (USENIX ATC 20)",
+      "author": "Shahrad"
+    },
+    {
+      "key": "ref22",
+      "first-page": "1075",
+      "article-title": "Orca: Server-assisted multicast for datacenter networks",
+      "volume-title": "19th USENIX Symposium on Networked Systems Design and Implementation (NSDI 22)",
+      "author": "Diab"
+    },
+    {
+      "key": "ref23",
+      "article-title": "Tetris: Memory-efficient serverless inference through tensor sharing",
+      "volume-title": "2022 USENIX Annual Technical Conference, USENIX ATC 2022, Carlsbad, CA, USA, July 11-13, 2022",
+      "author": "Li"
+    },
+    {
+      "key": "ref24",
+      "first-page": "533",
+      "article-title": "Antman: Dynamic scaling on gpu clusters for deep learning",
+      "volume-title": "14th USENIX Symposium on Operating Systems Design and Implementation, OSDI 2020, Virtual Event, November 4-6, 2020",
+      "author": "Xiao"
+    },
+    {
+      "key": "ref25",
+      "first-page": "497",
+      "article-title": "Bamboo: Making preemptible instances resilient for affordable training of large dnns",
+      "volume-title": "20th USENIX Symposium on Networked Systems Design and Implementation, NSDI 2023, Boston, MA, April 17-19, 2023",
+      "author": "Thorpe"
+    },
+    {
+      "key": "ref26",
+      "first-page": "559",
+      "article-title": "Alpa: Automating inter- and intra-operator parallelism for distributed deep learning",
+      "volume-title": "16th USENIX Symposium on Operating Systems Design and Implementation (OSDI 22)",
+      "author": "Zheng"
+    },
+    {
+      "key": "ref27",
+      "first-page": "1",
+      "article-title": "Supporting very large models using automatic dataflow graph partitioning",
+      "volume-title": "Proceedings of the Fourteenth EuroSys Conference 2019",
+      "author": "Wang"
+    },
+    {
+      "key": "ref28",
+      "first-page": "381",
+      "article-title": "Fine-tuning giant neural networks on commodity hardware with automatic pipeline model parallelism",
+      "volume-title": "2021 USENIX Annual Technical Conference, USENIX ATC 2021, July 14-16, 2021",
+      "author": "Eliad"
+    },
+    {
+      "key": "ref29",
+      "first-page": "16639",
+      "article-title": "Bpipe: Memory-balanced pipeline parallelism for training large language models",
+      "volume-title": "Proceedings of the 40th International Conference on Machine Learning",
+      "author": "Kim"
+    },
+    {
+      "key": "ref30",
+      "first-page": "103",
+      "article-title": "Gpipe: Efficient training of giant neural networks using pipeline parallelism",
+      "volume-title": "Proceedings of the 33rd International Conference on Neural Information Processing Systems",
+      "author": "Huang"
+    },
+    {
+      "key": "ref31",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3492321.3519584"
+    },
+    {
+      "key": "ref32",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/SC41405.2020.00024"
+    },
+    {
+      "key": "ref33",
+      "first-page": "24829",
+      "article-title": "Piper: Multidimensional planner for dnn parallelization",
+      "author": "Tarnawski",
+      "year": "2021",
+      "journal-title": "Advances in Neural Information Processing Systems"
+    },
+    {
+      "key": "ref34",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3437801.3441593"
+    },
+    {
+      "key": "ref35",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3341301.3359646"
+    }
+  ],
+  "event": {
+    "name": "2024 IEEE International Conference on Web Services (ICWS)",
+    "location": "Shenzhen, China",
+    "start": {
+      "date-parts": [
+        [
+          2024,
+          7,
+          7
+        ]
+      ]
+    },
+    "end": {
+      "date-parts": [
+        [
+          2024,
+          7,
+          13
+        ]
+      ]
+    }
+  },
+  "container-title": [
+    "2024 IEEE International Conference on Web Services (ICWS)"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "http://xplorestaging.ieee.org/ielx8/10707332/10707376/10707384.pdf?arnumber=10707384",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2024,
+        10,
+        16
+      ]
+    ],
+    "date-time": "2024-10-16T05:06:50Z",
+    "timestamp": 1729055210000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://ieeexplore.ieee.org/document/10707384/"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2024,
+        7,
+        7
+      ]
+    ]
+  },
+  "references-count": 35,
+  "URL": "https://doi.org/10.1109/icws62655.2024.00157",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2024,
+        7,
+        7
+      ]
+    ]
+  }
+}

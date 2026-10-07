@@ -1,0 +1,28 @@
+{
+  "arxiv": "2403.01136",
+  "citation_title": [
+    "LLM-PQ: Serving LLM on Heterogeneous Clusters with Phase-Aware Partition and Adaptive Quantization"
+  ],
+  "citation_author": [
+    "Zhao, Juntao",
+    "Wan, Borui",
+    "Peng, Yanghua",
+    "Lin, Haibin",
+    "Wu, Chuan"
+  ],
+  "citation_date": [
+    "2024/03/02"
+  ],
+  "citation_online_date": [
+    "2024/03/02"
+  ],
+  "citation_pdf_url": [
+    "https://arxiv.org/pdf/2403.01136"
+  ],
+  "citation_arxiv_id": [
+    "2403.01136"
+  ],
+  "citation_abstract": [
+    "Recent breakthroughs in Large-scale language models (LLMs) have demonstrated impressive performance on various tasks. The immense sizes of LLMs have led to very high resource demand and cost for running the models. Though the models are largely served using uniform high-caliber GPUs nowadays, utilizing a heterogeneous cluster with a mix of available high- and low-capacity GPUs can potentially substantially reduce the serving cost. There is a lack of designs to support efficient LLM serving using a heterogeneous cluster, while the current solutions focus on model partition and uniform compression among homogeneous devices. This paper proposes LLM-PQ, a system that advocates adaptive model quantization and phase-aware partition to improve LLM serving efficiency on heterogeneous GPU clusters. We carefully decide on mixed-precision model quantization together with phase-aware model partition and micro-batch sizing in distributed LLM serving with an efficient algorithm, to greatly enhance inference throughput while fulfilling user-specified model quality targets. Extensive experiments on production inference workloads in 11 different clusters demonstrate that LLM-PQ achieves up to 2.88x (2.26x on average) throughput improvement in inference, showing great advantages over state-of-the-art works."
+  ]
+}

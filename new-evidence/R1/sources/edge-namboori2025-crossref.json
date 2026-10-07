@@ -1,0 +1,296 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        22
+      ]
+    ],
+    "date-time": "2026-09-22T16:28:42Z",
+    "timestamp": 1790094522206,
+    "version": "4.0.1"
+  },
+  "publisher-location": "New York, NY, USA",
+  "reference-count": 15,
+  "publisher": "ACM",
+  "content-domain": {
+    "domain": [
+      "dl.acm.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2025,
+        2,
+        20
+      ]
+    ]
+  },
+  "DOI": "10.1145/3731806.3731859",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2025,
+        9,
+        23
+      ]
+    ],
+    "date-time": "2025-09-23T10:17:39Z",
+    "timestamp": 1758622659000
+  },
+  "page": "321-326",
+  "update-policy": "https://doi.org/10.1145/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 3,
+  "title": [
+    "Distributed Inference of Large Language Models on Edge Devices"
+  ],
+  "prefix": "10.1145",
+  "author": [
+    {
+      "ORCID": "https://orcid.org/0009-0008-3517-1244",
+      "authenticated-orcid": false,
+      "given": "Karthik",
+      "family": "Namboori",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "CSE_PESU, PES University, Bangalore, Karnataka, India"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0000-1960-4419",
+      "authenticated-orcid": false,
+      "given": "Rohit P",
+      "family": "Suresh",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "CSE_PESU, PES University, Bangalore, Karnataka, India"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0003-6210-4016",
+      "authenticated-orcid": false,
+      "given": "Sathwik",
+      "family": "Hj",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "CSE_PESU, PES University, Bangalore, Karnataka, India"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0004-8146-6300",
+      "authenticated-orcid": false,
+      "given": "Shriansh",
+      "family": "Mohanty",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "CSE_PESU, PES University, Bangalore, Karnataka, India"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-9509-0066",
+      "authenticated-orcid": false,
+      "given": "Jayashree",
+      "family": "Rangareddy",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "AIML_PESU, PES University, Bangalore, Karnataka, India"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "320",
+  "published-online": {
+    "date-parts": [
+      [
+        2025,
+        9,
+        23
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "e_1_3_3_1_2_2",
+      "unstructured": "Vaswani A. Shazeer N. Parmar N. Uszkoreit J. Jones L. Gomez A.N. Kaiser L. Polosukhin I.: Attention is all you need. In: Advances in Neural Information Processing Systems vol. 30 pp. 5998–6008 (2017). arXiv:1706.03762"
+    },
+    {
+      "key": "e_1_3_3_1_3_2",
+      "unstructured": "Hu E.J. Shen Y. Wallis P. Allen-Zhu Z. Li Y. Wang S. Wang L.: LoRA: Low-Rank Adaptation of Large Language Models. arXiv preprint arXiv:2106.09685 (2021)"
+    },
+    {
+      "key": "e_1_3_3_1_4_2",
+      "unstructured": "Dettmers T. Lewis M. Belkada Y. Zettlemoyer L.: QLoRA: Efficient finetuning of quantized LLMs. arXiv preprint arXiv:2305.14314 (2023)"
+    },
+    {
+      "key": "e_1_3_3_1_5_2",
+      "unstructured": "Bartłomiej Tadych Distributed Llama. (2024)"
+    },
+    {
+      "key": "e_1_3_3_1_6_2",
+      "unstructured": "Lin J. Gu Y. Han S.: AWQ: Activation-aware weight quantization for LLM compression and acceleration. arXiv preprint arXiv:2306.00978 (2023)"
+    },
+    {
+      "key": "e_1_3_3_1_7_2",
+      "unstructured": "Ma S. Wang H. Ma L. Wang L. Wang W. Huang S. Dong L. Wang R. Xue J. Wei F.: The era of 1-bit LLMs: All large language models are in 1.58 bits. arXiv preprint arXiv:2402.17764 [cs.CL] (2023)"
+    },
+    {
+      "key": "e_1_3_3_1_8_2",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Alizadeh K. Mirzadeh I. Belenko D. Khatamifard K. Cho M. Del Mundo C.C. Rastegari M. Farajtabar M.: LLM in a flash: Efficient large language model inference with limited memory. arXiv preprint arXiv:2312.11514 [cs.CL]. Presented at ACL 2024 (2023)",
+      "DOI": "10.18653/v1/2024.acl-long.678"
+    },
+    {
+      "key": "e_1_3_3_1_9_2",
+      "unstructured": "Carreira S. Marques T. Ribeiro J. Grilo C.: Revolutionizing mobile interaction: Enabling a 3 billion parameter GPT LLM on mobile. arXiv preprint arXiv:2310.01434 [cs.CL] (2023)"
+    },
+    {
+      "key": "e_1_3_3_1_10_2",
+      "unstructured": "Huang Y. Cheng Y. Bapna A. Firat O. Chen M.X. Chen D. Lee H. Ngiam J. Le Q.V. Wu Y. Chen Z.: GPipe: Efficient training of giant neural networks using pipeline parallelism. In: Advances in Neural Information Processing Systems vol. 32 (2019). arXiv:1811.06965"
+    },
+    {
+      "key": "e_1_3_3_1_11_2",
+      "doi-asserted-by": "crossref",
+      "unstructured": "Borzunov A. Baranchuk D. Dettmers T. Ryabinin M. Belkada Y.: PETALS: Collaborative inference and fine-tuning of large models. arXiv preprint arXiv:2209.01188 (2023)",
+      "DOI": "10.18653/v1/2023.acl-demo.54"
+    },
+    {
+      "key": "e_1_3_3_1_12_2",
+      "unstructured": "Shoeybi M. Patwary M. Puri R. LeGresley P. Casper J. Catanzaro B.: Megatron-LM: Training multi-billion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053 (2021)"
+    },
+    {
+      "key": "e_1_3_3_1_13_2",
+      "unstructured": "Su J. Lu Y. Pan S. Wen B. Liu Y.: RoFormer: Enhanced transformer with rotary position embedding. arXiv preprint arXiv:2104.09864 (2021)"
+    },
+    {
+      "key": "e_1_3_3_1_14_2",
+      "unstructured": "Zhou Z. Liu Y. Wang H. Zhang K. Yang Z. Liu X.: Mixture-of-experts meets instruction tuning: A winning combination for large language models. arXiv preprint arXiv:2305.14705 (2022)"
+    },
+    {
+      "key": "e_1_3_3_1_15_2",
+      "unstructured": "Hu J. Bruno A. Ritchken B. Jackson B. Espinosa M. Shah A. Delimitrou C.: HiveMind: A scalable and serverless coordination control platform for UAV swarms. arXiv preprint arXiv:2002.01419 [cs.DC] (2020)"
+    },
+    {
+      "key": "e_1_3_3_1_16_2",
+      "unstructured": "Spheron Network How Much GPU Memory is Required to Run a Large Language Model? Find Out Here! (2024)"
+    }
+  ],
+  "event": {
+    "name": "ICSCA 2025: 2025 14th International Conference on Software and Computer Applications",
+    "location": "Kuala Lumpur Malaysia",
+    "acronym": "ICSCA 2025"
+  },
+  "container-title": [
+    "Proceedings of the 2025 14th International Conference on Software and Computer Applications"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://dl.acm.org/doi/pdf/10.1145/3731806.3731859",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        9,
+        23
+      ]
+    ],
+    "date-time": "2025-09-23T20:53:40Z",
+    "timestamp": 1758660820000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://dl.acm.org/doi/10.1145/3731806.3731859"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2025,
+        2,
+        20
+      ]
+    ]
+  },
+  "references-count": 15,
+  "alternative-id": [
+    "10.1145/3731806.3731859",
+    "10.1145/3731806"
+  ],
+  "URL": "https://doi.org/10.1145/3731806.3731859",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2025,
+        2,
+        20
+      ]
+    ]
+  },
+  "assertion": [
+    {
+      "value": "2025-09-23",
+      "order": 3,
+      "name": "published",
+      "label": "Published",
+      "group": {
+        "name": "publication_history",
+        "label": "Publication History"
+      }
+    }
+  ]
+}

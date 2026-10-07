@@ -4,6 +4,17 @@ from workload import WorkloadTracker
 
 
 class WorkloadTests(unittest.TestCase):
+    def test_replay_context_tracks_all_active_histories(self):
+        tracker = WorkloadTracker()
+        tracker.begin("a", 3, 64)
+        tracker.begin("b", 5, 128)
+        tracker.produced("a")
+        self.assertEqual(tracker.snapshot()["replay_context_tokens"], 193)
+        tracker.finish("b")
+        self.assertEqual(tracker.snapshot()["replay_context_tokens"], 65)
+        tracker.finish("a")
+        self.assertEqual(tracker.snapshot()["replay_context_tokens"], 0)
+
     def test_progress_and_cleanup(self):
         tracker = WorkloadTracker()
         tracker.begin("a", 3)

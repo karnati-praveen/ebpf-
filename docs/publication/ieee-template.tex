@@ -1,0 +1,25 @@
+% IEEE conference writing draft. Verify the selected venue's review rules.
+\documentclass[conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,booktabs,array,graphicx}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\setlength{\emergencystretch}{2em}
+\newcommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\begin{document}
+\title{$title$}
+\author{\IEEEauthorblockN{$author$}}
+\maketitle
+\begin{abstract}
+$abstract$
+\end{abstract}
+\begin{IEEEkeywords}
+$keywords$
+\end{IEEEkeywords}
+$body$
+\bibliographystyle{IEEEtranN}
+\bibliography{references}
+\end{document}

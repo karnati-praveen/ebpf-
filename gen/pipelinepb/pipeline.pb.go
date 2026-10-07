@@ -242,13 +242,16 @@ func (x *ForwardRequest) GetGeneration() int64 {
 }
 
 type ForwardReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Hidden        []byte                 `protobuf:"bytes,1,opt,name=hidden,proto3" json:"hidden,omitempty"`
-	Shape         []int32                `protobuf:"varint,2,rep,packed,name=shape,proto3" json:"shape,omitempty"`
-	NextToken     int32                  `protobuf:"varint,3,opt,name=next_token,json=nextToken,proto3" json:"next_token,omitempty"`  // set by the last stage
-	IsLast        bool                   `protobuf:"varint,4,opt,name=is_last,json=isLast,proto3" json:"is_last,omitempty"`           // true if this worker holds the final layers
-	ComputeMs     float64                `protobuf:"fixed64,5,opt,name=compute_ms,json=computeMs,proto3" json:"compute_ms,omitempty"` // busy time spent on this call
-	Error         string                 `protobuf:"bytes,6,opt,name=error,proto3" json:"error,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Hidden    []byte                 `protobuf:"bytes,1,opt,name=hidden,proto3" json:"hidden,omitempty"`
+	Shape     []int32                `protobuf:"varint,2,rep,packed,name=shape,proto3" json:"shape,omitempty"`
+	NextToken int32                  `protobuf:"varint,3,opt,name=next_token,json=nextToken,proto3" json:"next_token,omitempty"`  // set by the last stage
+	IsLast    bool                   `protobuf:"varint,4,opt,name=is_last,json=isLast,proto3" json:"is_last,omitempty"`           // true if this worker holds the final layers
+	ComputeMs float64                `protobuf:"fixed64,5,opt,name=compute_ms,json=computeMs,proto3" json:"compute_ms,omitempty"` // busy time spent on this call
+	Error     string                 `protobuf:"bytes,6,opt,name=error,proto3" json:"error,omitempty"`
+	// Time waiting for the worker compute lock, measured before execution.
+	// Optional for older workers; zero cannot prove an absence of queueing.
+	QueueMs       float64 `protobuf:"fixed64,7,opt,name=queue_ms,json=queueMs,proto3" json:"queue_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -323,6 +326,13 @@ func (x *ForwardReply) GetError() string {
 		return x.Error
 	}
 	return ""
+}
+
+func (x *ForwardReply) GetQueueMs() float64 {
+	if x != nil {
+		return x.QueueMs
+	}
+	return 0
 }
 
 type StatsRequest struct {
@@ -872,7 +882,7 @@ const file_pipeline_proto_rawDesc = "" +
 	"\x05shape\x18\x05 \x03(\x05R\x05shape\x12\x1e\n" +
 	"\n" +
 	"generation\x18\x06 \x01(\x03R\n" +
-	"generation\"\xa9\x01\n" +
+	"generation\"\xc4\x01\n" +
 	"\fForwardReply\x12\x16\n" +
 	"\x06hidden\x18\x01 \x01(\fR\x06hidden\x12\x14\n" +
 	"\x05shape\x18\x02 \x03(\x05R\x05shape\x12\x1d\n" +
@@ -881,7 +891,8 @@ const file_pipeline_proto_rawDesc = "" +
 	"\ais_last\x18\x04 \x01(\bR\x06isLast\x12\x1d\n" +
 	"\n" +
 	"compute_ms\x18\x05 \x01(\x01R\tcomputeMs\x12\x14\n" +
-	"\x05error\x18\x06 \x01(\tR\x05error\"\x0e\n" +
+	"\x05error\x18\x06 \x01(\tR\x05error\x12\x19\n" +
+	"\bqueue_ms\x18\a \x01(\x01R\aqueueMs\"\x0e\n" +
 	"\fStatsRequest\"\xd2\x01\n" +
 	"\n" +
 	"StatsReply\x12\x1f\n" +

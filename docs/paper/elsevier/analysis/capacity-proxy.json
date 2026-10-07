@@ -1,0 +1,98 @@
+[
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_latency_c1_r1_20261004T111124",
+    "q": 1,
+    "proxy_tps": 4.416111791227494,
+    "observed_tps": 4.029222081072145,
+    "observed_over_proxy": 0.9123913233075539
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_latency_c1_r2_20261004T113138",
+    "q": 1,
+    "proxy_tps": 4.50824741828295,
+    "observed_tps": 4.02024097696984,
+    "observed_over_proxy": 0.891752515770535
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_latency_c1_r3_20261004T112019",
+    "q": 1,
+    "proxy_tps": 4.194303800168061,
+    "observed_tps": 4.066053201133674,
+    "observed_over_proxy": 0.9694226729524819
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_latency_c2_r1_20261004T112519",
+    "q": 2,
+    "proxy_tps": 4.469004466018589,
+    "observed_tps": 4.0459710518260374,
+    "observed_over_proxy": 0.9053405702748313
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_latency_c2_r2_20261004T111516",
+    "q": 2,
+    "proxy_tps": 4.495450803414137,
+    "observed_tps": 4.018906607736876,
+    "observed_over_proxy": 0.8939941250574154
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_latency_c2_r3_20261004T113254",
+    "q": 2,
+    "proxy_tps": 4.488199388321809,
+    "observed_tps": 4.065639192904252,
+    "observed_over_proxy": 0.9058508415385802
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_throughput_c1_r1_20261004T110838",
+    "q": 1,
+    "proxy_tps": 4.256460242533104,
+    "observed_tps": 3.8378069767226326,
+    "observed_over_proxy": 0.9016428576902852
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_throughput_c1_r2_20261004T111904",
+    "q": 1,
+    "proxy_tps": 4.205768570871013,
+    "observed_tps": 3.8754907640351357,
+    "observed_over_proxy": 0.9214702850928679
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_throughput_c1_r3_20261004T112750",
+    "q": 1,
+    "proxy_tps": 4.382121236285167,
+    "observed_tps": 3.8950856221973895,
+    "observed_over_proxy": 0.888858480213877
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_throughput_c2_r1_20261004T113024",
+    "q": 2,
+    "proxy_tps": 8.571918395336876,
+    "observed_tps": 7.355548068929653,
+    "observed_over_proxy": 0.8580982377213333
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_throughput_c2_r2_20261004T112135",
+    "q": 2,
+    "proxy_tps": 8.571918395336876,
+    "observed_tps": 7.29883710676965,
+    "observed_over_proxy": 0.8514823368757474
+  },
+  {
+    "analysis": "service-envelope",
+    "run": "stable_gate_ebpf+app_throughput_c2_r3_20261004T112404",
+    "q": 2,
+    "proxy_tps": 8.15535591779445,
+    "observed_tps": 7.303369796839572,
+    "observed_over_proxy": 0.8955304796574358
+  }
+]

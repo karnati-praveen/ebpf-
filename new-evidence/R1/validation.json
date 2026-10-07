@@ -1,0 +1,13 @@
+{
+  "work_rows": 58,
+  "columns": 15,
+  "unique_ids": 58,
+  "bibtex_entries": 87,
+  "summary_words": 500,
+  "limitations": [
+    "Not exhaustive",
+    "Exact sentence coverage incomplete",
+    "Journal-specific current rules inaccessible",
+    "Accepted journal samples include labelled analogues"
+  ]
+}

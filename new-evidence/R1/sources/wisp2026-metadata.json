@@ -1,0 +1,33 @@
+{
+  "arxiv": "2601.11652",
+  "citation_title": [
+    "WISP: Waste- and Interference-Suppressed Distributed Speculative LLM Serving at the Edge via Dynamic Drafting and SLO-Aware Batching"
+  ],
+  "citation_author": [
+    "Li, Xiangchen",
+    "Fan, Jiakun",
+    "Wang, Qingyuan",
+    "Spatharakis, Dimitrios",
+    "Ghafouri, Saeid",
+    "Vandierendonck, Hans",
+    "John, Deepu",
+    "Ji, Bo",
+    "Butt, Ali R.",
+    "Nikolopoulos, Dimitrios S."
+  ],
+  "citation_date": [
+    "2026/01/15"
+  ],
+  "citation_online_date": [
+    "2026/04/07"
+  ],
+  "citation_pdf_url": [
+    "https://arxiv.org/pdf/2601.11652"
+  ],
+  "citation_arxiv_id": [
+    "2601.11652"
+  ],
+  "citation_abstract": [
+    "As Large Language Models (LLMs) become increasingly accessible to end users, an ever-growing number of inference requests are initiated from edge devices and computed on centralized GPU clusters. However, the resulting exponential growth in computation workload is placing significant strain on data centers, while edge devices remain largely underutilized, leading to imbalanced workloads and resource inefficiency across the network. Integrating edge devices into the LLM inference process via speculative decoding helps balance the workload between the edge and the cloud, while maintaining lossless prediction accuracy. In this paper, we identify and formalize two critical bottlenecks that limit the efficiency and scalability of distributed speculative LLM serving: Wasted Drafting Time and Verification Interference. To address these challenges, we propose WISP, an efficient and SLO-aware distributed LLM inference system that consists of an intelligent speculation controller, a verification time estimator, and a verification batch scheduler. These components collaboratively enhance drafting efficiency and optimize verification request scheduling on the server. Extensive numerical results show that WISP improves system capacity by up to 2.1x and 4.1x, and increases system goodput by up to 1.94x and 3.7x, compared to centralized serving and SLED, respectively."
+  ]
+}

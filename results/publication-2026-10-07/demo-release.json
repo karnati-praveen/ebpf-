@@ -1,0 +1,7 @@
+{
+  "url": "https://github.com/karnati-praveen/ebpf-/releases/download/shardwise-latest/shardwise_amd64.deb",
+  "version": "0.1.0+ci3",
+  "sha256": "b7268ddeff783198b7971134bfbe5036027d763afcd8b68a9242bd1bb7002f4d",
+  "captured_package_utc": "2026-10-07",
+  "execution": "local extraction with existing Python environment; system package not installed"
+}

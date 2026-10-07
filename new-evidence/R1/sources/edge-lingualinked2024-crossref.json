@@ -1,0 +1,161 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        13
+      ]
+    ],
+    "date-time": "2026-09-13T12:53:07Z",
+    "timestamp": 1789303987442,
+    "version": "build-2803163510"
+  },
+  "publisher-location": "Stroudsburg, PA, USA",
+  "reference-count": 0,
+  "publisher": "Association for Computational Linguistics",
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2024
+      ]
+    ]
+  },
+  "DOI": "10.18653/v1/2024.acl-demos.16",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2024,
+        9,
+        20
+      ]
+    ],
+    "date-time": "2024-09-20T19:33:08Z",
+    "timestamp": 1726860788000
+  },
+  "page": "160-171",
+  "source": "Crossref",
+  "is-referenced-by-count": 6,
+  "title": [
+    "LinguaLinked: Distributed Large Language Model Inference on Mobile Devices"
+  ],
+  "prefix": "10.18653",
+  "author": [
+    {
+      "given": "Junchen",
+      "family": "Zhao",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Yurun",
+      "family": "Song",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Ian",
+      "family": "Harris",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Sangeetha",
+      "family": "Abdu Jyothi",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "1643",
+  "event": {
+    "name": "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+    "location": "Bangkok, Thailand",
+    "start": {
+      "date-parts": [
+        [
+          2024,
+          8
+        ]
+      ]
+    },
+    "end": {
+      "date-parts": [
+        [
+          2024,
+          8
+        ]
+      ]
+    }
+  },
+  "container-title": [
+    "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)"
+  ],
+  "original-title": [],
+  "deposited": {
+    "date-parts": [
+      [
+        2024,
+        9,
+        20
+      ]
+    ],
+    "date-time": "2024-09-20T19:33:20Z",
+    "timestamp": 1726860800000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://aclanthology.org/2024.acl-demos.16"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2024
+      ]
+    ]
+  },
+  "references-count": 0,
+  "URL": "https://doi.org/10.18653/v1/2024.acl-demos.16",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2024
+      ]
+    ]
+  }
+}

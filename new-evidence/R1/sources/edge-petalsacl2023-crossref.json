@@ -1,0 +1,209 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        10,
+        1
+      ]
+    ],
+    "date-time": "2026-10-01T07:49:12Z",
+    "timestamp": 1790840952554,
+    "version": "4.1.0"
+  },
+  "publisher-location": "Stroudsburg, PA, USA",
+  "reference-count": 0,
+  "publisher": "Association for Computational Linguistics",
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+    "date-parts": [
+      [
+        2023
+      ]
+    ]
+  },
+  "DOI": "10.18653/v1/2023.acl-demo.54",
+  "type": "proceedings-article",
+  "created": {
+    "date-parts": [
+      [
+        2023,
+        8,
+        4
+      ]
+    ],
+    "date-time": "2023-08-04T20:57:42Z",
+    "timestamp": 1691182662000
+  },
+  "page": "558-568",
+  "source": "Crossref",
+  "is-referenced-by-count": 40,
+  "title": [
+    "Petals: Collaborative Inference and Fine-tuning of Large Models"
+  ],
+  "prefix": "10.18653",
+  "author": [
+    {
+      "given": "Alexander",
+      "family": "Borzunov",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Dmitry",
+      "family": "Baranchuk",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Tim",
+      "family": "Dettmers",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Maksim",
+      "family": "Riabinin",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Younes",
+      "family": "Belkada",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Artem",
+      "family": "Chumachenko",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Pavel",
+      "family": "Samygin",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Colin",
+      "family": "Raffel",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "1643",
+  "event": {
+    "name": "Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+    "location": "Toronto, Canada",
+    "start": {
+      "date-parts": [
+        [
+          2023,
+          7
+        ]
+      ]
+    },
+    "end": {
+      "date-parts": [
+        [
+          2023,
+          7
+        ]
+      ]
+    }
+  },
+  "container-title": [
+    "Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)"
+  ],
+  "original-title": [],
+  "deposited": {
+    "date-parts": [
+      [
+        2023,
+        8,
+        4
+      ]
+    ],
+    "date-time": "2023-08-04T20:58:39Z",
+    "timestamp": 1691182719000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://aclanthology.org/2023.acl-demo.54"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2023
+      ]
+    ]
+  },
+  "references-count": 0,
+  "URL": "https://doi.org/10.18653/v1/2023.acl-demo.54",
+  "relation": {},
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2023
+      ]
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "queue_windows_verified": 54,
+  "calibration_windows_verified": 24,
+  "analytical_cost_rows": 240,
+  "analytical_policy_rows": 18000,
+  "context_2048_cost_example": [
+    {
+      "context": "2048",
+      "speed_b": "1",
+      "link_ms": "0.5",
+      "endpoints": "false",
+      "context_table": "false",
+      "chosen_split": "[[0,14],[14,28]]",
+      "oracle_split": "[[0,16],[16,28]]",
+      "estimated_bottleneck_ms": "78.2",
+      "reference_evaluated_bottleneck_ms": "177.16",
+      "reference_optimal_bottleneck_ms": "158.18",
+      "reference_regret_frac": "0.119989884941",
+      "reference_pipeline_ms": "310.11"
+    },
+    {
+      "context": "2048",
+      "speed_b": "1",
+      "link_ms": "0.5",
+      "endpoints": "false",
+      "context_table": "true",
+      "chosen_split": "[[0,14],[14,28]]",
+      "oracle_split": "[[0,16],[16,28]]",
+      "estimated_bottleneck_ms": "133.36",
+      "reference_evaluated_bottleneck_ms": "177.16",
+      "reference_optimal_bottleneck_ms": "158.18",
+      "reference_regret_frac": "0.119989884941",
+      "reference_pipeline_ms": "310.11"
+    },
+    {
+      "context": "2048",
+      "speed_b": "1",
+      "link_ms": "0.5",
+      "endpoints": "true",
+      "context_table": "false",
+      "chosen_split": "[[0,18],[18,28]]",
+      "oracle_split": "[[0,16],[16,28]]",
+      "estimated_bottleneck_ms": "99.99",
+      "reference_evaluated_bottleneck_ms": "170.91",
+      "reference_optimal_bottleneck_ms": "158.18",
+      "reference_regret_frac": "0.080477936528",
+      "reference_pipeline_ms": "310.11"
+    },
+    {
+      "context": "2048",
+      "speed_b": "1",
+      "link_ms": "0.5",
+      "endpoints": "true",
+      "context_table": "true",
+      "chosen_split": "[[0,16],[16,28]]",
+      "oracle_split": "[[0,16],[16,28]]",
+      "estimated_bottleneck_ms": "158.18",
+      "reference_evaluated_bottleneck_ms": "158.18",
+      "reference_optimal_bottleneck_ms": "158.18",
+      "reference_regret_frac": "0",
+      "reference_pipeline_ms": "310.11"
+    }
+  ]
+}

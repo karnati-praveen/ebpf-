@@ -1,0 +1,448 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        8,
+        18
+      ]
+    ],
+    "date-time": "2026-08-18T00:23:54Z",
+    "timestamp": 1787012634814,
+    "version": "build-2736575974"
+  },
+  "reference-count": 44,
+  "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2025,
+            1,
+            1
+          ]
+        ],
+        "date-time": "2025-01-01T00:00:00Z",
+        "timestamp": 1735689600000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://creativecommons.org/licenses/by/4.0/legalcode"
+    }
+  ],
+  "funder": [
+    {
+      "name": "European Union under the Italian National Recovery and Resilience Plan (NRRP) of NextGenerationEU, partnership on \u201cTelecommunications of the Future\u201d",
+      "award": [
+        "PE0000001"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "PE0000001"
+          ]
+        }
+      ]
+    }
+  ],
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [
+    "IEEE Open J. Commun. Soc."
+  ],
+  "published-print": {
+    "date-parts": [
+      [
+        2025
+      ]
+    ]
+  },
+  "DOI": "10.1109/ojcoms.2025.3561605",
+  "type": "journal-article",
+  "created": {
+    "date-parts": [
+      [
+        2025,
+        4,
+        16
+      ]
+    ],
+    "date-time": "2025-04-16T13:54:23Z",
+    "timestamp": 1744811663000
+  },
+  "page": "3795-3805",
+  "source": "Crossref",
+  "is-referenced-by-count": 14,
+  "title": [
+    "A Matching Game for LLM Layer Deployment in Heterogeneous Edge Networks"
+  ],
+  "prefix": "10.1109",
+  "volume": "6",
+  "author": [
+    {
+      "ORCID": "https://orcid.org/0000-0003-4970-1361",
+      "authenticated-orcid": false,
+      "given": "Benedetta",
+      "family": "Picano",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "School of Electrical and Data Engineering, University of Florence, Florence, Italy"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0002-9528-0863",
+      "authenticated-orcid": false,
+      "given": "Dinh Thai",
+      "family": "Hoang",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Electrical and Data Engineering, University of Technology Sydney, Ultimo, NSW, Australia"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0003-2659-8648",
+      "authenticated-orcid": false,
+      "given": "Diep N.",
+      "family": "Nguyen",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Electrical and Data Engineering, University of Technology Sydney, Ultimo, NSW, Australia"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "263",
+  "reference": [
+    {
+      "key": "ref1",
+      "article-title": "On the opportunities and risks of foundation models",
+      "author": "Bommasani",
+      "year": "2021",
+      "journal-title": "arXiv:2108.07258"
+    },
+    {
+      "key": "ref2",
+      "article-title": "Foundation models for decision making: Problems, methods, and opportunities",
+      "author": "Yang",
+      "year": "2023",
+      "journal-title": "arXiv:2303.04129"
+    },
+    {
+      "key": "ref3",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JIOT.2024.3470210"
+    },
+    {
+      "key": "ref4",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MC.2024.3405397"
+    },
+    {
+      "key": "ref5",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/IOTM.001.2400074"
+    },
+    {
+      "key": "ref6",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JSAC.2024.3460078"
+    },
+    {
+      "key": "ref7",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/mnet.2024.3511662"
+    },
+    {
+      "key": "ref8",
+      "first-page": "1",
+      "article-title": "BERT: Pre-training of deep bidirectional transformers for language understanding",
+      "volume-title": "Proc. North Amer. Chapter Assoc. Comput. Linguist.",
+      "author": "Devlin"
+    },
+    {
+      "key": "ref9",
+      "first-page": "1877",
+      "article-title": "Language models are few shot learners",
+      "volume-title": "Proc. Adv. Neural Inf. Process. Syst.",
+      "volume": "33",
+      "author": "Brown"
+    },
+    {
+      "key": "ref10",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.18653/v1/2024.emnlp-main.35"
+    },
+    {
+      "key": "ref11",
+      "article-title": "Decentralized training of foundation models in heterogeneous environments",
+      "author": "Yuan",
+      "year": "2023",
+      "journal-title": "arXiv:2206.01288"
+    },
+    {
+      "key": "ref12",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1016/j.hcc.2024.100211"
+    },
+    {
+      "key": "ref13",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ICCCWorkshops62562.2024.10693742"
+    },
+    {
+      "key": "ref14",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/jiot.2024.3524255"
+    },
+    {
+      "key": "ref15",
+      "article-title": "Distributed inference and fine-tuning of large language models over the Internet",
+      "author": "Borzunov",
+      "year": "2023",
+      "journal-title": "arXiv:2312.08361"
+    },
+    {
+      "key": "ref16",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TMC.2024.3494793"
+    },
+    {
+      "key": "ref17",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JSAC.2024.3460049"
+    },
+    {
+      "key": "ref18",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TMC.2024.3412751"
+    },
+    {
+      "key": "ref19",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/LCOMM.2024.3378270"
+    },
+    {
+      "key": "ref20",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TCOMM.2024.3368327"
+    },
+    {
+      "key": "ref21",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MWC.015.2300404"
+    },
+    {
+      "key": "ref22",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MCOM.001.2300550"
+    },
+    {
+      "key": "ref23",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MCOM.002.2400106"
+    },
+    {
+      "key": "ref24",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MWC.016.2300600"
+    },
+    {
+      "key": "ref25",
+      "article-title": "LAMBO: Large AI model empowered edge intelligence",
+      "author": "Dong",
+      "year": "2023",
+      "journal-title": "arXiv:2308.15078"
+    },
+    {
+      "key": "ref26",
+      "article-title": "Pushing large language models to the 6G edge: Vision, challenges, and opportunities",
+      "author": "Lin",
+      "year": "2023",
+      "journal-title": "arXiv:2309.16739"
+    },
+    {
+      "key": "ref27",
+      "article-title": "Cached model-as-a-resource: Provisioning large language model agents for edge intelligence in space-air-ground integrated networks",
+      "author": "Xu",
+      "year": "2024",
+      "journal-title": "arXiv:2403.05826"
+    },
+    {
+      "key": "ref28",
+      "article-title": "Large language models for networking: Workflow, advances and challenges",
+      "author": "Liu",
+      "year": "2024",
+      "journal-title": "arXiv:2404.12901"
+    },
+    {
+      "key": "ref29",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/MWC.009.2300501"
+    },
+    {
+      "key": "ref30",
+      "article-title": "Large language models for forecasting and anomaly detection: A systematic literature review",
+      "author": "Su",
+      "year": "2024",
+      "journal-title": "arXiv:2402.10350"
+    },
+    {
+      "key": "ref31",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/OJCOMS.2024.3456549"
+    },
+    {
+      "key": "ref32",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3715073.3715083"
+    },
+    {
+      "key": "ref33",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ACCESS.2024.3506604"
+    },
+    {
+      "key": "ref34",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ACCESS.2024.3505983"
+    },
+    {
+      "key": "ref35",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1364/JOCN.527874"
+    },
+    {
+      "key": "ref36",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/LWC.2024.3462556"
+    },
+    {
+      "key": "ref37",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1002/9781119670827.ch6"
+    },
+    {
+      "key": "ref38",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/978-3-642-24829-0_12"
+    },
+    {
+      "key": "ref39",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TSE.2024.3428972"
+    },
+    {
+      "key": "ref40",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TSE.2024.3368208"
+    },
+    {
+      "key": "ref41",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TSE.2023.3334955"
+    },
+    {
+      "key": "ref42",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/978-88-470-0665-2_18"
+    },
+    {
+      "key": "ref43",
+      "article-title": "LMDrive: Closed-loop end-to-end driving with large language models",
+      "author": "Shao",
+      "year": "2023",
+      "journal-title": "arXiv:2312.07488"
+    },
+    {
+      "key": "ref44",
+      "article-title": "CarLLaVA: Vision language models for camera-only closed-loop driving",
+      "author": "Renz",
+      "year": "2024",
+      "journal-title": "arXiv:2406.10165"
+    }
+  ],
+  "container-title": [
+    "IEEE Open Journal of the Communications Society"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "http://xplorestaging.ieee.org/ielx8/8782661/10829557/10966456.pdf?arnumber=10966456",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        9,
+        30
+      ]
+    ],
+    "date-time": "2025-09-30T12:34:58Z",
+    "timestamp": 1759235698000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://ieeexplore.ieee.org/document/10966456/"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2025
+      ]
+    ]
+  },
+  "references-count": 44,
+  "URL": "https://doi.org/10.1109/ojcoms.2025.3561605",
+  "relation": {},
+  "ISSN": [
+    "2644-125X"
+  ],
+  "issn-type": [
+    {
+      "value": "2644-125X",
+      "type": "electronic"
+    }
+  ],
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2025
+      ]
+    ]
+  }
+}

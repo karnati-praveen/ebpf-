@@ -1,0 +1,828 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        9,
+        8
+      ]
+    ],
+    "date-time": "2026-09-08T19:20:05Z",
+    "timestamp": 1788895205773,
+    "version": "build-2803163510"
+  },
+  "reference-count": 69,
+  "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+  "issue": "10",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2025,
+            10,
+            1
+          ]
+        ],
+        "date-time": "2025-10-01T00:00:00Z",
+        "timestamp": 1759276800000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://ieeexplore.ieee.org/Xplorehelp/downloads/license-information/IEEE.html"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2025,
+            10,
+            1
+          ]
+        ],
+        "date-time": "2025-10-01T00:00:00Z",
+        "timestamp": 1759276800000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-029"
+    },
+    {
+      "start": {
+        "date-parts": [
+          [
+            2025,
+            10,
+            1
+          ]
+        ],
+        "date-time": "2025-10-01T00:00:00Z",
+        "timestamp": 1759276800000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-037"
+    }
+  ],
+  "funder": [
+    {
+      "name": "Guangdong S&#x0026;T Programme",
+      "award": [
+        "2024B0101040007"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "2024B0101040007"
+          ]
+        }
+      ]
+    },
+    {
+      "DOI": "10.13039/501100021171",
+      "name": "Basic and Applied Basic Research Foundation of Guangdong Province",
+      "doi-asserted-by": "publisher",
+      "award": [
+        "2023B1515120058"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "2023B1515120058"
+          ]
+        }
+      ],
+      "id": [
+        {
+          "id": "10.13039/501100021171",
+          "id-type": "DOI",
+          "asserted-by": "publisher"
+        }
+      ]
+    },
+    {
+      "name": "Guangzhou Basic and Applied Basic Research Program",
+      "award": [
+        "2024A04J6367"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "2024A04J6367"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Program for Guangdong Introducing Innovative and Entrepreneurial Teams",
+      "award": [
+        "2017ZT07X355"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "2017ZT07X355"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Guangzhou Municipal Joint Funding Project with Universities and Enterprises",
+      "award": [
+        "2024A03J0616"
+      ],
+      "award-info": [
+        {
+          "award-number": [
+            "2024A03J0616"
+          ]
+        }
+      ]
+    }
+  ],
+  "content-domain": {
+    "domain": [],
+    "crossmark-restriction": false
+  },
+  "short-container-title": [
+    "IEEE Trans. on Mobile Comput."
+  ],
+  "published-print": {
+    "date-parts": [
+      [
+        2025,
+        10
+      ]
+    ]
+  },
+  "DOI": "10.1109/tmc.2025.3574695",
+  "type": "journal-article",
+  "created": {
+    "date-parts": [
+      [
+        2025,
+        5,
+        29
+      ]
+    ],
+    "date-time": "2025-05-29T13:35:45Z",
+    "timestamp": 1748525745000
+  },
+  "page": "10945-10962",
+  "source": "Crossref",
+  "is-referenced-by-count": 5,
+  "title": [
+    "Resource-Efficient Collaborative Edge Transformer Inference With Hybrid Model Parallelism"
+  ],
+  "prefix": "10.1109",
+  "volume": "24",
+  "author": [
+    {
+      "ORCID": "https://orcid.org/0000-0001-8867-0655",
+      "authenticated-orcid": false,
+      "given": "Shengyuan",
+      "family": "Ye",
+      "sequence": "first",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0001-4408-2832",
+      "authenticated-orcid": false,
+      "given": "Bei",
+      "family": "Ouyang",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0003-4707-9492",
+      "authenticated-orcid": false,
+      "given": "Jiangsu",
+      "family": "Du",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Liekang",
+      "family": "Zeng",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Department of Information Engineering, The Chinese University of Hong Kong, Ma Liu Shui, Hong Kong"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0009-0001-2802-2258",
+      "authenticated-orcid": false,
+      "given": "Tianyi",
+      "family": "Qian",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Wenzhong",
+      "family": "Ou",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0001-9745-4372",
+      "authenticated-orcid": false,
+      "given": "Xiaowen",
+      "family": "Chu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "Hong Kong University of Science and Technology, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0003-4894-5540",
+      "authenticated-orcid": false,
+      "given": "Deke",
+      "family": "Guo",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "National Key Laboratory of Information Systems Engineering, National University of Defense Technology, Changsha, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0001-5315-3375",
+      "authenticated-orcid": false,
+      "given": "Yutong",
+      "family": "Lu",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "ORCID": "https://orcid.org/0000-0001-9943-6020",
+      "authenticated-orcid": false,
+      "given": "Xu",
+      "family": "Chen",
+      "sequence": "additional",
+      "affiliation": [
+        {
+          "name": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+        }
+      ],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "263",
+  "reference": [
+    {
+      "key": "ref1",
+      "article-title": "BERT: Pre-training of deep bidirectional transformers for language understanding",
+      "author": "Devlin",
+      "year": "2018"
+    },
+    {
+      "key": "ref2",
+      "article-title": "Improving language understanding by generative pre-training",
+      "author": "Radford",
+      "year": "2018"
+    },
+    {
+      "key": "ref3",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/comst.2025.3527641"
+    },
+    {
+      "key": "ref4",
+      "article-title": "Sasha: Creative goal-oriented reasoning in smart homes with large language models",
+      "author": "King",
+      "year": "2023"
+    },
+    {
+      "key": "ref5",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ACCESS.2024.3387941"
+    },
+    {
+      "key": "ref6",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.3390/vehicles7010011"
+    },
+    {
+      "key": "ref7",
+      "first-page": "663",
+      "article-title": "{AlpaServe}: Statistical multiplexing with model parallelism for deep learning serving",
+      "volume-title": "Proc. USENIX Conf. Operating Syst. Des. Implementation",
+      "author": "Li"
+    },
+    {
+      "key": "ref8",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3437801.3441578"
+    },
+    {
+      "key": "ref9",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/JPROC.2019.2918951"
+    },
+    {
+      "key": "ref10",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1007/978-3-319-57959-7"
+    },
+    {
+      "key": "ref11",
+      "article-title": "Personal LLM agents: Insights and survey about the capability, efficiency and security",
+      "author": "Li",
+      "year": "2024"
+    },
+    {
+      "key": "ref12",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3498361.3538932"
+    },
+    {
+      "key": "ref13",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TNET.2020.3042320"
+    },
+    {
+      "key": "ref14",
+      "article-title": "Beyond efficiency: A systematic survey of resource-efficient large language models",
+      "author": "Bai",
+      "year": "2024"
+    },
+    {
+      "key": "ref15",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3545008.3545015"
+    },
+    {
+      "key": "ref16",
+      "article-title": "Raspberry Pi 4 model B specifications",
+      "year": "2024"
+    },
+    {
+      "key": "ref18",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3447993.3448625"
+    },
+    {
+      "key": "ref19",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TCAD.2019.2944584"
+    },
+    {
+      "key": "ref20",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3302424.3303950"
+    },
+    {
+      "key": "ref21",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/TCAD.2018.2858384"
+    },
+    {
+      "issue": "8",
+      "key": "ref22",
+      "article-title": "Language models are unsupervised multitask learners",
+      "volume": "1",
+      "author": "Radford",
+      "year": "2019",
+      "journal-title": "OpenAI Blog"
+    },
+    {
+      "key": "ref23",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.48550/ARXIV.1706.03762"
+    },
+    {
+      "issue": "140",
+      "key": "ref24",
+      "first-page": "1",
+      "article-title": "Exploring the limits of transfer learning with a unified text-to-text transformer",
+      "volume": "21",
+      "author": "Raffel",
+      "year": "2020",
+      "journal-title": "J. Mach. Learn. Res."
+    },
+    {
+      "key": "ref25",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.48550/arXiv.2010.11929"
+    },
+    {
+      "key": "ref26",
+      "article-title": "OPT: Open pre-trained transformer language models",
+      "author": "Zhang",
+      "year": "2022"
+    },
+    {
+      "key": "ref27",
+      "first-page": "119",
+      "article-title": "Ekya: Continuous learning of video analytics models on edge compute servers",
+      "volume-title": "Proc. 19th Symp. Netw. Syst. Des. Implementation",
+      "author": "Bhardwaj"
+    },
+    {
+      "key": "ref28",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/SC41404.2022.00051"
+    },
+    {
+      "key": "ref29",
+      "first-page": "22941",
+      "article-title": "On-device training under 256kb memory",
+      "volume-title": "Proc. Int. Conf. Neural Inf. Process. Syst.",
+      "author": "Lin"
+    },
+    {
+      "key": "ref30",
+      "first-page": "19",
+      "article-title": "Communication efficient distributed machine learning with the parameter server",
+      "volume-title": "Proc. Int. Conf. Neural Inf. Process. Syst.",
+      "author": "Li"
+    },
+    {
+      "key": "ref31",
+      "first-page": "103",
+      "article-title": "GPipe: Efficient training of giant neural networks using pipeline parallelism",
+      "volume-title": "Proc. Int. Conf. Neural Inf. Process. Syst.",
+      "author": "Huang"
+    },
+    {
+      "key": "ref32",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3341301.3359646"
+    },
+    {
+      "key": "ref33",
+      "article-title": "Megatron-LM: Training multi-billion parameter language models using model parallelism",
+      "author": "Shoeybi",
+      "year": "2019"
+    },
+    {
+      "key": "ref34",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.18653/v1/2023.acl-long.134"
+    },
+    {
+      "key": "ref35",
+      "first-page": "1",
+      "article-title": "Efficient large-scale language model training on GPU clusters using megatron-LM",
+      "volume-title": "Proc. Int. Conf. High Perform. Comput., Netw., Storage Anal.",
+      "author": "Narayanan"
+    },
+    {
+      "key": "ref36",
+      "article-title": "Horovod: Fast and easy distributed deep learning in tensorflow",
+      "author": "Sergeev",
+      "year": "2018"
+    },
+    {
+      "key": "ref37",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/INFOCOM52122.2024.10621342"
+    },
+    {
+      "key": "ref38",
+      "article-title": "Pytorch",
+      "year": "2019"
+    },
+    {
+      "key": "ref39",
+      "article-title": "LLaMA.cpp: Port of Facebook’s LLaMA model in C/C",
+      "author": "Gerganov",
+      "year": "2023"
+    },
+    {
+      "key": "ref40",
+      "first-page": "1",
+      "article-title": "MNN: A universal and efficient inference engine",
+      "volume-title": "Proc. Mach. Learn. Syst.",
+      "author": "Jiang"
+    },
+    {
+      "key": "ref41",
+      "article-title": "Tensorflow-lite",
+      "year": "2021"
+    },
+    {
+      "key": "ref42",
+      "article-title": "DistilBERT, a distilled version of BERT: Smaller, faster, cheaper and lighter",
+      "author": "Sanh",
+      "year": "2019"
+    },
+    {
+      "key": "ref43",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.18653/v1/W18-5446"
+    },
+    {
+      "key": "ref44",
+      "first-page": "3637",
+      "article-title": "Matching networks for one shot learning",
+      "volume-title": "Proc. Adv. Neural Inf. Process. Syst.",
+      "author": "Vinyals"
+    },
+    {
+      "key": "ref45",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/jiot.2024.3524255"
+    },
+    {
+      "key": "ref46",
+      "article-title": "Jetson-nano",
+      "year": "2019"
+    },
+    {
+      "key": "ref47",
+      "article-title": "Nvidia geforce GTX 1080 Ti graphics card",
+      "year": "2017"
+    },
+    {
+      "key": "ref48",
+      "first-page": "135",
+      "article-title": "Serverlessllm: Low-latency serverless inference for large language models",
+      "volume-title": "Proc. 18th USENIX Symp. Operating Syst. Des. Implementation",
+      "author": "Fu"
+    },
+    {
+      "key": "ref49",
+      "article-title": "Fast distributed inference serving for large language models",
+      "author": "Wu",
+      "year": "2023"
+    },
+    {
+      "key": "ref50",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3560905.3568520"
+    },
+    {
+      "key": "ref51",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3498361.3538948"
+    },
+    {
+      "key": "ref52",
+      "first-page": "87",
+      "article-title": "AWQ: Activation-aware weight quantization for on-device LLM compression and acceleration",
+      "volume-title": "Proc. Mach. Learn. Syst.",
+      "author": "Lin",
+      "year": "2024"
+    },
+    {
+      "key": "ref53",
+      "first-page": "21702",
+      "article-title": "LLM-pruner: On the structural pruning of large language models",
+      "volume-title": "Proc. Adv. Neural Inf. Process. Syst.",
+      "author": "Ma"
+    },
+    {
+      "key": "ref54",
+      "article-title": "EchoLM: Accelerating LLM serving with real-time knowledge distillation",
+      "author": "Yu",
+      "year": "2025"
+    },
+    {
+      "key": "ref55",
+      "article-title": "Empowering 1000 tokens/second on-device LLM prefilling with MLLM-NPU",
+      "author": "Xu",
+      "year": "2024"
+    },
+    {
+      "key": "ref56",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3694715.3695964"
+    },
+    {
+      "key": "ref57",
+      "article-title": "Powerinfer-2: Fast large language model inference on a smartphone",
+      "author": "Xue",
+      "year": "2024"
+    },
+    {
+      "key": "ref58",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/SC41405.2020.00024"
+    },
+    {
+      "key": "ref59",
+      "article-title": "Reducing activation recomputation in large transformer models",
+      "volume-title": "Proc. Mach. Learn. Syst.",
+      "author": "Korthikanti"
+    },
+    {
+      "key": "ref60",
+      "first-page": "521",
+      "article-title": "Orca: A distributed serving system for {Transformer-based} generative models",
+      "volume-title": "Proc. USENIX Conf. Operating Syst. Des. Implementation",
+      "author": "Yu"
+    },
+    {
+      "key": "ref61",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3636534.3649363"
+    },
+    {
+      "key": "ref62",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3673038.3673043"
+    },
+    {
+      "key": "ref63",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.23919/DATE58400.2024.10546617"
+    },
+    {
+      "key": "ref64",
+      "article-title": "ZeRO : Extremely efficient collective communication for giant model training",
+      "author": "Wang",
+      "year": "2023"
+    },
+    {
+      "key": "ref65",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3447993.3483278"
+    },
+    {
+      "key": "ref66",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3570361.3613277"
+    },
+    {
+      "key": "ref67",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3570361.3592505"
+    },
+    {
+      "key": "ref68",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3503222.3507778"
+    },
+    {
+      "key": "ref69",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1109/ISCA52012.2021.00049"
+    },
+    {
+      "key": "ref70",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.1145/3627535.3638466"
+    }
+  ],
+  "container-title": [
+    "IEEE Transactions on Mobile Computing"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "http://xplorestaging.ieee.org/ielx8/7755/11154819/11017462.pdf?arnumber=11017462",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2025,
+        9,
+        10
+      ]
+    ],
+    "date-time": "2025-09-10T19:54:02Z",
+    "timestamp": 1757534042000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://ieeexplore.ieee.org/document/11017462/"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2025,
+        10
+      ]
+    ]
+  },
+  "references-count": 69,
+  "journal-issue": {
+    "issue": "10"
+  },
+  "URL": "https://doi.org/10.1109/tmc.2025.3574695",
+  "relation": {},
+  "ISSN": [
+    "1536-1233",
+    "1558-0660",
+    "2161-9875"
+  ],
+  "issn-type": [
+    {
+      "value": "1536-1233",
+      "type": "print"
+    },
+    {
+      "value": "1558-0660",
+      "type": "electronic"
+    },
+    {
+      "value": "2161-9875",
+      "type": "electronic"
+    }
+  ],
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2025,
+        10
+      ]
+    ]
+  }
+}

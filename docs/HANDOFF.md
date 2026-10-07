@@ -1,3 +1,7 @@
+# User-requested stop — 7 October 2026
+
+All benchmark/follow-up/storage-watch processes were stopped. Important work is preserved on main. Do not restart experiments without a new user request. See `docs/publication/READINESS.md`, `results/publication-2026-10-07/README.md` and `docs/TWO_LAPTOP_TESTS.md`.
+
 # Handoff — state, and what to do next
 
 For an agent or person picking this up cold. Read in this order:
@@ -10,6 +14,15 @@ Ignore any copy of the plan under `~/.claude/plans/` — it predates corrections
 
 Branch: `research/phase0-1-measurement`.
 
+## Publication revision, 7 October 2026
+
+The current user target is a **general IEEE conference paper**. Read
+[PUBLICATION_REVISION.md](PUBLICATION_REVISION.md) and `docs/publication/` before
+continuing the older Elsevier path. New raw evidence is under
+`results/publication-2026-10-07/`; interrupted hardware campaigns and pilots
+remain separate. The fresh runtime fixes and writing bundle do not establish
+gate superiority or broad pipeline novelty.
+
 ## State
 
 | Phase | State | Evidence |
@@ -20,8 +33,8 @@ Branch: `research/phase0-1-measurement`.
 | 3 — Qwen3 shards + KV cache + recovery | **Done, verified** | `docs/data/qwen3-validation/` |
 | 4 — cost model | **Measured and wired in** (endpoint + context terms) | `docs/phase4-*`, `docs/data/azure-d4-2026-09/` |
 | 5 — decision gate | **Done**: `none` / `hysteresis` / `gate` / `gate-force` | `internal/partition/decider_test.go` |
-| 6 — experiments | **Harness ready**; needs the VMs | `bench/vmrun.py`, `bench/vmanalyze.py` |
-| 7 — write-up | Blocked on 6 | — |
+| 6 — experiments | **Exploratory results available**: 65 real-model runs; controlled ablations remain | `results/objective-aware-2026-10-04/`, `docs/data/azure-vm-2026-10-04/` |
+| 7 — write-up | **General Elsevier working draft available**; author review and stronger evaluation pending | `docs/paper/elsevier/README.md` |
 
 Not done and not needed for the VM study: proto field for several workers per
 machine (plan 2.4 — one worker per VM suffices), the `keinfer` Go launcher
@@ -76,6 +89,12 @@ machine (plan 2.4 — one worker per VM suffices), the `keinfer` Go launcher
   `contaminated` and excluded by `vmanalyze.py`.
 
 ## Next
+
+**Update, 4 October 2026:** The VM work below is no longer wholly outstanding.
+Read `docs/paper/elsevier/RESULTS_AUDIT.md` for completed evidence and
+`docs/paper/elsevier/VENUES_AND_NEXT_EXPERIMENTS.md` for controlled follow-ups.
+The older recipe is historical context. Retained small-repeat results are
+exploratory. The current manuscript and PDF are in `docs/paper/elsevier/`.
 
 1. Create the VMs per `deploy/standalone/README.md` §1 (Accelerated Networking
    OFF; never B-series or Spot).
