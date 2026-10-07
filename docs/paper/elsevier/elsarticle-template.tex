@@ -1,0 +1,30 @@
+% General Elsevier article class; numerical references remain venue-neutral.
+\documentclass[preprint,12pt]{elsarticle}
+\usepackage{amsmath,amssymb,booktabs,longtable,array}
+\usepackage{graphicx}
+\setkeys{Gin}{keepaspectratio}
+\usepackage{microtype}
+\setlength{\emergencystretch}{3em}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newcommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\makeatletter
+\def\ps@pprintTitle{\let\@oddhead\@empty\let\@evenhead\@empty
+  \def\@oddfoot{\footnotesize Preprint submitted to Elsevier\hfill\today}
+  \let\@evenfoot\@oddfoot}
+\makeatother
+\begin{document}
+\begin{frontmatter}
+\title{$title$}
+\author{$author$}
+\begin{abstract}
+$abstract$
+\end{abstract}
+\begin{keyword}
+$keywords$
+\end{keyword}
+\end{frontmatter}
+$body$
+\end{document}
