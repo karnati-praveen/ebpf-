@@ -1,0 +1,21 @@
+\begin{table}[p]
+\centering\scriptsize\setlength{\tabcolsep}{4pt}
+\caption{Scope and evidence of related systems. Statements summarise the cited publications; without a matched experiment, no cross-system performance ranking is implied.}
+\begin{tabular}{>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.35\linewidth}>{\raggedright\arraybackslash}p{.35\linewidth}}
+\toprule System & Principal capability & Relation to this study\\\midrule
+EdgeShard \cite{edgeshard2025} & Separate latency/throughput optimization, device and memory constraints & Broader placement space and larger models; we examine short-run transition effects.\\
+Kafetzis et al. \cite{kafetzis2025partitioning} & Migration-aware attention-head optimization; simulator evaluation & Finer allocation and explicit resources; our complementary evidence executes a full model on two VMs.\\
+TPI-LLM \cite{tpi2025} & Tensor parallelism and memory scheduling on constrained devices & Stronger large-model and consumer-device evidence; different parallelization and state movement.\\
+MDI-LLM \cite{mdi2025} & Recurrent pipeline, per-sequence KV caches, Jetson tests & Demonstrates capacity beyond one device; our study focuses on objective changes and transition accounting.\\
+Galaxy \cite{galaxy2024} & Heterogeneity-aware hybrid parallelism and communication overlap & Richer parallelization than our serialized stage model.\\
+Petals / Parallax \cite{borzunov2023petals,tong2025parallax} & Distributed block serving / decentralized allocation and routing & Broader distributed deployment than our fixed worker order.\\
+Llumnix / ServerlessLLM \cite{sun2024llumnix,fu2024serverlessllm} & Stateful request migration / startup and migration-aware serving & Stronger serving and state-management mechanisms; our transition uses history replay.\\
+DiSCo / STAR \cite{sun-etal-2025-disco,star2026} & Migration admitted only if remaining decode savings amortise its cost & Same payback principle for request migration; we study it for contiguous-layer re-partitioning with whole-chain replay.\\
+ShadowLLM / EASTER \cite{chen2026shadowllmhotstandby,easter2024} & Hot-standby recovery / split robustness on edge boards & Physical edge recovery evidence; our recovery is exact (replay) but measured on VMs and containers.\\
+SpotServe \cite{miao2023spotserve} & Adaptive parallel configurations on preemptible resources & Broader resource-reconfiguration problem than a two-worker loss test.\\
+ATSInfer / ETCInfer \cite{liu2026atsinfer,lu2026etcinfer} & Consumer CPU/GPU scheduling / thermal and cooling control & Different resource and physical-control scope; quota injection is not thermal evidence.\\
+prima.cpp \cite{prima2026} & Piped-ring parallelism for large models on heterogeneous home devices over Wi-Fi & Real home-device evidence and capacity aggregation; re-plans only when idle, whereas we study mid-session moves.\\
+Shardwise (this work) & Exact sum/bottleneck contiguous placement, payback-gated re-partitioning, recovery, outbound-only joining & Audited real-model runs with transition, telemetry, cost-term and baseline diagnostics; capacity aggregation and prior-system comparison remain future work.\\
+\bottomrule
+\end{tabular}
+\end{table}

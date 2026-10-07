@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering\small
+\caption{Adaptation and separate baseline results. Phase throughput attributes tokens at completion between logged on/off times. Whole-run throughput includes drain. Failures are retained.}
+\begin{tabular}{llrrrr}
+\toprule
+Condition & Arm & Runs & Phase TPS & Whole TPS & Failures \\
+\midrule
+single-device & static & 3 & 4.267 & 4.158 & 0 \\
+compute & gate & 3 & 5.267 & 6.041 & 0 \\
+compute & gate-force & 3 & 5.268 & 6.100 & 0 \\
+compute & hysteresis & 3 & 5.269 & 6.133 & 0 \\
+compute & static & 3 & 4.215 & 5.744 & 0 \\
+loss & gate & 2 & 3.693 & 5.409 & 0 \\
+loss & hysteresis & 2 & 4.219 & 5.443 & 0 \\
+loss & static & 2 & 0.000 & 3.271 & 19 \\
+network & gate & 3 & 5.270 & 6.055 & 0 \\
+network & gate-force & 3 & 5.271 & 6.117 & 0 \\
+network & hysteresis & 3 & 5.269 & 6.131 & 0 \\
+network & static & 3 & 5.270 & 6.554 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
