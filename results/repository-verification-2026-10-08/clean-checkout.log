@@ -1,0 +1,31 @@
+?   	kubeedgeinfer/bench/dpsim	[no test files]
+?   	kubeedgeinfer/cmd/controller	[no test files]
+?   	kubeedgeinfer/cmd/dpsweep	[no test files]
+ok  	kubeedgeinfer/cmd/gate-replay	0.003s
+?   	kubeedgeinfer/cmd/nodeagent	[no test files]
+?   	kubeedgeinfer/cmd/partitionplan	[no test files]
+?   	kubeedgeinfer/docs/data/paper-ablations-2026-10-04	[no test files]
+?   	kubeedgeinfer/docs/paper/elsevier/checks	[no test files]
+?   	kubeedgeinfer/gen/pipelinepb	[no test files]
+ok  	kubeedgeinfer/internal/controller	0.020s
+?   	kubeedgeinfer/internal/ebpf	[no test files]
+?   	kubeedgeinfer/internal/gpu	[no test files]
+ok  	kubeedgeinfer/internal/partition	0.032s
+?   	kubeedgeinfer/internal/peerconn	[no test files]
+?   	kubeedgeinfer/results/paper-ablations-2026-10-04	[no test files]
+ok  	kubeedgeinfer/internal/controller	1.075s
+?   	kubeedgeinfer/internal/ebpf	[no test files]
+?   	kubeedgeinfer/internal/gpu	[no test files]
+ok  	kubeedgeinfer/internal/partition	1.144s
+?   	kubeedgeinfer/internal/peerconn	[no test files]
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.014s
+
+OK
+...................
+----------------------------------------------------------------------
+Ran 19 tests in 1.734s
+
+OK
+Syntax verification: {'python': 130, 'shell': 16}
