@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "evidence_type": "real-model single-host loopback",
+  "started_utc": "2026-10-08T05:36:13Z",
+  "host": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.39",
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "cpu_quota": "max 100000",
+  "cpus": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "inference_cpu_budget": [
+    0,
+    1
+  ],
+  "coordination_cpus": [
+    2,
+    3
+  ],
+  "packages": {
+    "torch": "2.8.0+cpu",
+    "transformers": "4.57.1",
+    "grpcio": "1.84.0",
+    "numpy": "2.5.3",
+    "protobuf": "7.36.2"
+  },
+  "arguments": {
+    "out": "results/calibrated-controller-2026-10-08/smoke",
+    "model": "Qwen/Qwen3-0.6B",
+    "repetitions": 1,
+    "concurrency": "1",
+    "contexts": "32",
+    "tokens": 8,
+    "requests": 2,
+    "seed": 20261007,
+    "base_port": 51000,
+    "modes": "unsplit-1t,unsplit-2t,replicas-2x1t,pipeline-2x1t",
+    "resume": false
+  },
+  "pipeline_layout": [
+    [
+      0,
+      18
+    ],
+    [
+      18,
+      28
+    ]
+  ],
+  "precision": "FP32",
+  "kv_cache": true,
+  "prompts": {
+    "32": [
+      234,
+      836,
+      847,
+      364,
+      79,
+      299,
+      624,
+      638,
+      721,
+      833,
+      578,
+      764,
+      104,
+      287,
+      886,
+      835,
+      132,
+      513,
+      570,
+      844,
+      770,
+      105,
+      842,
+      106,
+      487,
+      906,
+      6,
+      648,
+      196,
+      937,
+      740,
+      123
+    ]
+  },
+  "schedule": [
+    {
+      "repetition": 0,
+      "mode": "pipeline-2x1t",
+      "conditions": [
+        [
+          32,
+          1
+        ]
+      ]
+    },
+    {
+      "repetition": 0,
+      "mode": "replicas-2x1t",
+      "conditions": [
+        [
+          32,
+          1
+        ]
+      ]
+    },
+    {
+      "repetition": 0,
+      "mode": "unsplit-1t",
+      "conditions": [
+        [
+          32,
+          1
+        ]
+      ]
+    },
+    {
+      "repetition": 0,
+      "mode": "unsplit-2t",
+      "conditions": [
+        [
+          32,
+          1
+        ]
+      ]
+    }
+  ],
+  "git_head": "912b6bf12ed1178765d8d9e6d01a514dbd1ab695",
+  "source_sha256": {
+    "bench/local_publication.py": "efd966730f56e70e5e0e9096478d479a58807c903889de2057785b696bef863f",
+    "worker/router.py": "a4a39f0dd3e110fd029c8beb018667de8541190115bd63da9972bea76ce0da63",
+    "worker/server.py": "ae62fc46d0efd54249e0349a108a2624bd2b48c6d6db91110d48d91cb72a4c86",
+    "worker/backends/qwen3.py": "6b178d231f3c1569c40f8856049cdb2d6cb639908a7a6f268535df52477df9ba",
+    "worker/gen/pipeline_pb2.py": "6b2a5d2b01a3f9b57be3dac3e58522adc2dbec1546648dc4534221986451b962"
+  },
+  "model_revision": null
+}

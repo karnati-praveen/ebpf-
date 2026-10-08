@@ -1,0 +1,16 @@
+r=0 capacity-3x1t Q=2 layouts=[[0, 1], [1, 18], [18, 28]] TPS=5.246 failures=0
+r=0 capacity-3x1t Q=4 layouts=[[0, 12], [12, 23], [23, 28]] TPS=5.431 failures=0
+r=0 capacity-3x1t Q=8 layouts=[[0, 12], [12, 23], [23, 28]] TPS=5.565 failures=0
+r=0 capacity-3x1t Q=1 layouts=[[0, 28], [28, 28], [28, 28]] TPS=3.876 failures=0
+r=0 replicas-3x1t Q=2 layouts=[[0, 28], [0, 28], [0, 28]] TPS=5.500 failures=0
+r=0 replicas-3x1t Q=1 layouts=[[0, 28], [0, 28], [0, 28]] TPS=3.829 failures=0
+r=0 replicas-3x1t Q=8 layouts=[[0, 28], [0, 28], [0, 28]] TPS=6.240 failures=1
+r=0 replicas-3x1t Q=4 layouts=[[0, 28], [0, 28], [0, 28]] TPS=5.296 failures=1
+r=0 unsplit-3t Q=1 layouts=[[0, 28]] TPS=4.443 failures=0
+r=0 unsplit-3t Q=8 layouts=[[0, 28]] TPS=4.476 failures=0
+r=0 unsplit-3t Q=4 layouts=[[0, 28]] TPS=4.480 failures=0
+r=0 unsplit-3t Q=2 layouts=[[0, 28]] TPS=4.349 failures=0
+r=0 bottleneck-3x1t Q=4 layouts=[[0, 12], [12, 23], [23, 28]] TPS=5.584 failures=0
+r=0 bottleneck-3x1t Q=8 layouts=[[0, 12], [12, 23], [23, 28]] TPS=5.626 failures=0
+r=0 bottleneck-3x1t Q=2 layouts=[[0, 12], [12, 23], [23, 28]] TPS=4.829 failures=0
+r=0 bottleneck-3x1t Q=1 layouts=[[0, 12], [12, 23], [23, 28]] TPS=3.473 failures=0

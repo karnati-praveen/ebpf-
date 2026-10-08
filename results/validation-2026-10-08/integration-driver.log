@@ -1,0 +1,20 @@
+START qwen-e2e
+END qwen-e2e exit=0
+START recovery
+END recovery exit=0
+START baseline-functional
+END baseline-functional exit=1
+START baseline-functional
+END baseline-functional exit=0
+START baseline-analysis
+END baseline-analysis exit=0
+START component-profile
+END component-profile exit=0
+START planner-build
+END planner-build exit=0
+START three-worker-functional
+END three-worker-functional exit=1
+START three-worker-functional
+END three-worker-functional exit=0
+START three-worker-analysis
+END three-worker-analysis exit=0

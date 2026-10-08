@@ -1,25 +1,24 @@
 ---
-title: "When Does Repartitioning Pay? Measurement Pitfalls in Small CPU Language-Model Serving (Working Draft)"
+title: "Shardwise: Measurement Pitfalls in Repartitioning Small CPU Language Models"
 author: "Anonymous Authors"
 abstract: |
-  This working draft retains incomplete local experiments explicitly.
-  Splitting a language model that fits on one machine creates a deployment
-  choice rather than a capacity requirement. We study that choice with
-  Shardwise, a CPU runtime for contiguous-layer inference, voluntary
-  repartitioning, and replay recovery. An audit of 65 two-VM Qwen3-0.6B runs
-  finds that objective choice changes throughput substantially, but an apparent
-  25% fault-phase adaptation gain shrinks to about 5–7% over the complete run;
-  adaptation under injected link delay loses about 6–8%. The payback gate does
-  not demonstrate an advantage over hysteresis. We distinguish ideal service
-  capacity from finite-session completion, expose a three-worker counterexample
-  to a simple concurrency heuristic, and implement an exact envelope planner.
-  New local experiments compare the pipeline with complete-model replicas and
-  unsplit CPU serving under an explicit resource budget. Position-controlled
-  recovery checks retain exact greedy outputs while measuring token stalls.
-  Worker queue timing separates a real-model application residual into wait
-  and remaining overhead. These results support an empirical account of
-  baseline choice, transition accounting, and controller limitations, rather
-  than a general claim that partitioning outperforms replication.
+  Splitting a language model that fits on each available machine creates a
+  serving choice rather than a capacity requirement. We study that choice with
+  Shardwise, a CPU runtime for contiguous-layer inference, repartitioning, and
+  replay recovery. An audit of 65 two-VM Qwen3-0.6B runs shows that a 25% gain
+  during an injected CPU fault shrinks to about 5–7% over the complete run,
+  while adaptation under injected link delay loses about 6–8%. A migration
+  payback gate demonstrates no advantage over hysteresis. We distinguish ideal
+  capacity from finite-session completion, give a three-worker counterexample
+  to a saturation heuristic, and implement an exact finite-concurrency envelope
+  planner. Separate single-repetition local checks compare pipeline, replica,
+  and unsplit execution across concurrency one to eight; they establish
+  functional coverage, not statistical superiority. Eighteen position-controlled
+  recovery cases preserve exact greedy outputs while exposing token stalls of
+  up to about ten seconds. A packaged application demonstrates real inference,
+  worker-stop recovery, and restored placement through a browser interface.
+  The results identify baseline choice, transition accounting, and telemetry
+  contamination as central limits on conclusions drawn from small deployments.
 keywords: "LLM inference, pipeline parallelism, CPU serving, performance measurement, recovery"
 ---
 
@@ -48,12 +47,13 @@ whose clients keep admitting new requests. One-thread whole-model execution
 also leaves a central baseline question unresolved: if the model fits on both
 machines, why not replicate it?
 
-We address that question with a separately reported local baseline matrix,
-and improve the implementation's diagnostic and correctness support. The
-contributions are (i) an audited empirical study with explicit claim boundaries,
-(ii) a resource-accounted real-model replica comparison, (iii) position-controlled
-replay checks and queue-aware measurements, and (iv) a corrected planner for
-the ideal finite-concurrency envelope. Exact optimization of this model does
+We examine that question with separate local baseline checks, while keeping
+one-repetition validation distinct from the unfinished repeated study. The
+completed contributions are (i) an audited empirical study with explicit claim
+boundaries, (ii) position-controlled replay checks and queue instrumentation,
+and (iii) a corrected planner for the ideal finite-concurrency envelope.
+An installable application makes the execution and recovery behavior visible.
+Exact optimization of this model does
 not imply optimal placement on the real runtime. We do not claim a new general
 migration, recovery, or partitioning principle.
 
@@ -218,42 +218,53 @@ fault window, not by streamed token timestamps. This convention can move
 work across phase boundaries. Median request latency and router TTFT are
 supporting metrics; TTFT does not measure client streaming delivery.
 
-## New local evidence
+## Local validation and its analysis unit
 
-The new baseline matrix is an additional evidence stratum. All arms use the
-same cached FP32 model, prompts, greedy output, worker backend and HTTP/gRPC
-path. The arms are one-thread unsplit serving, two-thread unsplit serving,
-two complete-model one-thread replicas, and two one-thread pipeline workers
-with fixed 18/10 placement. Inference is restricted to two host CPUs; the
-one-thread unsplit arm leaves one unused. The other two host CPUs provide
-coordination consistently. Replicas reserve the first available endpoint for
-an entire request, including dispatch wait in client latency.
+The local baseline checks form an additional evidence stratum. All four arms
+use the same cached FP32 Qwen3-0.6B model, prompts, greedy output, worker
+backend and HTTP/gRPC path. They are one-thread unsplit serving, two-thread
+unsplit serving, two complete-model one-thread replicas, and two one-thread
+pipeline workers with fixed 18/10 placement. Two host CPUs are reserved for
+inference; the one-thread unsplit arm leaves one unused. Two other host CPUs
+provide coordination. Replicas reserve the first available endpoint for an
+entire request, including dispatch wait in client latency.
 
-Ten restart blocks randomize arm order. Contexts are 32 and 128 tokens; output
-length is 16; concurrency is one, two, four or eight. Each run serves at least
-four requests and at least as many as concurrency. The program saves prompts,
-reference outputs, model revision, package versions, source hashes, CPU
-affinities and process memory. Every returned sequence is checked against
-unsplit Hugging Face greedy output. Block bootstrap intervals resample paired
-run contrasts, not individual requests. They are descriptive, unadjusted
-intervals; the study has no prespecified power calculation or equivalence test.
+On an AMD EPYC 7763 host, one randomized restart block covers contexts of 32
+and 128 tokens, 16 output tokens, and concurrency $Q=1,2,4,8$. Each run serves
+at least four requests and at least as many as its concurrency. The 32 runs
+contain 160 requests. The driver saves prompts, reference outputs, model
+revision, package versions, source hashes, CPU affinities and process memory.
+Every successful sequence is checked against unsplit Hugging Face greedy
+output. The model revision is
+\texttt{c1899de289a04d12100db370d81485cdf75e47ca}; the research environment uses
+PyTorch 2.8.0 and Transformers 4.57.1. Inputs are seeded pseudorandom token IDs,
+not a natural-language task suite. They control length and support exact
+reference checks, but do not establish answer quality.
 
-The fixed inputs are seeded pseudorandom token IDs, rather than a natural-language
-task suite. This controls sequence length and permits exact reference checks;
-it does not establish answer quality or coverage of application workloads.
-The local baseline campaigns were stopped before completion at the user's request. The EPYC 7763 campaign retains 129 of 320 planned runs; a separate EPYC 9V74 campaign retains 37. These strata are not pooled, and no completed ten-block local result is claimed. Workspace restarts and changing hardware required checkpoint resumes; physical host identity across restarts was not independently authenticated.
+A separate one-block, three-worker check reserves three inference CPUs and
+one coordination CPU. It measures a context-256 component profile before
+comparing three-thread unsplit execution, three whole-model replicas,
+bottleneck placement, and finite-concurrency capacity placement at
+$Q=1,2,4,8$, with 32 output tokens. Layouts are fixed for each concurrency;
+this is not an adaptive-controller trial. Its 16 runs contain 80 requests.
+A configured 1 ms coefficient into remote stages models loopback placement
+cost; it is not a measured WAN delay. Empty stages launch no worker. Workers
+load their checkpoints sequentially to avoid simultaneous full-model loading.
 
-The pilot is kept separate because builds and cache cleanup ran concurrently.
-Local loops do not reproduce two physical machines or Azure link behavior.
-The complete-model baselines are useful matched alternatives within the
-runtime, but an optimized external engine remains unevaluated.
+These local matrices have only one repetition per condition. We report
+observations without confidence intervals or statistical significance claims.
+Requests within a run are not independent repetitions. Earlier ten-block
+campaigns stopped after 129/320 and 37/320 runs on different CPUs; those partial
+campaigns, their pilots and the present checks remain separate. The repeated
+study and optimized external-engine baseline are unfinished. Single-host
+loopback execution does not reproduce physical heterogeneity or Azure links.
 
 Recovery checks manually inject relayout, remote-worker loss, or remote-worker
 restart at accepted-token positions 1, 4 and 12, with one and two active
-requests. Actual worker processes and gRPC are used. The surviving worker loads
-the full model after loss. These checks validate replay sequencing and
-internal stalls; they do not measure heartbeat detection, controller response,
-router loss or delivery through a streaming HTTP API.
+requests. Actual Qwen3 worker processes and gRPC are used; the survivor loads
+the full model after loss. Eighteen cases check 27 outputs of 16 tokens each.
+They validate replay sequencing and internal stalls, not heartbeat detection,
+controller response, coordinator loss or streamed HTTP delivery.
 
 # Results
 
@@ -332,9 +343,34 @@ compute and residual durations for each stage, allowing the same diagnosis on
 actual model execution. Subtracting queue time changes the telemetry estimate;
 it does not by itself prove a better placement or end-to-end outcome.
 
-## Resource-matched local comparisons
+## Resource-matched local observations
 
-The new resource-matched matrix is incomplete. Its partial observations are retained in the artifact for continuation, but do not establish a complete repeated comparison. The optimized-engine and three-worker follow-ups are prepared but have not been executed.
+All 32 two-CPU local conditions complete with zero request failures and exact
+reference matches. Fig.~\ref{fig:local-baselines} reports the observed whole-run
+throughput. At context 32 and $Q=2$, pipeline and replicas achieve 7.572 and
+7.853 tokens/s; at $Q=8$, 8.019 and 7.933. At context 128 and $Q=2$, they achieve
+4.816 and 5.063; at $Q=8$, 5.114 and 5.057. Thus a suitable replica dispatcher
+provides a competitive alternative in these observations. The one-thread
+unsplit baseline alone would miss this deployment choice. These differences
+cannot establish superiority, equivalence or a stable ranking from one block.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{figures/local-baselines.pdf}
+\caption{Observed resource-accounted Qwen3-0.6B throughput on one host, one run per condition. All arms have two available inference CPUs; one-thread unsplit leaves one unused. Coordination uses two other CPUs. No error bars are shown because independent repetitions are absent. Loopback results do not establish multi-machine performance.}
+\label{fig:local-baselines}
+\end{figure*}
+
+The three-CPU matrix retains two HTTP failures in the replica arm. Worker 0
+exits with SIGTERM during $Q=8$; one request fails there and one in the later
+$Q=4$ condition reusing that runtime. The signal's origin was not established.
+All other conditions return exact reference outputs. Separate fresh-runtime
+replica reruns at $Q=8$ and $Q=4$ serve 12 requests without failure and keep all
+workers alive. These reruns read saved reference outputs without allocating a
+reference model in their driver, changing its memory footprint. They do not
+prove that the earlier failures cannot recur, and do not replace failed
+observations. Three-worker validation extends functional coverage without
+establishing physical heterogeneity or a performance advantage of the planner.
 
 ## Replay correctness and stalls
 
@@ -342,8 +378,8 @@ All 18 position-controlled recovery cases match the unsplit reference token
 sequence, including both active requests where concurrency is two. This
 checks 27 request outputs with 16 generated tokens each, not arbitrary
 fault schedules. The final sequences contain no duplicated or omitted tokens
-relative to that reference. Internally accepted token times show worst gaps
-of roughly 4–10 s across the tested cases. Exact output is compatible with a
+relative to that reference. Internally accepted token times show a maximum gap of 10.005 s
+in the fresh validation pass. Exact output is compatible with a
 substantial user-visible pause.
 
 Relayout waits to reload changed shards; loss reloads the full model on the
@@ -352,6 +388,73 @@ orchestration is manual and explicitly logged. The reported internal
 disruption interval begins when the router detects failure; maximum token gaps
 also include the orchestration delay. This experiment makes no claim about
 automatic detection latency or clients receiving streamed tokens.
+
+# Packaged Application Demonstration
+
+The application exposes execution and recovery through a local browser UI.
+Its panels show the current layer owner, worker availability, measured request
+speed and first-token time, predicted token cost, controller decisions and a
+recovery timeline. Chat requests execute the model on the worker chain. Stop
+and restore controls terminate or restart a worker; the controller detects
+its availability change and assigns a complete surviving placement.
+
+We launched a Linux amd64 Debian package based on release 0.1.0+ci3
+through its packaged launcher, using an isolated application-data directory.
+A presentation update replaces the local hostname with CPU host;
+worker identifiers and all inference and controller code remain unchanged.
+The repackaged version is 0.1.0+ci3.paper2. The launcher installed its pinned CPU runtime and downloaded
+Qwen2.5-0.5B-Instruct at revision
+\texttt{7ae557604adf67be50417f59c2c2f167def9a775}. This demo has 24 layers and
+uses PyTorch 2.14.0 and Transformers 5.17.0. It is a distinct model, dependency
+environment and release snapshot from the Qwen3 research experiments. Running
+an extracted package payload verifies its launcher and application, while
+system-wide installation through a distribution package manager was not
+exercised in this capture.
+
+Fig.~\ref{fig:demo-chat} is a fresh browser screenshot after an actual model
+answer with two local CPU workers. We then used the visible Stop w2 control,
+observed recovery to all 24 layers on w1, and obtained another model answer.
+Restoring w2 produced an active split again. Fig.~\ref{fig:demo-recovery}
+shows captured placement panels before loss and after recovery. Original
+screenshots, execution records, package checksum and capture metadata accompany
+the artifact. Both workers run on one host; this sequence does not demonstrate
+a second physical laptop joining, benchmark algorithmic novelty, or prove
+availability relative to fault-aware replicas. The UI returns an answer after
+generation; it is not a client streaming-delivery check.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{demo-screenshots/01-real-chat-two-workers.png}
+\caption{Actual browser UI from the Debian-packaged application after a real Qwen2.5-0.5B-Instruct answer. Two worker processes on one CPU host hold the 24-layer model. Request measurements belong to this demonstration and are not Qwen3 benchmark results.}
+\label{fig:demo-chat}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{demo-screenshots/02-two-worker-placement.png}\hfill
+\includegraphics[width=0.48\textwidth]{demo-screenshots/04-recovered-full-model.png}
+\caption{Actual placement panels: left, two active workers before loss; right, after the visible Stop w2 action, the surviving w1 holds all 24 layers and w2 is stopped. A subsequent real answer and restored two-worker split were also verified. Screenshots establish execution and control behavior on one host.}
+\label{fig:demo-recovery}
+\end{figure*}
+
+## Illustrative heterogeneous configuration
+
+The packaged interface also includes a read-only CPU/GPU illustration
+(Fig.~\ref{fig:gpu-illustration}). It assigns layers 0--7 to a CPU worker
+and 8--23 to a GPU worker, illustrating a larger share for an assumed faster
+GPU. This is an assumed deployment diagram shown in the application, not
+an executed GPU placement, measured speedup or optimized split. The capture
+host has no GPU; all execution and recovery screenshots above are CPU runs.
+Selecting a real heterogeneous split requires device-specific compute,
+endpoint, memory and transport measurements. No GPU metrics or generated
+answers are displayed in the illustrative view.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{demo-screenshots/07-cpu-gpu-illustration.png}
+\caption{Read-only CPU/GPU illustration in the packaged UI: the CPU worker is assigned 8 layers and the GPU worker 16. The visible banner identifies the view as illustrative; no GPU inference, measurement, or optimal-placement claim is made.}
+\label{fig:gpu-illustration}
+\end{figure*}
 
 # Discussion and Limits
 
@@ -377,13 +480,11 @@ three or more physical workers, natural heterogeneity and controller behavior
 at changing concurrency remains necessary.
 
 The historical CPU model is small, prompts and output budgets are short,
-machines are similar, and faults are injected. The added context and concurrency
-matrix broadens local coverage while preserving these external-validity
-limitations. Ten restart blocks characterize some variation; they are not a
-universal power guarantee, and temporal or host interference can remain.
-Recovery depends on model-fit and excludes coordinator loss. The application
-demo is evidence of execution and control behavior, with its simulation mode
-clearly labeled; it is not a comparative performance experiment.
+machines are similar, and faults are injected. The one-block context and concurrency matrices extend local functional
+coverage, but do not establish repeated results across conditions. Ten restart blocks are a starting design, not a universal power
+guarantee; temporal or host interference can remain.
+Recovery depends on model-fit and excludes coordinator loss. The packaged real-inference demonstration is execution and control evidence;
+its different model and release are not pooled with the comparative study.
 
 The strongest next studies are matched-start finite cohorts versus continuing
 arrivals, real transport measurements that change placement decisions, a
@@ -398,8 +499,9 @@ The audited two-VM record shows that objective choice, transition accounting
 and failure recovery matter, while the payback gate has no demonstrated
 advantage over hysteresis. The revised runtime addresses a finite-concurrency
 planner error and exposes active replay histories, queue time and token stalls.
-New local baseline and correctness experiments make the small-model claim more
-testable. This is an empirical study of conditions and pitfalls, with broader
+Completed position-controlled checks establish replay correctness only for
+the tested schedules; the one-block local checks show why replicas belong in the baseline set,
+while leaving stable performance rankings unresolved. This is an empirical study of conditions and pitfalls, with broader
 deployment and external-system comparisons still required.
 
 # Artifact Availability
@@ -407,6 +509,7 @@ deployment and external-system comparisons still required.
 The writing bundle contains editable IEEE LaTeX and Markdown, figures,
 bibliography, experiment reports, source hashes and build instructions. The
 repository preserves historical raw matrices and the new local measurements
-separately. A stable public artifact URL and final author details must be
-provided according to the chosen venue's policy. No submission or public
-release is implied by the local bundle.
+separately. A companion application artifact supplies the verified Debian package, fresh
+screenshots and capture provenance. Review access and final author metadata
+will follow the selected venue's policy; the anonymous manuscript exposes
+no author-specific repository URL.

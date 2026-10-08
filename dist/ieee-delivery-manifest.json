@@ -1,0 +1,23 @@
+{
+  "paper_pages": 8,
+  "format": "IEEEtran conference, letter paper",
+  "formatting_target": "CCGrid 2027 ten pages including references",
+  "author_metadata": "anonymous; user audit pending",
+  "gpu_view": "illustrative CPU 8 / GPU 16, not measured GPU execution",
+  "archives": [
+    {
+      "file": "shardwise-ieee-paper.zip",
+      "bytes": 3207651,
+      "sha256": "e21eb767ccced02cd759e033be3ac1011700e4461b864816603259d67c644a82",
+      "files": 28,
+      "crc_and_sha256_verified": true
+    },
+    {
+      "file": "shardwise-ieee-paper-and-demo.zip",
+      "bytes": 53801549,
+      "sha256": "310a8a181bb250cd895948819a6f01c8231c0b62ee11b1f269feadb760501cd9",
+      "files": 895,
+      "crc_and_sha256_verified": true
+    }
+  ]
+}

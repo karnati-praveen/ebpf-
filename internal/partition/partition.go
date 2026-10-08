@@ -344,7 +344,8 @@ const (
 	// executes the move regardless. Run on the same fault trace as
 	// PolicyGate, it supplies the OBSERVED outcome of moves the gate rejects,
 	// which otherwise have no counterfactual.
-	PolicyGateForce Policy = "gate-force"
+	PolicyGateForce      Policy = "gate-force"
+	PolicyGateCalibrated Policy = "gate-calibrated"
 )
 
 // GateParams parameterises the transition gate. Transition downtime is
@@ -380,32 +381,44 @@ func (g GateParams) TransitionMs(totalLayers int) float64 {
 // quantity the verdict used. Rejected moves are recorded too, because
 // evaluating whether a rejection was justified needs them.
 type Decision struct {
-	Concurrency         int       `json:"concurrency,omitempty"`
-	ReplayContextTokens *float64  `json:"replay_context_tokens,omitempty"`
-	RemainingTokens     *float64  `json:"remaining_tokens,omitempty"`
-	Objective           Objective `json:"objective"`
-	CurrentObjectiveMs  float64   `json:"current_objective_ms"`
-	OptimalObjectiveMs  float64   `json:"optimal_objective_ms"`
-	Time                time.Time `json:"time"`
-	Policy              Policy    `json:"policy"`
-	Reason              string    `json:"reason"`
-	CurrentMs           float64   `json:"current_bottleneck_ms"`
-	OptimalMs           float64   `json:"optimal_bottleneck_ms"`
-	Improvement         float64   `json:"improvement_frac"`
-	TransitionMs        float64   `json:"transition_ms,omitempty"`
-	HorizonS            float64   `json:"horizon_s,omitempty"`
-	TokensStay          float64   `json:"tokens_stay,omitempty"`
-	TokensAdapt         float64   `json:"tokens_adapt,omitempty"`
-	BreakEvenS          float64   `json:"break_even_s,omitempty"`
-	GateAccepts         bool      `json:"gate_accepts"`
-	Executed            bool      `json:"executed"`
-	FromSplits          [][2]int  `json:"from_splits,omitempty"`
-	ToSplits            [][2]int  `json:"to_splits"`
+	PointForecastOnly      bool         `json:"point_forecast_only,omitempty"`
+	CalibrationDisabled    bool         `json:"calibration_disabled,omitempty"`
+	CalibrationID          string       `json:"calibration_id,omitempty"`
+	ForecastSamples        int          `json:"forecast_samples,omitempty"`
+	TelemetryBlocks        int          `json:"telemetry_blocks,omitempty"`
+	CalibrationTransitions int          `json:"calibration_transitions,omitempty"`
+	EmpiricalProbability   float64      `json:"empirical_probability,omitempty"`
+	RequiredProbability    float64      `json:"required_probability,omitempty"`
+	BaseTransitionMs       float64      `json:"base_transition_ms,omitempty"`
+	ForecastScenarios      []GateSample `json:"forecast_scenarios,omitempty"`
+	Concurrency            int          `json:"concurrency,omitempty"`
+	ReplayContextTokens    *float64     `json:"replay_context_tokens,omitempty"`
+	RemainingTokens        *float64     `json:"remaining_tokens,omitempty"`
+	Objective              Objective    `json:"objective"`
+	CurrentObjectiveMs     float64      `json:"current_objective_ms"`
+	OptimalObjectiveMs     float64      `json:"optimal_objective_ms"`
+	Time                   time.Time    `json:"time"`
+	Policy                 Policy       `json:"policy"`
+	Reason                 string       `json:"reason"`
+	CurrentMs              float64      `json:"current_bottleneck_ms"`
+	OptimalMs              float64      `json:"optimal_bottleneck_ms"`
+	Improvement            float64      `json:"improvement_frac"`
+	TransitionMs           float64      `json:"transition_ms,omitempty"`
+	HorizonS               float64      `json:"horizon_s,omitempty"`
+	TokensStay             float64      `json:"tokens_stay,omitempty"`
+	TokensAdapt            float64      `json:"tokens_adapt,omitempty"`
+	BreakEvenS             float64      `json:"break_even_s,omitempty"`
+	GateAccepts            bool         `json:"gate_accepts"`
+	Executed               bool         `json:"executed"`
+	FromSplits             [][2]int     `json:"from_splits,omitempty"`
+	ToSplits               [][2]int     `json:"to_splits"`
 }
 
 // Decider decides when to adopt a new split. Recovery -- a changed worker set
 // -- always forces a new split, whatever the policy.
 type Decider struct {
+	InitialSplits   [][2]int
+	Calibrated      CalibratedGate
 	HoldVoluntary   bool
 	Objective       Objective
 	ImprovementFrac float64
@@ -435,6 +448,23 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 		return nil, false, err
 	}
 	if d.current == nil || force || workersChanged(d.current, in.Workers) {
+		if d.current == nil && len(d.InitialSplits) == len(in.Workers) {
+			position := 0
+			seeded := &Result{}
+			for i, span := range d.InitialSplits {
+				if span[0] != position || span[1] < span[0] || span[1] > in.TotalLayers {
+					return nil, false, fmt.Errorf("invalid initial layout")
+				}
+				position = span[1]
+				seeded.Assignments = append(seeded.Assignments, Assignment{Worker: in.Workers[i], Start: span[0], End: span[1]})
+			}
+			if position != in.TotalLayers {
+				return nil, false, fmt.Errorf("initial layout does not cover model")
+			}
+			seeded.BottleneckMs = Evaluate(in, d.InitialSplits)
+			seeded.PipelineMs = EvaluatePipeline(in, d.InitialSplits)
+			opt = seeded
+		}
 		var from [][2]int
 		if d.current != nil {
 			from = d.current.Splits()
@@ -482,7 +512,7 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 	switch d.policy() {
 	case PolicyNone:
 		dec.Reason, dec.GateAccepts, execute = "strictly-better", true, true
-	case PolicyHysteresis, PolicyGate, PolicyGateForce:
+	case PolicyHysteresis, PolicyGate, PolicyGateForce, PolicyGateCalibrated:
 		if optimalScore >= currentScore*(1-d.ImprovementFrac) {
 			dec.Reason = "below-improvement-threshold"
 			return keep()
@@ -493,6 +523,13 @@ func (d *Decider) Decide(now time.Time, in Input, force bool) (*Result, bool, er
 		}
 		if d.policy() == PolicyHysteresis {
 			dec.Reason, dec.GateAccepts, execute = "hysteresis-passed", true, true
+			break
+		}
+		if d.policy() == PolicyGateCalibrated {
+			if err := d.evaluateCalibrated(dec, in, curSplits, opt.Splits()); err != nil {
+				return nil, false, err
+			}
+			execute = dec.GateAccepts
 			break
 		}
 		d.evaluateGate(dec, in.TotalLayers, currentScore, optimalScore)

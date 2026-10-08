@@ -1,0 +1,596 @@
+{
+  "evidence_type": "real-model three-worker single-host follow-up",
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "cpus": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "inference_cpu_budget": [
+    0,
+    1,
+    2
+  ],
+  "coordination_cpus": [
+    3
+  ],
+  "model": "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+  "profile": {
+    "model": "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+    "device": "cpu",
+    "device_name": "CPU",
+    "dtype": "torch.float32",
+    "torch_version": "2.8.0+cpu",
+    "transformers_version": "4.57.1",
+    "total_layers": 28,
+    "samples_per_context": 5,
+    "warmup_per_context": 2,
+    "per_layer_by_ctx": [
+      {
+        "context_len": 256,
+        "ms": 4.860276249993539
+      }
+    ],
+    "embed_ms": 0.05097499888506718,
+    "head_ms": 29.520207999667036,
+    "prefill_ms_per_token_layer": 0.42615168233821926,
+    "reload_half_model_ms": 2066.13307599946,
+    "reload_samples_ms": [
+      1599.6998899991013,
+      2216.16418099984,
+      2066.13307599946
+    ],
+    "measurements": [
+      {
+        "context_len": 256,
+        "decode_ms_per_layer": 4.860276249993539,
+        "decode_head_ms": 29.520207999667036,
+        "decode_embed_ms": 0.05097499888506718,
+        "prefill_ms_per_token_layer": 0.42615168233821926,
+        "prefill_layer_ms": 3054.6552590003557
+      }
+    ]
+  },
+  "plans": {
+    "capacity:1": {
+      "bottleneck_ms": 165.65891799837118,
+      "objective_ms": 165.65891799837118,
+      "pipeline_ms": 165.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          28
+        ],
+        [
+          28,
+          28
+        ],
+        [
+          28,
+          28
+        ]
+      ]
+    },
+    "capacity:2": {
+      "bottleneck_ms": 83.62469624989015,
+      "objective_ms": 83.82945899918559,
+      "pipeline_ms": 167.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          18
+        ],
+        [
+          18,
+          28
+        ]
+      ]
+    },
+    "capacity:4": {
+      "bottleneck_ms": 58.37428999880753,
+      "objective_ms": 58.37428999880753,
+      "pipeline_ms": 167.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          12
+        ],
+        [
+          12,
+          23
+        ],
+        [
+          23,
+          28
+        ]
+      ]
+    },
+    "capacity:8": {
+      "bottleneck_ms": 58.37428999880753,
+      "objective_ms": 58.37428999880753,
+      "pipeline_ms": 167.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          12
+        ],
+        [
+          12,
+          23
+        ],
+        [
+          23,
+          28
+        ]
+      ]
+    },
+    "throughput:1": {
+      "bottleneck_ms": 58.37428999880753,
+      "objective_ms": 58.37428999880753,
+      "pipeline_ms": 167.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          12
+        ],
+        [
+          12,
+          23
+        ],
+        [
+          23,
+          28
+        ]
+      ]
+    },
+    "throughput:2": {
+      "bottleneck_ms": 58.37428999880753,
+      "objective_ms": 58.37428999880753,
+      "pipeline_ms": 167.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          12
+        ],
+        [
+          12,
+          23
+        ],
+        [
+          23,
+          28
+        ]
+      ]
+    },
+    "throughput:4": {
+      "bottleneck_ms": 58.37428999880753,
+      "objective_ms": 58.37428999880753,
+      "pipeline_ms": 167.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          12
+        ],
+        [
+          12,
+          23
+        ],
+        [
+          23,
+          28
+        ]
+      ]
+    },
+    "throughput:8": {
+      "bottleneck_ms": 58.37428999880753,
+      "objective_ms": 58.37428999880753,
+      "pipeline_ms": 167.65891799837118,
+      "scope": "ideal cost model; not measured runtime throughput",
+      "splits": [
+        [
+          0,
+          12
+        ],
+        [
+          12,
+          23
+        ],
+        [
+          23,
+          28
+        ]
+      ]
+    }
+  },
+  "link_ms": 1.0,
+  "link_scope": "configured 1 ms loopback model coefficient; not a WAN measurement",
+  "prompts": {
+    "256": [
+      233,
+      835,
+      846,
+      363,
+      78,
+      298,
+      623,
+      637,
+      720,
+      832,
+      577,
+      763,
+      103,
+      286,
+      885,
+      834,
+      131,
+      512,
+      569,
+      843,
+      769,
+      104,
+      841,
+      105,
+      486,
+      905,
+      5,
+      647,
+      195,
+      936,
+      739,
+      122,
+      987,
+      555,
+      170,
+      180,
+      112,
+      323,
+      711,
+      201,
+      371,
+      614,
+      495,
+      913,
+      240,
+      2,
+      577,
+      345,
+      271,
+      758,
+      558,
+      674,
+      48,
+      218,
+      559,
+      59,
+      49,
+      745,
+      89,
+      40,
+      17,
+      37,
+      523,
+      949,
+      977,
+      26,
+      465,
+      117,
+      654,
+      875,
+      295,
+      49,
+      917,
+      330,
+      643,
+      54,
+      51,
+      756,
+      471,
+      197,
+      519,
+      950,
+      389,
+      515,
+      751,
+      935,
+      404,
+      134,
+      227,
+      550,
+      991,
+      561,
+      399,
+      644,
+      978,
+      141,
+      90,
+      515,
+      568,
+      647,
+      380,
+      32,
+      991,
+      473,
+      286,
+      355,
+      450,
+      622,
+      986,
+      62,
+      801,
+      416,
+      353,
+      356,
+      752,
+      920,
+      895,
+      238,
+      477,
+      485,
+      200,
+      303,
+      912,
+      410,
+      425,
+      76,
+      568,
+      436,
+      830,
+      49,
+      1,
+      670,
+      137,
+      342,
+      552,
+      94,
+      503,
+      48,
+      631,
+      110,
+      193,
+      275,
+      831,
+      381,
+      5,
+      980,
+      978,
+      866,
+      520,
+      266,
+      303,
+      59,
+      852,
+      148,
+      120,
+      63,
+      747,
+      785,
+      140,
+      791,
+      662,
+      191,
+      823,
+      650,
+      519,
+      335,
+      872,
+      819,
+      429,
+      991,
+      403,
+      368,
+      536,
+      522,
+      771,
+      816,
+      27,
+      296,
+      175,
+      416,
+      622,
+      935,
+      13,
+      32,
+      762,
+      172,
+      841,
+      573,
+      280,
+      253,
+      858,
+      64,
+      120,
+      942,
+      407,
+      144,
+      301,
+      898,
+      449,
+      403,
+      632,
+      578,
+      888,
+      178,
+      645,
+      215,
+      636,
+      981,
+      57,
+      63,
+      362,
+      98,
+      268,
+      607,
+      410,
+      470,
+      177,
+      655,
+      702,
+      518,
+      718,
+      525,
+      785,
+      152,
+      695,
+      712,
+      847,
+      291,
+      842,
+      716,
+      963,
+      422,
+      246,
+      741,
+      745,
+      610,
+      302,
+      39,
+      471,
+      73,
+      732,
+      746,
+      13,
+      211,
+      220,
+      711,
+      272,
+      657,
+      889,
+      409,
+      439,
+      269,
+      357,
+      680,
+      495,
+      392
+    ]
+  },
+  "schedule": [
+    {
+      "mode": "capacity-3x1t",
+      "repetition": 0,
+      "conditions": [
+        [
+          256,
+          2
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          256,
+          8
+        ],
+        [
+          256,
+          1
+        ]
+      ]
+    },
+    {
+      "mode": "replicas-3x1t",
+      "repetition": 0,
+      "conditions": [
+        [
+          256,
+          2
+        ],
+        [
+          256,
+          1
+        ],
+        [
+          256,
+          8
+        ],
+        [
+          256,
+          4
+        ]
+      ]
+    },
+    {
+      "mode": "unsplit-3t",
+      "repetition": 0,
+      "conditions": [
+        [
+          256,
+          1
+        ],
+        [
+          256,
+          8
+        ],
+        [
+          256,
+          4
+        ],
+        [
+          256,
+          2
+        ]
+      ]
+    },
+    {
+      "mode": "bottleneck-3x1t",
+      "repetition": 0,
+      "conditions": [
+        [
+          256,
+          4
+        ],
+        [
+          256,
+          8
+        ],
+        [
+          256,
+          2
+        ],
+        [
+          256,
+          1
+        ]
+      ]
+    }
+  ],
+  "output_tokens": 32,
+  "packages": {
+    "torch": "2.8.0+cpu",
+    "transformers": "4.57.1",
+    "grpcio": "1.84.0",
+    "protobuf": "7.36.2",
+    "numpy": "2.5.3"
+  },
+  "source_sha256": {
+    "bench/multistage_publication.py": "f1c8cbf978aee197cc3c3f10dac668410807a4bcdfeb679cc1b54f91ff47e9c3",
+    "bench/local_publication.py": "cbef1046a5c06915f793442515525cfbae1be39ad31dfcb8fba89cf674aeedbf",
+    "bench/profile_qwen3.py": "7c4205f9c51b0a2c64a37008b65d0109ad13d6376bb8cfeb99d470a028a49ef6",
+    "worker/router.py": "a4a39f0dd3e110fd029c8beb018667de8541190115bd63da9972bea76ce0da63",
+    "worker/server.py": "ae62fc46d0efd54249e0349a108a2624bd2b48c6d6db91110d48d91cb72a4c86",
+    "worker/backends/qwen3.py": "418702b21de0125a88b64fb32b5f3a158abbdcaff43b93c220ac37213162f8ea",
+    "worker/gen/pipeline_pb2.py": "6b2a5d2b01a3f9b57be3dac3e58522adc2dbec1546648dc4534221986451b962"
+  },
+  "planner_sha256": "367fa6d54d08f26cff844e4d367134bdd44ad6996fbf18ed9c910fac16af29cb",
+  "contrast_arm": "capacity-3x1t",
+  "contrast_baselines": [
+    "bottleneck-3x1t",
+    "replicas-3x1t",
+    "unsplit-3t"
+  ],
+  "method_description": "Three available compute CPUs, one coordination CPU. FP32 cached Qwen3-0.6B and exact reference outputs; seeded 256-token inputs, 32 output tokens; Q=1/2/4/8; whole-request first-available three replicas; three-thread unsplit; fixed per-Q model-capacity or bottleneck layouts. Component profile measured on the campaign host before runs. Empty model stages do not launch workers, leaving those CPUs unused.",
+  "scope": "additional processes on one host, not physical heterogeneity or adaptive controller superiority; conditions sharing a fixed layout share one restart",
+  "started_utc": "2026-10-08T08:18:13Z"
+}

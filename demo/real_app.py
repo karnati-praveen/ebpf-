@@ -646,6 +646,7 @@ def handler(runtime, pair=False):
         def do_GET(self):
             if pair: self.send(404,{'error':'not found'}); return
             if self.path == '/': self.send(200, (ROOT/'demo/app.html').read_text().replace('__SESSION_TOKEN__',runtime.token), True)
+            elif self.path == '/illustration': self.send(200,(ROOT/'demo/cpu-gpu-illustration.html').read_text(),True)
             elif self.path == '/api/status': self.send(200,runtime.status())
             elif self.path == '/api/hw': self.send(200,hardware())
             else: self.send(404,{'error':'not found'})

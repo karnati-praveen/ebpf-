@@ -1,0 +1,2 @@
+ctx=  256 decode=4.8603 ms/layer head=29.5202 ms prefill=0.426152 ms/token/layer
+wrote /workspaces/ebpf-/results/validation-2026-10-08/component-profile.json

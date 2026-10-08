@@ -1,0 +1,18 @@
+{
+  "remote_repo": "/opt/shardwise",
+  "state_directory": "/opt/shardwise-state",
+  "coordinator": {"ssh": "local", "compute_cpus": [2, 3]},
+  "workers": [
+    {"ssh": "worker-a", "compute_cpus": [0, 1]},
+    {"ssh": "worker-b", "compute_cpus": [0, 1]}
+  ],
+  "initial_splits": [[0, 14], [14, 28]],
+  "runtime_env": {
+    "COST_PROFILE": "/opt/shardwise-state/component-profile.json",
+    "WORKER_DEVICE": "cpu",
+    "GATE_HORIZON_S": "30",
+    "GATE_MARGIN": "0.13",
+    "COOLDOWN_S": "30",
+    "IMPROVEMENT_FRAC": "0.15"
+  }
+}

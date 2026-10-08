@@ -1,0 +1,13 @@
+context,concurrency,arm,baseline,paired_n,paired_mean_tps_change_pct,paired_mean_change_ci95,paired_failures,interpretation
+256,1,capacity-3x1t,bottleneck-3x1t,1,11.586251937993609,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,1,capacity-3x1t,replicas-3x1t,1,1.2118720289357343,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,1,capacity-3x1t,unsplit-3t,1,-12.755999479116076,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,2,capacity-3x1t,bottleneck-3x1t,1,8.641535241023224,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,2,capacity-3x1t,replicas-3x1t,1,-4.616609205801014,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,2,capacity-3x1t,unsplit-3t,1,20.628236676592728,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,4,capacity-3x1t,bottleneck-3x1t,1,-2.7350914880486354,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,4,capacity-3x1t,replicas-3x1t,1,2.5584824402889783,"[None, None]",1,descriptive paired block bootstrap; local host only; no equivalence claim
+256,4,capacity-3x1t,unsplit-3t,1,21.223656269984104,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,8,capacity-3x1t,bottleneck-3x1t,1,-1.0864468152084639,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim
+256,8,capacity-3x1t,replicas-3x1t,1,-10.823730909097629,"[None, None]",1,descriptive paired block bootstrap; local host only; no equivalence claim
+256,8,capacity-3x1t,unsplit-3t,1,24.32819649935587,"[None, None]",0,descriptive paired block bootstrap; local host only; no equivalence claim

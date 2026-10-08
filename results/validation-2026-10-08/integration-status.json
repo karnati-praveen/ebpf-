@@ -1,0 +1,163 @@
+[
+  {
+    "name": "qwen-e2e",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/verify_qwen3.py",
+      "--tokens",
+      "16"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 41.62265753746033
+  },
+  {
+    "name": "recovery",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/recovery_matrix.py",
+      "--out",
+      "/workspaces/ebpf-/results/validation-2026-10-08/recovery",
+      "--model",
+      "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 347.5053389072418
+  },
+  {
+    "name": "baseline-functional",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/local_publication.py",
+      "--out",
+      "/workspaces/ebpf-/results/validation-2026-10-08/baseline-functional",
+      "--repetitions",
+      "1",
+      "--contexts",
+      "32,128",
+      "--concurrency",
+      "1,2,4,8",
+      "--tokens",
+      "16",
+      "--requests",
+      "4",
+      "--model",
+      "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca"
+    ],
+    "exit_code": 1,
+    "elapsed_s": 0.27108287811279297
+  },
+  {
+    "name": "baseline-functional",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/local_publication.py",
+      "--out",
+      "/workspaces/ebpf-/results/validation-2026-10-08/baseline-functional",
+      "--repetitions",
+      "1",
+      "--contexts",
+      "32,128",
+      "--concurrency",
+      "1,2,4,8",
+      "--tokens",
+      "16",
+      "--requests",
+      "4",
+      "--model",
+      "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 550.873749256134
+  },
+  {
+    "name": "baseline-analysis",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/publication_analyze.py",
+      "/workspaces/ebpf-/results/validation-2026-10-08/baseline-functional"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 0.05324745178222656
+  },
+  {
+    "name": "component-profile",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/profile_qwen3.py",
+      "--model",
+      "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+      "--device",
+      "cpu",
+      "--contexts",
+      "256",
+      "--warmup",
+      "2",
+      "--samples",
+      "5",
+      "--out",
+      "/workspaces/ebpf-/results/validation-2026-10-08/component-profile.json"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 34.74681496620178
+  },
+  {
+    "name": "planner-build",
+    "command": [
+      "go",
+      "build",
+      "-o",
+      "/workspaces/ebpf-/results/validation-2026-10-08/partitionplan",
+      "./cmd/partitionplan"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 1.2816598415374756
+  },
+  {
+    "name": "three-worker-functional",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/multistage_publication.py",
+      "--out",
+      "/workspaces/ebpf-/results/validation-2026-10-08/three-worker-functional",
+      "--model",
+      "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+      "--profile",
+      "/workspaces/ebpf-/results/validation-2026-10-08/component-profile.json",
+      "--planner",
+      "/workspaces/ebpf-/results/validation-2026-10-08/partitionplan",
+      "--repetitions",
+      "1"
+    ],
+    "exit_code": 1,
+    "elapsed_s": 59.293914556503296
+  },
+  {
+    "name": "three-worker-functional",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/multistage_publication.py",
+      "--out",
+      "/workspaces/ebpf-/results/validation-2026-10-08/three-worker-functional-serial",
+      "--model",
+      "/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+      "--profile",
+      "/workspaces/ebpf-/results/validation-2026-10-08/component-profile.json",
+      "--planner",
+      "/workspaces/ebpf-/results/validation-2026-10-08/partitionplan",
+      "--repetitions",
+      "1"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 626.8496885299683
+  },
+  {
+    "name": "three-worker-analysis",
+    "command": [
+      "/workspaces/ebpf-/.publication-tools/venv/bin/python",
+      "bench/publication_analyze.py",
+      "/workspaces/ebpf-/results/validation-2026-10-08/three-worker-functional-serial"
+    ],
+    "exit_code": 0,
+    "elapsed_s": 0.15247821807861328
+  }
+]

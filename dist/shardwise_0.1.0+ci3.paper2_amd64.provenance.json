@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0+ci3.paper2",
+  "filename": "shardwise_0.1.0+ci3.paper2_amd64.deb",
+  "sha256": "356c25d757ac1438275caa6d357c5082d899d669d7ecebf84dadce801a67b822",
+  "bytes": 48608424,
+  "original_sha256": "b7268ddeff783198b7971134bfbe5036027d763afcd8b68a9242bd1bb7002f4d",
+  "original_url": "https://github.com/karnati-praveen/ebpf-/releases/download/shardwise-latest/shardwise_amd64.deb",
+  "changes": [
+    "local hostname presentation replaced with CPU host",
+    "read-only illustrative CPU/GPU page and navigation link"
+  ],
+  "runtime_code": "worker backends, router, controller, node agent and launch setup unchanged from original release"
+}

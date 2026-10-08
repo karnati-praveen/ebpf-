@@ -200,6 +200,7 @@ select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background
   </div>
   <span class="pill" id="device" title="">…</span>
   <span class="pill" id="mode">…</span>
+  <a class="btn" href="/illustration" target="_blank" rel="noopener">CPU/GPU illustration</a>
   <button class="btn danger" id="exit">Exit app</button>
 </div>
 <div id="reason" hidden></div>
@@ -352,7 +353,7 @@ function render(s){
   const stageBy=Object.fromEntries((t.stages||[]).map(x=>[x.name,x]));
   $('workers').innerHTML=s.workers.map((w,i)=>{const st=stageBy[w.name]||{},node=(t.nodes||{})[w.name]||{},speed=w.speed??node.speed,on=w.status==='up';
     return `<div class="worker ${esc(w.name)}${on?'':' off'}" style="--wc:${colorOf(w.name)}">
-      <div class="row"><span class="name">${esc(w.name)} <span class="small">· ${esc(w.node)}</span></span><span class="badge b-${esc(w.status)}">${esc(w.status)}</span></div>
+      <div class="row"><span class="name">${esc(w.name)} <span class="small">· ${w.local?'CPU host':esc(w.node)}</span></span><span class="badge b-${esc(w.status)}">${esc(w.status)}</span></div>
       <div class="small">${w.local?'On this laptop':s.mode==='join'?'On another laptop in this pipeline':'On another laptop (joined)'}</div>
       <div class="mini" tabindex="0" role="button" aria-label="Inspect ${esc(w.name)} layers">${Array.from({length:N},(_,n)=>`<span class="${w.layers&&n>=w.layers[0]&&n<w.layers[1]?'assigned':''}"></span>`).join('')}</div>
       <div class="stats">

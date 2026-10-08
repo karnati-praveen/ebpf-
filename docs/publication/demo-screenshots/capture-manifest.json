@@ -1,0 +1,42 @@
+{
+  "capture_date": "2026-10-08",
+  "source": "actual Debian-package UI; presentation-only local hostname label changed to CPU host",
+  "original_package": {
+    "url": "https://github.com/karnati-praveen/ebpf-/releases/download/shardwise-latest/shardwise_amd64.deb",
+    "sha256": "b7268ddeff783198b7971134bfbe5036027d763afcd8b68a9242bd1bb7002f4d",
+    "bytes": 48599834
+  },
+  "package": {
+    "filename": "shardwise_0.1.0+ci3.paper2_amd64.deb",
+    "sha256": "356c25d757ac1438275caa6d357c5082d899d669d7ecebf84dadce801a67b822"
+  },
+  "hostname_label": "CPU host (presentation-only anonymization; both workers on one physical host)",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "runtime": "package-managed CPU runtime; separate from research environment",
+  "viewport": {
+    "width": 1240,
+    "height": 920,
+    "device_scale_factor": 2
+  },
+  "illustration": {
+    "filename": "07-cpu-gpu-illustration.png",
+    "cpu_layers": 8,
+    "gpu_layers": 16,
+    "gpu_execution_verified": false,
+    "label": "Illustrative CPU/GPU configuration \u2014 no GPU execution or measurements"
+  },
+  "real_inference_verified": true,
+  "worker_loss_verified": true,
+  "worker_restore_verified": true,
+  "scope": "two worker processes on one CPU host; manual stop/restore controls; screenshots are execution evidence, not comparative performance",
+  "sha256": {
+    "03-worker-stopped.png": "ab5db2209f28dfbb13dd73dd4d6b358a579d523570788bcaf60130db566e301b",
+    "01-real-chat-two-workers.png": "c3f10f9a25a087b06a7e7b1594f91ffe1150c9a13e3f429ea1954e2fd0769179",
+    "04-recovered-full-model.png": "ab8c8772c3bdb4220d532e8201a19c852378a22867c61ca6730a661906bc2552",
+    "05-chat-after-recovery.png": "84c3a8a5fbd2c12d847ac90e2c5c9da0b79e8590c7aea60a9b94d8766b9d6308",
+    "02-two-worker-placement.png": "a59b56cf480555b2a01fe3351767936969da7790410f2cbeb562e1aa5e9458cf",
+    "06-restored-split.png": "957afeb3a3c68ede4afe68907360f282a83bd939734d775ca68e6c0685e441cb",
+    "07-cpu-gpu-illustration.png": "5aa8388181cf5f5e99060999723e3738800238ac3999169531bba6abf64ce1de"
+  }
+}

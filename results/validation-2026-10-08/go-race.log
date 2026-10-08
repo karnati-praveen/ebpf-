@@ -1,0 +1,5 @@
+ok  	kubeedgeinfer/internal/controller	1.169s
+?   	kubeedgeinfer/internal/ebpf	[no test files]
+?   	kubeedgeinfer/internal/gpu	[no test files]
+ok  	kubeedgeinfer/internal/partition	1.492s
+?   	kubeedgeinfer/internal/peerconn	[no test files]

@@ -34,33 +34,85 @@ func kubeConfig() (*rest.Config, error) {
 
 func main() {
 	var (
-		namespace     = flag.String("namespace", envOr("NAMESPACE", "kubeedgeinfer"), "namespace to operate in")
-		selector      = flag.String("worker-selector", "app=keinfer-worker", "label selector for shard workers")
-		workerPort    = flag.Int("worker-port", 50051, "worker gRPC port")
-		static        = flag.Bool("static", os.Getenv("STATIC_MODE") == "1", "apply one equal split and never repartition (baseline)")
-		grpcAddr      = flag.String("grpc-addr", ":50053", "telemetry gRPC listen address")
-		httpAddr      = flag.String("http-addr", ":8081", "debug/state HTTP listen address")
-		interval      = flag.Duration("interval", 2*time.Second, "reconcile interval")
-		cooldown      = flag.Duration("cooldown", envDurationOr("COOLDOWN_S", 30*time.Second), "repartition cooldown")
-		improvement   = flag.Float64("improvement", envFloatOr("IMPROVEMENT_FRAC", 0.15), "min fractional bottleneck improvement to repartition")
-		heartbeat     = flag.Duration("heartbeat-timeout", 3*time.Second, "node agent staleness before a node is dead")
-		reassert      = flag.Duration("reassert-interval", 10*time.Second, "how often to re-push the current layout so a restarted worker/router recovers (0 disables)")
-		defLink       = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
-		mode          = flag.String("mode", envOr("KEINFER_MODE", "standalone"), "substrate: standalone | k8s")
-		configPath    = flag.String("config", envOr("KEINFER_CONFIG", "keinfer.json"), "standalone: pipeline config file")
-		policy        = flag.String("policy", envOr("DECISION_POLICY", "hysteresis"), "voluntary-move policy: none | hysteresis | gate | gate-force")
-		objective     = flag.String("objective", envOr("PLACEMENT_OBJECTIVE", "throughput"), "placement and transition objective: throughput | latency | auto")
-		workloadURL   = flag.String("workload-url", envOr("WORKLOAD_URL", ""), "router /workload URL; required for auto or remaining-work-aware")
-		remainingWork = flag.Bool("remaining-work-aware", os.Getenv("REMAINING_WORK_AWARE") == "1", "cap gate horizon by live remaining output budget")
-		liveReplay    = flag.Bool("live-replay-context", os.Getenv("LIVE_REPLAY_CONTEXT") == "1", "forecast serial replay work from all active request contexts; requires workload URL")
-		gateHorizon   = flag.Float64("gate-horizon-s", envFloatOr("GATE_HORIZON_S", 30), "transition gate planning horizon, seconds")
-		gateFixed     = flag.Float64("gate-transition-fixed-ms", envFloatOr("GATE_TRANSITION_FIXED_MS", 2000), "transition downtime independent of context (weight reload, orchestration)")
-		gatePrefill   = flag.Float64("gate-prefill-ms-per-token-layer", envFloatOr("GATE_PREFILL_MS_PER_TOKEN_LAYER", 0.21), "measured prefill cost per token per layer, for cache reconstruction")
-		gateMargin    = flag.Float64("gate-margin", envFloatOr("GATE_MARGIN", 0.13), "required fractional token advantage before a voluntary move")
-		linkSource    = flag.String("link-source", envOr("LINK_SOURCE", "any"), "link telemetry: ebpf | app | ebpf+app | none | any")
-		profileOnce   = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
+		namespace           = flag.String("namespace", envOr("NAMESPACE", "kubeedgeinfer"), "namespace to operate in")
+		selector            = flag.String("worker-selector", "app=keinfer-worker", "label selector for shard workers")
+		workerPort          = flag.Int("worker-port", 50051, "worker gRPC port")
+		static              = flag.Bool("static", os.Getenv("STATIC_MODE") == "1", "apply one equal split and never repartition (baseline)")
+		grpcAddr            = flag.String("grpc-addr", ":50053", "telemetry gRPC listen address")
+		httpAddr            = flag.String("http-addr", ":8081", "debug/state HTTP listen address")
+		interval            = flag.Duration("interval", 2*time.Second, "reconcile interval")
+		cooldown            = flag.Duration("cooldown", envDurationOr("COOLDOWN_S", 30*time.Second), "repartition cooldown")
+		improvement         = flag.Float64("improvement", envFloatOr("IMPROVEMENT_FRAC", 0.15), "min fractional bottleneck improvement to repartition")
+		heartbeat           = flag.Duration("heartbeat-timeout", 3*time.Second, "node agent staleness before a node is dead")
+		reassert            = flag.Duration("reassert-interval", 10*time.Second, "how often to re-push the current layout so a restarted worker/router recovers (0 disables)")
+		defLink             = flag.Float64("default-link-ms", 0.5, "assumed hop cost before eBPF data arrives")
+		mode                = flag.String("mode", envOr("KEINFER_MODE", "standalone"), "substrate: standalone | k8s")
+		configPath          = flag.String("config", envOr("KEINFER_CONFIG", "keinfer.json"), "standalone: pipeline config file")
+		evaluationHold      = flag.Bool("evaluation-hold", os.Getenv("EVALUATION_HOLD") == "1", "hold voluntary moves until benchmark start endpoint")
+		initialLayout       = flag.String("initial-layout", envOr("INITIAL_LAYOUT", ""), "JSON initial layer ranges for matched-start experiments")
+		transitionURL       = flag.String("transition-url", envOr("TRANSITION_URL", ""), "router /transitions URL for migration accounting")
+		calibrationPath     = flag.String("calibration", envOr("CALIBRATION_FILE", ""), "held-out calibration artifact")
+		identityPath        = flag.String("calibration-identity", envOr("CALIBRATION_IDENTITY", ""), "preflight-verified deployment identity JSON")
+		calibrationOnline   = flag.Bool("calibration-online", os.Getenv("CALIBRATION_ONLINE") == "1", "update calibration after completed voluntary transitions (experimental)")
+		scenarioPoint       = flag.Bool("calibrated-point-only", os.Getenv("CALIBRATED_POINT_ONLY") == "1", "ablation: evaluate calibrated point forecast without scenario gating")
+		calibrationDisabled = flag.Bool("calibrated-no-calibration", os.Getenv("CALIBRATED_NO_CALIBRATION") == "1", "ablation: use unit transition ratios")
+		profileReplay       = flag.Bool("calibrated-profile-context", os.Getenv("CALIBRATED_PROFILE_CONTEXT") == "1", "ablation: use configured profile context instead of live histories")
+		scenarioProbability = flag.Float64("scenario-probability", envFloatOr("SCENARIO_PROBABILITY", .9), "required empirical scenario acceptance fraction")
+		scenarioBlocks      = flag.Int("scenario-blocks", 12, "minimum completed five-second telemetry blocks")
+		calibrationMinimum  = flag.Int("calibration-minimum", 10, "minimum independent voluntary calibration transitions")
+		policy              = flag.String("policy", envOr("DECISION_POLICY", "hysteresis"), "voluntary-move policy: none | hysteresis | gate | gate-force | gate-calibrated")
+		objective           = flag.String("objective", envOr("PLACEMENT_OBJECTIVE", "throughput"), "placement and transition objective: throughput | latency | auto")
+		workloadURL         = flag.String("workload-url", envOr("WORKLOAD_URL", ""), "router /workload URL; required for auto or remaining-work-aware")
+		remainingWork       = flag.Bool("remaining-work-aware", os.Getenv("REMAINING_WORK_AWARE") == "1", "cap gate horizon by live remaining output budget")
+		liveReplay          = flag.Bool("live-replay-context", os.Getenv("LIVE_REPLAY_CONTEXT") == "1", "forecast serial replay work from all active request contexts; requires workload URL")
+		gateHorizon         = flag.Float64("gate-horizon-s", envFloatOr("GATE_HORIZON_S", 30), "transition gate planning horizon, seconds")
+		gateFixed           = flag.Float64("gate-transition-fixed-ms", envFloatOr("GATE_TRANSITION_FIXED_MS", 2000), "transition downtime independent of context (weight reload, orchestration)")
+		gatePrefill         = flag.Float64("gate-prefill-ms-per-token-layer", envFloatOr("GATE_PREFILL_MS_PER_TOKEN_LAYER", 0.21), "measured prefill cost per token per layer, for cache reconstruction")
+		gateMargin          = flag.Float64("gate-margin", envFloatOr("GATE_MARGIN", 0.13), "required fractional token advantage before a voluntary move")
+		linkSource          = flag.String("link-source", envOr("LINK_SOURCE", "any"), "link telemetry: ebpf | app | ebpf+app | none | any")
+		profileOnce         = flag.Bool("profile-once", os.Getenv("PROFILE_ONCE") == "1", "freeze link/GPU telemetry after the first reading instead of tracking it live (ablation: offline-profiling baseline vs. continuous eBPF)")
 	)
 	flag.Parse()
+	var initialSplits [][2]int
+	if *initialLayout != "" {
+		data, err := os.ReadFile(*initialLayout)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err = json.Unmarshal(data, &initialSplits); err != nil {
+			log.Fatal(err)
+		}
+	}
+	var calibrated partition.CalibratedGate
+	var identity controller.CalibrationIdentity
+	if *policy == "gate-calibrated" {
+		if *static || *workloadURL == "" || *transitionURL == "" || *calibrationPath == "" || *identityPath == "" {
+			log.Fatal("gate-calibrated requires workload-url, transition-url, calibration and calibration-identity in nonstatic mode")
+		}
+		if *objective != "auto" {
+			log.Fatal("gate-calibrated requires objective=auto")
+		}
+		*liveReplay = !*profileReplay
+		data, err := os.ReadFile(*identityPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err = json.Unmarshal(data, &identity); err != nil {
+			log.Fatal(err)
+		}
+		calibrated, err = controller.LoadCalibration(*calibrationPath, identity)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if *scenarioProbability <= 0 || *scenarioProbability > 1 || *scenarioBlocks < 1 || *scenarioBlocks > 120 || *calibrationMinimum < 1 || *calibrationMinimum > 128 {
+			log.Fatal("invalid calibrated gate thresholds")
+		}
+		calibrated.PointOnly = *scenarioPoint
+		calibrated.DisableCalibration = *calibrationDisabled
+		calibrated.RequiredProbability = *scenarioProbability
+		calibrated.MinBlocks = *scenarioBlocks
+		calibrated.MinTransitions = *calibrationMinimum
+	}
 
 	store := controller.NewTelemetryStore()
 
@@ -75,11 +127,11 @@ func main() {
 	if (*objective == "auto" || *remainingWork || *liveReplay) && (*workloadURL == "" || *static) {
 		log.Fatal("auto/remaining-work-aware/live-replay-context requires -workload-url and nonstatic mode")
 	}
-	if *remainingWork && *policy != "gate" && *policy != "gate-force" {
+	if *remainingWork && *policy != "gate" && *policy != "gate-force" && *policy != "gate-calibrated" {
 		log.Fatal("remaining-work-aware requires gate or gate-force")
 	}
 	switch partition.Policy(*policy) {
-	case partition.PolicyNone, partition.PolicyHysteresis, partition.PolicyGate, partition.PolicyGateForce:
+	case partition.PolicyNone, partition.PolicyHysteresis, partition.PolicyGate, partition.PolicyGateForce, partition.PolicyGateCalibrated:
 	default:
 		log.Fatalf("unknown -policy %q (want none, hysteresis, gate or gate-force)", *policy)
 	}
@@ -113,6 +165,8 @@ func main() {
 	}
 
 	ctrl := controller.New(controller.Config{
+		EvaluationHold: *evaluationHold,
+		InitialSplits:  initialSplits, TransitionURL: *transitionURL, Calibration: calibrated, CalibrationIdentity: identity, CalibrationOnline: *calibrationOnline,
 		Namespace:        *namespace,
 		WorkerSelector:   *selector,
 		WorkerPort:       *workerPort,
@@ -150,6 +204,9 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(ctrl.State())
 	})
+	if *evaluationHold {
+		mux.HandleFunc("POST /evaluation/start", func(w http.ResponseWriter, r *http.Request) { ctrl.StartEvaluation(); w.Write([]byte("{}")) })
+	}
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("ok"))
 	})

@@ -30,3 +30,8 @@ resource-matched Qwen3 measurements on two real laptops, follow
 The real demo sources came from the project's 0.1.0+ci3 release. The renamed
 entry point executes the revised repository runtime; this is not a certification
 of the unmodified release installer or its separately pinned dependencies.
+
+The CPU/GPU illustration link opens a read-only diagram assigning 8 layers to
+CPU and 16 to GPU. It is explicitly illustrative and supplies no measured GPU
+results. Local worker hostnames display CPU host. The packaged installer and
+actual execution screenshots are under `dist/` and `docs/publication/`.

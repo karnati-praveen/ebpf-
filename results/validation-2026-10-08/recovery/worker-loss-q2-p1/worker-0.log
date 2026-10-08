@@ -1,0 +1,5 @@
+2026-10-08 08:04:44,330 qwen3 INFO loading /home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca layers [0, 18) of 28 on device=cpu kv_cache=True threads=1
+2026-10-08 08:04:47,323 worker INFO bootstrapped from INITIAL_ASSIGNMENT=0:18:28:qwen3:/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca
+2026-10-08 08:04:47,329 worker INFO worker ? listening on :52000
+2026-10-08 08:04:49,657 qwen3 INFO loading /home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca layers [0, 28) of 28 on device=cpu kv_cache=True threads=1
+2026-10-08 08:04:52,020 worker INFO assigned layers [0, 28) of 28 backend=qwen3 gen=1

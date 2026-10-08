@@ -1,8 +1,9 @@
-# Shardwise publication revision — stopped checkpoint, 7 October 2026
+# Shardwise publication revision — assessment follow-up, 8 October 2026
 
-The user stopped the long-running work. Experiments are incomplete; see
-`docs/publication/READINESS.md`. Prepared follow-up scripts are saved for a
-future explicitly requested continuation.
+This follow-up reconciles the writing with the supplied 7 October assessment.
+Experiments remain incomplete; see `docs/publication/READINESS.md`. No long-running
+campaign was restarted for this editorial revision. The assessment checklist is
+[ASSESSMENT_RESPONSE.md](publication/ASSESSMENT_RESPONSE.md).
 
 The target is a **general IEEE conference writing package**, as requested. The
 paper is framed as an empirical study of small-model CPU serving, baseline
@@ -22,14 +23,14 @@ These are distinct writing formats, not independent experiments.
 |---|---|---|
 | Incorrect percentage denominators | Corrected 65.4% higher throughput, 39.5% reverse loss, 36.1% completion reduction; transition forecast 76.2% above forecast / 43.3% below measured | Original observations unchanged |
 | Broad novelty claims | Empirical framing; EdgeShard, DiSCo, STAR, SpotServe, ServerlessLLM, DynoPipe, FlexPipe and the Intel AI-PC preprint discussed | No matched prior-system ranking |
-| Missing whole-model alternatives | Four-arm FP32 Qwen3 matrix: unsplit one/two threads, first-available whole-model replicas, fixed pipeline | One physical host, loopback, seeded token prompts |
-| Too few repetitions | Ten randomized restart blocks per condition, contexts 32/128, Q=1/2/4/8, 16 output tokens; run-level analysis and bootstrap intervals | Not a power calculation, equivalence test or additional-model performance study |
-| Optimized engine absent | Separate pinned llama.cpp F32 weights/F32 KV, two compute threads, eight continuous-batching slots | Different kernels and HTTP path; separate timing campaign |
+| Missing whole-model alternatives | Prepared four-arm FP32 Qwen3 matrix: unsplit one/two threads, first-available whole-model replicas, fixed pipeline; retained 129/320 and 37/320 runs on different CPUs | Incomplete campaigns; one physical host, loopback, seeded token prompts; no completed comparison claimed |
+| Too few repetitions | Planned ten randomized restart blocks per condition, contexts 32/128, Q=1/2/4/8, 16 output tokens; run-level analysis prepared | Ten-block design not completed; historical central policy comparisons still have only two or three repetitions |
+| Optimized engine absent | Prepared separate pinned llama.cpp F32 weights/F32 KV, two compute threads, eight continuous-batching slots | Not executed; different kernels and HTTP path require separate accounting |
 | Q>1 heuristic unjustified | Exact optimizer for max(B,P/Q); three-worker counterexample and 1,000 exhaustive randomized checks | Ideal envelope, not achievable runtime throughput |
 | Multiple replay histories | Router reports summed prompt+accepted-token histories; optional `--live-replay-context` forecast | Serial replay-work estimate; elapsed transition calibration still required |
 | Synthetic queue result overstated | Worker reports compute-lock queue time; router retains per-stage decode timing and optional queue-corrected residual | Residual is not pure RTT; no demonstrated controller benefit |
 | Unclear recovery correctness | Eighteen real-Qwen/gRPC checks across relayout/loss/restart, token positions 1/4/12, Q=1/2; exact outputs and internal token gaps saved | Manual orchestration; no streaming delivery or coordinator-loss claim |
-| Weak demo evidence | Source-labeled dashboard, workload/decision/recovery panels, stop/restore controls; actual demo screenshots packaged separately | Demo execution is not comparative efficiency evidence |
+| Weak demo evidence | Source-labeled dashboard, workload/decision/recovery panels, stop/restore controls; legacy images retained with provenance | Fresh screenshots and usable public artifact remain outstanding; demo execution is not comparative efficiency evidence |
 | Elsevier-only format | IEEEtran conference source, resolved bibliography and verified PDF build | Final venue page/anonymity rules and author details remain to be selected |
 
 ## Runtime usage
@@ -58,11 +59,11 @@ observations, completed campaigns and pilots are preserved separately. Consult
 completion status rather than assuming that a folder name means a complete
 study. Host identity across restarts is not independently authenticated.
 
-The follow-up matrix in `multistage-epyc7763/` adds three workers, a three-CPU
+The prepared follow-up matrix for `multistage-epyc7763/` would add three workers, a three-CPU
 budget, 256-token inputs and 32-token outputs. Its calibrated fixed capacity
 and bottleneck layouts are compared with whole-model three replicas and
-three-thread unsplit execution. This adds worker and workload breadth but not
-physical heterogeneity. The two-laptop test kit and instructions in
+three-thread unsplit execution. It has not run and supplies no additional
+worker or workload evidence. The two-laptop test kit and instructions in
 [TWO_LAPTOP_TESTS.md](TWO_LAPTOP_TESTS.md) prepare that separate physical study;
 they are not themselves measured laptop evidence.
 

@@ -1,16 +1,25 @@
 {
   "format": "IEEEtran conference writing draft",
-  "pages": 5,
+  "pages": 8,
   "venue_limit_verified": false,
   "sha256": {
-    "ieee-manuscript.md": "4169947a460896e792c618df54a051c4fdc5fe41f85645b2a11af82e13c179c8",
+    "ieee-manuscript.md": "fd6b066db315a2ad930684123ad2a4b41717c500756827b58e48553401441169",
     "ieee-template.tex": "a662a1c7639cb314ba7aaba2dd28fd97b68170c47cd3bc4af53cd48162aa32cf",
-    "main.tex": "f924afdbb45fecbfcdca410c390cda378790829644f443d062d8eea83fdb6613",
-    "main.pdf": "30825a1e88ae523843ec05e25d5875d9e24069b444724f311739a73594983e0f",
+    "main.tex": "6d866500b8c98c749c99d234a173f17774c092d5f735ae6a40be0d7e926a8145",
+    "main.pdf": "7ef3c87dbd4af695befb5615eac53b901e470cc76bf72ef7ff8f732780f43a31",
     "main.bbl": "667bbb950add42ca92ba81b90e98a82a6be995ffea3819efbb087baa8f7651db",
     "references.bib": "8375d7309a799c966c6ec876cec7f9f3d9a8b93faf182d62d2327540405984d2",
     "figures/adaptation-comparison.pdf": "5aaea71e74a176ab865ac6c0360c9e38192e407293eba42c8741a14618f79c86",
+    "figures/local-baselines.pdf": "d2fdfc6e0cdcca893c74dd759207d76027b65fbb49fbd8b90bbbc812513f7e08",
+    "figures/local-baselines.png": "00aee7fd57e7f9da30028abf6be0accd53eb1f7a06d2847b40e71b19cb91cf18",
     "figures/objective-frontier.pdf": "93c31b141c46dd147f66e8c93e462255f4a342951f02c92a71b5d540910b4156",
-    "figures/transition-forecast.pdf": "589d63343b55dffad4565d558e1470b3d85c8f102c9bb60caaa0a0d9d696adf3"
+    "figures/transition-forecast.pdf": "589d63343b55dffad4565d558e1470b3d85c8f102c9bb60caaa0a0d9d696adf3",
+    "demo-screenshots/01-real-chat-two-workers.png": "c3f10f9a25a087b06a7e7b1594f91ffe1150c9a13e3f429ea1954e2fd0769179",
+    "demo-screenshots/02-two-worker-placement.png": "a59b56cf480555b2a01fe3351767936969da7790410f2cbeb562e1aa5e9458cf",
+    "demo-screenshots/03-worker-stopped.png": "ab5db2209f28dfbb13dd73dd4d6b358a579d523570788bcaf60130db566e301b",
+    "demo-screenshots/04-recovered-full-model.png": "ab8c8772c3bdb4220d532e8201a19c852378a22867c61ca6730a661906bc2552",
+    "demo-screenshots/05-chat-after-recovery.png": "84c3a8a5fbd2c12d847ac90e2c5c9da0b79e8590c7aea60a9b94d8766b9d6308",
+    "demo-screenshots/06-restored-split.png": "957afeb3a3c68ede4afe68907360f282a83bd939734d775ca68e6c0685e441cb",
+    "demo-screenshots/07-cpu-gpu-illustration.png": "5aa8388181cf5f5e99060999723e3738800238ac3999169531bba6abf64ce1de"
   }
 }

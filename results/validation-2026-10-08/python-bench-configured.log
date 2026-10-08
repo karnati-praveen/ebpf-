@@ -1,0 +1,15 @@
+test_checkpoint_and_interruption (test_calibrated_campaign.CampaignTests.test_checkpoint_and_interruption) ... ok
+test_deterministic_paired_schedule (test_calibrated_campaign.CampaignTests.test_deterministic_paired_schedule) ... ok
+test_export_requires_held_out_compatible_unique_successes (test_calibrated_campaign.CampaignTests.test_export_requires_held_out_compatible_unique_successes) ... ok
+test_stop_and_status_protocol (test_lan_agent.LANProtocolTests.test_stop_and_status_protocol) ... ok
+test_unauthorized_control_never_reaches_process_operations (test_lan_agent.LANProtocolTests.test_unauthorized_control_never_reaches_process_operations) ... ok
+test_unknown_endpoint_never_starts_a_process (test_lan_agent.LANProtocolTests.test_unknown_endpoint_never_starts_a_process) ... ok
+test_failed_request_is_retained_and_run_is_the_unit (test_publication_analyze.AnalysisTests.test_failed_request_is_retained_and_run_is_the_unit) ... ok
+test_one_repeat_does_not_produce_interval (test_publication_analyze.AnalysisTests.test_one_repeat_does_not_produce_interval) ... ok
+test_completion_requires_every_scheduled_run (test_publication_checkpoint.CheckpointTests.test_completion_requires_every_scheduled_run) ... ok
+test_keeps_completed_conditions_and_rejects_duplicates (test_publication_checkpoint.CheckpointTests.test_keeps_completed_conditions_and_rejects_duplicates) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.797s
+
+OK

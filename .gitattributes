@@ -1,0 +1,2 @@
+# Preserve raw benchmark CSV bytes; CSV writers use CRLF record endings.
+*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

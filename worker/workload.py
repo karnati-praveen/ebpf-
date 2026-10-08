@@ -23,9 +23,19 @@ class WorkloadTracker:
                 request[0] -= 1
                 request[1] += 1
 
-    def finish(self, key):
+    def finish(self, key, callback=None):
         with self._lock:
+            if callback is not None:
+                callback()
             self._requests.pop(key, None)
+
+    def with_active_keys(self, callback):
+        with self._lock:
+            return callback(list(self._requests))
+
+    def active_keys(self):
+        with self._lock:
+            return list(self._requests)
 
     def snapshot(self):
         with self._lock:

@@ -19,18 +19,24 @@ import (
 )
 
 type Config struct {
-	WorkloadURL        string
-	RemainingWorkAware bool
-	LiveReplayContext  bool
-	Namespace          string
-	WorkerSelector     string // label selector for shard worker pods
-	WorkerPort         int
-	Static             bool
-	HeartbeatTimeout   time.Duration
-	DefaultLinkMs      float64
-	ImprovementFrac    float64
-	Cooldown           time.Duration
-	Interval           time.Duration
+	EvaluationHold      bool
+	InitialSplits       [][2]int
+	TransitionURL       string
+	Calibration         partition.CalibratedGate
+	CalibrationIdentity CalibrationIdentity
+	CalibrationOnline   bool
+	WorkloadURL         string
+	RemainingWorkAware  bool
+	LiveReplayContext   bool
+	Namespace           string
+	WorkerSelector      string // label selector for shard worker pods
+	WorkerPort          int
+	Static              bool
+	HeartbeatTimeout    time.Duration
+	DefaultLinkMs       float64
+	ImprovementFrac     float64
+	Cooldown            time.Duration
+	Interval            time.Duration
 	// ReassertInterval is how often the controller re-pushes the current
 	// assignment even when nothing changed. Workers and the router hold
 	// their layout in memory only, so a restarted pod comes back empty; the
@@ -60,6 +66,14 @@ type Config struct {
 }
 
 type Controller struct {
+	evaluationHeld    bool
+	epoch             string
+	calibration       partition.CalibratedGate
+	calibrationState  map[string]any
+	seenTransitions   map[string]bool
+	migrations        []CalibrationObservation
+	transitionError   string
+	migrationLayers   int
 	workload          *WorkloadSnapshot
 	workloadError     string
 	decisionObjective partition.Objective
@@ -84,6 +98,7 @@ type Controller struct {
 
 func New(cfg Config, src Source, store *TelemetryStore) *Controller {
 	return &Controller{
+		evaluationHeld: cfg.EvaluationHold, epoch: fmt.Sprintf("%d", time.Now().UnixNano()), calibration: cfg.Calibration, seenTransitions: map[string]bool{},
 		cfg:          cfg,
 		src:          src,
 		store:        store,
@@ -103,6 +118,7 @@ func newDecider(cfg Config) *partition.Decider {
 	if cfg.Policy != "" {
 		d.Policy = cfg.Policy
 	}
+	d.InitialSplits = cfg.InitialSplits
 	d.Gate = cfg.Gate
 	d.Objective = cfg.Objective
 	if cfg.Objective == partition.Objective("auto") {
@@ -154,12 +170,25 @@ func (c *Controller) reconcile(ctx context.Context) error {
 
 	c.decider.Gate.ContextLen = sp.ContextLen
 	c.observeWorkload(ctx)
+	c.observeTransitions(ctx)
 	c.mu.Lock()
 	c.decisionObjective = c.decider.Objective
 	if c.workload != nil {
 		input.Concurrency = c.workload.ActiveRequests
 	}
 	c.mu.Unlock()
+	if c.cfg.Policy == partition.PolicyGateCalibrated {
+		if sp.Model != c.cfg.CalibrationIdentity.Model {
+			return fmt.Errorf("live model differs from calibration identity")
+		}
+		c.observeForecast(time.Now(), input)
+	}
+	c.mu.Lock()
+	held := c.evaluationHeld
+	c.mu.Unlock()
+	if held {
+		c.decider.HoldVoluntary = true
+	}
 	res, changed, err := c.decider.Decide(time.Now(), input, false)
 	c.recordDecision()
 	if err != nil {
@@ -281,11 +310,44 @@ func (c *Controller) buildInput(sp PipelineSpec, workers []WorkerRef) partition.
 
 // apply adopts a new split: it bumps the generation and pushes it out.
 func (c *Controller) apply(ctx context.Context, sp PipelineSpec, res *partition.Result) error {
+	cause := "voluntary"
+	c.mu.Lock()
+	initial := c.lastApplied == nil
+	c.mu.Unlock()
+	if initial {
+		cause = "initial"
+	} else if d := c.decider.LastDecision(); d != nil && d.Reason == "recovery-or-initial" {
+		cause = "recovery"
+	}
+	c.migrationLayers = sp.TotalLayers
 	c.mu.Lock()
 	c.generation++
 	gen := c.generation
 	c.mu.Unlock()
-	return c.push(ctx, sp, res, gen)
+	id, beginErr := c.migrationBegin(ctx, gen, cause)
+	if beginErr != nil {
+		c.mu.Lock()
+		c.transitionError = beginErr.Error()
+		c.mu.Unlock()
+		// Observability must not prevent mandatory recovery.
+		if cause == "voluntary" && c.cfg.Policy == partition.PolicyGateCalibrated {
+			return beginErr
+		}
+	}
+	err := c.push(ctx, sp, res, gen)
+	if id != "" {
+		message := ""
+		if err != nil {
+			message = err.Error()
+		}
+		endErr := transitionHTTP(ctx, c.cfg.TransitionURL+"/assignment", map[string]any{"transition_id": id, "success": err == nil, "error": message}, nil)
+		if endErr != nil {
+			c.mu.Lock()
+			c.transitionError = endErr.Error()
+			c.mu.Unlock()
+		}
+	}
+	return err
 }
 
 // reassertDue reports whether the current layout should be re-pushed.
@@ -420,6 +482,11 @@ func (c *Controller) State() map[string]any {
 		policy = partition.PolicyHysteresis
 	}
 	out["policy"] = string(policy)
+	out["evaluation_held"] = c.evaluationHeld
+	out["controller_epoch"] = c.epoch
+	out["calibration"] = c.calibrationState
+	out["migrations"] = append([]CalibrationObservation(nil), c.migrations...)
+	out["transition_error"] = c.transitionError
 	objective := c.cfg.Objective
 	if objective == "" {
 		objective = partition.ObjectiveThroughput
@@ -493,3 +560,6 @@ func describe(res *partition.Result) string {
 	}
 	return s
 }
+
+// StartEvaluation releases a benchmark warmup hold; initial assignment and recovery always bypass it.
+func (c *Controller) StartEvaluation() { c.mu.Lock(); defer c.mu.Unlock(); c.evaluationHeld = false }

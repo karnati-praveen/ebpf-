@@ -31,7 +31,8 @@ class Agent:
         if not self.token or len(self.token)<16:raise ValueError('set SHARDWISE_LAB_TOKEN to a shared random value of at least 16 characters')
         self.args.state.mkdir(parents=True,exist_ok=True)
         self.allowed=sorted(os.sched_getaffinity(0)) if hasattr(os,'sched_getaffinity') else list(range(os.cpu_count() or 1))
-        self.compute=self.allowed[:2]
+        self.compute=list(map(int,args.compute_cpus.split(","))) if getattr(args,"compute_cpus","") else self.allowed[:2]
+        if not self.compute or len(self.compute)!=len(set(self.compute)) or not set(self.compute)<=set(self.allowed):raise ValueError("compute CPUs outside affinity")
         self.sequence=0
 
     def status(self):
@@ -39,11 +40,12 @@ class Agent:
         if Path('/proc/cpuinfo').exists():
             cpu=next((x.split(':',1)[1].strip() for x in Path('/proc/cpuinfo').read_text().splitlines() if x.startswith('model name')),cpu)
         return {'platform':platform.platform(),'cpu':cpu,'logical_cpus':os.cpu_count(),
+            'machine_id_sha256':hashlib.sha256(Path('/etc/machine-id').read_bytes().strip()).hexdigest() if Path('/etc/machine-id').is_file() else None,
             'allowed_cpus':self.allowed,'compute_cpus':self.compute,
             'affinity_control':hasattr(os,'sched_setaffinity'),'model':MODEL,'model_revision':REVISION,
             'packages':{p:importlib.metadata.version(p) for p in ('torch','transformers','grpcio','protobuf','numpy')},
             'serving_source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in (
-                'worker/server.py','worker/router.py','worker/workload.py','worker/backends/qwen3.py','worker/gen/pipeline_pb2.py')},
+                'worker/server.py','worker/router.py','worker/transitions.py','worker/workload.py','worker/backends/qwen3.py','worker/gen/pipeline_pb2.py')},
             'processes':{k:{'pid':p.pid,'exit_code':p.poll()} for k,p in self.children.items()},
             'worker_addr':f'{self.args.advertise}:{self.args.base_port}',
             'router_url':f'http://{self.args.advertise}:{self.args.base_port+20}',
@@ -75,7 +77,7 @@ class Agent:
 
     def start(self,body):
         lo,hi=map(int,body['layers']);threads=int(body.get('threads',1))
-        if not 0<=lo<hi<=28 or threads not in (1,2) or len(self.compute)<threads:raise ValueError('invalid layout or CPU budget')
+        if not 0<=lo<hi<=28 or not 1<=threads<=len(self.compute) or len(self.compute)<threads:raise ValueError('invalid layout or CPU budget')
         chain=body.get('chain')
         if not isinstance(chain,list) or not chain or len(chain)>2:raise ValueError('chain must contain one or two stages')
         for row in chain:
@@ -94,7 +96,7 @@ class Agent:
                 self.spawn('router','router.py',{'GRPC_PORT':str(self.args.base_port+10),
                     'HTTP_PORT':str(self.args.base_port+20),'STATIC_PIPELINE':','.join(
                     f"w{i}={r['addr']}={r['layers'][0]}={r['layers'][1]}" for i,r in enumerate(chain))},
-                    self.allowed[2:] or self.allowed)
+                    [c for c in self.allowed if c not in self.compute] or self.allowed)
             deadline=time.monotonic()+600
             while True:
                 if any(p.poll() is not None for p in self.children.values()):raise RuntimeError('owned process exited; inspect agent state logs')
@@ -152,6 +154,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--host',default='0.0.0.0');ap.add_argument('--advertise',required=True,help='LAN IP reachable from the other laptop')
     ap.add_argument('--port',type=int,default=56080);ap.add_argument('--base-port',type=int,default=56100)
+    ap.add_argument('--compute-cpus',default='',help='explicit CPU set; defaults to first two allowed CPUs')
     ap.add_argument('--state',type=Path,default=ROOT/'.lan-test-state')
     args=ap.parse_args();agent=Agent(args)
     server=ThreadingHTTPServer((args.host,args.port),handler(agent))

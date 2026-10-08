@@ -1,6 +1,12 @@
-# KubeEdgeInfer
+# Shardwise
 
 Experiment data and reports are organized in [results/](results/README.md).
+The [IEEE paper and demo](docs/publication/README.md) include the PDF, editable
+sources, real CPU execution screenshots, and a separately labeled CPU/GPU
+illustration. See the [repository verification report](docs/REPOSITORY_VERIFICATION.md)
+for checks, supported scope, and private-repository setup.
+
+The Go module and deployment identifiers retain `kubeedgeinfer` for compatibility.
 
 A closed-loop, eBPF-driven framework for heterogeneous distributed LLM
 inference on consumer edge devices. It runs standalone on plain Linux machines

@@ -32,7 +32,7 @@ def main():
     # Keep the user informed if the draft needs reduction; do not manipulate
     # margins or fonts to manufacture compliance.
     names = ["ieee-manuscript.md", "ieee-template.tex", "main.tex", "main.pdf", "main.bbl", "references.bib"]
-    names += [str(p.relative_to(HERE)) for p in sorted((HERE/"figures").glob("*.pdf"))]
+    names += [str(p.relative_to(HERE)) for folder in ('figures', 'demo-screenshots') for p in sorted((HERE/folder).glob('*')) if p.suffix in ('.pdf', '.png')]
     manifest = {"format": "IEEEtran conference writing draft", "pages": pages,
                 "venue_limit_verified": False,
                 "sha256": {name: hashlib.sha256((HERE/name).read_bytes()).hexdigest() for name in names}}

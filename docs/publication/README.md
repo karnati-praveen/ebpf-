@@ -1,41 +1,37 @@
-# General IEEE conference writing package
+# Shardwise IEEE paper and demo package
 
-Open **main.pdf** to review the compiled paper. Edit **main.tex** and
-**references.bib** for a conventional LaTeX/Overleaf workflow. `IEEEtran.cls`
-and `IEEEtranN.bst` are included in the final ZIP with their upstream license
-headers. The template uses normal IEEEtran conference fonts and margins.
-No particular conference's eligibility or page policy is implied.
+Open **main.pdf** for the paper. **main.tex**, **references.bib**, **figures/**,
+and **demo-screenshots/** are the editable IEEE LaTeX sources. The portable ZIP
+includes IEEEtran.cls and IEEEtranN.bst with their original license headers.
 
 ```bash
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-In the repository, Markdown is the editable authoring source. After editing
-`ieee-manuscript.md`, run `python scripts/build-ieee.py`; it regenerates LaTeX.
-Editing LaTeX directly and later running that script will overwrite those edits.
-The root `main.bbl` is also supplied for inspection and portability.
+The paper uses standard IEEE conference fonts, letter paper and margins. It
+keeps **Anonymous Authors** for the author's later audit. CCGrid 2027 is a
+possible target: its [official call](https://hpcclab.org/ccgrid27-call-for-papers/)
+requires double-blind IEEE conference submissions of at most ten pages including
+references. This is a formatting target, not a submission or acceptance claim.
 
-The writing package contains:
+The paper includes actual CPU chat/recovery screenshots and a separate CPU/GPU
+illustration. The illustration explicitly assigns 8 layers to CPU and 16 to GPU
+and states that GPU execution was not measured. Visible Codespaces hostnames
+are replaced with CPU host. The real demo uses Qwen2.5-0.5B-Instruct; the
+research measurements use Qwen3-0.6B and a different dependency environment.
 
-- `figures/`: historical and newly measured figures, with scope in their captions.
-- `source/`: runtime, tests, raw evidence, reports and reproduction scripts.
-- `planner-checks/`: isolated cost-model checks runnable with Go, without the serving dependencies.
-- `demo-screenshots/`: actual captures, captions and provenance; these are not throughput baselines.
-- `revision-history/`: retained long-form writing sources before and after technical corrections.
-- `SHA256SUMS`: checksums of every included file.
+The combined archive adds **demo-package/** with the Linux amd64 .deb,
+installation instructions and package provenance, plus **source/** with selected
+research runtime sources, raw evidence and validation reports. Model weights,
+Python environments, caches, authentication tokens and .git are excluded.
+The smaller paper-only ZIP is suitable for editing in Overleaf.
 
-Read **READINESS.md** and `source/docs/PUBLICATION_REVISION.md` before writing
-new claims. Pilots, interrupted hardware campaigns, historical two-VM runs,
-synthetic diagnostics and complete local campaigns are kept separate. The
-source archive omits weights, Python environments, caches and third-party
-research-PDF downloads. Their absence is intentional for low disk usage.
+In the repository, ieee-manuscript.md is the authoring source. Running
+`python scripts/build-ieee.py` regenerates main.tex and validates the build.
+Direct LaTeX edits should not subsequently be overwritten by that script.
 
-For testing your laptop and your friend's laptop, start with
-`source/docs/TWO_LAPTOP_TESTS.md`. The separate small test-kit ZIP contains the
-needed Python runtime and scripts. Physical-laptop results become paper
-evidence only when the actual runs are completed and audited.
-
-Authors must fill in final metadata, choose a venue, review the claims and
-check its formatting, page, artifact and review policies before submission.
-This package does not submit or publish anything. No acceptance probability
-is represented by the implementation or formatting checks.
+Before submission, audit the claims, authorship, selected venue and track,
+artifact anonymity/access, and the IEEE policies referenced by its call.
+The repeated evaluation and optimized-engine baseline remain incomplete;
+single-repetition local observations do not establish statistical superiority.
+See READINESS.md and the supplied validation report for precise limits.

@@ -49,6 +49,20 @@ if cost_model == "full":
 json.dump(spec, open(cfg, "w"), indent=2)
 PY
 
+controller_args=()
+[[ "${EVALUATION_HOLD:-0}" == 1 ]] && controller_args+=("-evaluation-hold")
+[[ -n "${INITIAL_LAYOUT:-}" ]] && controller_args+=("-initial-layout=$INITIAL_LAYOUT")
+[[ -n "${WORKLOAD_URL:-}" ]] && controller_args+=("-workload-url=$WORKLOAD_URL")
+[[ -n "${TRANSITION_URL:-}" ]] && controller_args+=("-transition-url=$TRANSITION_URL")
+[[ -n "${CALIBRATION_FILE:-}" ]] && controller_args+=("-calibration=$CALIBRATION_FILE")
+[[ -n "${CALIBRATION_IDENTITY:-}" ]] && controller_args+=("-calibration-identity=$CALIBRATION_IDENTITY")
+[[ "${LIVE_REPLAY_CONTEXT:-0}" == 1 ]] && controller_args+=("-live-replay-context")
+[[ "${REMAINING_WORK_AWARE:-0}" == 1 ]] && controller_args+=("-remaining-work-aware")
+[[ "${CALIBRATION_ONLINE:-0}" == 1 ]] && controller_args+=("-calibration-online")
+[[ -n "${SCENARIO_PROBABILITY:-}" ]] && controller_args+=("-scenario-probability=$SCENARIO_PROBABILITY")
+[[ "${CALIBRATED_POINT_ONLY:-0}" == 1 ]] && controller_args+=("-calibrated-point-only")
+[[ "${CALIBRATED_NO_CALIBRATION:-0}" == 1 ]] && controller_args+=("-calibrated-no-calibration")
+[[ "${CALIBRATED_PROFILE_CONTEXT:-0}" == 1 ]] && controller_args+=("-calibrated-profile-context")
 stop_one controller
 supervise controller env \
   STATIC_MODE="${STATIC_MODE:-0}" PROFILE_ONCE="${PROFILE_ONCE:-0}" \
@@ -60,7 +74,7 @@ supervise controller env \
   "$CONTROLLER_BIN" -mode=standalone -config="$CFG" \
     -objective="${PLACEMENT_OBJECTIVE:-throughput}" \
   -grpc-addr=":$CONTROLLER_GRPC_PORT" -http-addr=":$CONTROLLER_HTTP_PORT" \
-  -policy="${POLICY:-hysteresis}" -link-source="${LINK_SOURCE:-ebpf+app}"
+  -policy="${POLICY:-hysteresis}" -link-source="${LINK_SOURCE:-ebpf+app}" "${controller_args[@]}"
 
 if [[ "${ROUTER:-1}" == 1 ]]; then
   stop_one router
@@ -68,7 +82,7 @@ if [[ "${ROUTER:-1}" == 1 ]]; then
   # CONTROLLER_ADDR makes the router push application-level link telemetry.
   supervise router env PYTHONUNBUFFERED=1 KV_CACHE="${KV_CACHE:-1}" \
     CONTROLLER_ADDR="127.0.0.1:$CONTROLLER_GRPC_PORT" \
-    HTTP_PORT="$ROUTER_HTTP_PORT" GRPC_PORT="$ROUTER_GRPC_PORT" "$VENV/bin/python" router.py
+    APP_LINK_MODE="${APP_LINK_MODE:-residual}" HTTP_PORT="$ROUTER_HTTP_PORT" GRPC_PORT="$ROUTER_GRPC_PORT" "$VENV/bin/python" router.py
 fi
 
 log "coordinator: profile=${COST_PROFILE:-azure-cpu} policy=${POLICY:-hysteresis} link-source=${LINK_SOURCE:-ebpf+app} cost-model=$COST_MODEL static=${STATIC_MODE:-0} profile-once=${PROFILE_ONCE:-0} ctx=$CONTEXT_LEN workers=$WORKERS"

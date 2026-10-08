@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/bench/local_publication.py", line 357, in <module>
+    main()
+  File "/workspaces/ebpf-/bench/local_publication.py", line 269, in main
+    cached_config = try_to_load_from_cache(args.model, "config.json")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/.publication-tools/venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 106, in _inner_fn
+    validate_repo_id(arg_value)
+  File "/workspaces/ebpf-/.publication-tools/venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 154, in validate_repo_id
+    raise HFValidationError(
+huggingface_hub.errors.HFValidationError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/home/codespace/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca'. Use `repo_type` argument if needed.

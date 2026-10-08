@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-08",
+  "scope": "automated tests and single-host functional validation; not a completed repeated publication evaluation",
+  "automated": {
+    "go_test_functions": 46,
+    "go_tests": "passed",
+    "go_internal_race": "passed",
+    "go_vet": "passed",
+    "go_build": "passed",
+    "bench_tests": 15,
+    "worker_tests": 12,
+    "publication_build_pages": 6,
+    "python_source_syntax_files": 61,
+    "shell_syntax": "passed",
+    "git_diff_check": "passed"
+  },
+  "qwen_inprocess": {
+    "layout_mode_pairs": 12,
+    "passed": true,
+    "max_abs_logit_difference": 2.8014183044433594e-05,
+    "protocol_guards_passed": true
+  },
+  "recovery": {
+    "cases": 18,
+    "passed": true,
+    "requests": 27,
+    "max_internal_token_gap_ms": 10005.262999999999
+  },
+  "campaigns": {
+    "baseline-functional": {
+      "runs": 32,
+      "requests": 160,
+      "failures": 0,
+      "repetitions": 1
+    },
+    "three-worker-functional-serial": {
+      "runs": 16,
+      "requests": 80,
+      "failures": 2,
+      "repetitions": 1
+    },
+    "replicas-isolated-retest": {
+      "runs": 2,
+      "requests": 12,
+      "failures": 0,
+      "repetitions": 1
+    }
+  },
+  "not_run": [
+    "remote physical-host controller/telemetry campaigns (host configuration needed)",
+    "ten-repetition baseline and controller comparisons",
+    "optimized external engine (checkout and engine dependencies absent)",
+    "GPU (no device present)",
+    "live eBPF loading and Kubernetes deployment",
+    "GPT-2 model execution (weights not cached)",
+    "streamed-client delivery (HTTP endpoint returns final JSON)",
+    "fault-aware replica comparison and coordinator-loss recovery"
+  ],
+  "issues": [
+    "fixed local model path being validated as a Hub repository ID",
+    "serialized three-worker checkpoint loading and added exit diagnostics after initial startup failure",
+    "retained two HTTP failures after worker SIGTERM; isolated fresh-runtime reruns passed, signal origin unconfirmed"
+  ]
+}

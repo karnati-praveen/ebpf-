@@ -1,0 +1,13 @@
+r=0 capacity-3x1t Q=2 layouts=[[0, 1], [1, 18], [18, 28]] TPS=5.073 failures=0
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/bench/multistage_publication.py", line 173, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspaces/ebpf-/bench/multistage_publication.py", line 163, in main
+    with ThreeRuntime(arm,layouts,args.model,directory,cpus,55000) as runtime:
+  File "/workspaces/ebpf-/bench/local_publication.py", line 145, in __enter__
+    return self.start()
+           ^^^^^^^^^^^^
+  File "/workspaces/ebpf-/bench/multistage_publication.py", line 58, in start
+    raise RuntimeError(f'runtime exited; see {self.directory}')
+RuntimeError: runtime exited; see /workspaces/ebpf-/results/validation-2026-10-08/three-worker-functional/r00-capacity-3x1t-q4-epoch0

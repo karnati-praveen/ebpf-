@@ -1,0 +1,66 @@
+test_router_observability (unittest.loader._FailedTest.test_router_observability) ... ERROR
+test_router_workload (unittest.loader._FailedTest.test_router_workload) ... ERROR
+test_failed_assignment_or_request_excluded (test_transitions.MigrationTests.test_failed_assignment_or_request_excluded) ... ok
+test_overlap_is_one_observation_and_assignment_is_included (test_transitions.MigrationTests.test_overlap_is_one_observation_and_assignment_is_included) ... ok
+test_recovery_supersedes_pending_and_is_not_calibration (test_transitions.MigrationTests.test_recovery_supersedes_pending_and_is_not_calibration) ... ok
+test_timeout_no_replay_duplicate_conflict_and_wrong_generation (test_transitions.MigrationTests.test_timeout_no_replay_duplicate_conflict_and_wrong_generation) ... ok
+test_worker_timing (unittest.loader._FailedTest.test_worker_timing) ... ERROR
+test_concurrent_progress (test_workload.WorkloadTests.test_concurrent_progress) ... ok
+test_progress_and_cleanup (test_workload.WorkloadTests.test_progress_and_cleanup) ... ok
+test_replay_context_tracks_all_active_histories (test_workload.WorkloadTests.test_replay_context_tracks_all_active_histories) ... ok
+
+======================================================================
+ERROR: test_router_observability (unittest.loader._FailedTest.test_router_observability)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_router_observability
+Traceback (most recent call last):
+  File "/home/codespace/.python/current/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/home/codespace/.python/current/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/workspaces/ebpf-/worker/test_router_observability.py", line 5, in <module>
+    import router
+  File "/workspaces/ebpf-/worker/router.py", line 27, in <module>
+    import grpc
+ModuleNotFoundError: No module named 'grpc'
+
+
+======================================================================
+ERROR: test_router_workload (unittest.loader._FailedTest.test_router_workload)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_router_workload
+Traceback (most recent call last):
+  File "/home/codespace/.python/current/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/home/codespace/.python/current/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/workspaces/ebpf-/worker/test_router_workload.py", line 3, in <module>
+    import router
+  File "/workspaces/ebpf-/worker/router.py", line 27, in <module>
+    import grpc
+ModuleNotFoundError: No module named 'grpc'
+
+
+======================================================================
+ERROR: test_worker_timing (unittest.loader._FailedTest.test_worker_timing)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_worker_timing
+Traceback (most recent call last):
+  File "/home/codespace/.python/current/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/home/codespace/.python/current/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/workspaces/ebpf-/worker/test_worker_timing.py", line 5, in <module>
+    import server
+  File "/workspaces/ebpf-/worker/server.py", line 16, in <module>
+    import grpc
+ModuleNotFoundError: No module named 'grpc'
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.035s
+
+FAILED (errors=3)

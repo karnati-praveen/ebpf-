@@ -51,6 +51,7 @@ POLICIES = {
     "none":        {"POLICY": "none"},
     "hysteresis":  {"POLICY": "hysteresis"},
     "gate":        {"POLICY": "gate"},
+    "gate-calibrated": {"POLICY": "gate-calibrated", "LIVE_REPLAY_CONTEXT": "1"},
     "gate-force":  {"POLICY": "gate-force"},
 }
 
@@ -123,12 +124,21 @@ class Run:
         self.router = f"http://127.0.0.1:{args.router_port}"
         self.ctrl = f"http://127.0.0.1:{args.controller_port}"
         self.requests, self.series, self.decisions, self.faults = [], [], {}, []
+        self.migrations = {}
+        self.input_ids = None
+        self.expected_tokens = None
+        if self.a.input_reference:
+            reference = json.load(open(self.a.input_reference))
+            self.input_ids = reference['input_ids']
+            self.expected_tokens = reference['tokens']
+            if len(self.input_ids) != self.a.prompt_len or len(self.expected_tokens) != self.a.new_tokens:
+                raise ValueError('reference lengths differ from workload')
         self.stop = threading.Event()
         self.lock = threading.Lock()
         # Remote restore runs through SSH, which does not inherit our shell
         # environment. Keep the worker on CUDA with the same profile after a
         # loss rather than silently restarting it with CPU defaults.
-        self.remote_worker_env = ""
+        self.remote_worker_env = "env " + " ".join(f"{key}={shlex.quote(os.environ[key])}" for key in ('MODEL_REVISION','TORCH_THREADS','COST_PROFILE','KEINFER_STATE','WORKER_DEVICE') if key in os.environ) + " "
         if os.environ.get("WORKER_DEVICE") == "cuda":
             profile = os.environ.get("COST_PROFILE")
             if not profile:
@@ -146,7 +156,7 @@ class Run:
         of a run: a change means a worker died or restarted mid-run."""
         local = subprocess.run(["bash", "-c", self.WORKER_PID], capture_output=True,
                                text=True).stdout.strip()
-        out = {"local": local}
+        out = {} if self.a.coordinator_only else {"local": local}
         for h in self.a.hosts:
             out[h] = ssh(h, self.WORKER_PID, check=False).strip()
         return out
@@ -157,13 +167,13 @@ class Run:
         # earlier run intended: a run that failed mid-loss leaves one stopped,
         # and memory pressure can kill one. VM1's own worker is checked too.
         pids = self.worker_pids()
-        if pids["local"] == "dead":
+        if not self.a.coordinator_only and pids["local"] == "dead":
             print("    restoring stopped local node")
             subprocess.run([os.path.join(DEPLOY, "start-worker-node.sh"), coord], check=True,
                            stdout=subprocess.DEVNULL)
         for h in self.a.hosts:
             ssh(h, f"{self.a.remote_repo}/deploy/standalone/fault.sh clear", check=False)
-            if pids[h] == "dead":
+            if pids[h] == "dead" or self.a.restart_workers:
                 print(f"    restoring stopped node on {h}")
                 ssh(h, f"{self.remote_worker_env}{shlex.quote(self.a.remote_repo)}/deploy/standalone/start-worker-node.sh {shlex.quote(coord)}")
 
@@ -172,7 +182,9 @@ class Run:
         env.update(POLICIES[self.policy])
         env.update({"LINK_SOURCE": self.a.link_source, "CONTEXT_LEN": str(self.a.context_len),
                     "COST_MODEL": self.a.cost_model, "ROUTER": "1",
-                    "PLACEMENT_OBJECTIVE": self.a.objective})
+                    "PLACEMENT_OBJECTIVE": self.a.objective,
+                    "WORKLOAD_URL": f"{self.router}/workload",
+                    "TRANSITION_URL": f"{self.router}/transitions"})
         for k in ("GATE_HORIZON_S", "GATE_MARGIN", "COOLDOWN_S", "IMPROVEMENT_FRAC"):
             v = getattr(self.a, k.lower())
             if v is not None:
@@ -222,16 +234,18 @@ class Run:
             raise RuntimeError("layout changed deterministic greedy output")
 
     # -- load and sampling --------------------------------------------------------
-    def load_worker(self):
+    def load_worker(self, finite=None):
         while not self.stop.is_set():
             t0 = time.time()
             row = {"t_start": t0}
             try:
                 o = http_json(f"{self.router}/generate",
-                              {"prompt_len": self.a.prompt_len, "max_new_tokens": self.a.new_tokens},
+                              {"input_ids": self.input_ids, "prompt_len": self.a.prompt_len, "max_new_tokens": self.a.new_tokens},
                               timeout=1800)
                 n = len(o["tokens"])
-                row.update(ok=1, tokens=n, ttft_ms=o["ttft_ms"], duration_ms=o["duration_ms"],
+                exact = self.expected_tokens is None or o["tokens"] == self.expected_tokens
+                gaps = [b-a for a,b in zip(o.get("token_times_ms", []), o.get("token_times_ms", [])[1:])]
+                row.update(ok=int(exact), reference_match=int(exact), reply_json=json.dumps(o), maximum_internal_token_gap_ms=max(gaps,default=0), tokens=n, ttft_ms=o["ttft_ms"], duration_ms=o["duration_ms"],
                            itl_ms=((o["duration_ms"] - o["ttft_ms"]) / (n - 1)) if n > 1 else "",
                            replays=o["replays"], transition_ms=o.get("transition_ms", ""),
                            reconstruct_ms=o.get("reconstruct_ms", ""), generation=o["generation"],
@@ -244,6 +258,8 @@ class Run:
             row["t_end"] = time.time()
             with self.lock:
                 self.requests.append(row)
+            if self.a.demand_mode == "finite" if finite is None else finite:
+                break
 
     def sampler(self):
         while not self.stop.is_set():
@@ -264,6 +280,9 @@ class Run:
                     flows_json=json.dumps(st["telemetry"]["flows"], sort_keys=True,
                                           separators=(",", ":")),
                     last_error=st.get("last_error", ""))
+                migrations = http_json(f"{self.router}/transitions", timeout=3)
+                for migration in migrations.get("migrations", []):
+                    self.migrations[migration['transition_id']] = migration
                 for d in st.get("decisions") or []:
                     self.decisions[d["time"]] = d
             except Exception as e:
@@ -299,6 +318,17 @@ class Run:
               + "|".join(f"{a['node']}:{a['start']}-{a['end']}" for a in st0['assignments']))
         self.warmup()
         self.verify_layout_output()
+        if self.a.history_warmup_s:
+            history = [threading.Thread(target=self.load_worker, args=(False,), daemon=True) for _ in range(self.a.concurrency)]
+            for thread in history: thread.start()
+            time.sleep(self.a.history_warmup_s)
+            self.stop.set()
+            for thread in history: thread.join(timeout=self.a.drain_s)
+            if any(thread.is_alive() for thread in history): raise RuntimeError('history warmup did not drain')
+            self.stop.clear(); self.requests=[]
+            st0 = http_json(f"{self.ctrl}/state")
+        if os.environ.get('EVALUATION_HOLD') == '1':
+            http_json(f"{self.ctrl}/evaluation/start", {})
 
         hosts = [(h, False) for h in self.a.hosts] + [("local", True)]
         cpu0 = {h: agent_cpu_seconds(h, loc) for h, loc in hosts}
@@ -311,15 +341,41 @@ class Run:
         t0 = time.time()
         for th in threads:
             th.start()
-        time.sleep(self.a.pre_s)
+        if self.a.demand_mode == 'finite' and self.scenario != 'stable':
+            deadline = time.monotonic()+self.a.drain_s
+            reached = False
+            while time.monotonic() < deadline:
+                workload = http_json(f"{self.router}/workload")
+                accepted = self.a.concurrency*self.a.new_tokens-workload['remaining_tokens']
+                if workload['active_requests'] and accepted >= self.a.fault_position*self.a.concurrency:
+                    reached=True;break
+                if all(not thread.is_alive() for thread in threads[1:]): break
+                time.sleep(.02)
+            if not reached: raise RuntimeError('finite fault position not reached while active')
+        elif self.a.demand_mode == 'continuing':
+            time.sleep(self.a.pre_s)
         self.fault("on")
-        time.sleep(self.a.fault_s)
+        if self.a.demand_mode == 'continuing':
+            time.sleep(self.a.fault_s)
+        else:
+            deadline = time.monotonic()+self.a.fault_s
+            while any(thread.is_alive() for thread in threads[1:]) and time.monotonic()<deadline:
+                time.sleep(.05)
         self.fault("off")
-        time.sleep(self.a.post_s)
+        if self.a.demand_mode == 'continuing': time.sleep(self.a.post_s)
         t_end = time.time()
         self.stop.set()
+        drain_deadline = time.monotonic() + self.a.drain_s
         for th in threads[1:]:
-            th.join(timeout=self.a.drain_s)
+            th.join(timeout=max(0, drain_deadline-time.monotonic()))
+        if any(th.is_alive() for th in threads[1:]):
+            raise RuntimeError("drain timed out; campaign must stop before another run")
+        threads[0].join(timeout=5)
+        t_drained = time.time()
+        final_migrations = http_json(f"{self.router}/transitions", timeout=3)
+        for migration in final_migrations.get('migrations', []):
+            self.migrations[migration['transition_id']] = migration
+        self.t_drained = max((r['t_end'] for r in self.requests), default=t_drained) if self.a.demand_mode == 'finite' else t_drained
         cpu1 = {h: agent_cpu_seconds(h, loc) for h, loc in hosts}
         self.pids_end = self.worker_pids()
 
@@ -351,13 +407,15 @@ class Run:
 
         dump("requests.csv", self.requests,
              ["t_start", "t_end", "ok", "tokens", "ttft_ms", "itl_ms", "duration_ms", "replays",
-              "transition_ms", "reconstruct_ms", "generation", "error"])
+              "transition_ms", "reconstruct_ms", "generation", "error", "reference_match", "maximum_internal_token_gap_ms", "reply_json"])
         dump("series.csv", self.series,
              ["t", "generation", "bottleneck_ms", "pipeline_ms", "layout", "speeds", "flows_json",
               "last_error", "objective", "active_objective", "workload_json", "workload_error"])
         dump("faults.csv", self.faults, ["action", "t_local", "t_remote", "detail"])
         with open(os.path.join(self.dir, "decisions.json"), "w") as fh:
             json.dump([self.decisions[k] for k in sorted(self.decisions)], fh, indent=1)
+        with open(os.path.join(self.dir, "migrations.json"), "w") as fh:
+            json.dump(list(self.migrations.values()), fh, indent=2)
         meta = {
             "run": self.name, "scenario": self.scenario, "magnitude": self.magnitude,
             "policy": self.policy, "policy_env": POLICIES[self.policy],
@@ -372,7 +430,9 @@ class Run:
             "concurrency": self.a.concurrency, "prompt_len": self.a.prompt_len,
             "new_tokens": self.a.new_tokens, "context_len": self.a.context_len,
             "phases_s": {"pre": self.a.pre_s, "fault": self.a.fault_s, "post": self.a.post_s},
-            "t0": t0, "t_end": t_end,
+            "t0": t0, "t_end": t_end, "t_drained": self.t_drained,
+            "demand_mode": self.a.demand_mode, "coordinator_only": self.a.coordinator_only,
+            "whole_run_tps_including_drain": sum(r['tokens'] for r in self.requests if r['ok'])/(self.t_drained-t0),
             "gate": {"horizon_s": self.a.gate_horizon_s, "margin": self.a.gate_margin},
             "initial_state": {k: st0.get(k) for k in ("generation", "assignments",
                                                        "bottleneck_ms", "pipeline_ms")},
@@ -398,6 +458,12 @@ def parse_scenarios(spec):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--history-warmup-s", type=float, default=0, help="unmeasured active-load telemetry warmup")
+    ap.add_argument("--fault-position", type=int, default=4, help="finite cohort aggregate accepted tokens per request before fault")
+    ap.add_argument("--coordinator-only", action="store_true", help="no inference worker on coordinator")
+    ap.add_argument("--restart-workers", action="store_true", help="restart every remote worker for each trial")
+    ap.add_argument("--input-reference", default="", help="independent greedy input_ids/tokens reference JSON")
+    ap.add_argument("--demand-mode", choices=['finite','continuing'], default='continuing')
     ap.add_argument("--workers", type=int, required=True)
     ap.add_argument("--hosts", default="", help="comma-separated SSH hosts of worker VMs (not VM1)")
     ap.add_argument("--target", default="", help="SSH host to inject faults on")
@@ -433,6 +499,8 @@ def main():
     args = ap.parse_args()
 
     args.hosts = [h for h in args.hosts.split(",") if h]
+    if args.coordinator_only and len(args.hosts) != args.workers:
+        ap.error('coordinator-only requires one host per worker')
     scenarios = parse_scenarios(args.scenarios)
     if os.environ.get("WORKER_DEVICE") == "cuda" and any(
             s in ("compute", "contention") for s, _ in scenarios):
@@ -477,7 +545,11 @@ def main():
                 for th in getattr(run, "threads", [])[1:]:
                     th.join(timeout=args.drain_s)
             if args.target:
-                ssh(args.target, f"{args.remote_repo}/deploy/standalone/fault.sh clear", check=False)
+                if run is not None:
+                    run.fault("off")
+                else:
+                    ssh(args.target, f"{shlex.quote(args.remote_repo)}/deploy/standalone/fault.sh clear", check=False)
+            return 1
     return 0
 
 

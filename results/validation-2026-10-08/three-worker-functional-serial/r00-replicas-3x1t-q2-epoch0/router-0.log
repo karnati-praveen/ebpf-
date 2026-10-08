@@ -1,0 +1,80 @@
+2026-10-08 08:23:52,276 router INFO pipeline gen=0: w0[0,28)
+2026-10-08 08:23:52,294 router INFO router: http :55020 grpc :55010 kv_cache=True
+2026-10-08 08:25:25,348 router ERROR generate failed
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/worker/router.py", line 198, in _forward_chain
+    reply = STATE.stub(stage.addr).Forward(req, timeout=120)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/.publication-tools/venv/lib/python3.12/site-packages/grpc/_channel.py", line 1168, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/.publication-tools/venv/lib/python3.12/site-packages/grpc/_channel.py", line 999, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = "failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:55000: Failed to connect to remote host: Connection refused"
+	debug_error_string = "UNAVAILABLE:failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:55000: Failed to connect to remote host: Connection refused"
+>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/worker/router.py", line 269, in _generate
+    reply = _forward_chain(stages, generation, request_id, step, first_ids)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/worker/router.py", line 200, in _forward_chain
+    raise GenerationChanged(f"stage {stage.name} unreachable: {e.code()}")
+GenerationChanged: stage w0 unreachable: StatusCode.UNAVAILABLE
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/worker/router.py", line 445, in do_POST
+    self._send(200, generate(input_ids, max_new_tokens))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/worker/router.py", line 230, in generate
+    result = _generate(input_ids, max_new_tokens, key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/worker/router.py", line 284, in _generate
+    raise RuntimeError(f"pipeline stuck: {e}")
+RuntimeError: pipeline stuck: stage w0 unreachable: StatusCode.UNAVAILABLE
+2026-10-08 08:25:40,064 router ERROR generate failed
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/worker/router.py", line 198, in _forward_chain
+    reply = STATE.stub(stage.addr).Forward(req, timeout=120)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/.publication-tools/venv/lib/python3.12/site-packages/grpc/_channel.py", line 1168, in __call__
+    return _end_unary_response_blocking(state, call, False, None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/.publication-tools/venv/lib/python3.12/site-packages/grpc/_channel.py", line 999, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)  # pytype: disable=not-instantiable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = "failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:55000: Failed to connect to remote host: Connection refused"
+	debug_error_string = "UNAVAILABLE:failed to connect to all addresses; last error: UNKNOWN: ipv4:127.0.0.1:55000: Failed to connect to remote host: Connection refused"
+>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/worker/router.py", line 269, in _generate
+    reply = _forward_chain(stages, generation, request_id, step, first_ids)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/worker/router.py", line 200, in _forward_chain
+    raise GenerationChanged(f"stage {stage.name} unreachable: {e.code()}")
+GenerationChanged: stage w0 unreachable: StatusCode.UNAVAILABLE
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspaces/ebpf-/worker/router.py", line 445, in do_POST
+    self._send(200, generate(input_ids, max_new_tokens))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/worker/router.py", line 230, in generate
+    result = _generate(input_ids, max_new_tokens, key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/ebpf-/worker/router.py", line 284, in _generate
+    raise RuntimeError(f"pipeline stuck: {e}")
+RuntimeError: pipeline stuck: stage w0 unreachable: StatusCode.UNAVAILABLE

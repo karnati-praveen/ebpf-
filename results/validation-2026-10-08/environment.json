@@ -1,0 +1,14 @@
+{
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "allowed_cpus": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "gpu_device_present": false,
+  "kernel_btf": true,
+  "external_engine_checkout": false,
+  "remote_configuration": "example only; host details requested",
+  "git_head": "912b6bf12ed1178765d8d9e6d01a514dbd1ab695"
+}

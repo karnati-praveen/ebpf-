@@ -30,3 +30,13 @@ ppt/*.toc
 /docs/publication/*.fls
 /docs/publication/*.out
 /.lan-test-state/
+
+# Local publication test environment and superseded installer
+.venv-pub/
+/dist/shardwise_0.1.0+ci3.paper1_amd64.deb
+# Advisory locks are local process state
+*.lock
+
+# Offline migration artifact includes history; do not commit recursively
+/dist/shardwise-repository.bundle
+/dist/shardwise-repository-manifest.json

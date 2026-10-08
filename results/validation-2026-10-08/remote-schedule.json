@@ -1,0 +1,4806 @@
+{
+  "phase": "evaluation",
+  "runs": 480,
+  "schedule": [
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "76de37ae93bb1c922c80"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "8fe9c61e90dcfb1e56cc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "fd0eae42358c4b30c3b2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "02f27ae7f1c9150d1b43"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "2b4b26b87ac424c3af67"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "eaca1c0ebb70a5f7e821"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "5b0cf67652505626f209"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "a12134c0fa40b92626a4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "93cdccf6f245756c8c69"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "1d47fcb5922e7e847459"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "abcea46107a2320b86fb"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "f70e8a450fdf248a5e6d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "5532bc982db73fddffd8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "9b03db83cebcadf39dff"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "79c1297bec8dc6e47cea"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "0de53bded9e1d1a0ed76"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "b36a44f90493b5a31faf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "7b44d4ee2c6d02f657aa"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "bb50191819a74aad9f38"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "9d7d5113f912e21ba965"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "e4b2088e7157cf4348a6"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "e43887b8bc094c731c20"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "d2c478ce5c33f5e9ca25"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "4914a222cdfb34b291ab"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "1cac51cb035b8834a352"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "219d2cde69f501af0c60"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "7c40bc15e81fc37cd626"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "0b6791e0493fd5b8d94b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "660a2a62ef1ae147cef4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "86562ff0c7f101674bad"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "974831a77fd05f02ee57"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "149ac2da405702fa9e66"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "073b69cd86894273fcf9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "8d487e4294967ed8f34c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "22be7c0299cac4a55995"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "89a29d1d8f6419afc71c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "c0c0806cc62eee530799"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "15c4e7517e6b89ca7bcd"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "5303338e232361626989"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "5c24168f5a0471143a21"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "b256bb1500de5a485a89"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "f97da0fcfd3570e9818f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "f5542cc6b3d013777fe4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "2f1126ce8b88757f8f40"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "1ca7f66e70eff4b6b193"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 0,
+      "id": "785448432e12f395636e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 0,
+      "id": "e6b714da4e775e319648"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 0,
+      "id": "174a0915f916970f1c96"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "acbac4a67b20cc41ca2d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "c20cc45b07b239023ff8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "2b358a6032f2ba0f5937"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "dbb797af5e9cfecfe975"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "3ee01b2d084e8f1acef3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "f31b5b7e42d1d0300e47"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "aadc5c872534830213b0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "7c7965f9898c94bb0e0e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "b4bbdbe3e4b65f17f98d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "9c57b55142e9d3cf74c1"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "5eed0b89e01d6fee1d6e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "97a6e03a0cd958926756"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "79df472343ef0976fa36"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "915a17aad6a2e1e4f71a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "ffe1973b5542bcb1d817"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "5b07f09b3f95ca1ffa0a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "2c7475ee701a421df8b0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "1dc45400ef216a1c5059"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "691ec4e50549272512de"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "e29731aeb8a0c5c3aa4c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "4a83573517658b9a0504"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "8ce289b2b1401b7b012d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "7bd99980bb48e236ada8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "e943c5b9b82aa3deeeed"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "7a7baa1137366668c92d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "f29b852e729b866cd550"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "139a5ed66d309e7532e0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "295903fd94cb551795c0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "c3222318a8e66fa1f676"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "d93175c9cfe0999168cc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "9a52477234323c7dca5d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "636228c59cc6ae2d79ab"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "acca9dedebd1b1933cb4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "54b27defd865cad19566"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "85cbdbfc7341664b9fa3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "1637fe21cf6eecef0fea"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "b48193a0ed95b16bac0c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "b6840435a828da397d1e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "792de6917096378f855f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "2529f421bc85023dab9b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "1be428853d1e8dc530ed"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "fab086a7530e079dc820"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 1,
+      "id": "9a5b465e2399d3df180d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "fe94a1716da9d074c5df"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 1,
+      "id": "1264b85fe89fc5a9235f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "b72c3ac5324342b06eb5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "de881dc939306f9e53fd"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 1,
+      "id": "f34ee2007d49b1e2d573"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "535e10ddbe4dbddb3e1b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "f253a6dbaab05630ece0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "305aaf75d02f4f85b39c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "0b89ad1aa914280427e3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "c29966d8afdca208ff54"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "cddcdad22ba624861085"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "b5b74d0c6f5a44d0e401"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "6a334a2384448ff2e5d9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "0fd61bfbfb8d05dcb284"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "f1a1614f921df37b7f04"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "4488e3c07d13d01219c2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "47a3c34baa610f0a00f7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "fcce457f6ea2a6070334"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "3ed7ba8797a2993b9ab1"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "b42eefa04880cca5a3ac"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "c967d6820138362659b4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "78de8b119126f5aa104a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "762dadf5828e2e19dcec"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "70e0026c44e599bdcece"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "906d145d117d56149836"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "56ba63123cbe4d827e75"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "13fb627a5964f7d34ea1"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "342586c7af193deff614"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "76510bdce855ccf73fba"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "078404c9a78aaa98cd05"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "16617b8c8875f8c871b9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "7fddaa5da0a52f1ec144"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "0f737fad4bcac5f0addd"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "a9d9ba91b33859722fa0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "bcb98f7e62da27e7cc8f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "53c0f1329727d447f013"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "e4b3d77be4f5f6f9d991"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "ed0670797ad2ad0d386e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "b4a575997079031df05a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "89af485dd486b71d0ba0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "62261da7714ed901a27f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "90bdb8c5435d7e6f58b8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "349fde73309e335f78b0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "7654dff2b4c22b2bef89"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "ae1e188f3a366f1a120f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "212b857382b3f1370e86"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "e7f76f2d08ac2d32bd93"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "f40d35b1fa4e7dddc778"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "e211abbb0b42cedebe40"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 2,
+      "id": "32f62c260217f12a68ff"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "d33fc82e6efa6864b570"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 2,
+      "id": "1d1245dd523da1b09cc8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 2,
+      "id": "ee0d72d4803f3b6523aa"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "2182b6b701cd1ae54c26"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "3159ea9a4ebbef381bcf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "54aa9aecfa8ec5594dd8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "9ea4a3dc1f57feee82e5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "936299c94cc6feb90de2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "f26ee9c3de5a292315bc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "7d84a8c73e3814ca1980"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "418ba27d2260de2e5169"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "47573893d29c20392ccf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "fa123c679b5499c1b4c7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "97357237686a0384a7ef"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "bdceccd84954ec92300b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "f1c2a82e1813bc3cde8b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "6ddc62ad243f0166c4a2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "e711a299e166664db93e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "abc569d7463ca7111660"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "364600cfba182f7feae7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "41279cf132f572b87ba1"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "e03ad673a5848d918974"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "c1b919d6454e83a036b9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "df79ca989fb4db0d6fb9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "696c7693772ab3eb6f39"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "fac8a4fac1933e644910"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "792bdf8e75d4cea63969"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "6b2e6c025bebe343012b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "4576b8f09a166d0ef949"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "e25d3e991ba2e386bb5b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "b43deb984d0c0e6bf1dc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "16442f9a222acc35fa6f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "3b954d307d2e89685c75"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "f295207475277915aa72"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "c0f558d60a1ff07c3d1a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "2f65f18471e96d628ebb"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "58c979e876d7b7d8c2c9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "ef9ed624e8ef6c5e5dc5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "20c493c66f4687cbd563"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "55e192d7f18d7bfe369b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "2491d644e72b79dd97a7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "9cb85209424861d05f28"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "87b87fcab883afd0a155"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "4fdd74e852d5f220accc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "f2200d2f96057c6ff4ef"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "db827e3a50f8b449ab46"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "3a3f48547f3e275bb98a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 3,
+      "id": "658077fc6916d3b7a4ef"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "abe5319e4abdfe35ed25"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 3,
+      "id": "2806418fc07edcd5cc64"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 3,
+      "id": "b2ee7b911311bc0fb7d7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "9cff3fc9c48f64c53572"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "dbe1fed4217cf5460cab"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "fb08869d2fdecab47871"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "8636361f51f53cf80dd1"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "3b079c5fe2e222e7fbbc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "6c364bc4b60704c26921"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "6d8bd1a676306b7888a0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "79f0746768f8f012af82"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "40ab2597bd9e4775a308"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "d1cce7c276de4ac49c20"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "19a4b0d84c8b4cb46bd3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "9ba6d20158aa5614bb31"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "5308150babc4625a1888"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "81c9d950ed6576b00843"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "2a07b46c740700a57558"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "ca155b5cd09fae54d01c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "188d01561fad6084c28f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "f10729b3f8cfc3dc5c7b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "ca2b035b29982230baad"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "381023ca990c82bd3f17"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "14275f7063ed85279b30"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "6320a1742e5f88cb7e47"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "bb1765dd1f27cc35d255"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "831ba34cd5531aa8c15a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "87c3db1431471b60a064"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "34e2acf79ab355c51ba2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "b7abacaa2099322b0da2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "4976fee81d3bda1f0d6f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "216c22fde0b115718a01"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "942e0a94b00377eba161"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "48676e49abf4740d7320"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "0177d6a06587c3f59cdb"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "146ec2a0b99000637304"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "263f12a73ca551eae4d3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "5cd1ed08bf14993dd3de"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "65cb98b9eeda8bd8ce39"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "716f76f02a0f492b205d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "6ab32c10737a5fa85a06"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "51d3780ced3782eeafc4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "f74cc7932f44f717d044"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "749997d71b382b59af29"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "6c356b741efbed11da5d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "97f9330a502fe9e4506d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 4,
+      "id": "2c2f4e00d78a19058565"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "e978612656d1ce138000"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 4,
+      "id": "5f483ada124c53bab8a3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "2d2adeef00c5ae96c82d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 4,
+      "id": "eb41d7f731c10c4ee84a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "c6948a67fbd21dbbf2b7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "5823db767c32583f0c8f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "ced52b8ed74db6de9d17"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "daf7fb151b8090a28e9b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "a607caa09bdd6f7517dc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "fe3bb1c3607aed0bcea3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "b771dbe3e6e807a2100e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "8e344ade50fff26d4e2c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "90e90d86ca94a42e9047"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "255cee060fd76ce16c0c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "06de4b9fcb04a1fbad34"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "2e74310e302761fc99e7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "e2f9b5a8944dae1bc4bc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "1742c1ce1930be20dd06"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "40545f27c001ca6592b1"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "0a1a857cdbdc12231c42"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "eb6658f94e00ff31d3e0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "50960763fa319e56eaa7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "602031f522fc62c7a224"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "e1c1036ad7eed9d45ae8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "bf76db5ed8a92f6664a9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "5ed6fe17deb83ee368cf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "67b3c3cb7e2f7d2ab4f8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "709959ef773fa968e443"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "434b3f4ebd4a47b9aecf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "fbf932d415f36502ccf5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "3547f19484441f9f5aa9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "0cc1da972ec022815a27"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "7d8f2f805ac2254f3bfe"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "cbfc5f86233d2d42755d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "9d3715cce7e0b47b30c4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "46938f9b95efa5361b81"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "80e7c178afdb835e42d3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "baf0497a10428ba6049f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "529d8ebff1da79a195ba"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "e9824ad35643cee2b908"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "6392c2bf387aade791ac"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "61108fb1d9d44eefa4a7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "0165072dcda5057698ad"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "b0bea9aa3d7887a34b79"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "2d9e3c70b8ab9b56dc3f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "76520dc5e1b29350cd5e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "0e717574e5268e9940e8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "b8227b5702b6659a07fa"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "38b06362977d01683b8a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 5,
+      "id": "b86a2f85b01c88b82c02"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 5,
+      "id": "3f16d83413aa3bb03c61"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 5,
+      "id": "b84c5d3f4b1f3255f1cf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "b661047e015a6f89eda4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "13e9f7ab58bcf0635e27"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "432c18bea7cce9621b6b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "a7e6e6cf93dfc3cd6d34"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "a65ae4b4ac0763ed9c27"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "205924032891e081b43c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "4a02cf90c763a9ac3e30"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "fa9e7988fb4b406db487"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "cb9a1d930a1f95e09fb6"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "6a81de5e604d5864afb5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "d55349a6701a4019f0b0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "a185c34568efb1e5e275"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "30bfba2daf4a6ea90412"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "0e31ef7070cd44aed9f4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "bd578ba656d4d4aac387"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "00940be1926ee9c95971"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "c2e32797bdfb5493872e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "bb23291f292ed24b929d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "9efc538bfe3237545190"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "002f63abad945488515f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "a13f306f919074c91507"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "c87207100ba892d24e23"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "5b8044eb91a3545948ad"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "1f3572b7a247cc3454e8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "04f1a60301f1f6c65423"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "20ac11182d0e649286c3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "82afefe2a3e5e73a333e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "e37612e2a8fc46a7db6b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "fb8464c08bf42f85f9b9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "7d8990fb54b8f120af35"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "1952124d1ad0d549166e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "fb87c23c55763d9084bf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "3e75322b516514f66118"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "5b7d3773210636780564"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "b8a936c3e2f66b92fc6c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "d9d31557782c4fa3d95c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "b433ceab053a45a5c283"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "4a221449b0ecbbd2568c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "8002ff3cf8502c4418be"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "df875c9c1584f97b252f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "4df16f725f74970ce3a3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "fdaa5291966a01f9ef05"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "f0dc6429adfefd21d0ee"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "1a76f09c43159277d14b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "41590bd4365a318403da"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 6,
+      "id": "d8bb8ee7c801df120175"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 6,
+      "id": "915e23cb7872b5496912"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 6,
+      "id": "3020f51396800f3b1329"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "f562476a765162650d1d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "8e3f5531ad869af894b8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "118d62474435c39a12fd"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "96e510086b9683fce2ba"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "4c58b5f35fa5c927c843"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "907b7de90a8c23c3555d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "27928cd806630c90456d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "c0b758504342e7d94bd8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "f9944c8028281a1227e6"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "ab6f7e0d3fecbd1d7f73"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "db09252731ce49cdfcbf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "bb21358a7e92c090ead7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "1533665101ac5c5b346f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "11ada904af0b8868bc59"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "2ebd1370a20dfaeb13a5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "0e875eb6e25e44ec333a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "e78ded5710dac7bbbb0d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "2bac6d359cf09877e998"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "3d2553b41eef65186906"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "f0bba6b8b9552cf8d26d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "793bf65baf5188930d77"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "90d50bbfa926955a4327"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "6830e33b7c081df67929"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "bc3832c4366d3577f9f8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "5c4ac7b98240a61d421e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "c048dba618104508c2c2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "76b8977cc7c29dbf6b67"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "fc1893fddae2a8e56b3f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "49029fe0b611842ce4af"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "5aac9b508299beb5e613"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "684d34476fb60782e03e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "42b882a4e22c69e262cd"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "f6e1558e8d6837f113a7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "a27874c4de6bb4cd12f5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "816db405dbab8a8d178a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "74a217173f80ca73a088"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "b0cae8c69baa17558d80"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "d7d7581ede01bdfa7655"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "b30d353be9690e5afb3a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "24a68bbed70f6d58cc8d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "73a9de09ad612fc814c5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "fc903f70db6f82251926"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "d43327aa7e4713ddeb8a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "620510b1e3ae409db492"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 7,
+      "id": "b8619117c22830dc2fc9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "656e1abdc2230a19a9e9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 7,
+      "id": "856c5271612e2647b274"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 7,
+      "id": "c6fc1e1b9a7d9d575006"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "6adaefc7aa4806b1f5ed"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "dad72531eddb661d753c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "ee3f94c96b16d6b660f2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "173d2f71d19672535bbf"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "d76da15845563c6e7f66"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "144a80ef5b80730a0ad2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "18ca1c520cb96ef99893"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "ee550bd1619b308df4ad"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "5e32d8f2e09128e3b943"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "5ca4ee6ef5c836a3841d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "fb3fd522142197ad5774"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "2941f5e666164592a7c3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "ac13f4ab504f1954b81f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "c2ed9f54e79697811fdb"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "9e186a40e459398409da"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "a0fbf344379ad41bf6de"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "ff6743851b1e7b3738e3"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "fa030c645a787d37e680"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "e8eb2f7937f7c0b9b7b5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "33db669512e8c13190a7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "14684f7c2be1f7d9aeac"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "6e2dd1420364adfff3c5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "ea12ad5a345959241ea0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "77c2625a7baf28759948"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "a16453b300224c0fd5a8"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "fe5165511a54d55aecde"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "64e0da3ceb289077a0ff"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "62c2246ae23fa7e803c1"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "2707695a1572566d5772"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "ce973517749177720a9e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "cb38af3ec40e5673c5fd"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "c45afb5d2a18c8d740b9"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "36923394211ff8d683fe"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "ec84c550ae4925b54e71"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "90ab0e940ba2149fffef"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "b86fdcdf051c2663dc3c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "c45c1c35cad942775e2a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "b918ff553e14da916337"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "bb79b431c1600382eaa6"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 8,
+      "id": "dce106323ecc552dd466"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "5814b9e5c1d5a0fa0c42"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "810ca6b4ff01b3a6560b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "6c23aba7f1d339aa4035"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "e23d455cf37a295b3b22"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "50782456da5021383fbc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "a1412de1fead14e2927f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 8,
+      "id": "227f646a151f1f27c3dc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 8,
+      "id": "4662d17d8656144f2b5a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "60aee7759ebe61a758ed"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "a3ae0770ef44a37c8b6c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "22ee986b23dc5383e849"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "10fc672a3a36e7e4157a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "6a917ec7b094811ddc1e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "17a1ec126a18534c4914"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "2ea3bb5100ea88208c3f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "6798bccac747b2d36428"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "9dd226b99286ebd2b98b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "09c6c49206d3e6b0a84e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "09d8e6460ca6f27e7db0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "d790f4c24d8ddfcc439a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "09b4ec5f59c54be6fca2"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "17249f9f89e2005d7f1a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "17524c7d97702bfa3a5e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "c3daa8865bb05c71bfc6"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "7fc69595a1d9880f9d78"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "0606115489e7892d787e"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "c0e1f6bcbf96f3d675c0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "f03345691772851afd9d"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "678455282f95ddb352f7"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "d212090c094ff8cc1b87"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "9bcb48fa168d21908927"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "7e258ead5380969e31bc"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "6d1c1b6f1c210ea61f3f"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "bfdbc790066ace132853"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "84f8d29e4a9ea2de3a99"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "32d9f65040cb95b6cfef"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "35b7d793f0f55f57ac6c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "b59244be44f3e675ae26"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "e7861b1628502410b310"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "fd987b00f58a67124978"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "bf5443c452ccb24e347b"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "06cfdd4bac03ed49ffbb"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "91c0cb54b20c57005df5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "e4cb5944bf0b1a26f8f5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "a54259515e9e5d1270c4"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "compute:0.5",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "c13226a4f03418016888"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "bf29ddbe4be97cca4aa5"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "7e531f4c5004fd630220"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "5df9b7266794911820e0"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "compute:0.5",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "d43cc65faca87831f77c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "network:120",
+      "arm": "gate-calibrated",
+      "repetition": 9,
+      "id": "f23b00d59e0f13dfd06c"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "e36aacf25f4b55ddb40a"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "gate",
+      "repetition": 9,
+      "id": "f2d2a9c500ef0468fcf6"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "finite",
+      "scenario": "network:120",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "6389b9605d035adabf95"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 2,
+      "demand": "finite",
+      "scenario": "stable:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "a8f504b61a69a755dadd"
+    },
+    {
+      "context": 128,
+      "tokens": 64,
+      "concurrency": 4,
+      "demand": "continuing",
+      "scenario": "loss:0",
+      "arm": "hysteresis",
+      "repetition": 9,
+      "id": "63464e4e00d631569bb5"
+    }
+  ]
+}
